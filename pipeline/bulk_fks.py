@@ -161,9 +161,14 @@ class BulkFKMixin:
             boundary="clock_timestamp() WHERE sequence_number = 3;"
             if text.count(begin)!=1 or text.count(boundary)!=1 or text.count("COMMIT;")!=1:
                 raise RuntimeError("Organizer expansion batch structure changed")
-            # Lock BEFORE the first RR data snapshot. Source-lock wait is timed.
-            text=text.replace(begin,"INSERT INTO pg_temp.pgdm_expansion_timings VALUES (0,'bulk_load','Acquire stable source lock',clock_timestamp(),NULL,NULL,NULL,NULL);\n"+begin+
-                "\nLOCK TABLE public.raw_data IN SHARE MODE;\nUPDATE pg_temp.pgdm_expansion_timings SET finished_at=clock_timestamp() WHERE sequence_number=0;",1)
+            # Protect the entire graph BEFORE any timing-table write acquires
+            # the RR data snapshot. A concurrent target commit must be visible
+            # to the empty-target proof after we finish waiting for its lock.
+            source,scopes,selected=self._expansion_timing_local.bulk_selection_context
+            prepared=self._prepare_cross_table_expansion(source,scopes,selected)['destinations']
+            target_locks=self._build_cross_table_expansion_lock_sql(prepared)
+            text=text.replace(begin,"INSERT INTO pg_temp.pgdm_expansion_timings VALUES (0,'bulk_load','Acquire stable source and target locks',clock_timestamp(),NULL,NULL,NULL,NULL);\n"+begin+
+                "\nLOCK TABLE public.raw_data IN SHARE MODE;\n"+target_locks+"\nUPDATE pg_temp.pgdm_expansion_timings SET finished_at=clock_timestamp() WHERE sequence_number=0;",1)
             text=text.replace(boundary,boundary+"\n"+instrument(self._guard_bulk_sql(prepare_sql()),4,"Prepare transactional bulk FK load"),1)
             commit_marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES (9000, 'execute'"
             if text.count(commit_marker)!=1:raise RuntimeError("Unknown commit timing boundary")

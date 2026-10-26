@@ -191,3 +191,56 @@ Clone methodology uses explicit FILE_COPY to complete clone checkpoints before
 measurement; see PostgreSQL 17 CREATE DATABASE documentation. Optional local
 CPU affinity applies equally to official/control/candidate measured backends.
 Latin-square order balances positions; backend CPU is recorded beside elapsed.
+
+
+## Qualified local 50% target
+
+The guarded_normalize balanced 100k campaign at commit 0e9f636 produced official
+26.382s, QF 19.293s, ours 13.887s medians: 47.36% reduction. Its normalizer cost
+was substantial. A component test found stage Memoize on/off medians 1.484s /
+1.460s: too small to pursue. EXPLAIN showed table2 expanded before its parent
+join, causing 232,386 parent index probes for 100,000 source rows.
+
+The guarded_prefix compiler uses table1's original GREATEST as an upper bound;
+this forces the parent join before expansion and avoids repeated parent probes.
+Every qualifying positive p satisfies p <= max(declared). Unused positions are
+skipped only within the proven error-free domain. The first three-run prefix
+cohort reached 49.51%, not rounded up to 50%.
+
+EXPLAIN confirmed the stage raw_id index was unused in all six recipes. Removing
+it and 14 unused column-statistics samples, plus counted native ANALYZE of the
+small fresh dimensions, produced the final commit 1a61b98 cohort:
+
+| Mode | Individual seconds | Median | Reduction vs official |
+|---|---|---:|---:|
+| Official original | 10.280075, 10.300463, 10.364258 | 10.300463 | 0% |
+| Exact QueryFoundry | 9.129256, 8.700098, 8.490309 | 8.700098 | 15.54% |
+| guarded_prefix | 5.240706, 4.982953, 4.977160 | 4.982953 | 51.62% |
+
+Final suite: 1,242 cases, zero differences (223 fast-domain, 1,019 fallback).
+The combined proof explicitly includes empty destinations; a seeded/stale parent
+therefore uses original fallback even in table2-only tests. All six exact outputs
+and restored metadata passed. Source: fresh-guarded-prefix-v2-100k.json.
+The full original service, actual private-cluster crash/WAL recovery and native
+dump/restore were checked separately; these are correctness gates, not included
+in the SQL-stage percentage. The 1M fresh pilot is recorded separately.
+
+
+The fresh 1M pilot passed exact output/schema verification: official 104.528613s,
+QF 91.191969s, guarded_prefix 45.551031s (56.42% / 50.05% less time respectively).
+Complete local original-service wall pair: official 103.045745s, guarded_prefix
+48.355471s (53.07% lower), with actual original preflight/counters/six versions.
+These are separate metrics/cohorts, both n=1 at 1M.
+
+Release fuzz seed 12473: 3,042 cases, zero differences, 587 fast-domain and 2,455
+fallback cases. Thirty-six current interruption tests, seven metadata fallbacks,
+32 boundary tests and 6,000 calendar/style cases passed. Clean source 1a61b98
+passed 45 tests plus the six original app tests. A final transport-only hardening
+acquires target locks before the first RR data snapshot; the new concurrent
+writer/empty-proof/counter regression passes. Ranked SQL-driver locking and
+transformation SQL were already in that order.
+
+The unranked 1M profile records an explicit staged relation of 186,130,432 bytes.
+1M sampled backend RSS was 182.2 MiB official / 231.3 MiB ours; WAL cluster delta
+3085.6 MiB / 818.1 MiB. These are bounded diagnostic observations, not total peak
+storage/memory or an official resource score.

@@ -31,15 +31,24 @@ proven FK relationships within the data transaction, then rebuild and fully
 validate before COMMIT. Its fresh 100k median is 34.30% below the official
 original and 12.54% below the exact QueryFoundry control (same cohort).
 
-`--mode guarded_normalize` is a research candidate with a conservative
-safe-domain proof and exact original fallback. It extracts all recipe inputs as
-TEXT once, retains the original casts/filters, and uses only immutable native
-data expressions. Preparation and proof cost are included in timing. See STATUS.md.
+`--mode guarded_prefix` is the fastest validated local candidate. In a fresh
+100k three-run cohort it reduces SQL-stage time from the official 10.300s median
+to 4.983s (51.62%), including proof/staging, rebuilding and full FK validation.
+The exact QueryFoundry control is 8.700s in that cohort. This is a local SQL
+diagnostic, not the official whole-workflow metric. See STATUS.md for scope.
 
-Earlier bulk_payload / bulk_array / bulk_full / unguarded normalization modes
-were rejected after new malformed-input counterexamples. They remain available
-only in the laboratory CLI for reproduction; their faster numbers are not valid
-performance results. The GUI exposes baseline, bulk_fks and guarded_normalize.
+It extracts recipe inputs as TEXT once, proves conservative numeric/calendar
+safety plus empty destinations, and retains exact original fallback. In the
+proven domain, table2 uses the original freshly computed maximum as a sound
+position bound. All original casts, CHECK/NOT NULL protections and final
+relationships remain. Added data functions use the unchanged immutable guard.
+Native versions include compiler/batch SHA provenance; complete batch SQL is
+archived under reports/sql. guarded_normalize is the preceding research mode.
+
+Earlier unguarded bulk_payload / bulk_array / bulk_full / normalization modes
+were rejected after malformed-input counterexamples. They remain only in the
+laboratory CLI; their faster numbers are not eligible claims. The GUI exposes
+baseline, bulk_fks and the two guarded modes; baseline remains the default.
 
 The original preflight, managed counters, versions, UI and dump code remain in
 use. `qf_lazy` calls the pinned public source directly and retains known malformed
@@ -68,7 +77,7 @@ $env:CHALLENGE_PSQL=(Resolve-Path .runtime/postgresql/pgsql/bin/psql.exe).Path
 .venv/Scripts/python.exe -m bench.prepare --database lab_template_100k
 .venv/Scripts/python.exe -m bench.prepare --database lab_reference_100k
 .venv/Scripts/python.exe -m bench.reference --database lab_reference_100k
-.venv/Scripts/python.exe -m bench.fresh --template lab_template_100k --reference lab_reference_100k --repeats 3 --modes baseline qf_lazy guarded_normalize --output reports/reproduced-100k.json
+.venv/Scripts/python.exe -m bench.fresh --template lab_template_100k --reference lab_reference_100k --repeats 3 --modes baseline qf_lazy guarded_prefix --output reports/reproduced-100k.json
 .venv/Scripts/python.exe -m bench.profile --database lab_reference_100k --modes baseline qf_lazy hash_array64
 ```
 
@@ -95,7 +104,7 @@ Remove-Item Env:PYTHONPATH
 .venv/Scripts/python.exe -m tests.semantics.fuzz --count 1500 --seed 3011 --modes path_table1 array_values path_array
 .venv/Scripts/python.exe -m tests.recovery.run
 .venv/Scripts/python.exe -m tests.recovery.tamper
-.venv/Scripts/python.exe -m tests.recovery.bulk_atomic --mode guarded_normalize
+.venv/Scripts/python.exe -m tests.recovery.bulk_atomic --mode guarded_prefix
 ```
 
 Fuzz/recovery create fresh `lab_*` databases, deliberately mutate only those
@@ -139,3 +148,23 @@ the measured local backend, identically for every mode; it is a lab control,
 not part of the submitted architecture. No global OS/durability settings change.
 Run `python -m tests.semantics.domain` for sufficient-domain boundaries and
 `python -m tests.recovery.bulk_guards` for metadata fallback/refusal cases.
+
+
+The fresh 1M SQL pilot is 104.529s official / 45.551s guarded_prefix (56.42%
+less time). A separate full local original-service pair is 103.046s / 48.355s
+wall (53.07% less time), including real preflight, counters and six versions.
+Both 1M comparisons are single-run pilots. Read STATUS.md and reports/README.md
+for authoritative cohorts and limits; do not mix SQL-only and full-service times.
+
+For native guarded recovery and detailed unranked scale profiles:
+
+```powershell
+.venv/Scripts/python.exe -m tests.recovery.bulk_atomic --mode guarded_prefix
+.venv/Scripts/python.exe -m tests.recovery.bulk_concurrency
+.venv/Scripts/python.exe -m bench.release_profile --template lab_template_1m
+```
+
+The actual crash test stops only the verified private project cluster; run it
+without other database work. The dump test preserves the prior database under
+a new lab_ name and restores the original name with its control identity.
+Their complete commands and results are in RECOVERY.md / reports.

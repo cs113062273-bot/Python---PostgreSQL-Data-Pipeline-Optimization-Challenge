@@ -141,3 +141,39 @@ original fallback outside it, and archives compiler/batch provenance. Domain,
 strict differential, native counter/version, valid-fallback and atomic recovery
 tests pass in current pilots. See STATUS.md for final repeated measurements and
 EXPERIMENTS.md for all rejected modes and benchmark stability changes.
+
+
+## Completed local SQL target
+
+The final guarded_prefix 100k Latin-square cohort, three runs per mode, produced
+10.300463s official, 8.700098s exact QueryFoundry and 4.982953s ours medians:
+51.62% less SQL-stage time than official, 42.73% less than the public control.
+The maximum comes from table1's actual original GREATEST; it is a mathematical
+bound on matching positions, not a generator-derived shortcut. A conservative
+cast/calendar proof and empty-target precondition protect the optimization;
+otherwise original SQL, constraints and settings execute unchanged. All stage,
+statistics, index build and native FK validation costs are included.
+
+The latest 1,242-case suite passed, along with six-table exact comparisons,
+function safety, native counter/version/provenance integration, 36 interruption
+boundaries, actual pre-commit server crash/retry and completed-data dump/restore.
+The 1M pilot and official-environment limitations are tracked in STATUS.md.
+This does not establish the full official metric, universal equivalence, chunk
+resume performance, 300M scaling or a winning competition placement.
+
+
+At 1M, the fresh SQL pilot (n=1) passed exact verification and measured
+104.529s official / 91.192s QF / 45.551s ours: 56.42% less time than official.
+The full local original-service pair measured 103.046s / 48.355s wall (53.07%
+lower), including preflight, counters and six version registrations. Source,
+version and compiler/batch provenance checks passed. Latest strict differential
+suite: 3,042 cases, zero differences. Final transport hardening protects source
+and targets before the first repeatable-read data snapshot; a concurrent target
+commit causes correct original fallback with preserved data/counters.
+
+Resource diagnostics show a WAL cluster delta about 73.49% lower at 1M, with
+sampled backend RSS 231.3 MiB versus 182.2 MiB (shared mappings included). The
+explicit temporary TEXT relation measures 177.5 MiB; it is outside pg_stat_database
+executor-spill counters and is dropped at commit. Full source archive regression
+and original app tests pass. Official Linux/SSH/GUI workflow and larger scales
+remain qualification gates, with the user's approval to finish local tests first.

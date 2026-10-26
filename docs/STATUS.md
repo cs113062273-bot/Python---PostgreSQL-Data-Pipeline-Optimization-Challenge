@@ -1,92 +1,120 @@
 # Current status
 
-The validated atomic `bulk_fks` candidate leads the exact public QueryFoundry
-control in local fresh-database SQL diagnostics. The next target, requested by
-the user, is at least 50% less time than the original official implementation.
-No official score or competition placement is claimed.
+The local 100k SQL-stage target is achieved: guarded_prefix reduces the
+three-run median by **51.62% versus the official original**, with all six
+outputs and restored constraints/indexes verified. This is not an official
+MEASURED PROCESSING TOTAL or Kaggle score. The user has no Linux/SSH environment;
+qualification continues locally and the official environment remains a gate.
 
-## Controlled results
+| Same fresh 100k cohort, n=3 | Median | Range | Time reduction vs official |
+|---|---:|---:|---:|
+| Official original (baseline) | 10.300463s | 10.280075-10.364258s | 0% |
+| Exact submitted QueryFoundry lazy_keys | 8.700098s | 8.490309-9.129256s | 15.54% |
+| Our guarded_prefix | 4.982953s | 4.977160-5.240706s | **51.62%** |
 
-Every run starts from a new clone of unchanged official generator output,
-with six empty, unanalyzed destinations. All architecture setup, rebuilding
-and FK validation are included in the SQL-stage sum. Complete preflight,
-managed counters, versions, GUI/SSH and lock waits are outside this diagnostic;
-commit latency is reported separately. Do not mix this with MEASURED PROCESSING TOTAL.
+Ours uses 42.73% less time than QueryFoundry in the same cohort. The metric
+includes TEXT staging, the conservative proof, statistics, all index rebuilding
+and complete native FK validation. Clone, oracle, full service preflight,
+counters, version registration, GUI/SSH, lock waits and commit latency are outside
+this SQL diagnostic; commit latency is reported separately. One individual run
+was below 50% reduction: the claim is specifically the three-run median.
 
-| Same cohort / scale | Official original | QueryFoundry original | Our bulk_fks | Ours vs official |
-|---|---:|---:|---:|---:|
-| 100k, median of 3 | 10.456s | 7.854s | 6.870s | 34.30% less time |
-| 1M, single pilot | 103.975s | 91.322s | 64.920s | 37.56% less time |
+Source: [fresh-guarded-prefix-v2-100k.json](../reports/fresh-guarded-prefix-v2-100k.json),
+implementation commit `1a61b98`. Every run starts from a new empty, unanalyzed
+clone. FILE_COPY completes clone checkpoints before timing; CPU 2 affinity is
+identical for all measured local backends; Latin-square order balances positions.
+All raw results, exact SQL and backend CPU/RSS/WAL limitations are retained.
 
-Sources: `reports/fresh-bulk-100k.json`, `reports/fresh-bulk-1m-pilot.json`.
-The 100k candidate is 12.54% below QueryFoundry's median; its slowest run is
-below the control's fastest run. All six tables passed exact bidirectional
-EXCEPT ALL once per mode, typed fingerprints/counts every run, and exact
-schema/index/constraint and relationship checks. Strict bulk_fks fuzzing:
-1,228 cases, zero observed differences (finite testing, not universal proof).
+## Correctness and integrity
 
-Fresh full local organizer-service pilots: baseline 11.016s wall, QueryFoundry
-11.007s, bulk_fks 8.771s. Actual original preflight, counters and six version/
-dependency registrations ran. These are separate, single-run wall diagnostics.
-The bulk report's commit timer originally overlapped its FK restoration timer;
-this reporting overlap is corrected in code and does not affect actual wall time.
+- All six relational outputs: bidirectional EXCEPT ALL once per mode, typed
+  fingerprints/counts and exact restored schema/index/constraint checks every run.
+- Release guarded_prefix differential suite: **3,042 cases, zero differences**;
+  587 proven-domain cases, 2,455 exact fallbacks. Prior v2 suite: 1,242 cases,
+  zero differences. Earlier full-graph
+  prefix suite: 621 cases, zero differences. The preceding guarded compiler
+  also passed 3,034 cases. Finite fuzzing is not universal proof.
+- Native proof tests: 32 numeric/date boundaries and 6,000 calendar/DateStyle
+  cases. Added data functions pass the unchanged native immutable-function guard.
+- Original-service pilots exercise actual counters, six atomic version /
+  dependency registrations, fast and valid-fallback branches. Replayable canonical
+  recipes persist compiler and complete batch SHA provenance in version history.
+- Thirty-six transaction interruption boundaries passed for the guarded
+  architecture. Actual private PostgreSQL immediate stop restored uncommitted
+  schema/data/counters exactly; a complete retry through the original service
+  produced the six exact outputs and six versions.
+- Actual pg_dump/pg_restore of that completed run preserved all six outputs,
+  validated constraints/indexes, actual source SHA-256, counters and versions.
+  The data database name and retained control database identity were preserved.
+- All 32 organizer files and the pinned QueryFoundry module remain byte-identical.
+  fsync, full_page_writes and synchronous_commit remain enabled. No durable
+  UNLOGGED data, generator changes, fixed-seed answers or STABLE-function bypass.
 
-## Current experiments and rejections
+## Architecture
 
-The 40.43% 100k pilot (bulk_array) is INVALID under the strict semantic policy:
-a later seed found inputs where baseline raised 22P02 and the candidate accepted.
-bulk_payload, bulk_full, bulk_full64, bulk_normalize and bulk_normalize64 also
-have counterexamples. Their timing reports remain negative research evidence,
-not effective performance claims. They are removed from GUI mode choices.
+TEXT extraction never casts, filters or rejects. A conservative proof covers
+all numeric conversions and valid timestamps. Empty protected destinations are
+also required for the fast path. Outside either condition, original statements,
+settings and constraints execute unchanged. Inside the proof, one TEXT stage is
+reused by the six recipes, provably unique keys are built in bulk, and six FKs
+are fully validated before commit. All NOT NULL and CHECK constraints remain.
 
-The original bulk_fks passed the same new seed (528 cases, zero mismatches).
-The launcher keeps baseline, bulk_fks and the guarded_normalize research mode.
-The new guarded mode first extracts TEXT without casts or filtering, proves a
-conservative error-free numeric/date domain using immutable native operators,
-and uses the original six statements/constraints/settings whenever the proof
-fails. Inside the proven domain it reuses the extracted fields and bulk-validates
-FKs. The gate and all preparation/validation costs are measured. Initial suite:
-The latest sparse guarded version passed 634 cases: 262 fast-domain cases and
-372 exact fallbacks, zero differences. Native domain tests passed 32 numeric/date
-boundaries and 6,000 calendar/DateStyle cases; all added data functions pass the
-unchanged immutable-function guard. Full local original-service tests passed
-both fast and valid-fallback inputs, exact six outputs, counters, six version
-records and compiler/batch provenance in version history. Thirty-six atomic
-interruption boundaries passed. Final repeated timing remains pending.
+The original table1 GREATEST is a sound upper bound for qualifying positive
+positions: if declared[p] = p, then p <= max(declared). Prefix expansion uses
+that freshly built parent value, caps only at the original 14-position limit,
+and retains declared/type/weight predicates. No axis-count distribution or
+precomputed answers are assumed. Small dimension statistics improve joins;
+unneeded stage indexing/statistics were removed after EXPLAIN verification.
 
-Index rollback passed 34 termination/exception boundaries and seven metadata
-fallback/refusal checks. Recovery alone does not make a semantically different
-SQL candidate eligible. The new counterexamples are permanent fuzz cases.
+## Rejected results and remaining gates
 
-## Recovery and release gates
+The earlier apparent 40.43% bulk_array result is INVALID: new cases found
+acceptance/rejection differences. bulk_payload, bulk_full and unguarded
+normalization also have counterexamples. These remain negative research
+artifacts and are excluded from GUI choices. Original bulk_fks passed those
+new traps, but its 34.30% result is historical, superseded by the new compiler.
+Historical repeated-TRUNCATE timings retained learned statistics and are not
+used as final comparisons.
 
-The independent chunk protocol v2 retains active constraints, durable chunk
-receipts, a persistent source/destination fence, actual-content source SHA-256,
-original counters and an audited control-database version saga. Twelve final
-interruption tests, actual local crash/WAL recovery, dump/restore and five
-tamper scenarios passed. It is not combined with the atomic bulk strategy.
-The 100k four-chunk pilot cost 20.028s including source hashes and finalization.
-Atomic publication, cancellation/undo and default GUI resume remain unfinished.
+The fresh 1M SQL pilot completed (n=1): official 104.528613s, exact QF
+91.191969s, ours 45.551031s: **56.42% less time than official**, 50.05% less
+than QF. All six exact outputs and restored schema/constraints passed.
+The separate complete local original-service pair (n=1), including preflight,
+counters and all six versions, measured 103.045745s / 48.355471s wall:
+**53.07% less time**. Its native timing-report totals are 102.976936s /
+48.121935s. Local psql transport is not standardized Linux/SSH parity.
+No larger-scale extrapolation is claimed. Full original
+GUI + standardized Linux/SSH timing, GUI snapshot filesystem/version replay,
+larger scales and a public submission commit remain release gates. Local native
+CLI dump/recovery is narrower than the complete GUI workflow.
 
-All 32 organizer files and the exact vendor recipe module remain byte-preserved.
-The default GUI remains baseline; experiments require an explicit mode.
-Direct QueryFoundry lazy paths retain malformed-input counterexamples and are
-controls, not the default safe candidate. jsonb_to_record remains lab-only.
-
-Remaining gates: repeated fresh 1M scale confidence, standardized Linux/SSH and
-actual GUI timing, GUI dump/version replay, larger scales, public repository
-and exact public submission commit. Historical repeated-TRUNCATE timings kept
-learned statistics and are superseded; their output-correctness evidence remains.
+The independent chunk protocol v2 retains durable chunk receipts, actual-content
+source SHA-256, fences, counters and an audited version saga. Its 12 interruption
+and five tamper tests, actual restart and partial-job dump/restore passed. The
+100k prototype costs 20.028s; it is not combined with the fast atomic compiler.
+The atomic mode rolls back and retries pre-commit failures; the post-commit
+control/version gap retains original-service behavior. No chunk reuse or full
+recovery-score claim is made for the fast mode.
 
 
-## Benchmark stability
+## Final hardening and resource evidence
 
-A later unpinned pilot showed large regression even for unchanged bulk_fks;
-no stable current 50% claim is made from a single run. The harness now permits
-identical local measured-backend CPU affinity for all modes, uses FILE_COPY
-clones (checkpointing completed before timing), records backend CPU as well as
-elapsed time, and rotates mode order in a Latin square. Clone/setup remains
-outside processing timing equally for every mode. Earlier timing reports remain
-historical evidence under their recorded method. No antivirus, durability or
-global OS priority setting was changed. User confirmed no Linux/SSH environment
-is available; continue local verification and label this limitation explicitly.
+After the timed implementation 1a61b98, production transport locking was moved
+before the first RR timing-table write: both source and targets are stable before
+its data snapshot. A concurrent writer commit during a target-lock wait is
+therefore seen by the empty-target proof, uses original fallback, preserves its
+row and reconciles all counters. The SQL diagnostic driver already locked in
+that order, so its ranked transformation SQL is unchanged. The native concurrent
+regression passes; compiler/batch provenance reflects the hardening revision.
+
+The clean source archive at 1a61b98 passed all 45 regression tests, all six
+upstream tests and all 32 source byte hashes. Final archive verification is
+recorded separately after the lock hardening.
+
+1M SQL diagnostics: sampled backend peak RSS official 182.2 MiB / ours
+231.3 MiB (shared mappings included, not whole-server peaks); cluster WAL delta
+3085.6 MiB / 818.1 MiB, about 73.49% lower. An unranked fresh 1M profile measured
+the explicit temporary TEXT stage at 186,130,432 bytes total (177.5 MiB), dropped
+at commit. Executor temp statistics do not include that explicit relation.
+Detailed EXPLAIN/BUFFERS/WAL plans are retained under
+reports/plans/guarded_prefix-1000000. No official resource score is claimed.

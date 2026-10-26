@@ -9,7 +9,7 @@ import psycopg
 from bench.common import connect, write_report, require_lab
 from bench.fixture import create_fixture
 from bench.run import prepared
-from pipeline.guarded_normalization import MODE as GUARDED_MODE, prepare_sql as prepare_guarded, fast_statement as guarded_statement
+from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, prepare_sql as prepare_guarded, fast_statement as guarded_statement
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
 from pipeline.recipes import ORDER, bulk_unique_tables, BULK_MODES
 from pipeline.bulk_fks import prepare_sql, restore_sql
@@ -32,7 +32,7 @@ def main():
         recipes=prepared(args.mode,scopes)
         tests=[]
         points=["after_fk_drop"]
-        if args.mode in NORMALIZATION_MODES or args.mode==GUARDED_MODE:points.append("after_normalization")
+        if args.mode in NORMALIZATION_MODES or args.mode in GUARDED_MODES:points.append("after_normalization")
         for table in ORDER:
             if table in bulk_unique_tables(args.mode):points.append(f"after_{table}_index_drop")
             points.append(f"after_{table}_insert")
@@ -53,8 +53,8 @@ def main():
                 try:
                     with victim.transaction():
                         victim.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
-                        if args.mode==GUARDED_MODE:
-                            victim.execute(prepare_guarded(scopes));inject("after_normalization")
+                        if args.mode in GUARDED_MODES:
+                            victim.execute(prepare_guarded(scopes,args.mode));inject("after_normalization")
                             assert victim.execute("SELECT safe FROM pg_temp.pipeline_normalization_domain").fetchone()[0]
                         victim.execute(prepare_sql());inject("after_fk_drop")
                         for d in recipes:
@@ -62,7 +62,7 @@ def main():
                             if args.mode in NORMALIZATION_MODES and table=="table1":victim.execute(normalize_sql(scopes));inject("after_normalization")
                             if table in bulk_unique_tables(args.mode):
                                 victim.execute(prepare_index(args.mode,table));inject(f"after_{table}_index_drop")
-                            for statement in d["statements"]:victim.execute(guarded_statement(statement,scopes) if args.mode==GUARDED_MODE else normalized_statement(statement,scopes) if args.mode in NORMALIZATION_MODES else statement)
+                            for statement in d["statements"]:victim.execute(guarded_statement(statement,scopes,args.mode) if args.mode in GUARDED_MODES else normalized_statement(statement,scopes) if args.mode in NORMALIZATION_MODES else statement)
                             inject(f"after_{table}_insert")
                             if table in bulk_unique_tables(args.mode):
                                 victim.execute(restore_index(table));inject(f"after_{table}_index_restore")

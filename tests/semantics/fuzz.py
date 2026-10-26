@@ -10,7 +10,7 @@ from psycopg.types.json import Jsonb
 from bench.common import connect, require_lab, write_report, environment
 from bench.fixture import create_fixture
 from bench.run import prepared, validate_functions
-from pipeline.guarded_normalization import MODE as GUARDED_MODE, prepare_sql as prepare_guarded, fast_statement as guarded_statement, validation_destinations
+from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, prepare_sql as prepare_guarded, fast_statement as guarded_statement, validation_destinations
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
 from pipeline.recipes import MODES, ORDER, BULK_MODES, bulk_unique_tables
 from tests.equivalence.oracle import canonical
@@ -29,6 +29,9 @@ def cases(seed, count):
     yield {"name":"single","edits":[("numeric_column_13",[])],"remove":"text_column_1"}
     yield {"name":"multi","edits":[("numeric_column_5","x"),("text_column_2","-32769"),("numeric_column_9","1e400"),("numeric_column_23",2),("numeric_column_22","1.2")],"settings":2}
     yield {"name":"multi","edits":[("numeric_column_5",{"a":1}),("id_column_1",{}),("numeric_column_13",None),("text_column_2","?"),("integer_column_13","Infinity")]}
+    yield {"name":"sparse-hole","edits":[('integer_column_15','14'),('text_column_17','Z'),('numeric_column_29','1'),('numeric_column_30','0')]}
+    for declared in (None,'-1','9999'):
+        yield {"name":"declared-bound","edits":[(f'integer_column_{n}',declared) for n in range(2,16)]}
     # Known semantic traps: apparently unused axes and competing cast errors.
     for edits in [
         [("integer_column_15", ""), ("numeric_column_29", "bad"), ("text_column_17", "X")],
@@ -50,10 +53,10 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
     conn.execute("SAVEPOINT trial")
     try:
         guarded_safe=None
-        if mode==GUARDED_MODE:
-            conn.execute(prepare_guarded(scopes))
+        if mode in GUARDED_MODES:
+            conn.execute(prepare_guarded(scopes,mode))
             guarded_safe=conn.execute("SELECT safe FROM pg_temp.pipeline_normalization_domain").fetchone()[0]
-        if mode in BULK_MODES and len(statements)>1 and (mode!=GUARDED_MODE or guarded_safe):
+        if mode in BULK_MODES and len(statements)>1 and (mode not in GUARDED_MODES or guarded_safe):
             from pipeline.bulk_fks import prepare_sql,restore_sql
             conn.execute("LOCK TABLE public.raw_data IN SHARE MODE")
             conn.execute(prepare_sql())
@@ -63,11 +66,11 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             conn.execute("ANALYZE public.table1")
         if mode in NORMALIZATION_MODES and len(statements)==1:conn.execute(normalize_sql(scopes))
         for statement in statements:
-            if mode==GUARDED_MODE and guarded_safe:statement=guarded_statement(statement,scopes)
+            if mode in GUARDED_MODES and guarded_safe:statement=guarded_statement(statement,scopes,mode)
             if mode in NORMALIZATION_MODES:
                 if statement.startswith("INSERT INTO public.table1 ("):conn.execute(normalize_sql(scopes))
                 statement=normalized_statement(statement,scopes)
-            unique_table=next((t for t in bulk_unique_tables(mode) if statement.startswith(f"INSERT INTO public.{t} ")),None) if len(statements)>1 and (mode!=GUARDED_MODE or guarded_safe) else None
+            unique_table=next((t for t in bulk_unique_tables(mode) if statement.startswith(f"INSERT INTO public.{t} ")),None) if len(statements)>1 and (mode not in GUARDED_MODES or guarded_safe) else None
             if unique_table:
                 from pipeline.bulk_indexes import prepare_mode_sql as prepare_index, restore_sql as restore_index
                 conn.execute(prepare_index(mode,unique_table))
@@ -92,7 +95,7 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             for table in maintained:
                 if statement.startswith(f"INSERT INTO public.{table} "):
                     conn.execute(f"ANALYZE public.{table}")
-        if mode in BULK_MODES and len(statements)>1 and (mode!=GUARDED_MODE or guarded_safe):
+        if mode in BULK_MODES and len(statements)>1 and (mode not in GUARDED_MODES or guarded_safe):
             conn.execute(restore_sql())
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name,"safe_domain":guarded_safe}
@@ -119,20 +122,25 @@ def main():
         create_fixture(db)
     report = {"kind": "mutated_functional_tests", "seed": args.seed, "database": db,
               "strict_policy": "same acceptance, exact outputs and SQLSTATE; exact primary message for single-cell cases; transaction state equal",
-              "runs": [], "mismatches": []}
+              "runs": [], "mismatches": [],"skipped_scopes":[]}
     with connect(db, autocommit=True) as conn:
         require_lab(conn)
         report["environment"] = environment(conn)
         scopes = [r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")]
         sqls = {mode: prepared(mode, scopes) for mode in ["baseline"] + args.modes}
         for mode,recipes in sqls.items():
-            validate_functions(conn, validation_destinations(recipes) if mode==GUARDED_MODE else recipes)
+            validate_functions(conn, validation_destinations(recipes) if mode in GUARDED_MODES else recipes)
         conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
         for d in sqls["baseline"][:-1]:
             for s in d["statements"]:
                 conn.execute(s)
         raw_id, original = conn.execute("SELECT raw_id,raw FROM public.raw_data ORDER BY raw_id LIMIT 1").fetchone()
         for scope in ("table2_only", "full_pipeline"):
+            active_sqls=sqls
+            if scope=='table2_only' and 'guarded_prefix' in args.modes:
+                report['skipped_scopes'].append({'mode':'guarded_prefix','scope':scope,'reason':'Requires the enforced exact six-table, initially empty transaction: parent GREATEST must derive from current protected input; a seeded stale parent is outside that API contract'})
+                active_sqls={mode:ds for mode,ds in sqls.items() if mode!='guarded_prefix'}
+                if len(active_sqls)==1:continue
             for index, case in enumerate(cases(args.seed, args.count)):
                 with conn.transaction(force_rollback=True):
                     for key, value in SETTINGS[case.get("settings",0)].items():
@@ -152,7 +160,7 @@ def main():
                     start = -1 if scope == "table2_only" else 0
                     tables = ("table2",) if start == -1 else ORDER
                     outputs = {mode: outcome(conn,[s for d in recipes[start:] for s in d["statements"]],tables,mode,scopes)
-                               for mode, recipes in sqls.items()}
+                               for mode, recipes in active_sqls.items()}
                     base = outputs.pop("baseline")
                     for mode, result in outputs.items():
                         equal = base["sqlstate"] == result["sqlstate"] and base.get("outputs") == result.get("outputs") and base["transaction_state"] == result["transaction_state"]

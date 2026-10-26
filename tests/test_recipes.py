@@ -42,6 +42,10 @@ def test_direct_queryfoundry_control_uses_pinned_original():
         assert payload["sql"]==original(baseline["sql"],"payload_once")
 
 
+def test_vendor_bytes_match_the_submitted_control():
+    assert hashlib.sha256((ROOT/'vendor/queryfoundry_recipes.py').read_bytes()).hexdigest()=='f84d00103da768bc88ed1fb7cfd21cec340bbc218218f858a94fe1037114a31c'
+
+
 def test_planner_override_preserves_counter_diagnostics_and_class_helpers():
     from pipeline.planner import Table1PlannerMixin
     class Tuned(Table1PlannerMixin,PostgresAdminService):pass
@@ -63,7 +67,8 @@ def test_dump_check_normalization_is_narrow():
     assert normalize_catalog(shape(original))!=normalize_catalog(shape(restored.replace("'Z'","'R'")))
 
 
-def test_bulk_strategy_binds_exact_recipes_and_resets_thread_context():
+@pytest.mark.parametrize('mode',['bulk_array','guarded_prefix'])
+def test_bulk_strategy_binds_exact_recipes_and_resets_thread_context(mode):
     import threading
     from pipeline.bulk_fks import BulkFKMixin
     class Base:
@@ -74,14 +79,14 @@ def test_bulk_strategy_binds_exact_recipes_and_resets_thread_context():
             raise RuntimeError("injected base failure")
     class Service(BulkFKMixin,Base):
         bulk_foreign_keys=True
-        bulk_recipe_mode="bulk_array"
+        bulk_recipe_mode=mode
     service=Service()
     with pytest.raises(RuntimeError,match="injected base failure"):
-        service.execute_cross_table_expansion("lab_unit","public.raw_data",["scope"],destinations("bulk_array"))
+        service.execute_cross_table_expansion("lab_unit","public.raw_data",["scope"],destinations(mode))
     assert service._expansion_timing_local.bulk_fk_active is False
     assert service._expansion_timing_local.bulk_selection_context is None
-    for source,selected in [("public.other",destinations("bulk_array")),("public.raw_data",destinations("qf_lazy")),
-                            ("public.raw_data",destinations("bulk_array")[:-1])]:
+    for source,selected in [("public.other",destinations(mode)),("public.raw_data",destinations("qf_lazy")),
+                            ("public.raw_data",destinations(mode)[:-1])]:
         with pytest.raises(RuntimeError,match="exact organizer"):
             service.execute_cross_table_expansion("lab_unit",source,["scope"],selected)
 

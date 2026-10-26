@@ -7,20 +7,20 @@ from pipeline.planner import Table1PlannerMixin
 from pipeline.bulk_fks import BulkFKMixin
 from pipeline.bulk_indexes import BulkIndexMixin
 from pipeline.normalization import NormalizationMixin
-from pipeline.guarded_normalization import GuardedNormalizationMixin
+from pipeline.guarded_normalization import GuardedNormalizationMixin, MODES as GUARDED_MODES
 from pipeline.recipes import BULK_MODES, bulk_unique_tables
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode",choices=["baseline","bulk_fks","guarded_normalize"],default="baseline")
+    parser.add_argument("--mode",choices=["baseline","bulk_fks","guarded_normalize","guarded_prefix"],default="baseline")
     args=parser.parse_args()
     mode=args.mode
     originals={d["table_name"]:d["sql"].strip() for d in destinations()}
     class ExperimentalService(BulkFKMixin,BulkIndexMixin,GuardedNormalizationMixin,NormalizationMixin,Table1PlannerMixin,PostgresAdminService):
         capture_batch_sql=True
         bulk_foreign_keys=mode in BULK_MODES
-        guarded_normalization=mode=="guarded_normalize"
+        guarded_normalization=mode in GUARDED_MODES
         normalize_input=mode in ("bulk_normalize","bulk_normalize64")
         bulk_recipe_mode=mode
         bulk_unique_tables=bulk_unique_tables(mode)

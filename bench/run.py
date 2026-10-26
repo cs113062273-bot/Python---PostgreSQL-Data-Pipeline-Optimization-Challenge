@@ -12,7 +12,7 @@ import threading
 import psutil
 
 from bench.common import ROOT, connect, environment, require_lab, write_report
-from pipeline.guarded_normalization import MODE as GUARDED_MODE, prepare_sql as prepare_guarded, conditional_sql, insert_sql as guarded_insert, fast_statement as guarded_statement, validation_destinations
+from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, prepare_sql as prepare_guarded, conditional_sql, insert_sql as guarded_insert, fast_statement as guarded_statement, validation_destinations
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
 from pipeline.recipes import MODES, ORDER, destinations, BULK_MODES, bulk_unique_tables
 from pipeline.upstream import PostgresAdminService
@@ -56,7 +56,7 @@ def validate_functions(conn, recipes):
 
 def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
     recipes = prepared(mode, scopes)
-    guard_parity = validate_functions(conn, validation_destinations(recipes) if mode==GUARDED_MODE else recipes)
+    guard_parity = validate_functions(conn, validation_destinations(recipes) if mode in GUARDED_MODES else recipes)
     exact_sql = "\n\n".join(s+";" for d in recipes for s in d["statements"])
     sql_sha256 = hashlib.sha256(exact_sql.encode()).hexdigest()
     sql_path = ROOT / "reports/sql" / (sql_sha256+".sql")
@@ -69,17 +69,17 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
         # Preserve the actual architecture SQL as well as the six recipe SQLs.
         strategy=["BEGIN ISOLATION LEVEL REPEATABLE READ;","LOCK TABLE public.raw_data IN SHARE MODE;",
                   PostgresAdminService._build_cross_table_expansion_lock_sql(recipes)]
-        if mode==GUARDED_MODE:strategy.append(prepare_guarded(scopes))
-        strategy.append(conditional_sql(fk_prepare()) if mode==GUARDED_MODE else fk_prepare())
+        if mode in GUARDED_MODES:strategy.append(prepare_guarded(scopes,mode))
+        strategy.append(conditional_sql(fk_prepare()) if mode in GUARDED_MODES else fk_prepare())
         if mode in ("bulk_full64","bulk_normalize64"):strategy.insert(2,"SET LOCAL work_mem='64MB';")
         strategy.append(PostgresAdminService._build_expansion_manifest_sql("public","raw_data",scopes).split("SELECT json_build_object(")[0])
         for d in recipes:
             table=d["pure_table_name"]
-            if table in bulk_unique_tables(mode):strategy.append(conditional_sql(prepare_mode_sql(mode,table)) if mode==GUARDED_MODE else prepare_mode_sql(mode,table))
+            if table in bulk_unique_tables(mode):strategy.append(conditional_sql(prepare_mode_sql(mode,table)) if mode in GUARDED_MODES else prepare_mode_sql(mode,table))
             if mode in NORMALIZATION_MODES and table=="table1":strategy.append(normalize_sql(scopes))
-            strategy.extend(("DO $guarded_insert$ BEGIN\n"+guarded_insert(s,scopes)+"; END $guarded_insert$;" if mode==GUARDED_MODE else (normalized_statement(s,scopes) if mode in NORMALIZATION_MODES else s)+";") for s in d["statements"])
-            if table in bulk_unique_tables(mode):strategy.append(conditional_sql(index_restore(table)) if mode==GUARDED_MODE else index_restore(table))
-        strategy.extend([conditional_sql(fk_restore()) if mode==GUARDED_MODE else fk_restore(),"COMMIT;"])
+            strategy.extend(("DO $guarded_insert$ BEGIN\n"+guarded_insert(s,scopes,mode)+"; END $guarded_insert$;" if mode in GUARDED_MODES else (normalized_statement(s,scopes) if mode in NORMALIZATION_MODES else s)+";") for s in d["statements"])
+            if table in bulk_unique_tables(mode):strategy.append(conditional_sql(index_restore(table)) if mode in GUARDED_MODES else index_restore(table))
+        strategy.extend([conditional_sql(fk_restore()) if mode in GUARDED_MODES else fk_restore(),"COMMIT;"])
         strategy_sql="\n\n".join(strategy)
         strategy_sha256=hashlib.sha256(strategy_sql.encode()).hexdigest()
         (sql_path.parent/(strategy_sha256+".sql")).write_text(strategy_sql,encoding="utf-8")
@@ -128,20 +128,20 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                 else:conn.execute("SET LOCAL work_mem='64MB'")
             conn.execute(PostgresAdminService._build_cross_table_expansion_lock_sql(recipes))
             guarded_safe=None
-            if mode==GUARDED_MODE:
-                conn.execute("DO $domain$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_guarded(scopes)+" INSERT INTO diagnostic_timing VALUES('normalize_and_prove_domain',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $domain$;")
+            if mode in GUARDED_MODES:
+                conn.execute("DO $domain$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_guarded(scopes,mode)+" INSERT INTO diagnostic_timing VALUES('normalize_and_prove_domain',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $domain$;")
                 guarded_safe=conn.execute("SELECT safe FROM pg_temp.pipeline_normalization_domain").fetchone()[0]
-            if mode in BULK_MODES and (mode!=GUARDED_MODE or guarded_safe):
+            if mode in BULK_MODES and (mode not in GUARDED_MODES or guarded_safe):
                 from pipeline.bulk_fks import prepare_sql,restore_sql
                 conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_sql()+" INSERT INTO diagnostic_timing VALUES('bulk_fk_prepare',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
             for name, statement in stages:
-                if mode==GUARDED_MODE and guarded_safe and name!="source_manifest":statement=guarded_statement(statement,scopes)
+                if mode in GUARDED_MODES and guarded_safe and name!="source_manifest":statement=guarded_statement(statement,scopes,mode)
                 if mode in NORMALIZATION_MODES:
                     if name=="public.table1":
                         conn.execute("DO $normalize$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+normalize_sql(scopes)+" INSERT INTO diagnostic_timing VALUES('normalize_text_input',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $normalize$;")
                     statement=normalized_statement(statement,scopes)
                 unique_table=name.removeprefix("public.")
-                if unique_table in bulk_unique_tables(mode) and (mode!=GUARDED_MODE or guarded_safe):
+                if unique_table in bulk_unique_tables(mode) and (mode not in GUARDED_MODES or guarded_safe):
                     from pipeline.bulk_indexes import prepare_mode_sql as prepare_index, restore_sql as restore_index
                     conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_index(mode,unique_table)+" INSERT INTO diagnostic_timing VALUES('bulk_unique_prepare_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
                 original_mergejoin=None
@@ -166,7 +166,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                     body = statement.strip().rstrip(";")
                     conn.execute("DO $diag$ DECLARE started timestamptz := clock_timestamp(); affected bigint; BEGIN " + body +
                         "; GET DIAGNOSTICS affected = ROW_COUNT; INSERT INTO diagnostic_timing VALUES ('" + name + "', EXTRACT(EPOCH FROM clock_timestamp()-started), affected); END $diag$;")
-                if unique_table in bulk_unique_tables(mode) and (mode!=GUARDED_MODE or guarded_safe):
+                if unique_table in bulk_unique_tables(mode) and (mode not in GUARDED_MODES or guarded_safe):
                     conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_index(unique_table)+" INSERT INTO diagnostic_timing VALUES('bulk_unique_restore_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
                 if original_mergejoin is not None:
                     conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
@@ -175,7 +175,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                 maintained=("public.table3","public.table4","public.table1") if mode=="analyze_base" else ("public.table3","public.table4") if mode=="analyze_dims" else ()
                 if name in maintained:
                     conn.execute("DO $stats$ DECLARE started timestamptz:=clock_timestamp(); BEGIN ANALYZE "+name+"; INSERT INTO diagnostic_timing VALUES ('analyze_"+name+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stats$;")
-            if mode in BULK_MODES and (mode!=GUARDED_MODE or guarded_safe):
+            if mode in BULK_MODES and (mode not in GUARDED_MODES or guarded_safe):
                 conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_sql()+" INSERT INTO diagnostic_timing VALUES('bulk_fk_restore_validate',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
             timing = conn.execute("SELECT stage,seconds,rows FROM diagnostic_timing").fetchall()
             conn.execute("SELECT pg_stat_force_next_flush()")
@@ -190,7 +190,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
         exact_sql=gate+";\n\n"+"\n\n".join(s+";" for d in recipes[:-1] for s in d["statements"])+"\n\n"+statement+";"
         sql_sha256=hashlib.sha256(exact_sql.encode()).hexdigest()
         (ROOT/"reports/sql"/(sql_sha256+".sql")).write_text(exact_sql,encoding="utf-8")
-    return {"mode": mode,"bulk_strategy_sql_sha256":strategy_sha256,"proven_safe_domain":guarded_safe, "table2_memoize_disabled":mode=="hash_array64_nomemo","work_mem_override":"64MB" if mode in ("hash_array64","hash_array64_nomemo","bulk_full64","bulk_normalize64") else None,"table1_mergejoin_disabled":mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo"),"executed_sql_sha256":sql_sha256,"guarded_fast_path":safe if mode=="guarded_qf" else None,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
+    return {"mode": mode,"bulk_strategy_sql_sha256":strategy_sha256,"proven_safe_domain":guarded_safe,"guarded_work_mem_override":"64MB" if mode in GUARDED_MODES and guarded_safe else None,"bulk_index_maintenance_work_mem":"128MB, restored after each build" if bulk_unique_tables(mode) and (mode not in GUARDED_MODES or guarded_safe) else None, "table2_memoize_disabled":mode=="hash_array64_nomemo","work_mem_override":"64MB" if mode in ("hash_array64","hash_array64_nomemo","bulk_full64","bulk_normalize64") else None,"table1_mergejoin_disabled":mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo"),"executed_sql_sha256":sql_sha256,"guarded_fast_path":safe if mode=="guarded_qf" else None,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
             "stages": [{"name": n, "seconds": s, "rows": r} for n,s,r in timing],
             "wal_cluster_delta_bytes": wal, "db_cumulative_temp_files": stats[0], "db_cumulative_temp_bytes": stats[1], **sample}
 

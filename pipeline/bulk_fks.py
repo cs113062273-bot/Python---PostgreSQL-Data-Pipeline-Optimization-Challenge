@@ -32,7 +32,7 @@ def prepare_sql():
         columns=[m[1] for line in match[1].splitlines() if (m:=re.match(r"\s+([a-z][a-z_0-9]*)\s+",line))]
         expected="ARRAY["+",".join(sql_literal(c) for c in columns)+"]::text[]"
         column_checks.append("IF (SELECT array_agg(attname::text ORDER BY attnum) FROM pg_attribute WHERE attrelid='public."+table+"'::regclass AND attnum>0 AND NOT attisdropped) IS DISTINCT FROM "+expected+" THEN RAISE EXCEPTION 'Unsupported bulk column layout: "+table+"'; END IF;")
-    key_types=[("raw_data","raw_id","bigint"),("table1","id_column_1","bigint"),("table1","id_column_3","bigint"),("table1","id_column_4","bigint"),
+    key_types=[("raw_data","raw_id","bigint"),("table1","id_column_1","bigint"),("table1","id_column_3","bigint"),("table1","id_column_4","bigint"),("table1","integer_column_1","smallint"),
                ("table3","id_column_1","bigint"),("table4","id_column_1","smallint"),("table2","id_column_2","bigint"),("table5","id_column_2","bigint"),
                ("table6","id_column_2","bigint"),("table6","id_column_3","smallint")]
     for table,column,kind in key_types:

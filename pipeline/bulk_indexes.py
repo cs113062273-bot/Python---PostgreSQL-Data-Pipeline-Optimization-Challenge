@@ -45,7 +45,7 @@ def prepare_primary_sql(table):
 def prepare_mode_sql(mode,table):
     from pipeline.recipes import bulk_unique_tables
     unique=prepare_sql(table) if table in bulk_unique_tables(mode) and table in ("table1","table2") else ""
-    primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize") else ""
+    primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix") else ""
     return unique+"\n"+primary
 
 

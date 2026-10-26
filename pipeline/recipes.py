@@ -14,13 +14,13 @@ ANCHOR = "FROM {{source}} AS source_row"
 EXTRACT = re.compile(r"source_row\.raw\s*->\s*'values'\s*->>\s*'([a-z_]+\d+)'")
 MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
          "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array",
-         "qf_payload", "qf_lazy", "qf_lazy_path1", "guarded_qf", "qf_hash1", "hash_table1", "hash_array", "hash_array64", "analyze_base", "analyze_dims", "hash_array64_nomemo", "bulk_fks", "bulk_index2", "bulk_indexes", "bulk_index_payload", "bulk_payload", "bulk_array", "bulk_full", "bulk_full64", "bulk_normalize", "bulk_normalize64", "guarded_normalize")
+         "qf_payload", "qf_lazy", "qf_lazy_path1", "guarded_qf", "qf_hash1", "hash_table1", "hash_array", "hash_array64", "analyze_base", "analyze_dims", "hash_array64_nomemo", "bulk_fks", "bulk_index2", "bulk_indexes", "bulk_index_payload", "bulk_payload", "bulk_array", "bulk_full", "bulk_full64", "bulk_normalize", "bulk_normalize64", "guarded_normalize", "guarded_prefix")
 
-BULK_MODES=("bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload", "bulk_payload", "bulk_array", "bulk_full", "bulk_full64", "bulk_normalize", "bulk_normalize64", "guarded_normalize")
+BULK_MODES=("bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload", "bulk_payload", "bulk_array", "bulk_full", "bulk_full64", "bulk_normalize", "bulk_normalize64", "guarded_normalize", "guarded_prefix")
 
 
 def bulk_unique_tables(mode):
-    if mode in ("bulk_full","bulk_full64","guarded_normalize"):return ("table1","table2","table5","table6")
+    if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix"):return ("table1","table2","table5","table6")
     return ("table2",) if mode=="bulk_index2" else ("table1","table2") if mode in ("bulk_indexes","bulk_index_payload", "bulk_payload", "bulk_array") else ()
 
 
@@ -35,7 +35,7 @@ def compiler_sha256():
 def rewrite(sql, mode):
     if mode not in MODES:
         raise ValueError(f"Unknown recipe mode: {mode}")
-    if mode=="guarded_normalize":return sql.rstrip()+"\n-- pipeline guarded_normalize_v1 compiler_sha256="+compiler_sha256()+"\n"
+    if mode in ("guarded_normalize","guarded_prefix"):return sql.rstrip()+"\n-- pipeline "+mode+"_v1 compiler_sha256="+compiler_sha256()+"\n"
     if mode in ("bulk_normalize","bulk_normalize64"):return sql
     if mode in ("bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64"):
         if sql.startswith("INSERT INTO public.table1 ("):return rewrite(sql,"qf_payload")

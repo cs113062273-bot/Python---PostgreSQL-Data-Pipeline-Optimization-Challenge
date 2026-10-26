@@ -11,7 +11,7 @@ from pipeline.planner import Table1PlannerMixin
 from pipeline.bulk_fks import BulkFKMixin
 from pipeline.bulk_indexes import BulkIndexMixin
 from pipeline.normalization import NormalizationMixin
-from pipeline.guarded_normalization import GuardedNormalizationMixin
+from pipeline.guarded_normalization import GuardedNormalizationMixin, MODES as GUARDED_MODES
 from pipeline.recipes import BULK_MODES, bulk_unique_tables
 from pipeline.recipes import destinations
 from pipeline.upstream import PostgresAdminService
@@ -22,7 +22,7 @@ from ui.dialogs import ExpansionTimingReportDialog
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database",default="lab_full_100k")
-    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64","bulk_normalize","bulk_normalize64","guarded_normalize"])
+    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64","bulk_normalize","bulk_normalize64","guarded_normalize","guarded_prefix"])
     parser.add_argument("--output",default="reports/local-service.json")
     parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     args=parser.parse_args()
@@ -40,7 +40,7 @@ def main():
     class Service(BulkFKMixin,BulkIndexMixin,GuardedNormalizationMixin,NormalizationMixin,Table1PlannerMixin,LocalService):
         capture_batch_sql=True
         bulk_foreign_keys=args.mode in BULK_MODES
-        guarded_normalization=args.mode=="guarded_normalize"
+        guarded_normalization=args.mode in GUARDED_MODES
         normalize_input=args.mode in ("bulk_normalize","bulk_normalize64")
         bulk_recipe_mode=args.mode
         bulk_unique_tables=bulk_unique_tables(args.mode)
@@ -53,7 +53,7 @@ def main():
     result=service.execute_cross_table_expansion(args.database,"public.raw_data",scopes,destinations(args.mode),timing_report=report)
     versions=service.register_cross_table_expansion_versions(result,"research","local-diagnostic",timing_report=report)
     wall=time.perf_counter()-started
-    if args.mode=='guarded_normalize':
+    if args.mode in GUARDED_MODES:
         import os
         with connect(os.environ.get('PDM_CONTROL_DB','postgres_data_manager'),autocommit=True) as control:
             history=control.execute("SELECT sql_recipe FROM app_control.table_versions WHERE database_name=%s AND version_code<>'0000'",(args.database,)).fetchall()

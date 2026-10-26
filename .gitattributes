@@ -1,7 +1,6 @@
 # Preserve the exact imported Windows export bytes and pinned vendor source.
 # This also keeps archive/clean-room hashes stable under core.autocrlf=true.
-app/** -text
-vendor/** -text
+/.gitattributes text eol=lf
 *.json text eol=lf
 *.md text eol=lf
 *.ps1 text eol=lf
@@ -9,3 +8,5 @@ pipeline/** text eol=lf
 bench/** text eol=lf
 tests/** text eol=lf
 scripts/*.py text eol=lf
+app/** -text
+vendor/** -text

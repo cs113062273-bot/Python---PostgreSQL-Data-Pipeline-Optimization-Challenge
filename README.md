@@ -8,7 +8,7 @@ This project contains measured SQL candidates, a six-table equivalence oracle,
 strict malformed-input differential fuzzing, and an experimental durable chunk
 runner with a recoverable control-database version saga. Research results are
 local diagnostics; no official score, winning placement or submission is claimed.
-See [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
+See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
 ## Install and launch
@@ -25,8 +25,12 @@ python -m venv .venv
 .venv/Scripts/python.exe launch.py --mode baseline
 ```
 
-`baseline` is the conservative default. `--mode path_table1`, `--mode
-path_array`, `--mode qf_lazy` and `--mode qf_lazy_path1` are explicit experiments,
+`baseline` is the conservative default. `--mode hash_array64` is the current
+semantics-tested experimental candidate: original table1 with a scoped Hash
+Join preference, eager immutable table2 arrays, and transaction-local work_mem
+64 MiB. It does not establish a statistically reliable lead over QueryFoundry.
+`--mode path_table1`, `--mode path_array`, `--mode qf_lazy` and
+`--mode qf_lazy_path1` are other explicit experiments,
 restricted to exact organizer recipes. The last two directly use the submitted
 QueryFoundry source and retain observed malformed-input semantic differences.
 The original preflight, counters, versioning, UI and dump implementation remain
@@ -51,15 +55,21 @@ $env:PGPORT='55432'
 $env:PGUSER='challenge'
 $env:CHALLENGE_PSQL=(Resolve-Path .runtime/postgresql/pgsql/bin/psql.exe).Path
 .venv/Scripts/python.exe app/generate_database.py --rows 100000 --host 127.0.0.1 --postgres-port 55432 --user challenge --psql $env:CHALLENGE_PSQL
-.venv/Scripts/python.exe -m bench.prepare --database lab_100k
-.venv/Scripts/python.exe -m bench.run --database lab_100k --repeats 3 --modes baseline path_table1 path_array lazy_keys --output reports/reproduced-100k.json
-.venv/Scripts/python.exe -m bench.profile --database lab_100k
+.venv/Scripts/python.exe -m bench.prepare --database lab_template_100k
+.venv/Scripts/python.exe -m bench.prepare --database lab_reference_100k
+.venv/Scripts/python.exe -m bench.reference --database lab_reference_100k
+.venv/Scripts/python.exe -m bench.fresh --template lab_template_100k --reference lab_reference_100k --repeats 3 --modes baseline qf_lazy hash_array64 --output reports/reproduced-100k.json
+.venv/Scripts/python.exe -m bench.profile --database lab_reference_100k --modes baseline qf_lazy hash_array64
 ```
 
 The generator refuses an existing target. To build another scale, preserve the
 existing generated database under another name or use a separate disposable
 cluster. Do not point replacement generation or diagnostics at a production DB.
-`bench.prepare` clones to a new database and refuses replacement. Destructive
+`bench.prepare` clones to a new database and refuses replacement. Every ranked
+diagnostic run uses a new clone, with no destination warmup or TRUNCATE first:
+TRUNCATE preserves column statistics and can make repeated runs incomparable.
+`bench.run` remains a historical same-database diagnostic harness, not the
+preferred controlled comparison. Destructive
 diagnostics require both a `lab_` name and a disposable marker. Benchmark SQL
 timings exclude oracle/reference work and are not MEASURED PROCESSING TOTAL.
 Exact SQL snapshots, stage times, settings, typed fingerprints and resource
@@ -83,12 +93,12 @@ Recovery tests seed initial clone lineage from an already-generated
 `kaggle_challenge` control store. Reports name each fixture and job UUID.
 
 For a full local organizer-service integration, create a fresh clone and run
-`python -m bench.service_run --database lab_full_100k`. This executes real
+`python -m bench.service_run --database lab_full_100k --mode hash_array64 --reference lab_reference_100k`. This executes real
 preflight, managed counters and all six version/dependency registrations. It
 substitutes local psql for SSH and labels its report accordingly.
 
 For checkpoint measurement, create another fresh clone and run
-`python -m bench.checkpoints --database lab_chunks_100k --chunk-rows 25000`.
+`python -m bench.checkpoints --database lab_chunks_100k --chunk-rows 25000 --reference lab_reference_100k`.
 The job UUID is saved before work; repeat the same command with `--job UUID`
 and identical arguments to resume. Full source rehashing and version finalization
 costs are included. Partial public outputs and the persistent fence require the

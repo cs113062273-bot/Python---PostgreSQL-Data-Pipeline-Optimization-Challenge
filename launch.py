@@ -8,13 +8,14 @@ from pipeline.planner import Table1PlannerMixin
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64"],default="baseline")
+    parser.add_argument("--mode",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo"],default="baseline")
     args=parser.parse_args()
     mode=args.mode
     originals={d["table_name"]:d["sql"].strip() for d in destinations()}
     class ExperimentalService(Table1PlannerMixin,PostgresAdminService):
-        table1_hash_join=mode in ("hash_table1","hash_array","qf_hash1","hash_array64")
-        expansion_work_mem="64MB" if mode=="hash_array64" else None
+        table1_hash_join=mode in ("hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo")
+        table2_memoize=mode!="hash_array64_nomemo"
+        expansion_work_mem="64MB" if mode in ("hash_array64","hash_array64_nomemo") else None
         def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,destinations,**kwargs):
             selected=[]
             for destination in destinations:

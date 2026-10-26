@@ -17,7 +17,7 @@ from ui.dialogs import ExpansionTimingReportDialog
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database",default="lab_full_100k")
-    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64"])
+    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo"])
     parser.add_argument("--output",default="reports/local-service.json")
     parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     args=parser.parse_args()
@@ -33,8 +33,9 @@ def main():
             conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
     seed_initial_versions(args.database)
     class Service(Table1PlannerMixin,LocalService):
-        table1_hash_join=args.mode in ("hash_table1","hash_array","qf_hash1","hash_array64")
-        expansion_work_mem="64MB" if args.mode=="hash_array64" else None
+        table1_hash_join=args.mode in ("hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo")
+        table2_memoize=args.mode!="hash_array64_nomemo"
+        expansion_work_mem="64MB" if args.mode in ("hash_array64","hash_array64_nomemo") else None
     service=Service()
     report=PostgresAdminService.create_cross_table_expansion_timing_report(args.database,"public.raw_data",scopes,[d["table_name"] for d in destinations()])
     started=time.perf_counter()

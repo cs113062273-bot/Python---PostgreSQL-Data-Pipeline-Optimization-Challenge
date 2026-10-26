@@ -22,11 +22,12 @@ def main():
     parser.add_argument("--chunk-rows",type=int,default=100000)
     parser.add_argument("--mode",choices=["baseline","path_once"],default="baseline")
     parser.add_argument("--output",default="reports/chunk-benchmark.json")
+    parser.add_argument("--reference",help="Separate existing oracle; no destination warmup in the job database")
     args=parser.parse_args();job=args.job or str(uuid.uuid4())
     with connect(args.database,autocommit=True) as conn:
         require_lab(conn);env=environment(conn)
         scopes=[r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")]
-        if not conn.execute("SELECT to_regclass('pipeline_recovery.jobs')").fetchone()[0]:
+        if not args.reference and not conn.execute("SELECT to_regclass('pipeline_recovery.jobs')").fetchone()[0]:
             execute(conn,"baseline",scopes);snapshot(conn)
             conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
         before=conn.execute("SELECT pg_database_size(current_database()),pg_current_wal_insert_lsn()").fetchone()
@@ -39,10 +40,16 @@ def main():
     versions=service.finalize_checkpoint_job(runner,args.database,job)
     seconds=time.perf_counter()-started
     with connect(args.database,autocommit=True) as conn:
-        assert_exact(conn)
+        if args.reference:
+            from bench.fresh import exact_to_reference
+            with connect(args.reference,autocommit=True) as reference:
+                require_lab(reference);exact_to_reference(conn,reference)
+        else:
+            assert_exact(conn)
         chunks=conn.execute("SELECT lo,hi,rows_inserted FROM pipeline_recovery.chunks WHERE job_id=%s ORDER BY lo",(job,)).fetchall()
         size,wal=conn.execute("SELECT pg_database_size(current_database()),pg_wal_lsn_diff(pg_current_wal_insert_lsn(),%s)::bigint",(before[1],)).fetchone()
     report={"kind":"local_chunk_end_to_end_wall","official_score":False,"job":job,"database":args.database,
+            "separate_reference":args.reference,"destination_warmup_before_job":not bool(args.reference),
             "timestamp_utc":datetime.now(timezone.utc).isoformat(),"environment":env,"chunk_rows":args.chunk_rows,"mode":args.mode,
             "seconds":seconds,"includes":["preflight","three full actual-content source fingerprints on fresh completion","checkpoint commits","output fingerprints","version saga","final integrity verification"],
             "excludes":["diagnostic reference construction","post-run EXCEPT ALL oracle","GUI refresh","SSH"],

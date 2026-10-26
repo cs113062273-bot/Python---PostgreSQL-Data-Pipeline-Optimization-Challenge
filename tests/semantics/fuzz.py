@@ -44,21 +44,27 @@ def cases(seed, count):
 def outcome(conn, statements, tables,mode=None,scopes=None):
     conn.execute("SAVEPOINT trial")
     try:
-        if mode=="hash_array64":
+        if mode in ("hash_array64","hash_array64_nomemo"):
             conn.execute("SET LOCAL work_mem='64MB'")
         if mode=="analyze_base" and len(statements)==1:
             conn.execute("ANALYZE public.table1")
         for statement in statements:
             original_mergejoin=None
-            if mode in ("hash_table1","qf_hash1","hash_array","hash_array64") and statement.startswith("INSERT INTO public.table1 "):
+            if mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo") and statement.startswith("INSERT INTO public.table1 "):
                 original_mergejoin=conn.execute("SHOW enable_mergejoin").fetchone()[0]
                 conn.execute("SET LOCAL enable_mergejoin=off")
+            original_memoize=None
+            if mode=="hash_array64_nomemo" and statement.startswith("INSERT INTO public.table2 "):
+                original_memoize=conn.execute("SHOW enable_memoize").fetchone()[0]
+                conn.execute("SET LOCAL enable_memoize=off")
             if mode=="guarded_qf" and statement.startswith("INSERT INTO public.table2"):
                 from pipeline.guards import choose
                 statement,_=choose(conn,statement,scopes)
             conn.execute(statement)
             if original_mergejoin is not None:
                 conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
+            if original_memoize is not None:
+                conn.execute("SELECT set_config('enable_memoize',%s,true)",(original_memoize,))
             maintained=("table3","table4","table1") if mode=="analyze_base" else ("table3","table4") if mode=="analyze_dims" else ()
             for table in maintained:
                 if statement.startswith(f"INSERT INTO public.{table} "):

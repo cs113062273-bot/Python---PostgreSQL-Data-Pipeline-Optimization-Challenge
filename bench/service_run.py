@@ -22,7 +22,7 @@ from ui.dialogs import ExpansionTimingReportDialog
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database",default="lab_full_100k")
-    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64","bulk_normalize","bulk_normalize64","guarded_normalize","guarded_prefix"])
+    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64","bulk_normalize","bulk_normalize64","guarded_normalize","guarded_prefix","guarded_parallel"])
     parser.add_argument("--output",default="reports/local-service.json")
     parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     args=parser.parse_args()

@@ -10,9 +10,9 @@ from psycopg.types.json import Jsonb
 from bench.common import connect, require_lab, write_report, environment
 from bench.fixture import create_fixture
 from bench.run import prepared, validate_functions
-from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, prepare_sql as prepare_guarded, fast_statement as guarded_statement, validation_destinations
+from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, PREFIX_MODES, prepare_sql as prepare_guarded, fast_statement as guarded_statement, validation_destinations
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
-from pipeline.recipes import MODES, ORDER, BULK_MODES, bulk_unique_tables
+from pipeline.recipes import MODES, ORDER, BULK_MODES, bulk_unique_tables,CTAS_MODES
 from tests.equivalence.oracle import canonical
 
 VALUES = [None, "", " ", " 2 ", "nope", "32768", "-32769", "-1", "-0.1", "1.2", "NaN",
@@ -74,6 +74,11 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             if unique_table:
                 from pipeline.bulk_indexes import prepare_mode_sql as prepare_index, restore_sql as restore_index
                 conn.execute(prepare_index(mode,unique_table))
+            ctas_cleanup=None
+            if mode in CTAS_MODES and guarded_safe:
+                from pipeline.parallel_normalization import materialize_statement
+                prep,statement,ctas_cleanup=materialize_statement(statement)
+                conn.execute(prep)
             original_mergejoin=None
             if mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo") and statement.startswith("INSERT INTO public.table1 "):
                 original_mergejoin=conn.execute("SHOW enable_mergejoin").fetchone()[0]
@@ -86,18 +91,20 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
                 from pipeline.guards import choose
                 statement,_=choose(conn,statement,scopes)
             conn.execute(statement)
-            if unique_table:conn.execute(restore_index(unique_table))
+            if ctas_cleanup:conn.execute(ctas_cleanup)
+            if unique_table:conn.execute(restore_index(unique_table,mode=mode))
             if original_mergejoin is not None:
                 conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
             if original_memoize is not None:
                 conn.execute("SELECT set_config('enable_memoize',%s,true)",(original_memoize,))
             maintained=("table3","table4","table1") if mode=="analyze_base" else ("table3","table4") if mode=="analyze_dims" else ()
-            if mode=='guarded_prefix' and guarded_safe:maintained=('table3','table4')
+            if mode in PREFIX_MODES and guarded_safe:maintained=('table3','table4')
             for table in maintained:
                 if statement.startswith(f"INSERT INTO public.{table} "):
                     conn.execute(f"ANALYZE public.{table}")
         if mode in BULK_MODES and len(statements)>1 and (mode not in GUARDED_MODES or guarded_safe):
             conn.execute(restore_sql())
+        if mode in CTAS_MODES:conn.execute('DROP TABLE challenge_lab.pipeline_normalized_input')
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name,"safe_domain":guarded_safe}
     except psycopg.Error as error:

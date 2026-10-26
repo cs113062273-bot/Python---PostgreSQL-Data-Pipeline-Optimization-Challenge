@@ -43,10 +43,11 @@ def prepare_primary_sql(table):
 
 
 def prepare_mode_sql(mode,table):
-    from pipeline.recipes import bulk_unique_tables
+    from pipeline.recipes import bulk_unique_tables,CTAS_MODES
     unique=prepare_sql(table) if table in bulk_unique_tables(mode) and table in ("table1","table2") else ""
-    primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix") else ""
-    return unique+"\n"+primary
+    primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix","guarded_parallel")+CTAS_MODES else ""
+    extra=(prepare_sql('table6') if table=='table6' else prepare_partial_sql() if table=='table5' else '') if mode=='lab_parallel_bulk' else ''
+    return unique+"\n"+extra+'\n'+primary
 
 
 def prepare_sql(table):
@@ -60,6 +61,10 @@ def prepare_sql(table):
         dimension_test="""IF (SELECT count(*) FROM pg_attribute WHERE attrelid='public.table3'::regclass
           AND attname IN ('text_column_1','text_column_2','text_column_3','text_column_4')
           AND atttypid='varchar'::regtype AND atttypmod=-1 AND attcollation='default'::regcollation)<>4 THEN PERFORM set_config('search_path',previous_path,true); RETURN; END IF;"""
+    elif table=='table6':
+        name='table6_id_column_2_id_column_3_key';columns='id_column_2, id_column_3';kinds=('int8_ops','int2_ops')
+        column_test="a.attname='id_column_3' AND a.atttypid='smallint'::regtype"
+        dimension_test=''
     else:raise ValueError(table)
     opclasses=" AND ".join(f"i.indclass[{n}]=(SELECT oid FROM pg_opclass WHERE opcnamespace='pg_catalog'::regnamespace AND opcname='{kind}' AND opcmethod=(SELECT oid FROM pg_am WHERE amname='btree'))" for n,kind in enumerate(kinds))
     return f"""DO $index_prepare$ DECLARE item record; previous_path text:=pg_catalog.current_setting('search_path'); BEGIN
@@ -83,9 +88,34 @@ def prepare_sql(table):
     END $index_prepare$;"""
 
 
-def restore_sql(table):
+def prepare_partial_sql():
+    # Exactly one qualifying source row per unique parent; canonical table5
+    # always projects id_column_3=NULL. Keep the unrelated non-null index.
+    return """DO $partial_prepare$ DECLARE item record; previous_path text:=pg_catalog.current_setting('search_path'); BEGIN
+      PERFORM pg_catalog.set_config('search_path','pg_catalog',true);
+      SELECT x.relname,pg_get_indexdef(x.oid) AS definition INTO item
+      FROM pg_index i JOIN pg_class x ON x.oid=i.indexrelid JOIN pg_am am ON am.oid=x.relam
+      WHERE i.indrelid='public.table5'::regclass AND x.relnamespace='public'::regnamespace
+        AND x.relname='table5_id_column_2_when_id_column_3_null_key' AND x.relkind='i' AND am.amname='btree'
+        AND i.indisunique AND i.indisvalid AND i.indisready AND NOT i.indisprimary
+        AND NOT i.indisclustered AND NOT i.indisreplident AND NOT i.indnullsnotdistinct
+        AND i.indnkeyatts=1 AND i.indnatts=1 AND i.indexprs IS NULL
+        AND i.indkey[0]=(SELECT attnum FROM pg_attribute WHERE attrelid=i.indrelid AND attname='id_column_2' AND atttypid='bigint'::regtype)
+        AND i.indclass[0]=(SELECT oid FROM pg_opclass WHERE opcnamespace='pg_catalog'::regnamespace AND opcname='int8_ops' AND opcmethod=x.relam)
+        AND x.reloptions IS NULL AND x.reltablespace=0
+        AND pg_get_expr(i.indpred,i.indrelid)='(id_column_3 IS NULL)'
+        AND NOT EXISTS(SELECT 1 FROM pg_constraint WHERE conindid=x.oid);
+      IF item.relname IS NULL OR item.definition<>'CREATE UNIQUE INDEX table5_id_column_2_when_id_column_3_null_key ON public.table5 USING btree (id_column_2) WHERE (id_column_3 IS NULL)' THEN PERFORM pg_catalog.set_config('search_path',previous_path,true); RETURN; END IF;
+      CREATE TEMP TABLE IF NOT EXISTS pipeline_bulk_partial_indexes(table_name text,index_name text,definition text) ON COMMIT DROP;
+      INSERT INTO pg_temp.pipeline_bulk_partial_indexes VALUES('table5',item.relname,item.definition);
+      DROP INDEX public.table5_id_column_2_when_id_column_3_null_key;
+      PERFORM pg_catalog.set_config('search_path',previous_path,true);
+    END $partial_prepare$;"""
+
+
+def restore_sql(table,*,mode=None):
     if table not in ("table1","table2","table5","table6"):raise ValueError(table)
-    return f"""DO $index_restore$ DECLARE item record; previous_path text:=pg_catalog.current_setting('search_path'); previous_memory text:=pg_catalog.current_setting('maintenance_work_mem'); BEGIN
+    result=f"""DO $index_restore$ DECLARE item record; previous_path text:=pg_catalog.current_setting('search_path'); previous_memory text:=pg_catalog.current_setting('maintenance_work_mem'); BEGIN
       PERFORM pg_catalog.set_config('search_path','pg_catalog',true);
       IF to_regclass('pg_temp.pipeline_bulk_unique_keys') IS NULL THEN PERFORM set_config('search_path',previous_path,true); RETURN; END IF;
       PERFORM set_config('maintenance_work_mem','128MB',true);
@@ -96,6 +126,17 @@ def restore_sql(table):
       PERFORM set_config('maintenance_work_mem',previous_memory,true);
       PERFORM set_config('search_path',previous_path,true);
     END $index_restore$;"""
+    if table=='table5' and mode=='lab_parallel_bulk':
+        result+='\n'+"""DO $partial_restore$ DECLARE item record; previous_memory text:=pg_catalog.current_setting('maintenance_work_mem'); BEGIN
+          IF to_regclass('pg_temp.pipeline_bulk_partial_indexes') IS NULL THEN RETURN; END IF;
+          PERFORM pg_catalog.set_config('maintenance_work_mem','128MB',true);
+          FOR item IN SELECT * FROM pg_temp.pipeline_bulk_partial_indexes WHERE table_name='table5' LOOP
+            EXECUTE item.definition;
+            DELETE FROM pg_temp.pipeline_bulk_partial_indexes WHERE index_name=item.index_name;
+          END LOOP;
+          PERFORM pg_catalog.set_config('maintenance_work_mem',previous_memory,true);
+        END $partial_restore$;"""
+    return result
 
 
 class BulkIndexMixin:

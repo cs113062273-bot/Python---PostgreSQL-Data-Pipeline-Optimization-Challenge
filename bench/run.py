@@ -10,12 +10,14 @@ import statistics
 import time
 import threading
 import psutil
+from psycopg import Error as DatabaseError
 
 from bench.common import ROOT, connect, environment, require_lab, write_report
-from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, prepare_sql as prepare_guarded, conditional_sql, insert_sql as guarded_insert, fast_statement as guarded_statement, validation_destinations
+from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, PREFIX_MODES, prepare_sql as prepare_guarded, conditional_sql, insert_sql as guarded_insert, fast_statement as guarded_statement, validation_destinations
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
-from pipeline.recipes import MODES, ORDER, destinations, BULK_MODES, bulk_unique_tables
+from pipeline.recipes import MODES, ORDER, destinations, BULK_MODES, bulk_unique_tables,CTAS_MODES
 from pipeline.upstream import PostgresAdminService
+from pipeline.parallel_normalization import materialize_statement
 from tests.equivalence.oracle import (assert_exact, assert_relationships, fingerprints,
                                       schema_signature, snapshot)
 
@@ -77,10 +79,16 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
             table=d["pure_table_name"]
             if table in bulk_unique_tables(mode):strategy.append(conditional_sql(prepare_mode_sql(mode,table)) if mode in GUARDED_MODES else prepare_mode_sql(mode,table))
             if mode in NORMALIZATION_MODES and table=="table1":strategy.append(normalize_sql(scopes))
-            strategy.extend(("DO $guarded_insert$ BEGIN\n"+guarded_insert(s,scopes,mode)+"; END $guarded_insert$;" if mode in GUARDED_MODES else (normalized_statement(s,scopes) if mode in NORMALIZATION_MODES else s)+";") for s in d["statements"])
-            if mode=='guarded_prefix' and table in ('table3','table4'):strategy.append(conditional_sql('ANALYZE public.'+table+';'))
-            if table in bulk_unique_tables(mode):strategy.append(conditional_sql(index_restore(table)) if mode in GUARDED_MODES else index_restore(table))
-        strategy.extend([conditional_sql(fk_restore()) if mode in GUARDED_MODES else fk_restore(),"COMMIT;"])
+            for s in d['statements']:
+                if mode in CTAS_MODES:
+                    prep,load,cleanup=materialize_statement(guarded_statement(s,scopes,mode))
+                    strategy.append("DO $lab_ctas$ BEGIN IF (SELECT safe FROM pg_temp.pipeline_normalization_domain) THEN\n"+prep+'\n'+load+';\n'+cleanup+'\nELSE\n'+s+';\nEND IF; END $lab_ctas$;')
+                else:strategy.append("DO $guarded_insert$ BEGIN\n"+guarded_insert(s,scopes,mode)+"; END $guarded_insert$;" if mode in GUARDED_MODES else (normalized_statement(s,scopes) if mode in NORMALIZATION_MODES else s)+";")
+            if mode in PREFIX_MODES and table in ('table3','table4'):strategy.append(conditional_sql('ANALYZE public.'+table+';'))
+            if table in bulk_unique_tables(mode):strategy.append(conditional_sql(index_restore(table,mode=mode)) if mode in GUARDED_MODES else index_restore(table,mode=mode))
+        strategy.append(conditional_sql(fk_restore()) if mode in GUARDED_MODES else fk_restore())
+        if mode in CTAS_MODES:strategy.append('DROP TABLE challenge_lab.pipeline_normalized_input;')
+        strategy.append('COMMIT;')
         strategy_sql="\n\n".join(strategy)
         strategy_sha256=hashlib.sha256(strategy_sql.encode()).hexdigest()
         (sql_path.parent/(strategy_sha256+".sql")).write_text(strategy_sql,encoding="utf-8")
@@ -99,6 +107,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
     stop = threading.Event()
     pid = conn.info.backend_pid
     def monitor():
+        observer=None
         try:
             if conn.info.host not in ("127.0.0.1", "localhost", "::1"):
                 sample["backend_rss_peak_bytes"] = None
@@ -108,14 +117,39 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                 sample["backend_rss_peak_bytes"] = None
                 return
             cpu_before=backend.cpu_times()
+            observed={}
+            observer=connect(conn.info.dbname,autocommit=True)
+            next_worker_sample=0.0
+            sample['parallel_workers_peak_sampled']=0
+            sample['backend_and_worker_rss_sum_peak_bytes']=0
             while not stop.is_set():
                 sample["backend_rss_peak_bytes"] = max(sample["backend_rss_peak_bytes"], backend.memory_info().rss)
                 sample["application_rss_peak_bytes"] = max(sample["application_rss_peak_bytes"], psutil.Process().memory_info().rss)
+                if time.monotonic()>=next_worker_sample:
+                    worker_pids=[r[0] for r in observer.execute('SELECT pid FROM pg_stat_activity WHERE leader_pid=%s',(pid,))]
+                    sample['parallel_workers_peak_sampled']=max(sample['parallel_workers_peak_sampled'],len(worker_pids))
+                    rss_sum=backend.memory_info().rss
+                    for worker_pid in worker_pids:
+                        try:
+                            worker=psutil.Process(worker_pid)
+                            if 'postgres' not in worker.name().lower():continue
+                            cpu=worker.cpu_times()
+                            observed[(worker_pid,worker.create_time())]=cpu.user+cpu.system
+                            rss_sum+=worker.memory_info().rss
+                        except psutil.Error:pass
+                    sample['backend_and_worker_rss_sum_peak_bytes']=max(sample['backend_and_worker_rss_sum_peak_bytes'],rss_sum)
+                    next_worker_sample=time.monotonic()+0.2
                 stop.wait(0.05)
+            observer.close()
+            sample['parallel_worker_cpu_seconds_sampled_lower_bound']=sum(observed.values())
+            sample['parallel_worker_resource_scope']='200ms worker sampling; CPU is a lower bound because workers exit between samples; summed RSS double-counts shared mappings; backend CPU excludes workers'
             cpu_after=backend.cpu_times()
             sample['backend_cpu_seconds_including_commit']=cpu_after.user+cpu_after.system-cpu_before.user-cpu_before.system
-        except (psutil.Error, OSError):
+        except (psutil.Error, OSError, DatabaseError) as error:
             sample["backend_rss_peak_bytes"] = None
+            sample['monitor_error']=type(error).__name__
+        finally:
+            if observer is not None:observer.close()
     watcher = threading.Thread(target=monitor, daemon=True)
     watcher.start()
     try:
@@ -145,6 +179,10 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                 if unique_table in bulk_unique_tables(mode) and (mode not in GUARDED_MODES or guarded_safe):
                     from pipeline.bulk_indexes import prepare_mode_sql as prepare_index, restore_sql as restore_index
                     conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_index(mode,unique_table)+" INSERT INTO diagnostic_timing VALUES('bulk_unique_prepare_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
+                ctas_cleanup=None
+                if mode in CTAS_MODES and guarded_safe and name!='source_manifest':
+                    ctas_prepare,statement,ctas_cleanup=materialize_statement(statement)
+                    conn.execute("DO $ctas_timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+ctas_prepare+" INSERT INTO diagnostic_timing VALUES('parallel_transform_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $ctas_timer$;")
                 original_mergejoin=None
                 if mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo") and name=="public.table1":
                     original_mergejoin=conn.execute("SHOW enable_mergejoin").fetchone()[0]
@@ -167,18 +205,22 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                     body = statement.strip().rstrip(";")
                     conn.execute("DO $diag$ DECLARE started timestamptz := clock_timestamp(); affected bigint; BEGIN " + body +
                         "; GET DIAGNOSTICS affected = ROW_COUNT; INSERT INTO diagnostic_timing VALUES ('" + name + "', EXTRACT(EPOCH FROM clock_timestamp()-started), affected); END $diag$;")
+                if ctas_cleanup:
+                    conn.execute("DO $ctas_drop$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+ctas_cleanup+" INSERT INTO diagnostic_timing VALUES('ctas_cleanup_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $ctas_drop$;")
                 if unique_table in bulk_unique_tables(mode) and (mode not in GUARDED_MODES or guarded_safe):
-                    conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_index(unique_table)+" INSERT INTO diagnostic_timing VALUES('bulk_unique_restore_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
+                    conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_index(unique_table,mode=mode)+" INSERT INTO diagnostic_timing VALUES('bulk_unique_restore_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
                 if original_mergejoin is not None:
                     conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
                 if original_memoize is not None:
                     conn.execute("SELECT set_config('enable_memoize',%s,true)",(original_memoize,))
                 maintained=("public.table3","public.table4","public.table1") if mode=="analyze_base" else ("public.table3","public.table4") if mode=="analyze_dims" else ()
-                if mode=='guarded_prefix' and guarded_safe:maintained=('public.table3','public.table4')
+                if mode in PREFIX_MODES and guarded_safe:maintained=('public.table3','public.table4')
                 if name in maintained:
                     conn.execute("DO $stats$ DECLARE started timestamptz:=clock_timestamp(); BEGIN ANALYZE "+name+"; INSERT INTO diagnostic_timing VALUES ('analyze_"+name+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stats$;")
             if mode in BULK_MODES and (mode not in GUARDED_MODES or guarded_safe):
                 conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_sql()+" INSERT INTO diagnostic_timing VALUES('bulk_fk_restore_validate',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
+            if mode in CTAS_MODES:
+                conn.execute("DO $stage_drop$ DECLARE started timestamptz:=clock_timestamp(); BEGIN DROP TABLE challenge_lab.pipeline_normalized_input; INSERT INTO diagnostic_timing VALUES('logged_stage_cleanup',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stage_drop$;")
             timing = conn.execute("SELECT stage,seconds,rows FROM diagnostic_timing").fetchall()
             conn.execute("SELECT pg_stat_force_next_flush()")
             before_commit = time.perf_counter()

@@ -8,12 +8,13 @@ from datetime import datetime,timezone
 import json
 import statistics
 import uuid
+import hashlib
 import psutil
 from psycopg import sql
 
 from bench.common import connect,environment,require_lab,write_report
 from bench.run import execute
-from pipeline.recipes import MODES,ORDER
+from pipeline.recipes import MODES,ORDER,compiler_sha256,ROOT
 from tests.equivalence.oracle import canonical,fingerprints,schema_signature,assert_relationships
 
 
@@ -58,9 +59,13 @@ def main():
     parser.add_argument("--order",choices=['latin','alternating'],default='latin')
     args=parser.parse_args()
     if not args.template.startswith("lab_"):parser.error("Use a preserved lab_ source template")
+    def implementation_identity():
+        return {'compiler_sha256':compiler_sha256(),**{name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in ('bench/run.py','bench/fresh.py')}}
+    implementation=implementation_identity()
     report={"kind":"fresh_database_per_run_sql_diagnostic","official_score":False,"template":args.template,
             "clone_strategy":args.clone_strategy,"measured_backend_cpu_affinity":args.cpu_affinity,"order":args.order,
             "reference":args.reference,"timestamp_utc":datetime.now(timezone.utc).isoformat(),"runs":[],
+            "implementation_identity":implementation,
             "method":"new database clone for each run; no destination warmup/TRUNCATE; typed fingerprints each run; central bidirectional EXCEPT ALL once per mode after timing",
             "exclusions":["clone","oracle","full preflight/counters/versions/GUI/SSH","locks","commit latency (reported separately)"]}
     with connect(args.reference,autocommit=True) as reference:
@@ -74,6 +79,7 @@ def main():
             shift=repeat%len(args.modes)
             modes=args.modes[shift:]+args.modes[:shift] if args.order=='latin' else args.modes if repeat%2==0 else list(reversed(args.modes))
             for mode in modes:
+                if implementation_identity()!=implementation:raise RuntimeError('Implementation changed during a benchmark cohort; stop and rerun with fixed source')
                 database="lab_fresh_"+uuid.uuid4().hex[:10]
                 with connect("postgres",autocommit=True) as admin:
                     admin.execute(sql.SQL("CREATE DATABASE {} TEMPLATE {} STRATEGY "+args.clone_strategy).format(sql.Identifier(database),sql.Identifier(args.template)))
@@ -89,6 +95,7 @@ def main():
                     if any(n!=-1 or count!=0 for _,n,count in stats):
                         raise RuntimeError("Template destinations are not in original unanalyzed empty state")
                     result=execute(conn,mode,scopes,reset_destinations=False)
+                    if implementation_identity()!=implementation:raise RuntimeError('Implementation changed during timed execution; discard this cohort')
                     print(f"fresh {repeat+1}: {mode}: SQL stages {result['sql_seconds']:.4f}s; verification pending",flush=True)
                     assert schema_signature(conn)==before
                     assert_relationships(conn)

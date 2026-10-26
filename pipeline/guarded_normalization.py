@@ -3,12 +3,13 @@ import time
 import re
 import hashlib
 from pipeline.normalization import prepare_sql as normalize_sql,rewrite
-from pipeline.recipes import EXTRACT,compiler_sha256,ORDER
+from pipeline.recipes import EXTRACT,compiler_sha256,ORDER,CTAS_MODES
 from pipeline.safe_domain import gate_sql
 from pipeline.bulk_fks import instrument
 
 MODE="guarded_normalize"
-MODES=(MODE,'guarded_prefix')
+PREFIX_MODES=('guarded_prefix','guarded_parallel')+CTAS_MODES
+MODES=(MODE,)+PREFIX_MODES
 EXTRA_DATA_FUNCTIONS=('bool_and','textcat','textregexeq','substr','octet_length','replace','array_remove','unnest')
 
 
@@ -21,6 +22,10 @@ def conditional_sql(sql):
 
 
 def prepare_sql(scopes,mode=MODE):
+    if mode in ('guarded_parallel',)+CTAS_MODES:
+        from pipeline.parallel_normalization import prepare_sql as parallel_sql
+        relation='challenge_lab.pipeline_normalized_input' if mode in CTAS_MODES else 'pg_temp.pipeline_normalized_input'
+        return parallel_sql(scopes,logged=mode in CTAS_MODES)+'\n'+conditional_sql("PERFORM pg_catalog.set_config('work_mem','64MB',true); ANALYZE "+relation+"(raw_id,text_column_1,text_column_2,text_column_3);")
     empty=" AND ".join(f'NOT EXISTS(SELECT 1 FROM public.{table})' for table in ORDER)
     domain="CREATE TEMP TABLE pipeline_normalization_domain ON COMMIT DROP AS SELECT g.safe AND "+empty+" AS safe FROM ("+gate_sql()+") g;"
     index="CREATE INDEX pipeline_normalized_input_raw_id_idx ON pg_temp.pipeline_normalized_input(raw_id);" if mode!= 'guarded_prefix' else ''
@@ -33,9 +38,17 @@ def prepare_sql(scopes,mode=MODE):
 
 
 def fast_statement(statement,scopes,mode=MODE):
+    if mode in CTAS_MODES:
+        result=fast_statement(statement,scopes,'guarded_prefix').replace('pg_temp.pipeline_normalized_input','challenge_lab.pipeline_normalized_input')
+        if mode=='lab_parallel_bulk' and statement.startswith('INSERT INTO public.table2 ('):
+            start='CROSS JOIN LATERAL (SELECT position_number FROM pg_catalog.unnest('
+            end=') AS expanded(position_number) OFFSET 0) AS position_keys'
+            if result.count(start)!=1 or result.count(end)!=1:raise RuntimeError('Unknown position barrier')
+            result=result.replace(start,'CROSS JOIN LATERAL pg_catalog.unnest(',1).replace(end,') AS position_keys(position_number)',1)
+        return result
     result=rewrite(statement,scopes,all_tables=True)
     if not statement.startswith('INSERT INTO public.table2 ('):return result
-    if mode=='guarded_prefix':
+    if mode in PREFIX_MODES:
         parent=re.search(r'JOIN public\.table1 AS main_row\s+ON main_row\.id_column_3 = source_row\.raw_id',result)
         anchor='FROM pg_temp.pipeline_normalized_input AS source_row'
         if not parent or result.count(anchor)!=1:raise RuntimeError('Unknown protected parent join')
@@ -53,7 +66,7 @@ def fast_statement(statement,scopes,mode=MODE):
     # The barrier keeps numeric/type filters outside this subquery. Memoize can
     # then key solely on declared positions, rather than each unique payload.
     positions="pg_catalog.array_remove(ARRAY["+",".join(matches)+"],NULL::smallint)"
-    if mode=='guarded_prefix':
+    if mode in PREFIX_MODES:
         # table1.integer_column_1 is the original GREATEST of all 14 declared
         # positions, built earlier in this exact, initially empty six-table
         # transaction. Any matching positive position is <= that maximum.
@@ -79,6 +92,8 @@ class GuardedNormalizationMixin:
     capture_batch_sql=False
 
     def execute_cross_table_expansion(self,*args,**kwargs):
+        if self.guarded_normalization and self.bulk_recipe_mode in CTAS_MODES:
+            raise RuntimeError('Lab-only CTAS architecture requires bench.run; native counter/version integration is not qualified')
         result=super().execute_cross_table_expansion(*args,**kwargs)
         if self.guarded_normalization:
             started=time.thread_time()
@@ -118,7 +133,7 @@ class GuardedNormalizationMixin:
                     timing_stage='execute',timing_name=f"Insert into {d['table_name']} (statement 1)",timing_destination=d['table_name'],timing_statement_index=1)
                 if text.count(managed)!=1 or managed.count(statement)!=1:raise RuntimeError('Unknown guarded normalization DML boundary')
                 replacement=managed.replace(statement,insert_sql(statement,scopes,self.bulk_recipe_mode),1)
-                if self.bulk_recipe_mode=='guarded_prefix' and d['pure_table_name'] in ('table3','table4'):
+                if self.bulk_recipe_mode in PREFIX_MODES and d['pure_table_name'] in ('table3','table4'):
                     table=d['pure_table_name']
                     replacement+='\n'+instrument(conditional_sql('ANALYZE public.'+table+';'),300+int(table[-1]),'Analyze fresh '+table+' dimension')
                 text=text.replace(managed,replacement,1)

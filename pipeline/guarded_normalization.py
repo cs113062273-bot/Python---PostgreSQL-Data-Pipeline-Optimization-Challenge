@@ -3,7 +3,7 @@ import time
 import re
 import hashlib
 from pipeline.normalization import prepare_sql as normalize_sql,rewrite
-from pipeline.recipes import EXTRACT,compiler_sha256
+from pipeline.recipes import EXTRACT,compiler_sha256,ORDER
 from pipeline.safe_domain import gate_sql
 from pipeline.bulk_fks import instrument
 
@@ -21,10 +21,14 @@ def conditional_sql(sql):
 
 
 def prepare_sql(scopes,mode=MODE):
-    return normalize_sql(scopes,all_tables=True,defer_index=True)+"\n"+"""CREATE TEMP TABLE pipeline_normalization_domain ON COMMIT DROP AS """+gate_sql()+";\n"+conditional_sql("""
+    empty=" AND ".join(f'NOT EXISTS(SELECT 1 FROM public.{table})' for table in ORDER)
+    domain="CREATE TEMP TABLE pipeline_normalization_domain ON COMMIT DROP AS SELECT g.safe AND "+empty+" AS safe FROM ("+gate_sql()+") g;"
+    index="CREATE INDEX pipeline_normalized_input_raw_id_idx ON pg_temp.pipeline_normalized_input(raw_id);" if mode!= 'guarded_prefix' else ''
+    analyzed='raw_id,text_column_1,text_column_2,text_column_3'
+    if mode!='guarded_prefix':analyzed+=','+','.join(f'integer_column_{n}' for n in range(2,16))
+    return normalize_sql(scopes,all_tables=True,defer_index=True)+"\n"+domain+"\n"+conditional_sql("""
       PERFORM pg_catalog.set_config('work_mem','64MB',true);
-      CREATE INDEX pipeline_normalized_input_raw_id_idx ON pg_temp.pipeline_normalized_input(raw_id);
-      ANALYZE pg_temp.pipeline_normalized_input(raw_id,text_column_1,text_column_2,text_column_3,"""+",".join(f'integer_column_{n}' for n in range(2,16))+""");
+      """+index+"\nANALYZE pg_temp.pipeline_normalized_input("+analyzed+""");
     """)
 
 
@@ -82,7 +86,9 @@ class GuardedNormalizationMixin:
             result['execution_architecture']={'mode':mode,'compiler_sha256':compiler_sha256(),
                 'batch_sql_sha256':getattr(self._expansion_timing_local,'guarded_batch_sha256',None)}
             architecture=result['execution_architecture']
-            provenance='\n\n-- pipeline '+mode+'_v1 compiler_sha256='+architecture['compiler_sha256']+' batch_sql_sha256='+architecture['batch_sql_sha256']
+            decisions=[item.get('rows') for item in (result.get('timing_report') or {}).get('items',[]) if item.get('name')=='Build TEXT input and prove safe cast domain']
+            architecture['safe_domain']=bool(decisions[0]) if len(decisions)==1 and decisions[0] in (0,1) else None
+            provenance='\n\n-- pipeline '+mode+'_v1 compiler_sha256='+architecture['compiler_sha256']+' batch_sql_sha256='+architecture['batch_sql_sha256']+' safe_domain='+str(architecture['safe_domain']).lower()
             for destination in result['destinations']:
                 # The canonical recipe remains replayable by the original app;
                 # persist the exact compiler/batch identity in version history.
@@ -104,13 +110,18 @@ class GuardedNormalizationMixin:
             scopes=selection['raw_schemas']
             marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES\n      (4,'bulk_load'"
             if text.count(marker)!=1:raise RuntimeError('Unknown bulk domain boundary')
-            text=text.replace(marker,instrument(prepare_sql(scopes,self.bulk_recipe_mode),5,'Build TEXT input and prove safe cast domain')+'\n'+marker,1)
+            proof_sql=prepare_sql(scopes,self.bulk_recipe_mode)+"\nUPDATE pg_temp.pgdm_expansion_timings SET rows_affected=(SELECT safe::integer FROM pg_temp.pipeline_normalization_domain) WHERE sequence_number=5;"
+            text=text.replace(marker,instrument(proof_sql,5,'Build TEXT input and prove safe cast domain')+'\n'+marker,1)
             for position,d in enumerate(selection['destinations']):
                 statement=d['statements'][0]
                 managed=self._build_managed_dml_sql(statement,d['schema_name'],d['pure_table_name'],'add',timing_sequence=10+position,
                     timing_stage='execute',timing_name=f"Insert into {d['table_name']} (statement 1)",timing_destination=d['table_name'],timing_statement_index=1)
                 if text.count(managed)!=1 or managed.count(statement)!=1:raise RuntimeError('Unknown guarded normalization DML boundary')
-                text=text.replace(managed,managed.replace(statement,insert_sql(statement,scopes,self.bulk_recipe_mode),1),1)
+                replacement=managed.replace(statement,insert_sql(statement,scopes,self.bulk_recipe_mode),1)
+                if self.bulk_recipe_mode=='guarded_prefix' and d['pure_table_name'] in ('table3','table4'):
+                    table=d['pure_table_name']
+                    replacement+='\n'+instrument(conditional_sql('ANALYZE public.'+table+';'),300+int(table[-1]),'Analyze fresh '+table+' dimension')
+                text=text.replace(managed,replacement,1)
             kwargs['stdin_text']=text
             self._expansion_timing_local.guarded_batch_sha256=hashlib.sha256(text.encode()).hexdigest()
             if self.capture_batch_sql:

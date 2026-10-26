@@ -92,6 +92,7 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             if original_memoize is not None:
                 conn.execute("SELECT set_config('enable_memoize',%s,true)",(original_memoize,))
             maintained=("table3","table4","table1") if mode=="analyze_base" else ("table3","table4") if mode=="analyze_dims" else ()
+            if mode=='guarded_prefix' and guarded_safe:maintained=('table3','table4')
             for table in maintained:
                 if statement.startswith(f"INSERT INTO public.{table} "):
                     conn.execute(f"ANALYZE public.{table}")
@@ -137,10 +138,6 @@ def main():
         raw_id, original = conn.execute("SELECT raw_id,raw FROM public.raw_data ORDER BY raw_id LIMIT 1").fetchone()
         for scope in ("table2_only", "full_pipeline"):
             active_sqls=sqls
-            if scope=='table2_only' and 'guarded_prefix' in args.modes:
-                report['skipped_scopes'].append({'mode':'guarded_prefix','scope':scope,'reason':'Requires the enforced exact six-table, initially empty transaction: parent GREATEST must derive from current protected input; a seeded stale parent is outside that API contract'})
-                active_sqls={mode:ds for mode,ds in sqls.items() if mode!='guarded_prefix'}
-                if len(active_sqls)==1:continue
             for index, case in enumerate(cases(args.seed, args.count)):
                 with conn.transaction(force_rollback=True):
                     for key, value in SETTINGS[case.get("settings",0)].items():

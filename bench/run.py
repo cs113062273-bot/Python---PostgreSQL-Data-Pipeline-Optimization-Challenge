@@ -78,6 +78,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
             if table in bulk_unique_tables(mode):strategy.append(conditional_sql(prepare_mode_sql(mode,table)) if mode in GUARDED_MODES else prepare_mode_sql(mode,table))
             if mode in NORMALIZATION_MODES and table=="table1":strategy.append(normalize_sql(scopes))
             strategy.extend(("DO $guarded_insert$ BEGIN\n"+guarded_insert(s,scopes,mode)+"; END $guarded_insert$;" if mode in GUARDED_MODES else (normalized_statement(s,scopes) if mode in NORMALIZATION_MODES else s)+";") for s in d["statements"])
+            if mode=='guarded_prefix' and table in ('table3','table4'):strategy.append(conditional_sql('ANALYZE public.'+table+';'))
             if table in bulk_unique_tables(mode):strategy.append(conditional_sql(index_restore(table)) if mode in GUARDED_MODES else index_restore(table))
         strategy.extend([conditional_sql(fk_restore()) if mode in GUARDED_MODES else fk_restore(),"COMMIT;"])
         strategy_sql="\n\n".join(strategy)
@@ -173,6 +174,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                 if original_memoize is not None:
                     conn.execute("SELECT set_config('enable_memoize',%s,true)",(original_memoize,))
                 maintained=("public.table3","public.table4","public.table1") if mode=="analyze_base" else ("public.table3","public.table4") if mode=="analyze_dims" else ()
+                if mode=='guarded_prefix' and guarded_safe:maintained=('public.table3','public.table4')
                 if name in maintained:
                     conn.execute("DO $stats$ DECLARE started timestamptz:=clock_timestamp(); BEGIN ANALYZE "+name+"; INSERT INTO diagnostic_timing VALUES ('analyze_"+name+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stats$;")
             if mode in BULK_MODES and (mode not in GUARDED_MODES or guarded_safe):

@@ -63,6 +63,7 @@ def main():
                             if table in bulk_unique_tables(args.mode):
                                 victim.execute(prepare_index(args.mode,table));inject(f"after_{table}_index_drop")
                             for statement in d["statements"]:victim.execute(guarded_statement(statement,scopes,args.mode) if args.mode in GUARDED_MODES else normalized_statement(statement,scopes) if args.mode in NORMALIZATION_MODES else statement)
+                            if args.mode=='guarded_prefix' and table in ('table3','table4'):victim.execute('ANALYZE public.'+table)
                             inject(f"after_{table}_insert")
                             if table in bulk_unique_tables(args.mode):
                                 victim.execute(restore_index(table));inject(f"after_{table}_index_restore")

@@ -73,6 +73,7 @@ def main():
                     if table in bulk_unique_tables(MODE):victim.execute(prepare_mode_sql(MODE,table))
                     for statement in d['statements']:
                         victim.execute(PostgresAdminService._build_managed_dml_sql(insert_sql(statement,scopes,MODE),'public',table,'add'))
+                    if MODE=='guarded_prefix' and table in ('table3','table4'):victim.execute('ANALYZE public.'+table)
                     if table in bulk_unique_tables(MODE):victim.execute(restore_indexes(table))
                 ready.set()
                 victim.execute('SELECT pg_sleep(600)')

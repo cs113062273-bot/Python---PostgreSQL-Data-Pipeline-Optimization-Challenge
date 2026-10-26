@@ -33,3 +33,10 @@ def test_array_experiment_is_table2_only():
     for baseline,candidate in zip(destinations(),destinations("array_values")):
         if baseline["table_name"]!="public.table2":
             assert baseline["sql"]==candidate["sql"]
+
+
+def test_direct_queryfoundry_control_uses_pinned_original():
+    from vendor.queryfoundry_recipes import rewrite as original
+    for baseline,lazy,payload in zip(destinations(),destinations("qf_lazy"),destinations("qf_payload")):
+        assert lazy["sql"]==original(baseline["sql"],"lazy_keys")
+        assert payload["sql"]==original(baseline["sql"],"payload_once")

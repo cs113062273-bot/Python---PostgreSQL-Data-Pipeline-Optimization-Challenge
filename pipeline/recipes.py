@@ -11,7 +11,8 @@ ORDER = ("table3", "table4", "table1", "table5", "table6", "table2")
 ANCHOR = "FROM {{source}} AS source_row"
 EXTRACT = re.compile(r"source_row\.raw\s*->\s*'values'\s*->>\s*'([a-z_]+\d+)'")
 MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
-         "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array")
+         "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array",
+         "qf_payload", "qf_lazy", "qf_lazy_path1")
 
 
 def rewrite(sql, mode):
@@ -19,6 +20,11 @@ def rewrite(sql, mode):
         raise ValueError(f"Unknown recipe mode: {mode}")
     if mode == "baseline":
         return sql
+    if mode in ("qf_payload","qf_lazy","qf_lazy_path1","lazy_keys"):
+        from vendor.queryfoundry_recipes import rewrite as original_queryfoundry
+        if mode=="qf_lazy_path1" and sql.startswith("INSERT INTO public.table1 ("):
+            return rewrite(sql,"path_once")
+        return original_queryfoundry(sql,"payload_once" if mode=="qf_payload" else "lazy_keys")
     if mode == "path_table1":
         return rewrite(sql,"path_once") if sql.startswith("INSERT INTO public.table1 (") else sql
     if mode == "path_array":

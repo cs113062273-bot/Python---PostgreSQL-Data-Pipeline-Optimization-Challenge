@@ -7,7 +7,7 @@ from pipeline.upstream import APP,PostgresAdminService
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode",choices=["baseline","path_table1","path_array"],default="baseline")
+    parser.add_argument("--mode",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1"],default="baseline")
     args=parser.parse_args()
     mode=args.mode
     originals={d["table_name"]:d["sql"].strip() for d in destinations()}

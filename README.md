@@ -25,11 +25,13 @@ python -m venv .venv
 .venv/Scripts/python.exe launch.py --mode baseline
 ```
 
-`baseline` is the conservative default. `--mode path_table1` and `--mode
-path_array` are explicit experiments, restricted to exact organizer recipes.
+`baseline` is the conservative default. `--mode path_table1`, `--mode
+path_array`, `--mode qf_lazy` and `--mode qf_lazy_path1` are explicit experiments,
+restricted to exact organizer recipes. The last two directly use the submitted
+QueryFoundry source and retain observed malformed-input semantic differences.
 The original preflight, counters, versioning, UI and dump implementation remain
-in use. Rejected record and payload experiments cannot be selected in this GUI
-launcher. Chunk recovery is not enabled in the GUI.
+in use. Record and independent payload experiments cannot be selected in this
+GUI launcher. Chunk recovery is not enabled in the GUI.
 
 For a project-local disposable PostgreSQL server (no system service or global
 settings), run `scripts/bootstrap-local.ps1`. It downloads the EDB binary from

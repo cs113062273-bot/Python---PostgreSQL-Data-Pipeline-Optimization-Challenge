@@ -54,8 +54,9 @@ owners/superusers can disable triggers. A bypass preserving raw_hash is detected
 on resume by content rehash. Arbitrary adversarial DDL during active execution
 is not supported. Catalog signatures cover columns, constraints, indexes,
 trigger enablement/function text and server version; typed output hashes are
-noncryptographic diagnostics, not adversarial proof. Fingerprinting twice and
-on resume costs full source scans; measure that cost before claiming efficiency.
+noncryptographic diagnostics, not adversarial proof. Fresh completion performs
+three full source scans (initialization, data completion, version finalization),
+and resume adds revalidation scans. Measure this cost before claiming efficiency.
 
 `python -m tests.recovery.run` tests 12 boundaries, exact six-table outputs,
 counter reconciliation, duplicate retries, changed-request rejection and fences.

@@ -44,7 +44,7 @@ def main():
         size,wal=conn.execute("SELECT pg_database_size(current_database()),pg_wal_lsn_diff(pg_current_wal_insert_lsn(),%s)::bigint",(before[1],)).fetchone()
     report={"kind":"local_chunk_end_to_end_wall","official_score":False,"job":job,"database":args.database,
             "timestamp_utc":datetime.now(timezone.utc).isoformat(),"environment":env,"chunk_rows":args.chunk_rows,"mode":args.mode,
-            "seconds":seconds,"includes":["preflight","two full actual-content source fingerprints","checkpoint commits","output fingerprints","version saga","final integrity verification"],
+            "seconds":seconds,"includes":["preflight","three full actual-content source fingerprints on fresh completion","checkpoint commits","output fingerprints","version saga","final integrity verification"],
             "excludes":["diagnostic reference construction","post-run EXCEPT ALL oracle","GUI refresh","SSH"],
             "chunks":chunks,"versions":versions,"exact_six_tables":True,"database_growth_bytes":size-before[0],
             "wal_cluster_delta_bytes":wal,"peak_ram_bytes":None,"peak_intermediate_bytes":None}

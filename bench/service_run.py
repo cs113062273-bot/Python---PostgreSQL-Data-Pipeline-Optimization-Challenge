@@ -16,7 +16,7 @@ from ui.dialogs import ExpansionTimingReportDialog
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database",default="lab_full_100k")
-    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array"])
+    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1"])
     parser.add_argument("--output",default="reports/local-service.json")
     args=parser.parse_args()
     with connect(args.database,autocommit=True) as conn:

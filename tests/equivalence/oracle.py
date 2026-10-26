@@ -27,7 +27,10 @@ def snapshot(conn):
     conn.execute("CREATE SCHEMA IF NOT EXISTS challenge_reference")
     for table in ORDER:
         conn.execute(f"DROP TABLE IF EXISTS challenge_reference.{table}")
-        conn.execute(f"CREATE TABLE challenge_reference.{table} AS {canonical(table)}")
+        # These immutable diagnostic snapshots need no background maintenance.
+        # Otherwise their autovacuum/ANALYZE competes with timed destination DML.
+        conn.execute(f"CREATE TABLE challenge_reference.{table} WITH (autovacuum_enabled=false,toast.autovacuum_enabled=false) AS {canonical(table)}")
+        conn.execute(f"ANALYZE challenge_reference.{table}")
 
 
 def assert_exact(conn):

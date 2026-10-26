@@ -66,3 +66,19 @@ counter reconciliation, duplicate retries, changed-request rejection and fences.
 destination edits, schema rename and changed version dependency rejection.
 `reports/recovery*.json` contains actual results. Real SSH, Linux restart, power
 loss and GUI termination remain separate release gates.
+
+
+## Independent atomic bulk strategy
+
+The opt-in bulk strategies execute DDL, six inserts, original counter updates,
+index rebuilding and full FK validation inside one data transaction. They do
+not persist partially missing constraints across transactions. A failure rolls
+back both schema and destination contents; the caller may retry the entire
+expansion. Identity sequences may retain ordinary rollback gaps. Data/control
+version finalization still follows the original service behavior; the separate
+chunk protocol above remains the recoverable version-saga prototype.
+
+`python -m tests.recovery.bulk_atomic --mode bulk_full` tests 34 exception and
+backend-termination boundaries, comparing all six empty destination contents
+and exact restored constraints/indexes. See recovery-bulk-full.json. These
+atomic tests do not claim chunk reuse or cover power loss / remote Linux.

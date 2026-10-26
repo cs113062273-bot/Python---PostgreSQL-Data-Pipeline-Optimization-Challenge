@@ -118,3 +118,76 @@ under lab_generated_100k before generating 1M. A 1M diagnostic pilot is queued
 after the alternating 100k series. No 5M/10M/300M result or extrapolated winning
 score is claimed. Full Windows GUI + Linux/SSH benchmark, real JIT, final
 version/dump behavior and clean-room release verification remain explicit gates.
+
+
+## Corrected fresh controls and transactional bulk candidates
+
+The fresh-database-per-run method supersedes historical timing inferences above.
+TRUNCATE keeps learned statistics; every new ranked run now starts from a new
+clone with six reltuples=-1 destinations and no column statistics. References
+are separate, with exact comparisons after timing.
+
+- fresh-bulk-100k.json, n=3: official 10.456s, exact QF 7.854s, bulk_fks 6.870s
+  medians. Reductions vs official: QF 24.88%, ours 34.30%; ours vs QF 12.54%.
+- fresh-bulk-1m-pilot.json, n=1: official 103.975s, QF 91.322s, bulk_fks 64.920s.
+  Ours reduces 37.56%. These are local SQL diagnostics, not official totals.
+- fresh-bulk-index-100k-pilot.json, n=1: official 9.186s, QF 7.315s, bulk_fks
+  6.590s, child unique bulk 6.361s, main+child unique bulk 6.495s, plus table1
+  payload 6.088s. Index-only savings are modest, not a 50% result.
+- fresh-bulk-combined-100k-pilot.json, n=1: official 9.436s, QF 7.317s,
+  table1-payload+unique bulk 6.181s, table1/table2 payload 5.786s, table1 payload
+  plus eager table2 arrays 5.621s (40.43% below official, 23.18% below QF).
+
+All completed modes passed six-table bidirectional EXCEPT ALL, per-run typed
+fingerprints/counts, exact restored index/constraint schema and relationships.
+All index/FK building and validation stages are included. bulk_payload and
+bulk_array each passed 1,228 differential cases (seed 10277), zero differences.
+bulk_full passed 1,228 (seed 10383), zero differences. Atomic rollback tests
+terminate backends and inject exceptions before/after key drops, inserts,
+rebuilding and FK validation. Completed reports identify every boundary.
+
+bulk_fks retains all PK/UNIQUE/CHECK constraints while six proven relationships
+are rebuilt and fully validated within the same transaction. Unique bulk modes
+also rebuild table1(raw_id) and/or table2(main_id,position), whose uniqueness
+follows from protected recipes and native key metadata. bulk_full additionally
+rebuilds native noncycling identity PK indexes on table1/2/5/6; NOT NULL stays
+active and all keys are rebuilt before dependent recipes. bulk_full64 tests
+transaction-local work_mem=64MB independently of a forced join strategy.
+
+No direct lazy-key path is promoted. No generator, hardcoded distribution,
+unlogged table, asynchronous commit or function-guard exemption is used.
+The earlier no-win hash_array64 / NoMemo / ANALYZE experiments remain recorded.
+
+
+## Semantic rejections and guarded normalization
+
+The later seed 10501 invalidates bulk_payload, bulk_array and bulk_full: four
+acceptance/rejection differences each over 528 cases. The apparent 40.43% pilot
+is therefore not an effective eligible result. bulk_fks passed the same 528
+cases without differences. Unguarded TEXT staging and work_mem variants also
+have counterexamples. Known missing-dimension + bad unused numeric cases are
+now permanent fuzz fixtures. The fuzzer exits nonzero on differences unless
+explicit --allow-mismatches is used for a negative experiment.
+
+The guarded_normalize compiler stages all original recipe inputs as TEXT, then
+proves a conservative safe domain with immutable native operations. Numeric
+bounds guarantee smallint and rounded int32 conversions; timestamp shape plus
+Gregorian calendar arithmetic guarantees valid timestamps. Outside the domain,
+original statements, indexes, FKs and settings execute unchanged. The gate
+never rejects data. It derives no answers from the seed or generator metadata.
+Inside the proven domain, TEXT fields are reused across all six recipes, proven
+keys are bulk built, FKs are fully validated and sparse table2 positions use
+only declared-number cache keys. All preparation and validation costs are timed.
+
+Native tests: 32 boundaries, 6,000 calendar/style cases, immutable-function
+metadata, 634 differential cases (262 fast, 372 fallback), 36 atomic interruption
+boundaries, plus actual original-service counters/versions and valid-fallback
+integration. Version recipes retain replayable canonical SQL and a compiler /
+exact-batch SHA comment. Complete batch SQL is archived by local service/GUI.
+One pilot exceeded the target but host drift was substantial; do not report a
+50% achievement before the balanced repeated campaign and final checks.
+
+Clone methodology uses explicit FILE_COPY to complete clone checkpoints before
+measurement; see PostgreSQL 17 CREATE DATABASE documentation. Optional local
+CPU affinity applies equally to official/control/candidate measured backends.
+Latin-square order balances positions; backend CPU is recorded beside elapsed.

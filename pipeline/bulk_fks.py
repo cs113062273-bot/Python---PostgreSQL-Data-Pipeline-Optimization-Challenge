@@ -37,6 +37,18 @@ def prepare_sql():
                ("table6","id_column_2","bigint"),("table6","id_column_3","smallint")]
     for table,column,kind in key_types:
         column_checks.append(f"IF NOT EXISTS(SELECT 1 FROM pg_attribute WHERE attrelid='public.{table}'::regclass AND attname='{column}' AND atttypid='{kind}'::regtype) THEN RAISE EXCEPTION 'Unsupported bulk relationship type'; END IF;")
+    # Relationship/uniqueness proofs rely on native integer equality, not a
+    # user-defined B-tree operator class attached to an otherwise familiar PK.
+    for table in ("raw_data",)+ORDER:
+        column="raw_id" if table=="raw_data" else "id_column_1"
+        kind="int2_ops" if table=="table4" else "int8_ops"
+        column_checks.append(f"""IF NOT EXISTS(SELECT 1 FROM pg_constraint k JOIN pg_index i ON i.indexrelid=k.conindid
+          JOIN pg_attribute a ON a.attrelid=k.conrelid AND a.attname='{column}'
+          WHERE k.conrelid='public.{table}'::regclass AND k.contype='p' AND k.convalidated AND NOT k.condeferrable
+          AND k.conkey=ARRAY[a.attnum]::smallint[] AND i.indisvalid AND i.indisunique
+          AND i.indclass[0]=(SELECT oid FROM pg_opclass WHERE opcnamespace='pg_catalog'::regnamespace
+             AND opcname='{kind}' AND opcmethod=(SELECT oid FROM pg_am WHERE amname='btree')))
+          THEN RAISE EXCEPTION 'Unsupported bulk primary-key equality: {table}'; END IF;""")
     for table in ("table1","table2","table3","table5","table6"):
         column_checks.append(f"IF NOT EXISTS(SELECT 1 FROM pg_attribute WHERE attrelid='public.{table}'::regclass AND attname='id_column_1' AND attidentity IN ('a','d')) THEN RAISE EXCEPTION 'Unsupported bulk identity default'; END IF;")
     checks=(
@@ -115,20 +127,31 @@ def instrument(sql,sequence,name):
 
 class BulkFKMixin:
     bulk_foreign_keys=False
+    bulk_recipe_mode="baseline"
+    guarded_normalization=False
+
+    def _guard_bulk_sql(self,sql):
+        if self.guarded_normalization:
+            from pipeline.guarded_normalization import conditional_sql
+            return conditional_sql(sql)
+        return sql
 
     def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,destinations,**kwargs):
         if self.bulk_foreign_keys:
             from pipeline.recipes import destinations as recipe_destinations
-            originals=recipe_destinations("baseline")
+            originals=recipe_destinations(self.bulk_recipe_mode)
             if source_full_table_name!="public.raw_data" or len(destinations)!=len(originals) or any(
                 d.get("table_name")!=o["table_name"] or d.get("sql","").strip()!=o["sql"].strip() for d,o in zip(destinations,originals)):
                 raise RuntimeError("Bulk FK mode requires the exact organizer source and six original recipes")
         previous=getattr(self._expansion_timing_local,"bulk_fk_active",False)
+        previous_context=getattr(self._expansion_timing_local,"bulk_selection_context",None)
         self._expansion_timing_local.bulk_fk_active=self.bulk_foreign_keys
+        self._expansion_timing_local.bulk_selection_context=(source_full_table_name,raw_schemas,destinations)
         try:
             return super().execute_cross_table_expansion(database_name,source_full_table_name,raw_schemas,destinations,**kwargs)
         finally:
             self._expansion_timing_local.bulk_fk_active=previous
+            self._expansion_timing_local.bulk_selection_context=previous_context
 
     def run_remote_command(self,command,**kwargs):
         text=kwargs.get("stdin_text")
@@ -141,8 +164,11 @@ class BulkFKMixin:
             # Lock BEFORE the first RR data snapshot. Source-lock wait is timed.
             text=text.replace(begin,"INSERT INTO pg_temp.pgdm_expansion_timings VALUES (0,'bulk_load','Acquire stable source lock',clock_timestamp(),NULL,NULL,NULL,NULL);\n"+begin+
                 "\nLOCK TABLE public.raw_data IN SHARE MODE;\nUPDATE pg_temp.pgdm_expansion_timings SET finished_at=clock_timestamp() WHERE sequence_number=0;",1)
-            text=text.replace(boundary,boundary+"\n"+instrument(prepare_sql(),4,"Prepare transactional bulk FK load"),1)
-            text=text.replace("COMMIT;",instrument(restore_sql(),8000,"Restore and validate all bulk foreign keys")+"\nCOMMIT;",1)
+            text=text.replace(boundary,boundary+"\n"+instrument(self._guard_bulk_sql(prepare_sql()),4,"Prepare transactional bulk FK load"),1)
+            commit_marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES (9000, 'execute'"
+            if text.count(commit_marker)!=1:raise RuntimeError("Unknown commit timing boundary")
+            # Restoration has its own stage; keep it outside the commit timer.
+            text=text.replace(commit_marker,instrument(self._guard_bulk_sql(restore_sql()),8000,"Restore and validate all bulk foreign keys")+"\n"+commit_marker,1)
             kwargs["stdin_text"]=text
             context=getattr(self._expansion_timing_local,"context",None)
             if context:

@@ -1,0 +1,107 @@
+"""Guarded full normalization: original execution outside a proven safe domain."""
+import time
+import re
+import hashlib
+from pipeline.normalization import prepare_sql as normalize_sql,rewrite
+from pipeline.recipes import EXTRACT,compiler_sha256
+from pipeline.safe_domain import gate_sql
+from pipeline.bulk_fks import instrument
+
+MODE="guarded_normalize"
+EXTRA_DATA_FUNCTIONS=('bool_and','textcat','textregexeq','substr','octet_length','replace','array_remove','unnest')
+
+
+def validation_destinations(destinations):
+    return list(destinations)+[{'statements':[],'function_references':[('pg_catalog',name) for name in EXTRA_DATA_FUNCTIONS]}]
+
+
+def conditional_sql(sql):
+    return "DO $guarded_bulk$ BEGIN IF (SELECT safe FROM pg_temp.pipeline_normalization_domain) THEN\n"+sql+"\nEND IF; END $guarded_bulk$;"
+
+
+def prepare_sql(scopes):
+    return normalize_sql(scopes,all_tables=True,defer_index=True)+"\n"+"""CREATE TEMP TABLE pipeline_normalization_domain ON COMMIT DROP AS """+gate_sql()+";\n"+conditional_sql("""
+      PERFORM pg_catalog.set_config('work_mem','64MB',true);
+      CREATE INDEX pipeline_normalized_input_raw_id_idx ON pg_temp.pipeline_normalized_input(raw_id);
+      ANALYZE pg_temp.pipeline_normalized_input(raw_id,text_column_1,text_column_2,text_column_3,"""+",".join(f'integer_column_{n}' for n in range(2,16))+""");
+    """)
+
+
+def fast_statement(statement,scopes):
+    result=rewrite(statement,scopes,all_tables=True)
+    if not statement.startswith('INSERT INTO public.table2 ('):return result
+    matrix=re.search(r'CROSS JOIN LATERAL \(\s*VALUES\s*(.*?)\s*\) AS position_data\([^)]*\)',result,re.S)
+    if not matrix:raise RuntimeError('Unknown guarded position matrix')
+    fields=EXTRACT.findall(statement)
+    # Fields repeat in SELECT/WHERE; the matrix itself has the exact 56 inputs.
+    original_matrix=re.search(r'CROSS JOIN LATERAL \(\s*VALUES\s*(.*?)\s*\) AS position_data\([^)]*\)',statement,re.S)
+    fields=EXTRACT.findall(original_matrix[1])
+    if len(fields)!=56:raise RuntimeError('Unknown guarded position fields')
+    matches=[f"CASE WHEN NULLIF(BTRIM(source_row.{fields[4*(n-1)]}), '')::smallint={n} THEN {n}::smallint END" for n in range(1,15)]
+    # The barrier keeps numeric/type filters outside this subquery. Memoize can
+    # then key solely on declared positions, rather than each unique payload.
+    expansion="CROSS JOIN LATERAL (SELECT position_number FROM pg_catalog.unnest(pg_catalog.array_remove(ARRAY["+",".join(matches)+"],NULL::smallint)) AS expanded(position_number) OFFSET 0) AS position_keys"
+    result=result[:matrix.start()]+expansion+result[matrix.end():]
+    for attribute,column in enumerate(('declared_number_text','type_text','weight_text','gap_text')):
+        choices="CASE position_keys.position_number "+" ".join(f"WHEN {n} THEN source_row.{fields[4*(n-1)+attribute]}" for n in range(1,15))+" END"
+        result=result.replace('position_data.'+column,'('+choices+')')
+    result=result.replace('position_data.position_number','position_keys.position_number')
+    if 'position_data' in result:raise RuntimeError('Unrecognized guarded position reference')
+    return result
+
+
+def insert_sql(statement,scopes):
+    return "IF (SELECT safe FROM pg_temp.pipeline_normalization_domain) THEN\n"+fast_statement(statement,scopes)+";\nELSE\n"+statement+";\nEND IF"
+
+
+class GuardedNormalizationMixin:
+    guarded_normalization=False
+    capture_batch_sql=False
+
+    def execute_cross_table_expansion(self,*args,**kwargs):
+        result=super().execute_cross_table_expansion(*args,**kwargs)
+        if self.guarded_normalization:
+            started=time.thread_time()
+            result['execution_architecture']={'mode':MODE,'compiler_sha256':compiler_sha256(),
+                'batch_sql_sha256':getattr(self._expansion_timing_local,'guarded_batch_sha256',None)}
+            architecture=result['execution_architecture']
+            provenance='\n\n-- pipeline guarded_normalize_v1 compiler_sha256='+architecture['compiler_sha256']+' batch_sql_sha256='+architecture['batch_sql_sha256']
+            for destination in result['destinations']:
+                # The canonical recipe remains replayable by the original app;
+                # persist the exact compiler/batch identity in version history.
+                destination['sql_recipe']=destination['sql_recipe'].rstrip()+provenance
+            self._append_expansion_timing(result.get('timing_report'),'prepare','Attach compiler provenance',time.thread_time()-started,'local_python_cpu')
+        return result
+
+    def _validate_cross_table_expansion_functions(self,database_name,destinations,cancel_event=None):
+        if self.guarded_normalization:destinations=validation_destinations(destinations)
+        return super()._validate_cross_table_expansion_functions(database_name,destinations,cancel_event=cancel_event)
+
+    def run_remote_command(self,command,**kwargs):
+        text=kwargs.get('stdin_text')
+        if self.guarded_normalization and getattr(self._expansion_timing_local,'bulk_fk_active',False) and isinstance(text,str) and 'BEGIN ISOLATION LEVEL REPEATABLE READ;' in text and 'pgdm_cross_table_hash_manifest' in text:
+            started=time.thread_time()
+            from pipeline.upstream import PostgresAdminService
+            source,scopes,selected=self._expansion_timing_local.bulk_selection_context
+            selection=PostgresAdminService._prepare_cross_table_expansion(source,scopes,selected)
+            scopes=selection['raw_schemas']
+            marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES\n      (4,'bulk_load'"
+            if text.count(marker)!=1:raise RuntimeError('Unknown bulk domain boundary')
+            text=text.replace(marker,instrument(prepare_sql(scopes),5,'Build TEXT input and prove safe cast domain')+'\n'+marker,1)
+            for position,d in enumerate(selection['destinations']):
+                statement=d['statements'][0]
+                managed=self._build_managed_dml_sql(statement,d['schema_name'],d['pure_table_name'],'add',timing_sequence=10+position,
+                    timing_stage='execute',timing_name=f"Insert into {d['table_name']} (statement 1)",timing_destination=d['table_name'],timing_statement_index=1)
+                if text.count(managed)!=1 or managed.count(statement)!=1:raise RuntimeError('Unknown guarded normalization DML boundary')
+                text=text.replace(managed,managed.replace(statement,insert_sql(statement,scopes),1),1)
+            kwargs['stdin_text']=text
+            self._expansion_timing_local.guarded_batch_sha256=hashlib.sha256(text.encode()).hexdigest()
+            if self.capture_batch_sql:
+                from pipeline.recipes import ROOT
+                directory=ROOT/'reports'/'sql';directory.mkdir(parents=True,exist_ok=True)
+                (directory/(self._expansion_timing_local.guarded_batch_sha256+'.sql')).write_text(text,encoding='utf-8')
+            context=getattr(self._expansion_timing_local,'context',None)
+            if context:
+                self._append_expansion_timing(context.get('report'),'prepare','Build guarded TEXT normalization strategy',time.thread_time()-started,'local_python_cpu')
+                if isinstance(context.get('report'),dict):context['report']['session_settings']={'work_mem':'64MB only inside proven safe domain; original value on fallback'}
+        return super().run_remote_command(command,**kwargs)

@@ -61,3 +61,36 @@ def test_dump_check_normalization_is_narrow():
     shape=lambda definition:{"constraints":[["table2","table2_text_column_1_check",definition,True]]}
     assert normalize_catalog(shape(original))==normalize_catalog(shape(restored))
     assert normalize_catalog(shape(original))!=normalize_catalog(shape(restored.replace("'Z'","'R'")))
+
+
+def test_bulk_strategy_binds_exact_recipes_and_resets_thread_context():
+    import threading
+    from pipeline.bulk_fks import BulkFKMixin
+    class Base:
+        def __init__(self):self._expansion_timing_local=threading.local()
+        def execute_cross_table_expansion(self,*args,**kwargs):
+            assert self._expansion_timing_local.bulk_fk_active
+            assert self._expansion_timing_local.bulk_selection_context[0]=="public.raw_data"
+            raise RuntimeError("injected base failure")
+    class Service(BulkFKMixin,Base):
+        bulk_foreign_keys=True
+        bulk_recipe_mode="bulk_array"
+    service=Service()
+    with pytest.raises(RuntimeError,match="injected base failure"):
+        service.execute_cross_table_expansion("lab_unit","public.raw_data",["scope"],destinations("bulk_array"))
+    assert service._expansion_timing_local.bulk_fk_active is False
+    assert service._expansion_timing_local.bulk_selection_context is None
+    for source,selected in [("public.other",destinations("bulk_array")),("public.raw_data",destinations("qf_lazy")),
+                            ("public.raw_data",destinations("bulk_array")[:-1])]:
+        with pytest.raises(RuntimeError,match="exact organizer"):
+            service.execute_cross_table_expansion("lab_unit",source,["scope"],selected)
+
+
+def test_guarded_mode_versions_carry_compiler_provenance():
+    from pipeline.recipes import compiler_sha256
+    guarded=destinations('guarded_normalize')
+    original=PostgresAdminService._prepare_cross_table_expansion('public.raw_data',['scope'],destinations())
+    compiled=PostgresAdminService._prepare_cross_table_expansion('public.raw_data',['scope'],guarded)
+    for d,o,g in zip(guarded,original['destinations'],compiled['destinations']):
+        assert 'compiler_sha256='+compiler_sha256() in d['sql']
+        assert o['statements']==g['statements']

@@ -25,17 +25,27 @@ python -m venv .venv
 .venv/Scripts/python.exe launch.py --mode baseline
 ```
 
-`baseline` is the conservative default. `--mode hash_array64` is the current
-semantics-tested experimental candidate: original table1 with a scoped Hash
-Join preference, eager immutable table2 arrays, and transaction-local work_mem
-64 MiB. It does not establish a statistically reliable lead over QueryFoundry.
-`--mode path_table1`, `--mode path_array`, `--mode qf_lazy` and
-`--mode qf_lazy_path1` are other explicit experiments,
-restricted to exact organizer recipes. The last two directly use the submitted
-QueryFoundry source and retain observed malformed-input semantic differences.
-The original preflight, counters, versioning, UI and dump implementation remain
-in use. Record and independent payload experiments cannot be selected in this
-GUI launcher. Chunk recovery is not enabled in the GUI.
+`baseline` remains the default. `--mode bulk_fks` is the validated atomic bulk
+candidate: keep original recipes and all PK/UNIQUE/CHECK constraints, defer six
+proven FK relationships within the data transaction, then rebuild and fully
+validate before COMMIT. Its fresh 100k median is 34.30% below the official
+original and 12.54% below the exact QueryFoundry control (same cohort).
+
+`--mode guarded_normalize` is a research candidate with a conservative
+safe-domain proof and exact original fallback. It extracts all recipe inputs as
+TEXT once, retains the original casts/filters, and uses only immutable native
+data expressions. Preparation and proof cost are included in timing. See STATUS.md.
+
+Earlier bulk_payload / bulk_array / bulk_full / unguarded normalization modes
+were rejected after new malformed-input counterexamples. They remain available
+only in the laboratory CLI for reproduction; their faster numbers are not valid
+performance results. The GUI exposes baseline, bulk_fks and guarded_normalize.
+
+The original preflight, managed counters, versions, UI and dump code remain in
+use. `qf_lazy` calls the pinned public source directly and retains known malformed
+input differences, so it is a control rather than the safe default. The separate
+chunk recovery protocol is not combined with atomic bulk mode or enabled in the
+GUI. jsonb_to_record remains a disposable-laboratory experiment.
 
 For a project-local disposable PostgreSQL server (no system service or global
 settings), run `scripts/bootstrap-local.ps1`. It downloads the EDB binary from
@@ -58,7 +68,7 @@ $env:CHALLENGE_PSQL=(Resolve-Path .runtime/postgresql/pgsql/bin/psql.exe).Path
 .venv/Scripts/python.exe -m bench.prepare --database lab_template_100k
 .venv/Scripts/python.exe -m bench.prepare --database lab_reference_100k
 .venv/Scripts/python.exe -m bench.reference --database lab_reference_100k
-.venv/Scripts/python.exe -m bench.fresh --template lab_template_100k --reference lab_reference_100k --repeats 3 --modes baseline qf_lazy hash_array64 --output reports/reproduced-100k.json
+.venv/Scripts/python.exe -m bench.fresh --template lab_template_100k --reference lab_reference_100k --repeats 3 --modes baseline qf_lazy guarded_normalize --output reports/reproduced-100k.json
 .venv/Scripts/python.exe -m bench.profile --database lab_reference_100k --modes baseline qf_lazy hash_array64
 ```
 
@@ -85,6 +95,7 @@ Remove-Item Env:PYTHONPATH
 .venv/Scripts/python.exe -m tests.semantics.fuzz --count 1500 --seed 3011 --modes path_table1 array_values path_array
 .venv/Scripts/python.exe -m tests.recovery.run
 .venv/Scripts/python.exe -m tests.recovery.tamper
+.venv/Scripts/python.exe -m tests.recovery.bulk_atomic --mode guarded_normalize
 ```
 
 Fuzz/recovery create fresh `lab_*` databases, deliberately mutate only those
@@ -93,7 +104,7 @@ Recovery tests seed initial clone lineage from an already-generated
 `kaggle_challenge` control store. Reports name each fixture and job UUID.
 
 For a full local organizer-service integration, create a fresh clone and run
-`python -m bench.service_run --database lab_full_100k --mode hash_array64 --reference lab_reference_100k`. This executes real
+`python -m bench.service_run --database lab_full_100k --mode bulk_fks --reference lab_reference_100k`. This executes real
 preflight, managed counters and all six version/dependency registrations. It
 substitutes local psql for SSH and labels its report accordingly.
 
@@ -119,3 +130,12 @@ Public extraction controls and the version-result capture pattern were informed
 by `Agnuxo1/QueryFoundry`, submitted commit
 `32c283f32fe35e9b5bd0e538bd6631f305863fb3`, Apache-2.0. Its local results are
 calibration targets, not an official ranking. See [research notes](docs/RESEARCH_NOTES.md).
+
+
+The current fresh harness rotates modes by Latin-square order and uses
+PostgreSQL FILE_COPY clones. `--clone-strategy WAL_LOG --order alternating`
+reproduces the older clone/order method. Optional `--cpu-affinity 2` pins only
+the measured local backend, identically for every mode; it is a lab control,
+not part of the submitted architecture. No global OS/durability settings change.
+Run `python -m tests.semantics.domain` for sufficient-domain boundaries and
+`python -m tests.recovery.bulk_guards` for metadata fallback/refusal cases.

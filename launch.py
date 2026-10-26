@@ -5,19 +5,28 @@ from pipeline.recipes import destinations,rewrite
 from pipeline.upstream import APP,PostgresAdminService
 from pipeline.planner import Table1PlannerMixin
 from pipeline.bulk_fks import BulkFKMixin
+from pipeline.bulk_indexes import BulkIndexMixin
+from pipeline.normalization import NormalizationMixin
+from pipeline.guarded_normalization import GuardedNormalizationMixin
+from pipeline.recipes import BULK_MODES, bulk_unique_tables
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks"],default="baseline")
+    parser.add_argument("--mode",choices=["baseline","bulk_fks","guarded_normalize"],default="baseline")
     args=parser.parse_args()
     mode=args.mode
     originals={d["table_name"]:d["sql"].strip() for d in destinations()}
-    class ExperimentalService(BulkFKMixin,Table1PlannerMixin,PostgresAdminService):
-        bulk_foreign_keys=mode=="bulk_fks"
+    class ExperimentalService(BulkFKMixin,BulkIndexMixin,GuardedNormalizationMixin,NormalizationMixin,Table1PlannerMixin,PostgresAdminService):
+        capture_batch_sql=True
+        bulk_foreign_keys=mode in BULK_MODES
+        guarded_normalization=mode=="guarded_normalize"
+        normalize_input=mode in ("bulk_normalize","bulk_normalize64")
+        bulk_recipe_mode=mode
+        bulk_unique_tables=bulk_unique_tables(mode)
         table1_hash_join=mode in ("hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo")
         table2_memoize=mode!="hash_array64_nomemo"
-        expansion_work_mem="64MB" if mode in ("hash_array64","hash_array64_nomemo") else None
+        expansion_work_mem="64MB" if mode in ("hash_array64","hash_array64_nomemo","bulk_full64","bulk_normalize64") else None
         def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,destinations,**kwargs):
             if self.bulk_foreign_keys and (source_full_table_name!="public.raw_data" or tuple(d.get('table_name') for d in destinations)!=tuple(originals)):
                 raise RuntimeError("Bulk FK experiment requires the exact organizer source and six destinations")

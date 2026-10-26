@@ -1,59 +1,92 @@
 # Current status
 
-No reliable performance win over QueryFoundry and no official score is claimed.
-The generator, application guards, counters and version/dump code are preserved.
-The default GUI launcher remains baseline; experiments require an explicit mode.
+The validated atomic `bulk_fks` candidate leads the exact public QueryFoundry
+control in local fresh-database SQL diagnostics. The next target, requested by
+the user, is at least 50% less time than the original official implementation.
+No official score or competition placement is claimed.
 
-The preferred benchmark now creates a new database clone for every run, starting
-with all six destinations empty and unanalyzed. Historical repeated-TRUNCATE
-series retained learned statistics and showed large drift; their performance
-inferences are superseded. Output-correctness evidence from those runs remains
-useful. The fresh input and all SQL snapshots are reproducible from the reports.
+## Controlled results
 
-Latest fresh 100k SQL diagnostics, n=3 per mode:
+Every run starts from a new clone of unchanged official generator output,
+with six empty, unanalyzed destinations. All architecture setup, rebuilding
+and FK validation are included in the SQL-stage sum. Complete preflight,
+managed counters, versions, GUI/SSH and lock waits are outside this diagnostic;
+commit latency is reported separately. Do not mix this with MEASURED PROCESSING TOTAL.
 
-| Mode | Median seconds | Range | Reduction vs baseline |
-|---|---:|---:|---:|
-| Baseline | 10.859 | 9.506–11.502 | — |
-| Exact QueryFoundry lazy source | 9.086 | 8.300–9.181 | 16.33% |
-| hash_array64 | 8.999 | 8.472–10.181 | 17.13% |
-| Explicit ANALYZE after dimensions/table1 | 9.899 | 9.282–11.176 | 8.84% |
-| Explicit ANALYZE after dimensions only | 10.028 | 10.005–11.880 | 7.66% |
+| Same cohort / scale | Official original | QueryFoundry original | Our bulk_fks | Ours vs official |
+|---|---:|---:|---:|---:|
+| 100k, median of 3 | 10.456s | 7.854s | 6.870s | 34.30% less time |
+| 1M, single pilot | 103.975s | 91.322s | 64.920s | 37.56% less time |
 
-hash_array64 is only 0.96% below the public control median, well within observed
-spread; do not call it a win. All six tables passed exact bidirectional EXCEPT
-ALL once per mode, typed fingerprints/counts every run, and schema/FK checks.
-Its 1,228-case differential suite found no mismatch; finite fuzzing is not proof
-of universal semantic equivalence. Direct QueryFoundry lazy paths retain known
-SQLSTATE and acceptance/rejection counterexamples.
+Sources: `reports/fresh-bulk-100k.json`, `reports/fresh-bulk-1m-pilot.json`.
+The 100k candidate is 12.54% below QueryFoundry's median; its slowest run is
+below the control's fastest run. All six tables passed exact bidirectional
+EXCEPT ALL once per mode, typed fingerprints/counts every run, and exact
+schema/index/constraint and relationship checks. Strict bulk_fks fuzzing:
+1,228 cases, zero observed differences (finite testing, not universal proof).
 
-Fresh local organizer-service runs (n=1, includes actual preflight, counters and
-all six version/dependency registrations, substitutes local psql for SSH):
-baseline 11.016s wall, QueryFoundry 11.007s, hash_array64 11.398s. There is no
-end-to-end lead in this small pilot. GUI cache/refresh and Linux/SSH parity are
-not covered. SQL-only and local-service times must never be mixed as one metric.
+Fresh full local organizer-service pilots: baseline 11.016s wall, QueryFoundry
+11.007s, bulk_fks 8.771s. Actual original preflight, counters and six version/
+dependency registrations ran. These are separate, single-run wall diagnostics.
+The bulk report's commit timer originally overlapped its FK restoration timer;
+this reporting overlap is corrected in code and does not affect actual wall time.
 
-The 1M historical SQL series verified exact six-table outputs but used the old
-same-database harness. Its timing comparison is not the final controlled scale
-result. A fresh-clone 1M pilot uses the corrected method and is recorded
-separately in `reports/fresh-1m-pilot.json` when complete.
+## Current experiments and rejections
 
-Recovery protocol v2 uses durable chunks, a persistent source/destination fence,
-actual-content source SHA-256, native typed fingerprints, counter reconciliation,
-and an audited two-database version saga. Twelve final interruption tests passed.
-Actual local PostgreSQL crash/WAL recovery and pg_dump/restore passed. A narrow
-official CHECK deparse equivalence is normalized; other schema changes remain
-rejected. Source-preserving-hash edits, destination edits, schema edits, version
-dependency edits and row-counter edits were rejected. Protocol v1 receipts retain
-their canonical fingerprint algorithm for compatible replay.
+The 40.43% 100k pilot (bulk_array) is INVALID under the strict semantic policy:
+a later seed found inputs where baseline raised 22P02 and the candidate accepted.
+bulk_payload, bulk_full, bulk_full64, bulk_normalize and bulk_normalize64 also
+have counterexamples. Their timing reports remain negative research evidence,
+not effective performance claims. They are removed from GUI mode choices.
 
-The 100k four-chunk prototype measured 20.028s in an exploratory local run,
-including three source scans and finalization; it is still costlier than a single
-data transaction. Early 70.804s results used the older fingerprint implementation
-and different runtime conditions, so their ratio is not an isolated speedup.
+The original bulk_fks passed the same new seed (528 cases, zero mismatches).
+The launcher keeps baseline, bulk_fks and the guarded_normalize research mode.
+The new guarded mode first extracts TEXT without casts or filtering, proves a
+conservative error-free numeric/date domain using immutable native operators,
+and uses the original six statements/constraints/settings whenever the proof
+fails. Inside the proven domain it reuses the extracted fields and bulk-validates
+FKs. The gate and all preparation/validation costs are measured. Initial suite:
+The latest sparse guarded version passed 634 cases: 262 fast-domain cases and
+372 exact fallbacks, zero differences. Native domain tests passed 32 numeric/date
+boundaries and 6,000 calendar/DateStyle cases; all added data functions pass the
+unchanged immutable-function guard. Full local original-service tests passed
+both fast and valid-fallback inputs, exact six outputs, counters, six version
+records and compiler/batch provenance in version history. Thirty-six atomic
+interruption boundaries passed. Final repeated timing remains pending.
+
+Index rollback passed 34 termination/exception boundaries and seven metadata
+fallback/refusal checks. Recovery alone does not make a semantically different
+SQL candidate eligible. The new counterexamples are permanent fuzz cases.
+
+## Recovery and release gates
+
+The independent chunk protocol v2 retains active constraints, durable chunk
+receipts, a persistent source/destination fence, actual-content source SHA-256,
+original counters and an audited control-database version saga. Twelve final
+interruption tests, actual local crash/WAL recovery, dump/restore and five
+tamper scenarios passed. It is not combined with the atomic bulk strategy.
+The 100k four-chunk pilot cost 20.028s including source hashes and finalization.
 Atomic publication, cancellation/undo and default GUI resume remain unfinished.
 
-Remaining release gates: standardized Linux/SSH and actual GUI timing, fresh
-scale confidence, GUI raw-dump/version replay, larger scales, public repository
-and exact public submission commit. This repository is a working laboratory and
-prototype, not a declared winning submission.
+All 32 organizer files and the exact vendor recipe module remain byte-preserved.
+The default GUI remains baseline; experiments require an explicit mode.
+Direct QueryFoundry lazy paths retain malformed-input counterexamples and are
+controls, not the default safe candidate. jsonb_to_record remains lab-only.
+
+Remaining gates: repeated fresh 1M scale confidence, standardized Linux/SSH and
+actual GUI timing, GUI dump/version replay, larger scales, public repository
+and exact public submission commit. Historical repeated-TRUNCATE timings kept
+learned statistics and are superseded; their output-correctness evidence remains.
+
+
+## Benchmark stability
+
+A later unpinned pilot showed large regression even for unchanged bulk_fks;
+no stable current 50% claim is made from a single run. The harness now permits
+identical local measured-backend CPU affinity for all modes, uses FILE_COPY
+clones (checkpointing completed before timing), records backend CPU as well as
+elapsed time, and rotates mode order in a Latin square. Clone/setup remains
+outside processing timing equally for every mode. Earlier timing reports remain
+historical evidence under their recorded method. No antivirus, durability or
+global OS priority setting was changed. User confirmed no Linux/SSH environment
+is available; continue local verification and label this limitation explicitly.

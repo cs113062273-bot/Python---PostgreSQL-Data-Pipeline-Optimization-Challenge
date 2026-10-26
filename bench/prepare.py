@@ -14,7 +14,7 @@ def main():
     with connect("postgres", autocommit=True) as admin:
         admin.execute(sql.SQL("CREATE DATABASE {} TEMPLATE {}").format(sql.Identifier(args.database), sql.Identifier(args.template)))
     with connect(args.database) as conn:
-        conn.execute("CREATE SCHEMA challenge_lab; CREATE TABLE challenge_lab.disposable (created_at timestamptz DEFAULT now())")
+        conn.execute("CREATE SCHEMA IF NOT EXISTS challenge_lab; CREATE TABLE IF NOT EXISTS challenge_lab.disposable (created_at timestamptz DEFAULT now())")
         conn.execute("INSERT INTO challenge_lab.disposable DEFAULT VALUES")
     print(f"Created disposable diagnostic database {args.database}")
 

@@ -72,6 +72,9 @@ class VersionReceiptMixin:
         self._receipt_command(INSTALL)
         with runner.connection_factory(database,autocommit=True) as conn:
             conn.execute("SELECT pg_advisory_lock(%s)",(LOCK_KEY,))
+            from pipeline.checkpoints import RELATIONS
+            conn.execute("BEGIN")
+            conn.execute("LOCK TABLE "+",".join("public."+table for table in RELATIONS)+" IN SHARE ROW EXCLUSIVE MODE")
             row = conn.execute("SELECT request_sha256,request,state,result,source_sha256,schema_signature FROM pipeline_recovery.jobs WHERE job_id=%s",(job_id,)).fetchone()
             if not row or row[2] not in ("data_complete","complete"):
                 raise RuntimeError("Data is not complete")
@@ -80,6 +83,9 @@ class VersionReceiptMixin:
                 raise RuntimeError("Source or schema changed before version finalization")
             runner.verify_outputs(conn,result)
             versions = self._read_version_receipt(job_id,signature,database)
+            if state=="complete" and versions is not None:
+                conn.commit()
+                return versions
             if versions is None:
                 if state=="complete":
                     raise RuntimeError("Complete data job is missing its control receipt")
@@ -95,8 +101,6 @@ class VersionReceiptMixin:
             runner.failpoint("after_versions_commit",{})
             with conn.transaction():
                 result["registered_versions"] = versions
-                from pipeline.checkpoints import RELATIONS
-                conn.execute("LOCK TABLE "+",".join("public."+table for table in RELATIONS)+" IN SHARE ROW EXCLUSIVE MODE")
                 # Restore compatibility with the organizer's blanket trigger
                 # guard only once both durable saga phases have completed.
                 for table in RELATIONS:
@@ -105,6 +109,7 @@ class VersionReceiptMixin:
                     (__import__('psycopg').types.json.Jsonb(result),job_id))
                 conn.execute("DELETE FROM pipeline_recovery.active WHERE job_id=%s",(job_id,))
                 conn.execute("UPDATE pipeline_recovery.jobs SET schema_signature=%s WHERE job_id=%s",(__import__('psycopg').types.json.Jsonb(catalog(conn)),job_id))
+            conn.commit()
             runner.failpoint("after_complete_commit",{})
             return versions
 

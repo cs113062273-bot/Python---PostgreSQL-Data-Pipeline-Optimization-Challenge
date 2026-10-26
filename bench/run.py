@@ -55,6 +55,11 @@ def validate_functions(conn, recipes):
 def execute(conn, mode, scopes, *, profile=False):
     recipes = prepared(mode, scopes)
     guard_parity = validate_functions(conn, recipes)
+    exact_sql = "\n\n".join(s+";" for d in recipes for s in d["statements"])
+    sql_sha256 = hashlib.sha256(exact_sql.encode()).hexdigest()
+    sql_path = ROOT / "reports/sql" / (sql_sha256+".sql")
+    sql_path.parent.mkdir(parents=True,exist_ok=True)
+    sql_path.write_text(exact_sql,encoding="utf-8")
     conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS diagnostic_timing(stage text, seconds double precision, rows bigint) ON COMMIT DELETE ROWS")
     stages = [("source_manifest", PostgresAdminService._build_expansion_manifest_sql("public", "raw_data", scopes).split("SELECT json_build_object(")[0])]
@@ -101,7 +106,7 @@ def execute(conn, mode, scopes, *, profile=False):
         watcher.join(timeout=1)
     wal = conn.execute("SELECT pg_wal_lsn_diff(pg_current_wal_insert_lsn(),%s)::bigint", (start_lsn,)).fetchone()[0]
     stats = conn.execute("SELECT temp_files,temp_bytes FROM pg_stat_database WHERE datname=current_database()").fetchone()
-    return {"mode": mode, "official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
+    return {"mode": mode, "executed_sql_sha256":sql_sha256,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
             "stages": [{"name": n, "seconds": s, "rows": r} for n,s,r in timing],
             "wal_cluster_delta_bytes": wal, "db_cumulative_temp_files": stats[0], "db_cumulative_temp_bytes": stats[1], **sample}
 
@@ -116,6 +121,8 @@ def main():
     parser.add_argument("--work-mem")
     parser.add_argument("--output", default="reports/sql-benchmark.json")
     args = parser.parse_args()
+    if args.profile:
+        parser.error("Use python -m bench.profile; profiled execution is never ranked as an uninstrumented benchmark")
     if args.repeats < 1:
         parser.error("repeats must be positive")
     with connect(args.database, autocommit=True) as conn:

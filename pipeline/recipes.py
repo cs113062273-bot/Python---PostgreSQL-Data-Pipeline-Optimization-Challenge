@@ -13,13 +13,13 @@ ANCHOR = "FROM {{source}} AS source_row"
 EXTRACT = re.compile(r"source_row\.raw\s*->\s*'values'\s*->>\s*'([a-z_]+\d+)'")
 MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
          "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array",
-         "qf_payload", "qf_lazy", "qf_lazy_path1", "guarded_qf", "qf_hash1", "hash_table1", "hash_array", "hash_array64")
+         "qf_payload", "qf_lazy", "qf_lazy_path1", "guarded_qf", "qf_hash1", "hash_table1", "hash_array", "hash_array64", "analyze_base", "analyze_dims")
 
 
 def rewrite(sql, mode):
     if mode not in MODES:
         raise ValueError(f"Unknown recipe mode: {mode}")
-    if mode in ("baseline","guarded_qf","hash_table1"):
+    if mode in ("baseline","guarded_qf","hash_table1","analyze_base","analyze_dims"):
         return sql
     if mode in ("hash_array","hash_array64"):
         return rewrite(sql,"array_values")

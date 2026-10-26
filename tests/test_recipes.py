@@ -52,3 +52,12 @@ def test_planner_override_preserves_counter_diagnostics_and_class_helpers():
     assert tuned!=original
     prepared=Tuned._prepare_managed_sql_script("INSERT INTO public.table1 (id_column_2) SELECT 1","public.table1")
     assert prepared["wrapped_sql"]
+
+
+def test_dump_check_normalization_is_narrow():
+    from pipeline.checkpoints import normalize_catalog
+    original="CHECK (((text_column_1 IS NULL) OR ((text_column_1)::text = ANY ((ARRAY['X'::character varying, 'Y'::character varying, 'Z'::character varying])::text[]))))"
+    restored="CHECK (((text_column_1 IS NULL) OR ((text_column_1)::text = ANY (ARRAY[('X'::character varying)::text, ('Y'::character varying)::text, ('Z'::character varying)::text]))))"
+    shape=lambda definition:{"constraints":[["table2","table2_text_column_1_check",definition,True]]}
+    assert normalize_catalog(shape(original))==normalize_catalog(shape(restored))
+    assert normalize_catalog(shape(original))!=normalize_catalog(shape(restored.replace("'Z'","'R'")))

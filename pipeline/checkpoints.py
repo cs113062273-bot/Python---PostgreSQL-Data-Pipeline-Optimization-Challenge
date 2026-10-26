@@ -101,6 +101,23 @@ def source_digest(conn, scopes):
     return result.hexdigest()
 
 
+def normalize_catalog(value):
+    """Canonicalize the one known pg_dump CHECK cast representation change.
+
+    ARRAY[varchar constants]::text[] and ARRAY[each constant::text] express the
+    same organizer IN check. Do not normalize arbitrary SQL or other checks.
+    """
+    value=json.loads(json.dumps(value,default=str))
+    equivalent={
+        "CHECK (((text_column_1 IS NULL) OR ((text_column_1)::text = ANY ((ARRAY['X'::character varying, 'Y'::character varying, 'Z'::character varying])::text[]))))",
+        "CHECK (((text_column_1 IS NULL) OR ((text_column_1)::text = ANY (ARRAY[('X'::character varying)::text, ('Y'::character varying)::text, ('Z'::character varying)::text]))))",
+    }
+    for constraint in value.get("constraints",[]):
+        if constraint[0:2]==["table2","table2_text_column_1_check"] and constraint[2] in equivalent:
+            constraint[2]="organizer_table2_type_check_nullable_X_Y_Z_v1"
+    return value
+
+
 def catalog(conn):
     from tests.equivalence.oracle import schema_signature
     value = schema_signature(conn)
@@ -108,7 +125,7 @@ def catalog(conn):
     value["fences"] = conn.execute("""SELECT c.relname,pg_get_triggerdef(t.oid),t.tgenabled,p.prosrc
         FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_proc p ON p.oid=t.tgfoid
         WHERE t.tgname='pipeline_write_fence' ORDER BY c.relname""").fetchall()
-    return json.loads(json.dumps(value,default=str))
+    return normalize_catalog(value)
 
 
 class ChunkRunner:
@@ -164,7 +181,7 @@ class ChunkRunner:
                     if existing[0] != signature:
                         raise RuntimeError("Job UUID reused with different request/recipes/source versions")
                     job = conn.execute("SELECT source_sha256,schema_signature FROM pipeline_recovery.jobs WHERE job_id=%s",(job_id,)).fetchone()
-                    if catalog(conn)!=job[1] or source_digest(conn,scopes)!=job[0]:
+                    if catalog(conn)!=normalize_catalog(job[1]) or source_digest(conn,scopes)!=job[0]:
                         raise RuntimeError("Source content, schema or write fence changed")
                     if existing[1] == "complete":
                         self.verify_outputs(conn,existing[2])
@@ -262,7 +279,7 @@ class ChunkRunner:
         from tests.equivalence.oracle import fingerprints, assert_relationships
         assert_relationships(conn)
         identity = conn.execute("SELECT source_sha256,schema_signature FROM pipeline_recovery.jobs WHERE job_id=%s",(job_id,)).fetchone()
-        if catalog(conn)!=identity[1] or source_digest(conn,scopes)!=identity[0]:
+        if catalog(conn)!=normalize_catalog(identity[1]) or source_digest(conn,scopes)!=identity[0]:
             raise RuntimeError("Source content/schema changed before completion")
         manifest_sql = self.service._build_expansion_manifest_sql("public","raw_data",scopes)
         # Execute multi-statements and retain the final JSON manifest.

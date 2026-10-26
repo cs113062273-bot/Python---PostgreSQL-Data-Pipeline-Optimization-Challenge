@@ -7,7 +7,7 @@ No distributed atomicity is claimed. Data stays fenced until control completion.
 import json
 import shlex
 from psycopg.types.json import Jsonb
-from pipeline.checkpoints import LOCK_KEY, catalog, source_digest
+from pipeline.checkpoints import LOCK_KEY, catalog, source_digest,normalize_catalog
 from pipeline.upstream import PostgresAdminService
 from config import CONTROL_DB
 from utils import sql_literal
@@ -80,7 +80,7 @@ class VersionReceiptMixin:
             if not row or row[2] not in ("data_complete","complete"):
                 raise RuntimeError("Data is not complete")
             signature,request,state,result,source_hash,schema = row
-            if catalog(conn)!=schema or source_digest(conn,request["scopes"])!=source_hash:
+            if catalog(conn)!=normalize_catalog(schema) or source_digest(conn,request["scopes"])!=source_hash:
                 raise RuntimeError("Source or schema changed before version finalization")
             runner.verify_outputs(conn,result)
             versions = self._read_version_receipt(job_id,signature,database)

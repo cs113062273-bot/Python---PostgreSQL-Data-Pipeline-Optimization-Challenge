@@ -46,6 +46,8 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
     try:
         if mode=="hash_array64":
             conn.execute("SET LOCAL work_mem='64MB'")
+        if mode=="analyze_base" and len(statements)==1:
+            conn.execute("ANALYZE public.table1")
         for statement in statements:
             original_mergejoin=None
             if mode in ("hash_table1","qf_hash1","hash_array","hash_array64") and statement.startswith("INSERT INTO public.table1 "):
@@ -57,6 +59,10 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             conn.execute(statement)
             if original_mergejoin is not None:
                 conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
+            maintained=("table3","table4","table1") if mode=="analyze_base" else ("table3","table4") if mode=="analyze_dims" else ()
+            for table in maintained:
+                if statement.startswith(f"INSERT INTO public.{table} "):
+                    conn.execute(f"ANALYZE public.{table}")
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name}
     except psycopg.Error as error:

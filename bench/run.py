@@ -52,7 +52,7 @@ def validate_functions(conn, recipes):
     return True
 
 
-def execute(conn, mode, scopes, *, profile=False):
+def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
     recipes = prepared(mode, scopes)
     guard_parity = validate_functions(conn, recipes)
     exact_sql = "\n\n".join(s+";" for d in recipes for s in d["statements"])
@@ -60,7 +60,12 @@ def execute(conn, mode, scopes, *, profile=False):
     sql_path = ROOT / "reports/sql" / (sql_sha256+".sql")
     sql_path.parent.mkdir(parents=True,exist_ok=True)
     sql_path.write_text(exact_sql,encoding="utf-8")
-    conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
+    if reset_destinations:
+        conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
+    else:
+        for table in ORDER:
+            if conn.execute(f"SELECT EXISTS(SELECT 1 FROM public.{table})").fetchone()[0]:
+                raise RuntimeError("Fresh diagnostic destination is not empty: "+table)
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS diagnostic_timing(stage text, seconds double precision, rows bigint) ON COMMIT DELETE ROWS")
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS diagnostic_guard(safe boolean) ON COMMIT DELETE ROWS")
     stages = [("source_manifest", PostgresAdminService._build_expansion_manifest_sql("public", "raw_data", scopes).split("SELECT json_build_object(")[0])]
@@ -113,6 +118,9 @@ def execute(conn, mode, scopes, *, profile=False):
                         "; GET DIAGNOSTICS affected = ROW_COUNT; INSERT INTO diagnostic_timing VALUES ('" + name + "', EXTRACT(EPOCH FROM clock_timestamp()-started), affected); END $diag$;")
                 if original_mergejoin is not None:
                     conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
+                maintained=("public.table3","public.table4","public.table1") if mode=="analyze_base" else ("public.table3","public.table4") if mode=="analyze_dims" else ()
+                if name in maintained:
+                    conn.execute("DO $stats$ DECLARE started timestamptz:=clock_timestamp(); BEGIN ANALYZE "+name+"; INSERT INTO diagnostic_timing VALUES ('analyze_"+name+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stats$;")
             timing = conn.execute("SELECT stage,seconds,rows FROM diagnostic_timing").fetchall()
             conn.execute("SELECT pg_stat_force_next_flush()")
             before_commit = time.perf_counter()

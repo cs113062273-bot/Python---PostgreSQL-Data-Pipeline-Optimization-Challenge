@@ -1,0 +1,94 @@
+{
+  "kind": "reproducible_verification_storage_cleanup",
+  "runs": [
+    {
+      "timestamp_utc": "2026-10-26T20:08:54.787259+00:00",
+      "events": [
+        {
+          "database": "lab_100k",
+          "schema": "verify_17f7c2123a",
+          "receipt": "reports/fresh-parallel-ctas-100k-pilot.json",
+          "bytes": 155385856,
+          "removed": true
+        },
+        {
+          "database": "lab_100k",
+          "schema": "verify_18cfc46faf",
+          "receipt": "reports/fresh-parallel-ctas-100k-pilot.json",
+          "bytes": 155418624,
+          "removed": true
+        },
+        {
+          "database": "lab_100k",
+          "schema": "verify_aa7eb6c23a",
+          "receipt": "reports/fresh-parallel-ctas-100k-harness-failure.json",
+          "bytes": 155385856,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_08576eaa16",
+          "receipt": "reports/fresh-parallel-ctas-1m-harness-failure.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_285aecb005",
+          "receipt": "reports/fresh-guarded-parallel-1m-pilot.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_290168761d",
+          "receipt": "reports/fresh-parallel-ctas-bulk-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_2df388d2f8",
+          "receipt": "reports/fresh-parallel-ctas-bulk-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_7e9132a4e9",
+          "receipt": "reports/fresh-guarded-parallel-1m-pilot.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_a3b67fcb5f",
+          "receipt": "reports/fresh-parallel-ctas-bulk-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        }
+      ],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-26T21:42:59.646773+00:00",
+      "events": [
+        {
+          "database": "lab_1m",
+          "schema": "verify_37c6b18241",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_e998a72f63",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 1538277376,
+          "removed": true
+        }
+      ],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    }
+  ]
+}

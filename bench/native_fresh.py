@@ -11,6 +11,7 @@ import statistics
 import subprocess
 import sys
 import uuid
+import os
 from pathlib import Path
 from psycopg import sql
 from bench.common import connect,ROOT,write_report,environment
@@ -24,6 +25,7 @@ def main():
     p.add_argument('--modes',nargs='+',choices=['baseline','guarded_prefix','guarded_parallel','guarded_ctas','guarded_copy'],default=['baseline','guarded_ctas','guarded_copy'])
     p.add_argument('--repeats',type=int,default=1)
     p.add_argument('--output',default='reports/native-fresh-1m.json')
+    p.add_argument('--cpu-affinity',type=int,help='Optional identical local leader CPU pin; actual PID/affinity captured before SQL')
     args=p.parse_args()
     if args.repeats<1:p.error('repeats must be positive')
     if not args.template.startswith('lab_') or not args.reference.startswith('lab_'):p.error('Use disposable lab sources/references')
@@ -33,12 +35,16 @@ def main():
     output=Path(args.output).resolve()
     directory=output.with_suffix('')
     directory.mkdir(parents=True,exist_ok=True)
-    report={'kind':'fresh_local_original_service_complete_processing','official_score':False,'timestamp_utc':datetime.now(timezone.utc).isoformat(),'template':args.template,'reference':args.reference,'implementation_identity':implementation,'runs':[],
-            'method':'Fresh FILE_COPY clone per run; unchanged original preflight, actual counters and all six versions; no destination warmup; exact six-table verification after processing; Latin-square ordering; no backend affinity override',
+    report={'kind':'fresh_local_original_service_complete_processing','official_score':False,'timestamp_utc':datetime.now(timezone.utc).isoformat(),'template':args.template,'reference':args.reference,'implementation_identity':implementation,'measured_backend_cpu_affinity':args.cpu_affinity,'runs':[],
+            'method':'Fresh FILE_COPY clone per run; unchanged original preflight, actual counters and all six versions; no destination warmup; first run per mode uses exact six-table comparison, every run typed fingerprints/schema/counters/versions; Latin-square order; optional identical leader affinity is recorded explicitly',
             'metrics':'complete service wall includes preparation/preflight/transform/proof/staging/COPY I/O/rebuilding/validation/commit/control versions; native report totals also retained; clone/oracle excluded; Linux/SSH/GUI not claimed'}
     with connect(args.template,autocommit=True) as c:
         report['environment']=environment(c)
         report['source_rows']=c.execute('SELECT count(*) FROM public.raw_data').fetchone()[0]
+    checked=set()
+    child_environment=dict(os.environ)
+    if args.cpu_affinity is not None:child_environment['CHALLENGE_BACKEND_CPU_AFFINITY']=str(args.cpu_affinity)
+    else:child_environment.pop('CHALLENGE_BACKEND_CPU_AFFINITY',None)
     for repeat in range(args.repeats):
         shift=repeat%len(args.modes)
         for mode in args.modes[shift:]+args.modes[:shift]:
@@ -48,12 +54,15 @@ def main():
                 admin.execute(sql.SQL('CREATE DATABASE {} TEMPLATE {} STRATEGY FILE_COPY').format(sql.Identifier(db),sql.Identifier(args.template)))
             path=directory/f'{repeat+1}-{mode}.json'
             print(f'Native fresh {repeat+1}: {mode}: starting {db}',flush=True)
-            subprocess.run([sys.executable,'-m','bench.service_run','--database',db,'--mode',mode,'--reference',args.reference,'--output',str(path)],check=True,cwd=ROOT)
+            verification='fingerprints' if mode in checked else 'exact'
+            subprocess.run([sys.executable,'-m','bench.service_run','--database',db,'--mode',mode,'--reference',args.reference,'--verification',verification,'--output',str(path)],check=True,cwd=ROOT,env=child_environment)
             if identity()!=implementation:raise RuntimeError('Native source changed during execution; discard cohort')
             result=json.loads(path.read_text())
             row={'repeat':repeat,'mode':mode,'database':db,'wall_seconds':result['wall_seconds'],'native_measured_seconds':sum(i['seconds'] for i in result['timing_report']['items'] if i.get('include_in_total',True)),
-                 'exact_six_tables':result['exact_six_tables'],'counter_reconciliation':result['counter_reconciliation'],'versions':len(result['versions']),'report':str(path),'execution_architecture':result.get('execution_architecture')}
-            assert row['exact_six_tables'] and row['counter_reconciliation'] and row['versions']==6
+                 'exact_six_tables':result['exact_six_tables'],'six_table_fingerprints_equivalent':result['six_table_fingerprints_equivalent'],'counter_reconciliation':result['counter_reconciliation'],'versions':len(result['versions']),'report':str(path),'verification_schema':result['verification_schema'],'execution_architecture':result.get('execution_architecture'),'local_backend_diagnostics':result.get('local_backend_diagnostics')}
+            assert row['six_table_fingerprints_equivalent'] and row['counter_reconciliation'] and row['versions']==6
+            if args.cpu_affinity is not None:assert row['local_backend_diagnostics']['measured_affinity']==[args.cpu_affinity]
+            if verification=='exact':checked.add(mode)
             report['runs'].append(row)
             write_report(output,report)
     baseline=statistics.median(r['wall_seconds'] for r in report['runs'] if r['mode']=='baseline')

@@ -11,6 +11,14 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
+Latest 80% research: fresh 1M SQL-stage three-run medians are 107.190s official
+versus 20.111s candidate (81.24% less time). A separate complete local-service
+single-run pilot is 113.009s versus 20.976s for guarded_copy (81.44%). The latter
+includes actual preflight/counters/six versions and COPY cleanup. Repeated
+complete-service timing and final recovery qualification are pending; COPY
+currently supports only the local transport, and the 300M shared stage is not
+yet bounded. These are experimental successors to the older release below.
+
 ## Install and launch
 
 Python 3.10+ and PostgreSQL 17 are the tested API target. Actual tests used Python

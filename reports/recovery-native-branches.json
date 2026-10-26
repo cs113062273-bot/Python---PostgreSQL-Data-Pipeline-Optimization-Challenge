@@ -1,0 +1,30 @@
+{
+  "kind": "native_fast_valid_fallback_and_unrelated_workspace_preservation",
+  "tests": [
+    {
+      "name": "ctas_fast",
+      "database": "lab_native_branch_37899cfc",
+      "mode": "guarded_ctas",
+      "fast": true,
+      "all_passed": true,
+      "report": "reports\\local-service-ctas_fast64.json"
+    },
+    {
+      "name": "copy_valid_fallback",
+      "database": "lab_native_branch_fa3bc837",
+      "mode": "guarded_copy",
+      "fast": false,
+      "all_passed": true,
+      "report": "reports\\local-service-copy_valid_fallback64.json"
+    },
+    {
+      "name": "copy_namespace_collision",
+      "database": "lab_native_branch_0e49f705",
+      "mode": "guarded_copy",
+      "fast": false,
+      "all_passed": true,
+      "report": "reports\\local-service-copy_namespace_collision64.json"
+    }
+  ],
+  "all_passed": true
+}

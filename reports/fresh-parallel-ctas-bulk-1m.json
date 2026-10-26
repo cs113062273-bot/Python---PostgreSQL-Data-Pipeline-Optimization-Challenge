@@ -1,0 +1,640 @@
+{
+  "kind": "fresh_database_per_run_sql_diagnostic",
+  "official_score": false,
+  "template": "lab_template_1m",
+  "clone_strategy": "FILE_COPY",
+  "measured_backend_cpu_affinity": 2,
+  "order": "latin",
+  "reference": "lab_1m",
+  "timestamp_utc": "2026-10-26T19:49:59.916231+00:00",
+  "runs": [
+    {
+      "mode": "baseline",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 103.61809500000001,
+      "commit_client_wall_seconds": 0.020251800000551157,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.40658,
+          "rows": 2
+        },
+        {
+          "name": "public.table3",
+          "seconds": 2.960503,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 2.325124,
+          "rows": 27
+        },
+        {
+          "name": "public.table1",
+          "seconds": 32.786609,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 9.737379,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 12.08037,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 43.32153,
+          "rows": 2321522
+        }
+      ],
+      "wal_cluster_delta_bytes": 3239584928,
+      "db_cumulative_temp_files": 2,
+      "db_cumulative_temp_bytes": 78315520,
+      "backend_rss_peak_bytes": 191283200,
+      "application_rss_peak_bytes": 104472576,
+      "parallel_workers_peak_sampled": 2,
+      "backend_and_worker_rss_sum_peak_bytes": 191283200,
+      "parallel_worker_cpu_seconds_sampled_lower_bound": 0.421875,
+      "parallel_worker_resource_scope": "200ms worker sampling; CPU is a lower bound because workers exit between samples; summed RSS double-counts shared mappings; backend CPU excludes workers",
+      "backend_cpu_seconds_including_commit": 90.546875,
+      "verification_schema": "verify_2df388d2f8",
+      "exact_except_all": true,
+      "database": "lab_fresh_b5e99ac71a",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "lab_parallel_ctas",
+      "bulk_strategy_sql_sha256": "9dd81020c7c3eadf41914b4e38b596978bd3de484fa9b5d27617f3e65543db7d",
+      "proven_safe_domain": true,
+      "guarded_work_mem_override": "64MB",
+      "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 26.917116000000004,
+      "commit_client_wall_seconds": 0.05659320000268053,
+      "stages": [
+        {
+          "name": "normalize_and_prove_domain",
+          "seconds": 4.255206,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.017262,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.328719,
+          "rows": 2
+        },
+        {
+          "name": "parallel_transform_table3",
+          "seconds": 0.240511,
+          "rows": null
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.001145,
+          "rows": 4
+        },
+        {
+          "name": "ctas_cleanup_table3",
+          "seconds": 0.000409,
+          "rows": null
+        },
+        {
+          "name": "analyze_public.table3",
+          "seconds": 0.000401,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table4",
+          "seconds": 0.223838,
+          "rows": null
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.000483,
+          "rows": 27
+        },
+        {
+          "name": "ctas_cleanup_table4",
+          "seconds": 0.000341,
+          "rows": null
+        },
+        {
+          "name": "analyze_public.table4",
+          "seconds": 0.000338,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table1",
+          "seconds": 0.0044,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table1",
+          "seconds": 1.07577,
+          "rows": null
+        },
+        {
+          "name": "public.table1",
+          "seconds": 1.601104,
+          "rows": 1000000
+        },
+        {
+          "name": "ctas_cleanup_table1",
+          "seconds": 0.00047,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table1",
+          "seconds": 0.586588,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table5",
+          "seconds": 0.001566,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table5",
+          "seconds": 0.441726,
+          "rows": null
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.506737,
+          "rows": 1000000
+        },
+        {
+          "name": "ctas_cleanup_table5",
+          "seconds": 0.001149,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table5",
+          "seconds": 0.288378,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table6",
+          "seconds": 0.002321,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table6",
+          "seconds": 0.48961,
+          "rows": null
+        },
+        {
+          "name": "public.table6",
+          "seconds": 2.643669,
+          "rows": 1000000
+        },
+        {
+          "name": "ctas_cleanup_table6",
+          "seconds": 0.000401,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table6",
+          "seconds": 0.289863,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table2",
+          "seconds": 0.015427,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table2",
+          "seconds": 5.206577,
+          "rows": null
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.242557,
+          "rows": 2321522
+        },
+        {
+          "name": "ctas_cleanup_table2",
+          "seconds": 0.000633,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table2",
+          "seconds": 1.566183,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 1.882871,
+          "rows": null
+        },
+        {
+          "name": "logged_stage_cleanup",
+          "seconds": 0.000463,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 1098157416,
+      "db_cumulative_temp_files": 40,
+      "db_cumulative_temp_bytes": 192069632,
+      "backend_rss_peak_bytes": 242597888,
+      "application_rss_peak_bytes": 138792960,
+      "parallel_workers_peak_sampled": 7,
+      "backend_and_worker_rss_sum_peak_bytes": 844234752,
+      "parallel_worker_cpu_seconds_sampled_lower_bound": 35.53125,
+      "parallel_worker_resource_scope": "200ms worker sampling; CPU is a lower bound because workers exit between samples; summed RSS double-counts shared mappings; backend CPU excludes workers",
+      "backend_cpu_seconds_including_commit": 20.734375,
+      "verification_schema": "verify_a3b67fcb5f",
+      "exact_except_all": true,
+      "database": "lab_fresh_981b452043",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "lab_parallel_bulk",
+      "bulk_strategy_sql_sha256": "1be10a1677ee36f2a138619289c562d3cd861fae374859f8330ae3d2ac69f72e",
+      "proven_safe_domain": true,
+      "guarded_work_mem_override": "64MB",
+      "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 20.787422999999997,
+      "commit_client_wall_seconds": 0.0605541999975685,
+      "stages": [
+        {
+          "name": "normalize_and_prove_domain",
+          "seconds": 4.268336,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.017991,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.324014,
+          "rows": 2
+        },
+        {
+          "name": "parallel_transform_table3",
+          "seconds": 0.240482,
+          "rows": null
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.001121,
+          "rows": 4
+        },
+        {
+          "name": "ctas_cleanup_table3",
+          "seconds": 0.000396,
+          "rows": null
+        },
+        {
+          "name": "analyze_public.table3",
+          "seconds": 0.000392,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table4",
+          "seconds": 0.214082,
+          "rows": null
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.000628,
+          "rows": 27
+        },
+        {
+          "name": "ctas_cleanup_table4",
+          "seconds": 0.000469,
+          "rows": null
+        },
+        {
+          "name": "analyze_public.table4",
+          "seconds": 0.000338,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table1",
+          "seconds": 0.004422,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table1",
+          "seconds": 1.159471,
+          "rows": null
+        },
+        {
+          "name": "public.table1",
+          "seconds": 1.650996,
+          "rows": 1000000
+        },
+        {
+          "name": "ctas_cleanup_table1",
+          "seconds": 0.000397,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table1",
+          "seconds": 0.580365,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table5",
+          "seconds": 0.004359,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table5",
+          "seconds": 0.429795,
+          "rows": null
+        },
+        {
+          "name": "public.table5",
+          "seconds": 1.1738,
+          "rows": 1000000
+        },
+        {
+          "name": "ctas_cleanup_table5",
+          "seconds": 0.000513,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table5",
+          "seconds": 0.546693,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table6",
+          "seconds": 0.002483,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table6",
+          "seconds": 0.480632,
+          "rows": null
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.002042,
+          "rows": 1000000
+        },
+        {
+          "name": "ctas_cleanup_table6",
+          "seconds": 0.003134,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table6",
+          "seconds": 0.655485,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table2",
+          "seconds": 0.003023,
+          "rows": null
+        },
+        {
+          "name": "parallel_transform_table2",
+          "seconds": 1.430104,
+          "rows": null
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.266786,
+          "rows": 2321522
+        },
+        {
+          "name": "ctas_cleanup_table2",
+          "seconds": 0.000673,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_restore_table2",
+          "seconds": 1.411032,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 1.912499,
+          "rows": null
+        },
+        {
+          "name": "logged_stage_cleanup",
+          "seconds": 0.00047,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 976892240,
+      "db_cumulative_temp_files": 52,
+      "db_cumulative_temp_bytes": 240214016,
+      "backend_rss_peak_bytes": 326123520,
+      "application_rss_peak_bytes": 172691456,
+      "parallel_workers_peak_sampled": 7,
+      "backend_and_worker_rss_sum_peak_bytes": 1889329152,
+      "parallel_worker_cpu_seconds_sampled_lower_bound": 38.078125,
+      "parallel_worker_resource_scope": "200ms worker sampling; CPU is a lower bound because workers exit between samples; summed RSS double-counts shared mappings; backend CPU excludes workers",
+      "backend_cpu_seconds_including_commit": 14.953125,
+      "verification_schema": "verify_290168761d",
+      "exact_except_all": true,
+      "database": "lab_fresh_12dbfcc314",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    }
+  ],
+  "implementation_identity": {
+    "compiler_sha256": "e347a67476665638b12b8b60bf660fdac6a178478f61b299839ccdbcfa030055",
+    "bench/run.py": "fbccf6ce9b901509cefc1eaa6b0c8d4de47aaf00ff71d02edb931e7bd5131e75",
+    "bench/fresh.py": "1b6e45abb4f70c2fb18026e31fa138a50f6387e781a4e58f9377e30f80663dd2"
+  },
+  "method": "new database clone for each run; no destination warmup/TRUNCATE; typed fingerprints each run; central bidirectional EXCEPT ALL once per mode after timing",
+  "exclusions": [
+    "clone",
+    "oracle",
+    "full preflight/counters/versions/GUI/SSH",
+    "locks",
+    "commit latency (reported separately)"
+  ],
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "e3ef5f2f78ddf2444a672abd354c61ba2e42827c",
+    "git_status": "?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? reports/extraction-probe-1m.json\n?? reports/fresh-guarded-parallel-1m-pilot.json\n?? reports/fresh-parallel-ctas-100k-harness-failure.json\n?? reports/fresh-parallel-ctas-100k-pilot.json\n?? reports/fresh-parallel-ctas-1m-harness-failure.json\n?? reports/fresh-parallel-ctas-1m-pilot.json\n?? reports/local-service-guarded-parallel-fast64.json\n?? reports/local-service-guarded-parallel-fast64.txt\n?? reports/parallel-domain-probe-1m.json\n?? reports/parallel-extraction-probe-1m.json\n?? reports/plans/parallel-ctas-100k.json\n?? reports/recovery-guarded-parallel-atomic.json\n?? reports/recovery-parallel-indexes.json\n?? reports/semantics-guarded-parallel-pilot.json\n?? reports/semantics-parallel-bulk-pilot.json\n?? reports/semantics-parallel-ctas-pilot.json\n?? reports/semantics-parallel-research.json\n?? reports/sql/65c814b029cd148f9f44bcee225b328058776dd7936ed63a570b43556865a227.sql\n?? reports/sql/6bd8f4ea41ca7d8521e8ec88a9025e207b6029040db033f10fef526e01a8f7cc.sql\n?? reports/sql/76203871c048b1e406b2a3562abecfb9a088c989232588c842aa2f58f8b02924.sql\n?? reports/sql/fd9e5f31a98958d08aa5b15eb0b6f25cb97070adb47c3d2013b3909ef5972056.sql",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 1000000,
+  "summary": {
+    "baseline": {
+      "individual_seconds": [
+        103.61809500000001
+      ],
+      "median": 103.61809500000001,
+      "min": 103.61809500000001,
+      "max": 103.61809500000001,
+      "reduction_percent": 0.0
+    },
+    "lab_parallel_ctas": {
+      "individual_seconds": [
+        26.917116000000004
+      ],
+      "median": 26.917116000000004,
+      "min": 26.917116000000004,
+      "max": 26.917116000000004,
+      "reduction_percent": 74.02276503925303
+    },
+    "lab_parallel_bulk": {
+      "individual_seconds": [
+        20.787422999999997
+      ],
+      "median": 20.787422999999997,
+      "min": 20.787422999999997,
+      "max": 20.787422999999997,
+      "reduction_percent": 79.93842388243097
+    }
+  }
+}

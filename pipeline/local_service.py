@@ -7,7 +7,6 @@ service and are not simulated as successful.
 import os
 from pathlib import Path
 import shlex
-import subprocess
 import time
 import tempfile
 
@@ -49,8 +48,10 @@ class LocalService(PostgresAdminService):
                 raise RuntimeError('Unexpected COPY workspace path')
             setup_seconds=time.perf_counter()-started
         try:
-            result = subprocess.run(args, input=stdin_text, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                                    timeout=kwargs.get("timeout_seconds"), shell=False,cwd=copy_directory)
+            from pipeline.local_diagnostics import run_psql
+            cpu=os.environ.get('CHALLENGE_BACKEND_CPU_AFFINITY') if isinstance(stdin_text,str) and 'BEGIN ISOLATION LEVEL REPEATABLE READ;' in stdin_text and 'pgdm_cross_table_hash_manifest' in stdin_text else None
+            result=run_psql(args,stdin_text,cwd=copy_directory,timeout=kwargs.get('timeout_seconds'),cpu=int(cpu) if cpu is not None else None)
+            if getattr(result,'local_backend_diagnostics',None) is not None:self._expansion_timing_local.local_backend_diagnostics=result.local_backend_diagnostics
         finally:
             if copy_directory is not None:
                 cleanup_started=time.perf_counter()

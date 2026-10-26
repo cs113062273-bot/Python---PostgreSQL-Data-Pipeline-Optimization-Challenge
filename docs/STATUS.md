@@ -1,11 +1,32 @@
 # Current status
 
-The active objective is now **80% less time than the official original**; it
-has not been achieved. The latest fresh 1M, one-run SQL-stage research result is
-**79.9384%** (103.618095s to 20.787423s), with exact six-table and schema checks.
-It misses the 80% threshold by 0.063804s and is not a full-service/repeated claim.
-The earlier parallel projection alone reached 70.44%. These are separate from
-the earlier qualified release below.
+The active objective is **80% less time than the official original**. Local
+timings have crossed that threshold, but final qualification is incomplete.
+Do not interpret these results as an official score or a completed submission.
+
+| Fresh 1M cohort | Official original | Candidate | Time reduction |
+|---|---:|---:|---:|
+| SQL stages, three-run medians | 107.190432s | lab_parallel_cache 20.111344s | **81.24%** |
+| Complete local original service, single-run pilot | 113.008988s | guarded_copy 20.975695s | **81.44%** |
+| Same complete-service pilot | 113.008988s | guarded_ctas 22.581307s | **80.02%** |
+
+Sources: [repeated SQL cohort](../reports/fresh-parallel-cache-1m-repeated.json)
+and [complete-service pilot](../reports/native-fresh-ctas-copy-1m-pilot.json).
+The latter includes native preflight, actual counters, transformation, proof,
+staging, COPY files, all rebuilding/validation, commit and six control versions.
+The SQL cohort pins the leader to CPU 2 equally; the service pilot has no pin.
+They are separate experiments and must not be pooled. Every mode has exact
+six-table output checks plus restored schema/sequence metadata checks.
+
+Native COPY additionally passed 121 actual-batch semantic differential cases,
+six changed-schema binary-layout fallback cases and 22 actual-batch exception /
+backend termination cases. Real server-crash/retry, dump/restore, concurrency
+and repeated complete-service timing remain qualification work. A separate
+unexpected Windows child-process heap corruption is recorded in
+[the incident note](CRASH_INVESTIGATION.md); its root cause is not established.
+The COPY transport is local-only, the GUI/default remains unchanged, and the
+whole-batch shared stage still needs a bounded architecture for 300M rows.
+These candidates are separate from the earlier qualified release below.
 See [parallel research and its remaining gates](PARALLEL_RESEARCH.md).
 
 The local 100k SQL-stage target is achieved: guarded_prefix reduces the

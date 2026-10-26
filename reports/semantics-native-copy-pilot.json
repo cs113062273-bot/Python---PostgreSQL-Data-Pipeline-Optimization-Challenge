@@ -1,0 +1,2895 @@
+{
+  "kind": "actual_psql_native_copy_differential",
+  "database": "lab_native_copy_fuzz_10cd4de5",
+  "compiler_sha256": "abd280d11d8b89c396304493907a0578b885123cc49b77d319d23af07f84c008",
+  "seed": 718,
+  "cases": [
+    {
+      "index": 0,
+      "case": {
+        "name": "unchanged",
+        "edits": []
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 1,
+      "case": {
+        "name": "values-shape",
+        "shape": null
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 2,
+      "case": {
+        "name": "values-shape",
+        "shape": []
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 3,
+      "case": {
+        "name": "values-shape",
+        "shape": "text"
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 4,
+      "case": {
+        "name": "values-shape",
+        "shape": 42
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 5,
+      "case": {
+        "name": "values-shape",
+        "shape": true
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 6,
+      "case": {
+        "name": "values-shape",
+        "shape": {}
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 7,
+      "case": {
+        "name": "values-shape",
+        "shape": [
+          1,
+          2
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 8,
+      "case": {
+        "name": "missing-values",
+        "missing_values": true
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 9,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_13",
+            []
+          ]
+        ],
+        "remove": "text_column_1"
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 10,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_5",
+            "x"
+          ],
+          [
+            "text_column_2",
+            "-32769"
+          ],
+          [
+            "numeric_column_9",
+            "1e400"
+          ],
+          [
+            "numeric_column_23",
+            2
+          ],
+          [
+            "numeric_column_22",
+            "1.2"
+          ]
+        ],
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 11,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_5",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "id_column_1",
+            {}
+          ],
+          [
+            "numeric_column_13",
+            null
+          ],
+          [
+            "text_column_2",
+            "?"
+          ],
+          [
+            "integer_column_13",
+            "Infinity"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 12,
+      "case": {
+        "name": "sparse-hole",
+        "edits": [
+          [
+            "integer_column_15",
+            "14"
+          ],
+          [
+            "text_column_17",
+            "Z"
+          ],
+          [
+            "numeric_column_29",
+            "1"
+          ],
+          [
+            "numeric_column_30",
+            "0"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 13,
+      "case": {
+        "name": "declared-bound",
+        "edits": [
+          [
+            "integer_column_2",
+            null
+          ],
+          [
+            "integer_column_3",
+            null
+          ],
+          [
+            "integer_column_4",
+            null
+          ],
+          [
+            "integer_column_5",
+            null
+          ],
+          [
+            "integer_column_6",
+            null
+          ],
+          [
+            "integer_column_7",
+            null
+          ],
+          [
+            "integer_column_8",
+            null
+          ],
+          [
+            "integer_column_9",
+            null
+          ],
+          [
+            "integer_column_10",
+            null
+          ],
+          [
+            "integer_column_11",
+            null
+          ],
+          [
+            "integer_column_12",
+            null
+          ],
+          [
+            "integer_column_13",
+            null
+          ],
+          [
+            "integer_column_14",
+            null
+          ],
+          [
+            "integer_column_15",
+            null
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 14,
+      "case": {
+        "name": "declared-bound",
+        "edits": [
+          [
+            "integer_column_2",
+            "-1"
+          ],
+          [
+            "integer_column_3",
+            "-1"
+          ],
+          [
+            "integer_column_4",
+            "-1"
+          ],
+          [
+            "integer_column_5",
+            "-1"
+          ],
+          [
+            "integer_column_6",
+            "-1"
+          ],
+          [
+            "integer_column_7",
+            "-1"
+          ],
+          [
+            "integer_column_8",
+            "-1"
+          ],
+          [
+            "integer_column_9",
+            "-1"
+          ],
+          [
+            "integer_column_10",
+            "-1"
+          ],
+          [
+            "integer_column_11",
+            "-1"
+          ],
+          [
+            "integer_column_12",
+            "-1"
+          ],
+          [
+            "integer_column_13",
+            "-1"
+          ],
+          [
+            "integer_column_14",
+            "-1"
+          ],
+          [
+            "integer_column_15",
+            "-1"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 15,
+      "case": {
+        "name": "declared-bound",
+        "edits": [
+          [
+            "integer_column_2",
+            "9999"
+          ],
+          [
+            "integer_column_3",
+            "9999"
+          ],
+          [
+            "integer_column_4",
+            "9999"
+          ],
+          [
+            "integer_column_5",
+            "9999"
+          ],
+          [
+            "integer_column_6",
+            "9999"
+          ],
+          [
+            "integer_column_7",
+            "9999"
+          ],
+          [
+            "integer_column_8",
+            "9999"
+          ],
+          [
+            "integer_column_9",
+            "9999"
+          ],
+          [
+            "integer_column_10",
+            "9999"
+          ],
+          [
+            "integer_column_11",
+            "9999"
+          ],
+          [
+            "integer_column_12",
+            "9999"
+          ],
+          [
+            "integer_column_13",
+            "9999"
+          ],
+          [
+            "integer_column_14",
+            "9999"
+          ],
+          [
+            "integer_column_15",
+            "9999"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 16,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_15",
+            ""
+          ],
+          [
+            "numeric_column_29",
+            "bad"
+          ],
+          [
+            "text_column_17",
+            "X"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 17,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_15",
+            "bad"
+          ],
+          [
+            "numeric_column_29",
+            "-1"
+          ],
+          [
+            "text_column_17",
+            "?"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 18,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_2",
+            "40000"
+          ],
+          [
+            "numeric_column_3",
+            "bad"
+          ],
+          [
+            "text_column_4",
+            "X"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 19,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_2",
+            "1"
+          ],
+          [
+            "numeric_column_3",
+            "1e400"
+          ],
+          [
+            "numeric_column_4",
+            "bad"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 20,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "text_column_2",
+            [
+              "X"
+            ]
+          ],
+          [
+            "numeric_column_7",
+            []
+          ],
+          [
+            "integer_column_1",
+            true
+          ],
+          [
+            "numeric_column_19",
+            null
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 21,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            1.5
+          ],
+          [
+            "numeric_column_24",
+            "nope"
+          ],
+          [
+            "numeric_column_20",
+            "?"
+          ],
+          [
+            "numeric_column_21",
+            "x"
+          ]
+        ],
+        "remove": "numeric_column_5",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 22,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_29",
+            "Z"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 23,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_16",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 24,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_21",
+            null
+          ],
+          [
+            "text_column_14",
+            null
+          ],
+          [
+            "numeric_column_16",
+            [
+              "X"
+            ]
+          ],
+          [
+            "integer_column_15",
+            "Infinity"
+          ],
+          [
+            "text_column_16",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 25,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_6",
+            null
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 26,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_24",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 27,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "datetime_column_1",
+            " 2 "
+          ],
+          [
+            "integer_column_15",
+            "32768"
+          ],
+          [
+            "numeric_column_27",
+            "999999999999999999999999999999999999999999999"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22007",
+        "guarded_copy": "22007"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 28,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_16",
+            "?"
+          ]
+        ],
+        "remove": "numeric_column_13",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 29,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_23",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 30,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_3",
+            "1e400"
+          ],
+          [
+            "numeric_column_4",
+            []
+          ],
+          [
+            "datetime_column_1",
+            []
+          ],
+          [
+            "integer_column_6",
+            "1e400"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22007",
+        "guarded_copy": "22007"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 31,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_24",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 32,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_7",
+            null
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 33,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_30",
+            "999999999999999999999999999999999999999999999"
+          ],
+          [
+            "text_column_6",
+            "NaN"
+          ],
+          [
+            "numeric_column_10",
+            [
+              "X"
+            ]
+          ],
+          [
+            "numeric_column_2",
+            null
+          ],
+          [
+            "text_column_8",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 34,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_6",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 35,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_29",
+            "Z"
+          ]
+        ],
+        "remove": "numeric_column_26",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 36,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_24",
+            " "
+          ],
+          [
+            "text_column_9",
+            "-1"
+          ],
+          [
+            "numeric_column_7",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 37,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            "?"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 38,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "datetime_column_1",
+            1.5
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22007",
+        "guarded_copy": "22007"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 39,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_12",
+            null
+          ],
+          [
+            "integer_column_2",
+            ""
+          ],
+          [
+            "numeric_column_18",
+            "nope"
+          ],
+          [
+            "numeric_column_17",
+            "Infinity"
+          ],
+          [
+            "numeric_column_8",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 40,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_15",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 41,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_1",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 42,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_8",
+            "1.2"
+          ],
+          [
+            "id_column_1",
+            []
+          ],
+          [
+            "text_column_6",
+            true
+          ],
+          [
+            "integer_column_2",
+            "?"
+          ]
+        ],
+        "remove": "id_column_1",
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 43,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_3",
+            "1e400"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 44,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_11",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 45,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_23",
+            "1e400"
+          ],
+          [
+            "numeric_column_17",
+            "999999999999999999999999999999999999999999999"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 46,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_4",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 47,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_15",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 48,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_5",
+            null
+          ],
+          [
+            "text_column_10",
+            {}
+          ],
+          [
+            "numeric_column_30",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 49,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_15",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": "numeric_column_23",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 50,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_3",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 51,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_12",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "integer_column_8",
+            "nope"
+          ],
+          [
+            "text_column_1",
+            []
+          ],
+          [
+            "text_column_3",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 52,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_4",
+            "-1"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 53,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 54,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_1",
+            "999999999999999999999999999999999999999999999"
+          ],
+          [
+            "numeric_column_17",
+            {}
+          ],
+          [
+            "integer_column_1",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 55,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_26",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 56,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_7",
+            "1.2"
+          ]
+        ],
+        "remove": "integer_column_3",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 57,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_8",
+            2
+          ],
+          [
+            "text_column_15",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 58,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_14",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 59,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_3",
+            {}
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 60,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            "-32769"
+          ],
+          [
+            "integer_column_13",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 61,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_1",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 62,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_29",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 63,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_21",
+            true
+          ],
+          [
+            "numeric_column_23",
+            "Z"
+          ],
+          [
+            "numeric_column_4",
+            {}
+          ],
+          [
+            "numeric_column_1",
+            " "
+          ],
+          [
+            "numeric_column_19",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": "numeric_column_19",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 64,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_7",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 65,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_4",
+            "Z"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 66,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            "nope"
+          ],
+          [
+            "integer_column_7",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "text_column_11",
+            " 2 "
+          ],
+          [
+            "integer_column_1",
+            "x"
+          ],
+          [
+            "integer_column_1",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 67,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_5",
+            2
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 68,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_12",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 69,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_6",
+            {}
+          ],
+          [
+            "text_column_6",
+            "x"
+          ],
+          [
+            "integer_column_9",
+            1.5
+          ],
+          [
+            "numeric_column_17",
+            [
+              "X"
+            ]
+          ],
+          [
+            "text_column_11",
+            "Z"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 70,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            {}
+          ]
+        ],
+        "remove": "integer_column_13",
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 71,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_11",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 72,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_26",
+            true
+          ],
+          [
+            "text_column_3",
+            ""
+          ],
+          [
+            "integer_column_7",
+            "1.2"
+          ],
+          [
+            "integer_column_9",
+            "x"
+          ],
+          [
+            "numeric_column_13",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 73,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_16",
+            "-1"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 74,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_7",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 75,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_13",
+            "1e400"
+          ],
+          [
+            "numeric_column_9",
+            " "
+          ],
+          [
+            "numeric_column_3",
+            "?"
+          ],
+          [
+            "text_column_4",
+            "1.2"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 76,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            "-1"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 77,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_4",
+            2
+          ]
+        ],
+        "remove": "numeric_column_12",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 78,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_23",
+            "-32769"
+          ],
+          [
+            "integer_column_6",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 79,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_11",
+            true
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 80,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_2",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 81,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_23",
+            ""
+          ],
+          [
+            "text_column_5",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 82,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_16",
+            1.5
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 83,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_8",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 84,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_12",
+            "-1"
+          ],
+          [
+            "numeric_column_12",
+            []
+          ]
+        ],
+        "remove": "text_column_9",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 85,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_28",
+            "-32769"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 86,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_4",
+            {}
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 87,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_11",
+            "-1"
+          ],
+          [
+            "numeric_column_27",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 88,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 89,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 90,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_12",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "numeric_column_29",
+            [
+              "X"
+            ]
+          ],
+          [
+            "integer_column_15",
+            "-0.1"
+          ],
+          [
+            "text_column_6",
+            "x"
+          ],
+          [
+            "numeric_column_16",
+            "?"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 91,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_22",
+            {}
+          ]
+        ],
+        "remove": "id_column_1",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 92,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_4",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 93,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_27",
+            "32768"
+          ],
+          [
+            "numeric_column_22",
+            " 2 "
+          ],
+          [
+            "integer_column_7",
+            "1.2"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 94,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_3",
+            "1.2"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 95,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_10",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 96,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_10",
+            null
+          ],
+          [
+            "numeric_column_28",
+            "-32769"
+          ],
+          [
+            "text_column_8",
+            "Infinity"
+          ],
+          [
+            "integer_column_13",
+            2
+          ],
+          [
+            "integer_column_1",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 97,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_8",
+            {}
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 98,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            null
+          ]
+        ],
+        "remove": "text_column_17",
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 99,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_10",
+            " "
+          ],
+          [
+            "text_column_10",
+            "nope"
+          ],
+          [
+            "numeric_column_21",
+            2
+          ],
+          [
+            "text_column_11",
+            1.5
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 100,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_10",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 101,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_6",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 102,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            "32768"
+          ],
+          [
+            "numeric_column_11",
+            "NaN"
+          ],
+          [
+            "text_column_13",
+            1.5
+          ],
+          [
+            "numeric_column_19",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 103,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_17",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 104,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_21",
+            "-32769"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 105,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_14",
+            "32768"
+          ],
+          [
+            "id_column_1",
+            "-32769"
+          ],
+          [
+            "integer_column_6",
+            "Infinity"
+          ]
+        ],
+        "remove": "text_column_2",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 106,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_10",
+            "999999999999999999999999999999999999999999999"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 107,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_2",
+            "1e400"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 108,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_3",
+            2
+          ],
+          [
+            "numeric_column_19",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 109,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_22",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 110,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_5",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 111,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_19",
+            2
+          ],
+          [
+            "numeric_column_10",
+            " "
+          ],
+          [
+            "text_column_1",
+            1.5
+          ],
+          [
+            "text_column_8",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 112,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            "Infinity"
+          ]
+        ],
+        "remove": "numeric_column_25",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 113,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            2
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 114,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_13",
+            "Infinity"
+          ],
+          [
+            "numeric_column_24",
+            true
+          ],
+          [
+            "text_column_17",
+            true
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 115,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_14",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 116,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_6",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 117,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_14",
+            "32768"
+          ],
+          [
+            "integer_column_5",
+            "999999999999999999999999999999999999999999999"
+          ],
+          [
+            "text_column_10",
+            "x"
+          ],
+          [
+            "text_column_13",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 118,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_8",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 119,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_2",
+            "?"
+          ]
+        ],
+        "remove": "integer_column_10",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    },
+    {
+      "index": 120,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_11",
+            "-32769"
+          ],
+          [
+            "numeric_column_22",
+            2
+          ],
+          [
+            "numeric_column_23",
+            "Z"
+          ],
+          [
+            "numeric_column_28",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "integer_column_11",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true
+    }
+  ],
+  "mismatches": [],
+  "policy": "Same acceptance, all six canonical outputs and native counters; same first SQLSTATE/primary message; exact protected schema/sequence options and workspace restoration after every success/error. Deliberately mutated fixtures, never ranking data.",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "9b6e61c7fb1af091caf884a3d56d3a7f51ca3401",
+    "git_status": "M bench/run.py\n M bench/service_run.py\n M pipeline/bulk_indexes.py\n M pipeline/guarded_normalization.py\n M pipeline/local_service.py\n M pipeline/parallel_normalization.py\n M pipeline/recipes.py\n M reports/sql/b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78.sql\n M tests/equivalence/oracle.py\n M tests/semantics/fuzz.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/native_fresh.py\n?? pipeline/native_copy.py\n?? pipeline/workspace.py\n?? reports/copy-sequence-table2-component-1m.json\n?? reports/copy-table2-component-100k.json\n?? reports/direct-copy-table2-component-1m.json\n?? reports/extraction-probe-1m.json\n?? reports/fk-validation-components-1m.json\n?? reports/fresh-guarded-parallel-1m-pilot.json\n?? reports/fresh-parallel-cache-1m-repeated.json\n?? reports/fresh-parallel-ctas-100k-harness-failure.json\n?? reports/fresh-parallel-ctas-100k-pilot.json\n?? reports/fresh-parallel-ctas-1m-harness-failure.json\n?? reports/fresh-parallel-ctas-1m-pilot.json\n?? reports/fresh-parallel-ctas-bulk-1m.json\n?? reports/local-service-guarded-parallel-fast64.json\n?? reports/local-service-guarded-parallel-fast64.txt\n?? reports/local-service-native-copy-fast64.json\n?? reports/local-service-native-copy-fast64.txt\n?? reports/maintenance-components-1m.json\n?? reports/parallel-domain-probe-1m.json\n?? reports/parallel-extraction-probe-1m.json\n?? reports/plans/parallel-ctas-100k.json\n?? reports/plans/parallel-ctas-1m.json\n?? reports/plans/parallel-join-tuning-analyze.json\n?? reports/plans/parallel-join-tuning.json\n?? reports/recovery-guarded-parallel-atomic.json\n?? reports/recovery-parallel-indexes.json\n?? reports/recovery-sequence-cache.json\n?? reports/semantics-guarded-parallel-pilot.json\n?? reports/semantics-parallel-bulk-pilot.json\n?? reports/semantics-parallel-cache-pilot.json\n?? reports/semantics-parallel-ctas-pilot.json\n?? reports/semantics-parallel-research.json\n?? reports/sql/1be10a1677ee36f2a138619289c562d3cd861fae374859f8330ae3d2ac69f72e.sql\n?? reports/sql/25a1df6edb2514b5455216a21778d57f4ad57fbcae2178473e5f7aec0cb9c440.sql\n?? reports/sql/65c814b029cd148f9f44bcee225b328058776dd7936ed63a570b43556865a227.sql\n?? reports/sql/6bd8f4ea41ca7d8521e8ec88a9025e207b6029040db033f10fef526e01a8f7cc.sql\n?? reports/sql/76203871c048b1e406b2a3562abecfb9a088c989232588c842aa2f58f8b02924.sql\n?? reports/sql/9dd81020c7c3eadf41914b4e38b596978bd3de484fa9b5d27617f3e65543db7d.sql\n?? reports/sql/a0da596cc183326bb2a2b0a36b0f8866020a9b2d438d5a1d6897d4713a39e059.sql\n?? reports/sql/fd9e5f31a98958d08aa5b15eb0b6f25cb97070adb47c3d2013b3909ef5972056.sql\n?? reports/verification-scratch-cleanup.json\n?? tests/semantics/native_copy.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "all_passed": true
+}

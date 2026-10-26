@@ -24,7 +24,11 @@ def conditional_sql(sql):
 def prepare_sql(scopes,mode=MODE):
     if mode in ('guarded_ctas',)+COPY_MODES:
         from pipeline.workspace import prepare_sql as workspace_sql,RELATION
-        return workspace_sql(scopes)+'\n'+conditional_sql("PERFORM pg_catalog.set_config('work_mem','64MB',true); ANALYZE "+RELATION+"(raw_id,text_column_1,text_column_2,text_column_3);")
+        layout=''
+        if mode in COPY_MODES:
+            from pipeline.native_copy import layout_guard_sql
+            layout='\n'+layout_guard_sql()
+        return workspace_sql(scopes)+layout+'\n'+conditional_sql("PERFORM pg_catalog.set_config('work_mem','64MB',true); ANALYZE "+RELATION+"(raw_id,text_column_1,text_column_2,text_column_3);")
     if mode in ('guarded_parallel',)+CTAS_MODES:
         from pipeline.parallel_normalization import prepare_sql as parallel_sql
         relation='challenge_lab.pipeline_normalized_input' if mode in CTAS_MODES else 'pg_temp.pipeline_normalized_input'

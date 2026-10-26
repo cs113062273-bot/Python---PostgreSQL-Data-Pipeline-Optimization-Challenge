@@ -1,0 +1,323 @@
+{
+  "kind": "fresh_database_per_run_sql_diagnostic",
+  "official_score": false,
+  "template": "lab_template_1m",
+  "clone_strategy": "FILE_COPY",
+  "measured_backend_cpu_affinity": 2,
+  "order": "latin",
+  "reference": "lab_1m",
+  "timestamp_utc": "2026-10-26T19:31:28.659170+00:00",
+  "runs": [
+    {
+      "mode": "baseline",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 104.24307200000001,
+      "commit_client_wall_seconds": 0.011093799999798648,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.393919,
+          "rows": 2
+        },
+        {
+          "name": "public.table3",
+          "seconds": 3.152578,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 2.4392,
+          "rows": 27
+        },
+        {
+          "name": "public.table1",
+          "seconds": 32.894947,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 10.004014,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 12.172539,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 43.185875,
+          "rows": 2321522
+        }
+      ],
+      "wal_cluster_delta_bytes": 3235445392,
+      "db_cumulative_temp_files": 2,
+      "db_cumulative_temp_bytes": 78315520,
+      "backend_rss_peak_bytes": 191041536,
+      "application_rss_peak_bytes": 104157184,
+      "backend_cpu_seconds_including_commit": 91.25,
+      "verification_schema": "verify_7e9132a4e9",
+      "exact_except_all": true,
+      "database": "lab_fresh_71ebe0b79d",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "guarded_parallel",
+      "bulk_strategy_sql_sha256": "76203871c048b1e406b2a3562abecfb9a088c989232588c842aa2f58f8b02924",
+      "proven_safe_domain": true,
+      "guarded_work_mem_override": "64MB",
+      "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 30.811329000000004,
+      "commit_client_wall_seconds": 0.028070000000298023,
+      "stages": [
+        {
+          "name": "normalize_and_prove_domain",
+          "seconds": 3.77413,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.02079,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.342583,
+          "rows": 2
+        },
+        {
+          "name": "public.table3",
+          "seconds": 1.097794,
+          "rows": 4
+        },
+        {
+          "name": "analyze_public.table3",
+          "seconds": 0.000459,
+          "rows": null
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.992619,
+          "rows": 27
+        },
+        {
+          "name": "analyze_public.table4",
+          "seconds": 0.0004,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table1",
+          "seconds": 0.00543,
+          "rows": null
+        },
+        {
+          "name": "public.table1",
+          "seconds": 6.184945,
+          "rows": 1000000
+        },
+        {
+          "name": "bulk_unique_restore_table1",
+          "seconds": 0.522953,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table5",
+          "seconds": 0.001476,
+          "rows": null
+        },
+        {
+          "name": "public.table5",
+          "seconds": 3.033846,
+          "rows": 1000000
+        },
+        {
+          "name": "bulk_unique_restore_table5",
+          "seconds": 0.262433,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table6",
+          "seconds": 0.001687,
+          "rows": null
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.094491,
+          "rows": 1000000
+        },
+        {
+          "name": "bulk_unique_restore_table6",
+          "seconds": 0.277799,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table2",
+          "seconds": 0.002738,
+          "rows": null
+        },
+        {
+          "name": "public.table2",
+          "seconds": 8.20783,
+          "rows": 2321522
+        },
+        {
+          "name": "bulk_unique_restore_table2",
+          "seconds": 1.292971,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 1.693955,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 857877576,
+      "db_cumulative_temp_files": 36,
+      "db_cumulative_temp_bytes": 192012288,
+      "backend_rss_peak_bytes": 242663424,
+      "application_rss_peak_bytes": 138686464,
+      "backend_cpu_seconds_including_commit": 26.5,
+      "verification_schema": "verify_285aecb005",
+      "exact_except_all": true,
+      "database": "lab_fresh_275a25d5c5",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    }
+  ],
+  "method": "new database clone for each run; no destination warmup/TRUNCATE; typed fingerprints each run; central bidirectional EXCEPT ALL once per mode after timing",
+  "exclusions": [
+    "clone",
+    "oracle",
+    "full preflight/counters/versions/GUI/SSH",
+    "locks",
+    "commit latency (reported separately)"
+  ],
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "95837f7bca77df4e520fdeff1505a1d7b8a3c25f",
+    "git_status": "M bench/run.py\n M pipeline/bulk_indexes.py\n M pipeline/guarded_normalization.py\n M pipeline/recipes.py\n M tests/semantics/fuzz.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/extraction_probe.py\n?? bench/parallel_probe.py\n?? pipeline/parallel_normalization.py\n?? reports/extraction-probe-1m.json\n?? reports/parallel-domain-probe-1m.json\n?? reports/parallel-extraction-probe-1m.json\n?? reports/semantics-guarded-parallel-pilot.json",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 1000000,
+  "summary": {
+    "baseline": {
+      "individual_seconds": [
+        104.24307200000001
+      ],
+      "median": 104.24307200000001,
+      "min": 104.24307200000001,
+      "max": 104.24307200000001,
+      "reduction_percent": 0.0
+    },
+    "guarded_parallel": {
+      "individual_seconds": [
+        30.811329000000004
+      ],
+      "median": 30.811329000000004,
+      "min": 30.811329000000004,
+      "max": 30.811329000000004,
+      "reduction_percent": 70.44280410308706
+    }
+  }
+}

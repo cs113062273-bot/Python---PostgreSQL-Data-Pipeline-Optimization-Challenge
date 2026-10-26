@@ -1,0 +1,351 @@
+{
+  "kind": "unranked_explain_only_join_tuning",
+  "database": "lab_ctas_profile_2f20299b",
+  "plans": {
+    "default": [
+      {
+        "Plan": {
+          "Node Type": "Gather",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 2647.75,
+          "Total Cost": 2680.28,
+          "Plan Rows": 1,
+          "Plan Width": 160,
+          "Workers Planned": 1,
+          "Single Copy": false,
+          "Plans": [
+            {
+              "Node Type": "Hash Join",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": true,
+              "Async Capable": false,
+              "Join Type": "Inner",
+              "Startup Cost": 2647.75,
+              "Total Cost": 2680.28,
+              "Plan Rows": 1,
+              "Plan Width": 160,
+              "Inner Unique": false,
+              "Hash Cond": "(((dimension_row.text_column_1)::text = btrim(source_row.text_column_1)) AND ((dimension_row.text_column_3)::text = \"left\"(upper(btrim(source_row.text_column_2)), 1)) AND ((dimension_row.text_column_4)::text = \"right\"(upper(btrim(source_row.text_column_2)), 1)))",
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Relation Name": "table3",
+                  "Alias": "dimension_row",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.03,
+                  "Plan Rows": 2,
+                  "Plan Width": 23,
+                  "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                },
+                {
+                  "Node Type": "Hash",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Startup Cost": 2429.0,
+                  "Total Cost": 2429.0,
+                  "Plan Rows": 12500,
+                  "Plan Width": 598,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "pipeline_normalized_input",
+                      "Alias": "source_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 2429.0,
+                      "Plan Rows": 12500,
+                      "Plan Width": 598
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "serial_hash": [
+      {
+        "Plan": {
+          "Node Type": "Gather",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 1.12,
+          "Total Cost": 2836.61,
+          "Plan Rows": 1,
+          "Plan Width": 160,
+          "Workers Planned": 8,
+          "Single Copy": false,
+          "Plans": [
+            {
+              "Node Type": "Hash Join",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Join Type": "Inner",
+              "Startup Cost": 1.12,
+              "Total Cost": 2836.61,
+              "Plan Rows": 1,
+              "Plan Width": 160,
+              "Inner Unique": false,
+              "Hash Cond": "((btrim(source_row.text_column_1) = (dimension_row.text_column_1)::text) AND (\"left\"(upper(btrim(source_row.text_column_2)), 1) = (dimension_row.text_column_3)::text) AND (\"right\"(upper(btrim(source_row.text_column_2)), 1) = (dimension_row.text_column_4)::text))",
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Relation Name": "pipeline_normalized_input",
+                  "Alias": "source_row",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 2429.0,
+                  "Plan Rows": 12500,
+                  "Plan Width": 598
+                },
+                {
+                  "Node Type": "Hash",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 1.05,
+                  "Total Cost": 1.05,
+                  "Plan Rows": 4,
+                  "Plan Width": 23,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Relation Name": "table3",
+                      "Alias": "dimension_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 1.05,
+                      "Plan Rows": 4,
+                      "Plan Width": 23,
+                      "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "no_nested_loop": [
+      {
+        "Plan": {
+          "Node Type": "Gather",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 2647.75,
+          "Total Cost": 2680.28,
+          "Plan Rows": 1,
+          "Plan Width": 160,
+          "Workers Planned": 1,
+          "Single Copy": false,
+          "Plans": [
+            {
+              "Node Type": "Hash Join",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": true,
+              "Async Capable": false,
+              "Join Type": "Inner",
+              "Startup Cost": 2647.75,
+              "Total Cost": 2680.28,
+              "Plan Rows": 1,
+              "Plan Width": 160,
+              "Inner Unique": false,
+              "Hash Cond": "(((dimension_row.text_column_1)::text = btrim(source_row.text_column_1)) AND ((dimension_row.text_column_3)::text = \"left\"(upper(btrim(source_row.text_column_2)), 1)) AND ((dimension_row.text_column_4)::text = \"right\"(upper(btrim(source_row.text_column_2)), 1)))",
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Relation Name": "table3",
+                  "Alias": "dimension_row",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.03,
+                  "Plan Rows": 2,
+                  "Plan Width": 23,
+                  "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                },
+                {
+                  "Node Type": "Hash",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Startup Cost": 2429.0,
+                  "Total Cost": 2429.0,
+                  "Plan Rows": 12500,
+                  "Plan Width": 598,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "pipeline_normalized_input",
+                      "Alias": "source_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 2429.0,
+                      "Plan Rows": 12500,
+                      "Plan Width": 598
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "dimension_worker_hint": [
+      {
+        "Plan": {
+          "Node Type": "Gather",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 2647.75,
+          "Total Cost": 2664.62,
+          "Plan Rows": 1,
+          "Plan Width": 160,
+          "Workers Planned": 8,
+          "Single Copy": false,
+          "Plans": [
+            {
+              "Node Type": "Hash Join",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": true,
+              "Async Capable": false,
+              "Join Type": "Inner",
+              "Startup Cost": 2647.75,
+              "Total Cost": 2664.62,
+              "Plan Rows": 1,
+              "Plan Width": 160,
+              "Inner Unique": false,
+              "Hash Cond": "(((dimension_row.text_column_1)::text = btrim(source_row.text_column_1)) AND ((dimension_row.text_column_3)::text = \"left\"(upper(btrim(source_row.text_column_2)), 1)) AND ((dimension_row.text_column_4)::text = \"right\"(upper(btrim(source_row.text_column_2)), 1)))",
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Relation Name": "table3",
+                  "Alias": "dimension_row",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.01,
+                  "Plan Rows": 1,
+                  "Plan Width": 23,
+                  "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                },
+                {
+                  "Node Type": "Hash",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Startup Cost": 2429.0,
+                  "Total Cost": 2429.0,
+                  "Plan Rows": 12500,
+                  "Plan Width": 598,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "pipeline_normalized_input",
+                      "Alias": "source_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 2429.0,
+                      "Plan Rows": 12500,
+                      "Plan Width": 598
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "normalized_join_statistics": [
+      {
+        "Plan": {
+          "Node Type": "Gather",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 1.06,
+          "Total Cost": 7908.69,
+          "Plan Rows": 100000,
+          "Plan Width": 160,
+          "Workers Planned": 8,
+          "Single Copy": false,
+          "Plans": [
+            {
+              "Node Type": "Hash Join",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": true,
+              "Async Capable": false,
+              "Join Type": "Inner",
+              "Startup Cost": 1.06,
+              "Total Cost": 7908.69,
+              "Plan Rows": 12500,
+              "Plan Width": 160,
+              "Inner Unique": false,
+              "Hash Cond": "((source_row.pipeline_dim = (dimension_row.text_column_1)::text) AND (source_row.pipeline_left = (dimension_row.text_column_3)::text) AND (source_row.pipeline_right = (dimension_row.text_column_4)::text))",
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Relation Name": "pipeline_normalized_input",
+                  "Alias": "source_row",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 4892.0,
+                  "Plan Rows": 12500,
+                  "Plan Width": 599
+                },
+                {
+                  "Node Type": "Hash",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Startup Cost": 1.03,
+                  "Total Cost": 1.03,
+                  "Plan Rows": 2,
+                  "Plan Width": 23,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "table3",
+                      "Alias": "dimension_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 1.03,
+                      "Plan Rows": 2,
+                      "Plan Width": 23,
+                      "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "kind": "verified_sql_only_disposable_clone_cleanup",
+  "runs": [
+    {
+      "timestamp_utc": "2026-10-26T21:42:59.099865+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_2700588acd",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 2745775795,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_71ebe0b79d",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-parallel-1m-pilot.json",
+          "bytes": 2745759411,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_b5e99ac71a",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-ctas-bulk-1m.json",
+          "bytes": 2745767603,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_cd25f1f382",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 2745775795,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_e707187cd2",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 2745775795,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    }
+  ]
+}

@@ -30,7 +30,7 @@ def bulk_unique_tables(mode):
 
 
 def compiler_sha256():
-    names=('recipes.py','bulk_fks.py','bulk_indexes.py','bulk_sequences.py','normalization.py','safe_domain.py','guarded_normalization.py','parallel_normalization.py','workspace.py','native_copy.py','local_service.py','planner.py')
+    names=('recipes.py','bulk_fks.py','bulk_indexes.py','bulk_sequences.py','normalization.py','safe_domain.py','guarded_normalization.py','parallel_normalization.py','workspace.py','native_copy.py','local_service.py','local_diagnostics.py','planner.py')
     digest=hashlib.sha256()
     for name in names:
         digest.update(name.encode()+b'\0'+(ROOT/'pipeline'/name).read_text(encoding='utf-8').encode('utf-8')+b'\0')

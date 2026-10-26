@@ -1,0 +1,7 @@
+{
+  "kind": "windows_psql_binary_redirection_probe",
+  "observed_header_hex": "5047434f50590d0aff0d0d0a00000000",
+  "expected_signature_hex": "5047434f50590aff0d0a00",
+  "signature_matches": false,
+  "scope": "Generic psql g redirection only; native implementation now uses binary-aware copy meta-commands in both directions. The failed first integration attempt rolled back and supplied no performance result."
+}

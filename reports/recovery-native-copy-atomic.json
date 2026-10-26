@@ -1,0 +1,162 @@
+{
+  "database": "lab_native_atomic_d77f7302",
+  "tests": [
+    {
+      "boundary": "after_projection",
+      "failure": "server_exception",
+      "batch_sha256": "156773e63d16dacc50aa332e7219ca93a86ec381b658dcf697c83baa36e26e62",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_projection",
+      "failure": "backend_termination",
+      "batch_sha256": "0571deb1287289566aa5fe1bd8813cea9d9add6035eebc44b450681a6a220b13",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_fk_drop",
+      "failure": "server_exception",
+      "batch_sha256": "e1c4c29ec94d4d3329d23404cd1fc539c53ea1c7b0b24ad0bf339b9a06703286",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_fk_drop",
+      "failure": "backend_termination",
+      "batch_sha256": "390262144518cfedc2286ea9e6dbcda4cbee63a4c17f24782a127d47cee5de1b",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_table1_prepare",
+      "failure": "server_exception",
+      "batch_sha256": "f753d67e5de8f0aaf361484a5a7692861d77a490d1641d4f5413156e1d99f638",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_table1_prepare",
+      "failure": "backend_termination",
+      "batch_sha256": "df50793a0344d023a89a9d79306e061e23ea8f243921f9a45efc1de2e5d6d772",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_to_table1",
+      "failure": "server_exception",
+      "batch_sha256": "46f3523b5ec0b1b73aa655c6f6dd9a8d5e8e10df1f9c18cae87a8ac74c1fd854",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_to_table1",
+      "failure": "backend_termination",
+      "batch_sha256": "9c8efcb73cab4bde6a2da26ad853f05b7e8a599d63c832ee4efa89e5cd88e4c5",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_from_table1",
+      "failure": "server_exception",
+      "batch_sha256": "2db25be971d01791c26738bd02ec1af762de0d1a3c55a448f91944a5426000da",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_from_table1",
+      "failure": "backend_termination",
+      "batch_sha256": "4f9d417ff43e4862c83a7e448bbf8330156c24c94f8586e3668904d3a8714b8d",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_table1_restore",
+      "failure": "server_exception",
+      "batch_sha256": "c4715f672e1c75bf6a406d0aa3106fd6f4d66a6c0e42c7b8369be35798fd091e",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_table1_restore",
+      "failure": "backend_termination",
+      "batch_sha256": "0e45bffd37bd3e720a85a67b68d638932e88ea5d535928b5cee61673359ae754",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_from_table2",
+      "failure": "server_exception",
+      "batch_sha256": "5a99c63abef2e454f4f1956571f9cf5eac7cba2a3a03272d6aefb62393efed53",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_from_table2",
+      "failure": "backend_termination",
+      "batch_sha256": "1ff3f62a9db5a032318775f61501b0d84514c590c5a8e48a900783c0f95e4d6f",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "before_fk_restore",
+      "failure": "server_exception",
+      "batch_sha256": "f046aeb54a1fec215a688c8f49606ec60f8d88d7a9fc027cbf93ced22a16450d",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "before_fk_restore",
+      "failure": "backend_termination",
+      "batch_sha256": "e9d9d0f74f3d0ee7008abd6fce76622c462bf9f28ad535ad61b2a5a91a1335b9",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_fk_restore",
+      "failure": "server_exception",
+      "batch_sha256": "e216d14ee7c268e4ba3503f57ea0186863e02c2440645199c988c179c56b0a64",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "after_fk_restore",
+      "failure": "backend_termination",
+      "batch_sha256": "306d513ce49cdc51ebd30e9db020fde6abc00c32fbba0f605c4813b2b82a5b9c",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "before_commit",
+      "failure": "server_exception",
+      "batch_sha256": "7114a1d7f85837154f795fc8eeda82d8d115414adaea1de339f7aa26d0a74ca4",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "before_commit",
+      "failure": "backend_termination",
+      "batch_sha256": "2f25ccdd5b3498d04d5599aba91fff25160d43f60999068596c6973f44423d45",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_from_table1",
+      "failure": "missing_file",
+      "batch_sha256": "ad0357c9c22d05e523cfc728bf1d61d01fa4b7ddf3eb543744b331e28f2aab50",
+      "passed": true,
+      "copy_cleanup_success": true
+    },
+    {
+      "boundary": "copy_to_table1",
+      "failure": "bad_binary",
+      "batch_sha256": "4feda49ced973f23e2a45d89e1926cc3e0b1d53b67c38f71d9ba7b6e8c195225",
+      "passed": true,
+      "copy_cleanup_success": true
+    }
+  ],
+  "source_sha256": "9c12ec4ea92ea9d8b302bfa3f860739a35d8d6d98c045e02e386eeed5145dc83",
+  "all_passed": true,
+  "scope": "Actual native service, COPY command receipts/counters, protected schema and sequence options, source SHA and workspace/file cleanup; forced pre-commit failures; ordinary identity gaps allowed."
+}

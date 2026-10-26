@@ -7,6 +7,7 @@ They are rebuilt AND validated before the data transaction may commit.
 from pipeline.recipes import ORDER
 from pipeline.upstream import APP
 import re
+import time
 
 FOREIGN_KEYS=(
  ("table1","table1_id_column_3_fkey","FOREIGN KEY (id_column_3) REFERENCES public.raw_data(raw_id) ON UPDATE CASCADE ON DELETE CASCADE"),
@@ -38,10 +39,18 @@ def prepare_sql():
         column_checks.append(f"IF NOT EXISTS(SELECT 1 FROM pg_attribute WHERE attrelid='public.{table}'::regclass AND attname='{column}' AND atttypid='{kind}'::regtype) THEN RAISE EXCEPTION 'Unsupported bulk relationship type'; END IF;")
     for table in ("table1","table2","table3","table5","table6"):
         column_checks.append(f"IF NOT EXISTS(SELECT 1 FROM pg_attribute WHERE attrelid='public.{table}'::regclass AND attname='id_column_1' AND attidentity IN ('a','d')) THEN RAISE EXCEPTION 'Unsupported bulk identity default'; END IF;")
+    checks=(
+        "CHECK (((text_column_1 IS NULL) OR ((text_column_1)::text = ANY ((ARRAY['X'::character varying, 'Y'::character varying, 'Z'::character varying])::text[]))))",
+        "CHECK (((text_column_1 IS NULL) OR ((text_column_1)::text = ANY (ARRAY[('X'::character varying)::text, ('Y'::character varying)::text, ('Z'::character varying)::text]))))",
+    )
+    allowed_checks=",".join(sql_literal(c) for c in checks)
     return """DO $bulk_prepare$
 DECLARE item record; actual text; previous_path text:=current_setting('search_path');
 BEGIN
  LOCK TABLE public.raw_data IN SHARE MODE;
+ IF EXISTS(SELECT 1 FROM pg_event_trigger WHERE evtenabled<>'D') THEN
+   RAISE EXCEPTION 'Bulk FK mode does not support database event triggers';
+ END IF;
  IF EXISTS(SELECT 1 FROM pg_class WHERE oid IN ("""+relations+""") AND (relkind<>'r' OR relispartition OR relrowsecurity))
  OR EXISTS(SELECT 1 FROM pg_inherits WHERE inhparent IN ("""+relations+""") OR inhrelid IN ("""+relations+""")) THEN
    RAISE EXCEPTION 'Bulk FK mode requires ordinary non-inherited non-RLS tables';
@@ -53,6 +62,11 @@ BEGIN
  END IF;
  IF EXISTS(SELECT 1 FROM pg_trigger WHERE tgrelid IN ("""+relations+""") AND NOT tgisinternal) THEN
    RAISE EXCEPTION 'Bulk FK mode does not support additional user triggers';
+ END IF;
+ IF EXISTS(SELECT 1 FROM pg_constraint k WHERE k.conrelid IN ("""+relations+""") AND k.contype='c'
+   AND NOT (k.conrelid='public.table2'::regclass AND k.conname='table2_text_column_1_check' AND k.convalidated
+            AND pg_get_constraintdef(k.oid) IN ("""+allowed_checks+"""))) THEN
+   RAISE EXCEPTION 'Bulk FK mode requires the builtin organizer CHECK constraints';
  END IF;
  IF EXISTS(SELECT 1 FROM pg_attribute WHERE attrelid IN ("""+relations+""") AND attnum>0 AND NOT attisdropped
    AND (atttypid NOT IN ('bigint'::regtype,'smallint'::regtype,'integer'::regtype,'text'::regtype,
@@ -99,9 +113,24 @@ def instrument(sql,sequence,name):
 class BulkFKMixin:
     bulk_foreign_keys=False
 
+    def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,selected,**kwargs):
+        if self.bulk_foreign_keys:
+            from pipeline.recipes import destinations
+            originals=destinations("baseline")
+            if source_full_table_name!="public.raw_data" or len(selected)!=len(originals) or any(
+                d.get("table_name")!=o["table_name"] or d.get("sql","").strip()!=o["sql"].strip() for d,o in zip(selected,originals)):
+                raise RuntimeError("Bulk FK mode requires the exact organizer source and six original recipes")
+        previous=getattr(self._expansion_timing_local,"bulk_fk_active",False)
+        self._expansion_timing_local.bulk_fk_active=self.bulk_foreign_keys
+        try:
+            return super().execute_cross_table_expansion(database_name,source_full_table_name,raw_schemas,selected,**kwargs)
+        finally:
+            self._expansion_timing_local.bulk_fk_active=previous
+
     def run_remote_command(self,command,**kwargs):
         text=kwargs.get("stdin_text")
-        if self.bulk_foreign_keys and isinstance(text,str) and "BEGIN ISOLATION LEVEL REPEATABLE READ;" in text and "pgdm_expansion_timings" in text:
+        if self.bulk_foreign_keys and getattr(self._expansion_timing_local,"bulk_fk_active",False) and isinstance(text,str) and "BEGIN ISOLATION LEVEL REPEATABLE READ;" in text and "pgdm_cross_table_hash_manifest" in text:
+            started=time.thread_time()
             begin="BEGIN ISOLATION LEVEL REPEATABLE READ;"
             boundary="clock_timestamp() WHERE sequence_number = 3;"
             if text.count(begin)!=1 or text.count(boundary)!=1 or text.count("COMMIT;")!=1:
@@ -112,4 +141,7 @@ class BulkFKMixin:
             text=text.replace(boundary,boundary+"\n"+instrument(prepare_sql(),4,"Prepare transactional bulk FK load"),1)
             text=text.replace("COMMIT;",instrument(restore_sql(),8000,"Restore and validate all bulk foreign keys")+"\nCOMMIT;",1)
             kwargs["stdin_text"]=text
+            context=getattr(self._expansion_timing_local,"context",None)
+            if context:
+                self._append_expansion_timing(context.get("report"),"prepare","Build and validate bulk FK strategy",time.thread_time()-started,"local_python_cpu")
         return super().run_remote_command(command,**kwargs)

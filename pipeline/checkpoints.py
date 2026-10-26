@@ -128,6 +128,18 @@ def catalog(conn):
     return normalize_catalog(value)
 
 
+def physical_fingerprints(conn):
+    """Recovery compares the exact committed rows, including their stored IDs.
+
+    It needs neither cross-run surrogate normalization nor JSON construction.
+    Native composite hashing is bounded-memory and keeps dump-restored IDs.
+    """
+    return {table:conn.execute(f"""SELECT count(*),
+        coalesce(sum(hash_record_extended(t,17)::numeric),0)::text,
+        coalesce(sum(hash_record_extended(t,97)::numeric),0)::text
+        FROM public.{table} t""").fetchone() for table in ORDER}
+
+
 class ChunkRunner:
     def __init__(self, service, connection_factory, failpoint=None):
         self.service = service
@@ -164,13 +176,19 @@ class ChunkRunner:
         prepared, versions = self.preflight(database,scopes,mode)
         request = {"database":database,"scopes":scopes,"destinations":prepared["destinations"],
                    "source_versions":versions,"chunk_rows":chunk_rows,"requested_by":requested_by,"workstation":workstation,
-                   "protocol":1}
+                   "protocol":2}
         signature = digest(request)
         self.failpoint("before_start",{})
         with self.connection_factory(database,autocommit=True) as conn:
             conn.execute("SELECT pg_advisory_lock(%s)",(LOCK_KEY,))
             if not conn.execute("SELECT to_regclass('pipeline_recovery.jobs')").fetchone()[0]:
                 conn.execute(INSTALL)
+            previous=conn.execute("SELECT request->>'protocol' FROM pipeline_recovery.jobs WHERE job_id=%s",(job_id,)).fetchone()
+            if previous:
+                protocol=int(previous[0])
+                if protocol not in (1,2):raise RuntimeError("Unsupported recovery protocol")
+                request["protocol"]=protocol
+                signature=digest(request)
             # Durability is mandatory, including the receipt commits.
             if any(conn.execute("SHOW " + setting).fetchone()[0] != "on" for setting in ("fsync","full_page_writes","synchronous_commit")):
                 raise RuntimeError("Durable PostgreSQL configuration required")
@@ -211,6 +229,9 @@ class ChunkRunner:
                     for d in prepared["destinations"][:2]:
                         self._insert(conn,d,None,None)
                         self.failpoint("during_"+d["pure_table_name"],{"initial_dimensions":True,"backend_pid":conn.info.backend_pid})
+                    # A committed tiny dimension with unknown statistics can
+                    # otherwise force wide external sorts in every later chunk.
+                    conn.execute("ANALYZE public.table3; ANALYZE public.table4")
                 conn.execute("SELECT set_config('pipeline.job_id',%s,false)",(job_id,))
             self.failpoint("after_dimensions_commit",{})
             while True:
@@ -262,7 +283,11 @@ class ChunkRunner:
     @staticmethod
     def verify_outputs(conn,result):
         from tests.equivalence.oracle import fingerprints
-        actual = json.loads(json.dumps(fingerprints(conn),default=str))
+        algorithm=result.get("destination_fingerprint_algorithm","canonical_graph_v1")
+        if algorithm not in ("canonical_graph_v1","physical_record_v2"):
+            raise RuntimeError("Unknown destination fingerprint algorithm")
+        current=physical_fingerprints(conn) if algorithm=="physical_record_v2" else fingerprints(conn)
+        actual = json.loads(json.dumps(current,default=str))
         expected = json.loads(json.dumps(result["destination_fingerprints"],default=str))
         if actual != expected:
             raise RuntimeError("Committed destination counts/content changed")
@@ -290,9 +315,10 @@ class ChunkRunner:
                 manifest = json.loads(cursor.fetchone()[0])
             if not cursor.nextset():
                 break
-        footprints=fingerprints(conn)
+        protocol=int(conn.execute("SELECT request->>'protocol' FROM pipeline_recovery.jobs WHERE job_id=%s",(job_id,)).fetchone()[0])
+        footprints=physical_fingerprints(conn) if protocol==2 else fingerprints(conn)
         self.verify_counters(conn,footprints)
         return {"source_database_name":database,"source_schema_name":"public","source_table_name":"raw_data",
                 "raw_schemas":scopes,"source_versions":versions,"dependency_manifest":manifest,
                 "destinations":prepared["destinations"],"checkpoint_job_id":job_id,
-                "destination_fingerprints":footprints,"completed_at":datetime.now(timezone.utc).isoformat()}
+                "destination_fingerprints":footprints,"destination_fingerprint_algorithm":"physical_record_v2" if protocol==2 else "canonical_graph_v1","completed_at":datetime.now(timezone.utc).isoformat()}

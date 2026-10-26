@@ -53,7 +53,8 @@ def materialize_statement(statement,*,mode=None):
     header,table,columns,select=m.groups()
     columns=','.join(c.strip() for c in columns.split(','))
     name='pipeline_ready_'+table
-    tune='SET LOCAL enable_parallel_hash=off;\n' if mode=='lab_parallel_cache' and table=='table1' else ''
+    from pipeline.recipes import CACHE_CTAS_MODES
+    tune='SET LOCAL enable_parallel_hash=off;\n' if mode in CACHE_CTAS_MODES and table=='table1' else ''
     prepare=settings_sql()+'\n'+tune+f'CREATE TEMP TABLE {name} ({columns}) ON COMMIT DROP AS '+select.rstrip(';')+';\n'+restore_settings_sql()
     insert=header+' SELECT '+columns+' FROM pg_temp.'+name
     return prepare,insert,'DROP TABLE pg_temp.'+name+';'

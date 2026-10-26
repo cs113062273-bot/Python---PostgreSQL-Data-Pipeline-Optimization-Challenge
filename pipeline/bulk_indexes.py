@@ -43,12 +43,12 @@ def prepare_primary_sql(table):
 
 
 def prepare_mode_sql(mode,table):
-    from pipeline.recipes import bulk_unique_tables,CTAS_MODES,BULK_CTAS_MODES
+    from pipeline.recipes import bulk_unique_tables,CTAS_MODES,BULK_CTAS_MODES,CACHE_CTAS_MODES,COPY_MODES
     unique=prepare_sql(table) if table in bulk_unique_tables(mode) and table in ("table1","table2") else ""
-    primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix","guarded_parallel")+CTAS_MODES else ""
+    primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix","guarded_parallel")+CTAS_MODES+COPY_MODES else ""
     extra=(prepare_sql('table6') if table=='table6' else prepare_partial_sql() if table=='table5' else '') if mode in BULK_CTAS_MODES else ''
     from pipeline.bulk_sequences import prepare_sql as sequence_sql
-    sequence=sequence_sql(table) if mode=='lab_parallel_cache' and table in ('table1','table2','table5','table6') else ''
+    sequence=sequence_sql(table) if mode in CACHE_CTAS_MODES and table in ('table1','table2','table5','table6') else ''
     return unique+"\n"+extra+'\n'+primary+'\n'+sequence
 
 
@@ -139,7 +139,8 @@ def restore_sql(table,*,mode=None):
           END LOOP;
           PERFORM pg_catalog.set_config('maintenance_work_mem',previous_memory,true);
         END $partial_restore$;"""
-    if mode=='lab_parallel_cache':
+    from pipeline.recipes import CACHE_CTAS_MODES
+    if mode in CACHE_CTAS_MODES:
         from pipeline.bulk_sequences import restore_sql as restore_sequence
         result+='\n'+restore_sequence(table)
     return result
@@ -165,7 +166,7 @@ class BulkIndexMixin:
                     timing_stage="execute",timing_name=f"Insert into {d['table_name']} (statement 1)",timing_destination=d["table_name"],timing_statement_index=1)
                 if text.count(managed)!=1:raise RuntimeError("Unknown managed index boundary")
                 # Rebuild immediately after that table, before dependent recipes.
-                text=text.replace(managed,instrument(self._guard_bulk_sql(prepare_mode_sql(self.bulk_recipe_mode,table)),100+10*int(table[-1]),f"Prepare {table} key bulk build")+"\n"+managed+"\n"+instrument(self._guard_bulk_sql(restore_sql(table)),101+10*int(table[-1]),f"Rebuild and validate {table} keys"),1)
+                text=text.replace(managed,instrument(self._guard_bulk_sql(prepare_mode_sql(self.bulk_recipe_mode,table)),100+10*int(table[-1]),f"Prepare {table} key bulk build")+"\n"+managed+"\n"+instrument(self._guard_bulk_sql(restore_sql(table,mode=self.bulk_recipe_mode)),101+10*int(table[-1]),f"Rebuild and validate {table} keys"),1)
             kwargs["stdin_text"]=text
             timing_context=getattr(self._expansion_timing_local,"context",None)
             if timing_context:

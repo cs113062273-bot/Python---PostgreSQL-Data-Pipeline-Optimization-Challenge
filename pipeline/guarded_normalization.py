@@ -3,12 +3,12 @@ import time
 import re
 import hashlib
 from pipeline.normalization import prepare_sql as normalize_sql,rewrite
-from pipeline.recipes import EXTRACT,compiler_sha256,ORDER,CTAS_MODES,BULK_CTAS_MODES
+from pipeline.recipes import EXTRACT,compiler_sha256,ORDER,CTAS_MODES,BULK_CTAS_MODES,COPY_MODES
 from pipeline.safe_domain import gate_sql
 from pipeline.bulk_fks import instrument
 
 MODE="guarded_normalize"
-PREFIX_MODES=('guarded_prefix','guarded_parallel')+CTAS_MODES
+PREFIX_MODES=('guarded_prefix','guarded_parallel')+CTAS_MODES+COPY_MODES
 MODES=(MODE,)+PREFIX_MODES
 EXTRA_DATA_FUNCTIONS=('bool_and','textcat','textregexeq','substr','octet_length','replace','array_remove','unnest')
 
@@ -22,6 +22,9 @@ def conditional_sql(sql):
 
 
 def prepare_sql(scopes,mode=MODE):
+    if mode in ('guarded_ctas',)+COPY_MODES:
+        from pipeline.workspace import prepare_sql as workspace_sql,RELATION
+        return workspace_sql(scopes)+'\n'+conditional_sql("PERFORM pg_catalog.set_config('work_mem','64MB',true); ANALYZE "+RELATION+"(raw_id,text_column_1,text_column_2,text_column_3);")
     if mode in ('guarded_parallel',)+CTAS_MODES:
         from pipeline.parallel_normalization import prepare_sql as parallel_sql
         relation='challenge_lab.pipeline_normalized_input' if mode in CTAS_MODES else 'pg_temp.pipeline_normalized_input'
@@ -38,8 +41,10 @@ def prepare_sql(scopes,mode=MODE):
 
 
 def fast_statement(statement,scopes,mode=MODE):
-    if mode in CTAS_MODES:
-        result=fast_statement(statement,scopes,'guarded_prefix').replace('pg_temp.pipeline_normalized_input','challenge_lab.pipeline_normalized_input')
+    if mode in CTAS_MODES+COPY_MODES:
+        from pipeline.workspace import RELATION
+        relation=RELATION if mode in ('guarded_ctas',)+COPY_MODES else 'challenge_lab.pipeline_normalized_input'
+        result=fast_statement(statement,scopes,'guarded_prefix').replace('pg_temp.pipeline_normalized_input',relation)
         if mode in BULK_CTAS_MODES and statement.startswith('INSERT INTO public.table2 ('):
             start='CROSS JOIN LATERAL (SELECT position_number FROM pg_catalog.unnest('
             end=') AS expanded(position_number) OFFSET 0) AS position_keys'
@@ -92,8 +97,10 @@ class GuardedNormalizationMixin:
     capture_batch_sql=False
 
     def execute_cross_table_expansion(self,*args,**kwargs):
-        if self.guarded_normalization and self.bulk_recipe_mode in CTAS_MODES:
+        if self.guarded_normalization and self.bulk_recipe_mode.startswith('lab_'):
             raise RuntimeError('Lab-only CTAS architecture requires bench.run; native counter/version integration is not qualified')
+        if self.guarded_normalization and self.bulk_recipe_mode in COPY_MODES and not getattr(self,'supports_private_psql_workspace',False):
+            raise RuntimeError('Native COPY requires the private psql workspace transport; local verification is available, SSH transport is not qualified yet')
         result=super().execute_cross_table_expansion(*args,**kwargs)
         if self.guarded_normalization:
             started=time.thread_time()
@@ -101,6 +108,7 @@ class GuardedNormalizationMixin:
             result['execution_architecture']={'mode':mode,'compiler_sha256':compiler_sha256(),
                 'batch_sql_sha256':getattr(self._expansion_timing_local,'guarded_batch_sha256',None)}
             architecture=result['execution_architecture']
+            if mode in COPY_MODES:architecture['copy_workspace']=getattr(self._expansion_timing_local,'copy_workspace_result',None)
             decisions=[item.get('rows') for item in (result.get('timing_report') or {}).get('items',[]) if item.get('name')=='Build TEXT input and prove safe cast domain']
             architecture['safe_domain']=bool(decisions[0]) if len(decisions)==1 and decisions[0] in (0,1) else None
             provenance='\n\n-- pipeline '+mode+'_v1 compiler_sha256='+architecture['compiler_sha256']+' batch_sql_sha256='+architecture['batch_sql_sha256']+' safe_domain='+str(architecture['safe_domain']).lower()
@@ -126,17 +134,34 @@ class GuardedNormalizationMixin:
             marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES\n      (4,'bulk_load'"
             if text.count(marker)!=1:raise RuntimeError('Unknown bulk domain boundary')
             proof_sql=prepare_sql(scopes,self.bulk_recipe_mode)+"\nUPDATE pg_temp.pgdm_expansion_timings SET rows_affected=(SELECT safe::integer FROM pg_temp.pipeline_normalization_domain) WHERE sequence_number=5;"
+            if self.bulk_recipe_mode in COPY_MODES:
+                from pipeline.native_copy import prepare_receipts_sql
+                proof_sql+='\n'+prepare_receipts_sql()
             text=text.replace(marker,instrument(proof_sql,5,'Build TEXT input and prove safe cast domain')+'\n'+marker,1)
             for position,d in enumerate(selection['destinations']):
                 statement=d['statements'][0]
                 managed=self._build_managed_dml_sql(statement,d['schema_name'],d['pure_table_name'],'add',timing_sequence=10+position,
                     timing_stage='execute',timing_name=f"Insert into {d['table_name']} (statement 1)",timing_destination=d['table_name'],timing_statement_index=1)
                 if text.count(managed)!=1 or managed.count(statement)!=1:raise RuntimeError('Unknown guarded normalization DML boundary')
-                replacement=managed.replace(statement,insert_sql(statement,scopes,self.bulk_recipe_mode),1)
+                if self.bulk_recipe_mode in COPY_MODES:
+                    from pipeline.native_copy import copy_sql,managed_receipt_sql
+                    table=d['pure_table_name']
+                    replacement=instrument(copy_sql(fast_statement(statement,scopes,self.bulk_recipe_mode),table),200+int(table[-1]),'Transform and COPY '+table+' with native row receipt')+'\n'+managed_receipt_sql(managed,statement,table)
+                elif self.bulk_recipe_mode in CTAS_MODES:
+                    from pipeline.parallel_normalization import materialize_statement
+                    table=d['pure_table_name']
+                    prep,load,cleanup=materialize_statement(fast_statement(statement,scopes,self.bulk_recipe_mode),mode=self.bulk_recipe_mode)
+                    replacement=instrument(conditional_sql(prep),200+int(table[-1]),'Parallel transform '+table)+'\n'+managed.replace(statement,"IF (SELECT safe FROM pg_temp.pipeline_normalization_domain) THEN\n"+load+';\nELSE\n'+statement+';\nEND IF',1)+'\n'+instrument(conditional_sql(cleanup),400+int(table[-1]),'Drop ready '+table+' input')
+                else:replacement=managed.replace(statement,insert_sql(statement,scopes,self.bulk_recipe_mode),1)
                 if self.bulk_recipe_mode in PREFIX_MODES and d['pure_table_name'] in ('table3','table4'):
                     table=d['pure_table_name']
                     replacement+='\n'+instrument(conditional_sql('ANALYZE public.'+table+';'),300+int(table[-1]),'Analyze fresh '+table+' dimension')
                 text=text.replace(managed,replacement,1)
+            if self.bulk_recipe_mode in ('guarded_ctas',)+COPY_MODES:
+                from pipeline.workspace import cleanup_sql
+                commit_marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES (9000, 'execute'"
+                if text.count(commit_marker)!=1:raise RuntimeError('Unknown workspace cleanup boundary')
+                text=text.replace(commit_marker,instrument(cleanup_sql(),8500,'Remove transaction-owned shared workspace')+'\n'+commit_marker,1)
             kwargs['stdin_text']=text
             self._expansion_timing_local.guarded_batch_sha256=hashlib.sha256(text.encode()).hexdigest()
             if self.capture_batch_sql:

@@ -15,20 +15,23 @@ from pipeline.guarded_normalization import GuardedNormalizationMixin, MODES as G
 from pipeline.recipes import BULK_MODES, bulk_unique_tables
 from pipeline.recipes import destinations
 from pipeline.upstream import PostgresAdminService
-from tests.equivalence.oracle import snapshot,assert_exact,assert_relationships
+from tests.equivalence.oracle import snapshot,assert_exact,assert_relationships,protected_schema_signature,sequence_signature
 from ui.dialogs import ExpansionTimingReportDialog
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database",default="lab_full_100k")
-    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64","bulk_normalize","bulk_normalize64","guarded_normalize","guarded_prefix","guarded_parallel"])
+    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64","hash_array64_nomemo","bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload","bulk_payload","bulk_array","bulk_full","bulk_full64","bulk_normalize","bulk_normalize64","guarded_normalize","guarded_prefix","guarded_parallel","guarded_ctas","guarded_copy"])
     parser.add_argument("--output",default="reports/local-service.json")
     parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     args=parser.parse_args()
     with connect(args.database,autocommit=True) as conn:
         require_lab(conn)
         env=environment(conn)
+        protected_before=protected_schema_signature(conn)
+        sequences_before=sequence_signature(conn)
+        workspace_before=conn.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0]
         scopes=[r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")]
         if conn.execute("SELECT to_regclass('public.pgdm_table_row_counts')").fetchone()[0]:
             raise RuntimeError("Use a fresh lab clone so metadata/version history remains coherent")
@@ -53,6 +56,7 @@ def main():
     result=service.execute_cross_table_expansion(args.database,"public.raw_data",scopes,destinations(args.mode),timing_report=report)
     versions=service.register_cross_table_expansion_versions(result,"research","local-diagnostic",timing_report=report)
     wall=time.perf_counter()-started
+    print(f'Native {args.mode}: {wall:.4f}s complete processing wall; exact verification pending',flush=True)
     if args.mode in GUARDED_MODES:
         import os
         with connect(os.environ.get('PDM_CONTROL_DB','postgres_data_manager'),autocommit=True) as control:
@@ -63,6 +67,10 @@ def main():
                 assert 'batch_sql_sha256='+result['execution_architecture']['batch_sql_sha256'] in recipe
     report["completed_at"]=datetime.now(timezone.utc).isoformat()
     with connect(args.database,autocommit=True) as conn:
+        assert protected_schema_signature(conn)==protected_before,'Protected schema/index/constraint changed'
+        assert sequence_signature(conn)==sequences_before,'Native sequence options/ownership changed'
+        assert conn.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0]==workspace_before,'Workspace namespace not restored'
+        if args.mode=='guarded_copy':assert result['execution_architecture']['copy_workspace']['cleanup_success']
         if args.reference:
             from bench.fresh import exact_to_reference
             with connect(args.reference,autocommit=True) as reference:
@@ -78,7 +86,7 @@ def main():
     value={"kind":"local_transport_organizer_service","official_score":False,"environment":env,"mode":args.mode,
            "execution_architecture":result.get('execution_architecture'),
            "separate_reference":args.reference,"destination_warmup_before_measured_run":not bool(args.reference),
-           "wall_seconds":wall,"exact_six_tables":True,"counter_reconciliation":True,"versions":versions,"timing_report":report,
+           "wall_seconds":wall,"exact_six_tables":True,"counter_reconciliation":True,"protected_schema_equivalent":True,"sequence_options_and_ownership_equivalent":True,"workspace_namespace_restored":True,"versions":versions,"timing_report":report,
            "limitations":["local Windows psql substitutes Linux/SSH command transport","GUI cache/refresh excluded","dump filesystem/replay not exercised by this command"]}
     write_report(args.output,value)
     from pathlib import Path

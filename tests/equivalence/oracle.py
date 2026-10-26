@@ -68,6 +68,15 @@ def schema_signature(conn):
         FROM pg_indexes WHERE schemaname='public'))""").fetchone()[0]
 
 
+def protected_schema_signature(conn):
+    result=schema_signature(conn)
+    tables=set(ORDER)|{'raw_data'}
+    result['columns']=[c for c in result['columns'] if c['table_name'] in tables]
+    result['constraints']=[c for c in result['constraints'] if c[0] in tables]
+    result['indexes']=[i for i in result['indexes'] if i[0] in tables]
+    return result
+
+
 def assert_relationships(conn):
     for child in ("table2", "table5", "table6"):
         if conn.execute(f"SELECT EXISTS(SELECT 1 FROM public.{child} c LEFT JOIN public.table1 p ON p.id_column_1=c.id_column_2 WHERE p.id_column_1 IS NULL)").fetchone()[0]:

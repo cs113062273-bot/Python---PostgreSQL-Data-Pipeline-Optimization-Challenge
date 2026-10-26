@@ -12,7 +12,7 @@ from bench.fixture import create_fixture
 from bench.run import prepared, validate_functions
 from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, PREFIX_MODES, prepare_sql as prepare_guarded, fast_statement as guarded_statement, validation_destinations
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
-from pipeline.recipes import MODES, ORDER, BULK_MODES, bulk_unique_tables,CTAS_MODES
+from pipeline.recipes import MODES, ORDER, BULK_MODES, bulk_unique_tables,CTAS_MODES,COPY_MODES
 from tests.equivalence.oracle import canonical
 
 VALUES = [None, "", " ", " 2 ", "nope", "32768", "-32769", "-1", "-0.1", "1.2", "NaN",
@@ -104,7 +104,10 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
                     conn.execute(f"ANALYZE public.{table}")
         if mode in BULK_MODES and len(statements)>1 and (mode not in GUARDED_MODES or guarded_safe):
             conn.execute(restore_sql())
-        if mode in CTAS_MODES:conn.execute('DROP TABLE challenge_lab.pipeline_normalized_input')
+        if mode=='guarded_ctas':
+            from pipeline.workspace import cleanup_sql
+            conn.execute(cleanup_sql())
+        elif mode in CTAS_MODES:conn.execute('DROP TABLE challenge_lab.pipeline_normalized_input')
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name,"safe_domain":guarded_safe}
     except psycopg.Error as error:
@@ -124,6 +127,7 @@ def main():
     parser.add_argument("--output", default="reports/semantics.json")
     parser.add_argument("--allow-mismatches",action="store_true",help="Explicit negative-experiment mode; default exits nonzero on semantic differences")
     args = parser.parse_args()
+    if any(m in COPY_MODES for m in args.modes):parser.error('COPY requires the actual psql command receipts; use the native COPY differential driver')
     args.modes = list(dict.fromkeys(m for m in args.modes if m!="baseline"))
     db = args.database or "lab_semantics_" + uuid.uuid4().hex[:8]
     if not args.database:

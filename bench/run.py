@@ -15,7 +15,7 @@ from psycopg import Error as DatabaseError
 from bench.common import ROOT, connect, environment, require_lab, write_report
 from pipeline.guarded_normalization import MODE as GUARDED_MODE, MODES as GUARDED_MODES, PREFIX_MODES, prepare_sql as prepare_guarded, conditional_sql, insert_sql as guarded_insert, fast_statement as guarded_statement, validation_destinations
 from pipeline.normalization import MODES as NORMALIZATION_MODES, prepare_sql as normalize_sql, rewrite as normalized_statement
-from pipeline.recipes import MODES, ORDER, destinations, BULK_MODES, bulk_unique_tables,CTAS_MODES
+from pipeline.recipes import MODES, ORDER, destinations, BULK_MODES, bulk_unique_tables,CTAS_MODES,COPY_MODES
 from pipeline.upstream import PostgresAdminService
 from pipeline.parallel_normalization import materialize_statement
 from tests.equivalence.oracle import (assert_exact, assert_relationships, fingerprints,
@@ -57,6 +57,7 @@ def validate_functions(conn, recipes):
 
 
 def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
+    if mode in COPY_MODES:raise RuntimeError('Use the actual psql/native service for COPY; this SQL-only driver cannot validate psql command receipts')
     recipes = prepared(mode, scopes)
     guard_parity = validate_functions(conn, validation_destinations(recipes) if mode in GUARDED_MODES else recipes)
     exact_sql = "\n\n".join(s+";" for d in recipes for s in d["statements"])
@@ -87,7 +88,10 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
             if mode in PREFIX_MODES and table in ('table3','table4'):strategy.append(conditional_sql('ANALYZE public.'+table+';'))
             if table in bulk_unique_tables(mode):strategy.append(conditional_sql(index_restore(table,mode=mode)) if mode in GUARDED_MODES else index_restore(table,mode=mode))
         strategy.append(conditional_sql(fk_restore()) if mode in GUARDED_MODES else fk_restore())
-        if mode in CTAS_MODES:strategy.append('DROP TABLE challenge_lab.pipeline_normalized_input;')
+        if mode=='guarded_ctas':
+            from pipeline.workspace import cleanup_sql
+            strategy.append(cleanup_sql())
+        elif mode in CTAS_MODES:strategy.append('DROP TABLE challenge_lab.pipeline_normalized_input;')
         strategy.append('COMMIT;')
         strategy_sql="\n\n".join(strategy)
         strategy_sha256=hashlib.sha256(strategy_sql.encode()).hexdigest()
@@ -220,7 +224,9 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
             if mode in BULK_MODES and (mode not in GUARDED_MODES or guarded_safe):
                 conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_sql()+" INSERT INTO diagnostic_timing VALUES('bulk_fk_restore_validate',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
             if mode in CTAS_MODES:
-                conn.execute("DO $stage_drop$ DECLARE started timestamptz:=clock_timestamp(); BEGIN DROP TABLE challenge_lab.pipeline_normalized_input; INSERT INTO diagnostic_timing VALUES('logged_stage_cleanup',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stage_drop$;")
+                from pipeline.workspace import cleanup_sql
+                cleanup=cleanup_sql() if mode=='guarded_ctas' else 'DROP TABLE challenge_lab.pipeline_normalized_input;'
+                conn.execute("DO $stage_drop$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+cleanup+" INSERT INTO diagnostic_timing VALUES('logged_stage_cleanup',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stage_drop$;")
             timing = conn.execute("SELECT stage,seconds,rows FROM diagnostic_timing").fetchall()
             conn.execute("SELECT pg_stat_force_next_flush()")
             before_commit = time.perf_counter()

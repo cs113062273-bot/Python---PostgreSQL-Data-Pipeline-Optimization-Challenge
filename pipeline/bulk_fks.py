@@ -45,8 +45,9 @@ def prepare_sql():
     )
     allowed_checks=",".join(sql_literal(c) for c in checks)
     return """DO $bulk_prepare$
-DECLARE item record; actual text; previous_path text:=current_setting('search_path');
+DECLARE item record; actual text; previous_path text:=pg_catalog.current_setting('search_path');
 BEGIN
+ PERFORM pg_catalog.set_config('search_path','pg_catalog',true);
  LOCK TABLE public.raw_data IN SHARE MODE;
  IF EXISTS(SELECT 1 FROM pg_event_trigger WHERE evtenabled<>'D') THEN
    RAISE EXCEPTION 'Bulk FK mode does not support database event triggers';
@@ -92,7 +93,8 @@ END $bulk_prepare$;"""
 
 
 def restore_sql():
-    return """DO $bulk_restore$ DECLARE item record; BEGIN
+    return """DO $bulk_restore$ DECLARE item record; previous_path text:=pg_catalog.current_setting('search_path'); BEGIN
+ PERFORM pg_catalog.set_config('search_path','pg_catalog',true);
  IF (SELECT count(*) FROM pg_temp.pipeline_bulk_foreign_keys)<>6 THEN RAISE EXCEPTION 'Incomplete bulk FK restoration plan'; END IF;
  FOR item IN SELECT * FROM pg_temp.pipeline_bulk_foreign_keys ORDER BY table_name,constraint_name LOOP
    EXECUTE format('ALTER TABLE public.%I ADD CONSTRAINT %I %s',item.table_name,item.constraint_name,item.definition);
@@ -100,6 +102,7 @@ def restore_sql():
  IF EXISTS(SELECT 1 FROM pg_constraint WHERE connamespace='public'::regnamespace AND NOT convalidated) THEN
    RAISE EXCEPTION 'Bulk FK validation did not complete';
  END IF;
+ PERFORM pg_catalog.set_config('search_path',previous_path,true);
 END $bulk_restore$;"""
 
 
@@ -113,17 +116,17 @@ def instrument(sql,sequence,name):
 class BulkFKMixin:
     bulk_foreign_keys=False
 
-    def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,selected,**kwargs):
+    def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,destinations,**kwargs):
         if self.bulk_foreign_keys:
-            from pipeline.recipes import destinations
-            originals=destinations("baseline")
-            if source_full_table_name!="public.raw_data" or len(selected)!=len(originals) or any(
-                d.get("table_name")!=o["table_name"] or d.get("sql","").strip()!=o["sql"].strip() for d,o in zip(selected,originals)):
+            from pipeline.recipes import destinations as recipe_destinations
+            originals=recipe_destinations("baseline")
+            if source_full_table_name!="public.raw_data" or len(destinations)!=len(originals) or any(
+                d.get("table_name")!=o["table_name"] or d.get("sql","").strip()!=o["sql"].strip() for d,o in zip(destinations,originals)):
                 raise RuntimeError("Bulk FK mode requires the exact organizer source and six original recipes")
         previous=getattr(self._expansion_timing_local,"bulk_fk_active",False)
         self._expansion_timing_local.bulk_fk_active=self.bulk_foreign_keys
         try:
-            return super().execute_cross_table_expansion(database_name,source_full_table_name,raw_schemas,selected,**kwargs)
+            return super().execute_cross_table_expansion(database_name,source_full_table_name,raw_schemas,destinations,**kwargs)
         finally:
             self._expansion_timing_local.bulk_fk_active=previous
 

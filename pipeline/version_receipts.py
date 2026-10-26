@@ -6,6 +6,7 @@ No distributed atomicity is claimed. Data stays fenced until control completion.
 """
 import json
 import shlex
+from psycopg.types.json import Jsonb
 from pipeline.checkpoints import LOCK_KEY, catalog, source_digest
 from pipeline.upstream import PostgresAdminService
 from config import CONTROL_DB
@@ -106,9 +107,9 @@ class VersionReceiptMixin:
                 for table in RELATIONS:
                     conn.execute(f"DROP TRIGGER IF EXISTS pipeline_write_fence ON public.{table}")
                 conn.execute("UPDATE pipeline_recovery.jobs SET state='complete',result=%s,completed_at=clock_timestamp() WHERE job_id=%s",
-                    (__import__('psycopg').types.json.Jsonb(result),job_id))
+                    (Jsonb(result),job_id))
                 conn.execute("DELETE FROM pipeline_recovery.active WHERE job_id=%s",(job_id,))
-                conn.execute("UPDATE pipeline_recovery.jobs SET schema_signature=%s WHERE job_id=%s",(__import__('psycopg').types.json.Jsonb(catalog(conn)),job_id))
+                conn.execute("UPDATE pipeline_recovery.jobs SET schema_signature=%s WHERE job_id=%s",(Jsonb(catalog(conn)),job_id))
             conn.commit()
             runner.failpoint("after_complete_commit",{})
             return versions

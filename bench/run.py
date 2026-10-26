@@ -62,6 +62,7 @@ def execute(conn, mode, scopes, *, profile=False):
     sql_path.write_text(exact_sql,encoding="utf-8")
     conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS diagnostic_timing(stage text, seconds double precision, rows bigint) ON COMMIT DELETE ROWS")
+    conn.execute("CREATE TEMP TABLE IF NOT EXISTS diagnostic_guard(safe boolean) ON COMMIT DELETE ROWS")
     stages = [("source_manifest", PostgresAdminService._build_expansion_manifest_sql("public", "raw_data", scopes).split("SELECT json_build_object(")[0])]
     stages += [(d["table_name"], s) for d in recipes for s in d["statements"]]
     start_lsn = conn.execute("SELECT pg_current_wal_insert_lsn()").fetchone()[0]
@@ -90,6 +91,13 @@ def execute(conn, mode, scopes, *, profile=False):
             conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
             conn.execute(PostgresAdminService._build_cross_table_expansion_lock_sql(recipes))
             for name, statement in stages:
+                if mode=="guarded_qf" and name=="public.table2":
+                    from pipeline.guards import gate_sql,fast_statement
+                    gate=gate_sql(scopes)
+                    conn.execute("DO $gate$ DECLARE started timestamptz:=clock_timestamp(); BEGIN INSERT INTO diagnostic_guard "+gate+"; INSERT INTO diagnostic_timing VALUES ('semantic_domain_gate',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $gate$;")
+                    safe=conn.execute("SELECT safe FROM diagnostic_guard").fetchone()[0]
+                    if safe:
+                        statement=fast_statement(tuple(scopes))
                 if profile and name != "source_manifest":
                     plan = conn.execute("EXPLAIN (ANALYZE, BUFFERS, WAL, SETTINGS, SUMMARY, TIMING OFF, FORMAT JSON) " + statement).fetchone()[0]
                     write_report(ROOT / f"reports/plans/{mode}_{name}.json", plan)
@@ -106,7 +114,11 @@ def execute(conn, mode, scopes, *, profile=False):
         watcher.join(timeout=1)
     wal = conn.execute("SELECT pg_wal_lsn_diff(pg_current_wal_insert_lsn(),%s)::bigint", (start_lsn,)).fetchone()[0]
     stats = conn.execute("SELECT temp_files,temp_bytes FROM pg_stat_database WHERE datname=current_database()").fetchone()
-    return {"mode": mode, "executed_sql_sha256":sql_sha256,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
+    if mode=="guarded_qf":
+        exact_sql=gate+";\n\n"+"\n\n".join(s+";" for d in recipes[:-1] for s in d["statements"])+"\n\n"+statement+";"
+        sql_sha256=hashlib.sha256(exact_sql.encode()).hexdigest()
+        (ROOT/"reports/sql"/(sql_sha256+".sql")).write_text(exact_sql,encoding="utf-8")
+    return {"mode": mode, "executed_sql_sha256":sql_sha256,"guarded_fast_path":safe if mode=="guarded_qf" else None,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
             "stages": [{"name": n, "seconds": s, "rows": r} for n,s,r in timing],
             "wal_cluster_delta_bytes": wal, "db_cumulative_temp_files": stats[0], "db_cumulative_temp_bytes": stats[1], **sample}
 

@@ -24,7 +24,9 @@ Definitions are checked again against a stored catalog signature after locks.
 3. Process ordered raw-ID ranges. Within each transaction load table1, table5,
    table6 and table2 using the upstream managed DML counter wrapper; persist
    counts and the completed range in that SAME transaction. No ON CONFLICT
-   shortcut hides errors. Only one bounded list of chunk raw IDs is in Python.
+   shortcut hides errors. Dependent main_row joins also carry the implied raw-ID
+   bounds so they can use bounded index ranges as table1 grows. Only one bounded
+   list of chunk raw IDs is in Python; verify actual plans at larger scales.
 4. A failed chunk rolls back its data, counters and checkpoint. Committed chunks
    survive and retain their original completion timestamp on replay. A new
    backend authenticates its job against durable state before writing.

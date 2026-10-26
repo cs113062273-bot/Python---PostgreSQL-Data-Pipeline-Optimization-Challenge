@@ -7,7 +7,7 @@ from tests.recovery.run import Service,fixture
 
 def main():
     records=[]
-    for kind in ("source_same_raw_hash","destination_same_count","schema_rename","version_dependency"):
+    for kind in ("source_same_raw_hash","destination_same_count","schema_rename","version_dependency","row_counter"):
         database=fixture(); job=str(uuid.uuid4()); service=Service(); runner=ChunkRunner(service,connect)
         runner.run(database,["group001"],job,chunk_rows=16)
         if kind!="source_same_raw_hash":
@@ -23,6 +23,8 @@ def main():
                 conn.execute("UPDATE public.table2 SET integer_column_2=integer_column_2+1 WHERE id_column_1=(SELECT min(id_column_1) FROM public.table2)")
             elif kind=="schema_rename":
                 conn.execute("ALTER TABLE public.table1 RENAME COLUMN text_column_1 TO edited_column")
+            elif kind=="row_counter":
+                conn.execute("UPDATE public.pgdm_table_row_counts SET row_count=row_count+1 WHERE table_name='table2'")
         if kind=="version_dependency":
             with connect("postgres_data_manager",autocommit=True) as control:
                 control.execute("UPDATE app_control.table_version_dependencies SET dependency_payload='{}'::jsonb WHERE source_database_name=%s",(database,))

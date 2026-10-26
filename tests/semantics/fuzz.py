@@ -41,10 +41,13 @@ def cases(seed, count):
                "remove": rng.choice(keys) if n % 7 == 0 else None, "settings": n % len(SETTINGS)}
 
 
-def outcome(conn, statements, tables):
+def outcome(conn, statements, tables,mode=None,scopes=None):
     conn.execute("SAVEPOINT trial")
     try:
         for statement in statements:
+            if mode=="guarded_qf" and statement.startswith("INSERT INTO public.table2"):
+                from pipeline.guards import choose
+                statement,_=choose(conn,statement,scopes)
             conn.execute(statement)
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name}
@@ -102,7 +105,7 @@ def main():
                         conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
                     start = -1 if scope == "table2_only" else 0
                     tables = ("table2",) if start == -1 else ORDER
-                    outputs = {mode: outcome(conn,[s for d in recipes[start:] for s in d["statements"]],tables)
+                    outputs = {mode: outcome(conn,[s for d in recipes[start:] for s in d["statements"]],tables,mode,scopes)
                                for mode, recipes in sqls.items()}
                     base = outputs.pop("baseline")
                     for mode, result in outputs.items():

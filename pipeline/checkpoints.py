@@ -229,6 +229,14 @@ class ChunkRunner:
                 if statement.count(marker)!=1:
                     raise RuntimeError("Protected source scope structure changed")
                 statement = statement.replace(marker,f'WHERE "raw_id" > {int(lo)} AND "raw_id" <= {int(hi)} AND "raw_schema" IN (',1)
+                join_key="ON main_row.id_column_3 = source_row.raw_id"
+                if join_key in statement:
+                    # The source range and equality imply this predicate. Make
+                    # it explicit so later chunks need not scan an ever-growing
+                    # complete table1 for each dependent destination.
+                    if statement.count(join_key)!=1:
+                        raise RuntimeError("Unrecognized main-row relationship")
+                    statement=statement.replace(join_key,join_key+f"\n AND main_row.id_column_3 > {int(lo)} AND main_row.id_column_3 <= {int(hi)}",1)
             # Upstream counter effects and row insertion remain in this chunk tx.
             conn.execute(self.service._build_managed_dml_sql(statement,"public",d["pure_table_name"],"add"))
         after = conn.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(d["pure_table_name"],)).fetchone()[0]
@@ -241,6 +249,14 @@ class ChunkRunner:
         expected = json.loads(json.dumps(result["destination_fingerprints"],default=str))
         if actual != expected:
             raise RuntimeError("Committed destination counts/content changed")
+        ChunkRunner.verify_counters(conn,actual)
+
+    @staticmethod
+    def verify_counters(conn,footprints):
+        for table,footprint in footprints.items():
+            counter=conn.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(table,)).fetchone()
+            if not counter or counter[0]!=footprint[0]:
+                raise RuntimeError("Managed row counter differs from actual output: "+table)
 
     def _finish_data(self,conn,database,scopes,versions,prepared,job_id):
         from tests.equivalence.oracle import fingerprints, assert_relationships
@@ -257,7 +273,9 @@ class ChunkRunner:
                 manifest = json.loads(cursor.fetchone()[0])
             if not cursor.nextset():
                 break
+        footprints=fingerprints(conn)
+        self.verify_counters(conn,footprints)
         return {"source_database_name":database,"source_schema_name":"public","source_table_name":"raw_data",
                 "raw_schemas":scopes,"source_versions":versions,"dependency_manifest":manifest,
                 "destinations":prepared["destinations"],"checkpoint_job_id":job_id,
-                "destination_fingerprints":fingerprints(conn),"completed_at":datetime.now(timezone.utc).isoformat()}
+                "destination_fingerprints":footprints,"completed_at":datetime.now(timezone.utc).isoformat()}

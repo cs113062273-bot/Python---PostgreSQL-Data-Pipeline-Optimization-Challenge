@@ -13,13 +13,13 @@ ANCHOR = "FROM {{source}} AS source_row"
 EXTRACT = re.compile(r"source_row\.raw\s*->\s*'values'\s*->>\s*'([a-z_]+\d+)'")
 MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
          "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array",
-         "qf_payload", "qf_lazy", "qf_lazy_path1")
+         "qf_payload", "qf_lazy", "qf_lazy_path1", "guarded_qf")
 
 
 def rewrite(sql, mode):
     if mode not in MODES:
         raise ValueError(f"Unknown recipe mode: {mode}")
-    if mode == "baseline":
+    if mode in ("baseline","guarded_qf"):
         return sql
     if mode in ("qf_payload","qf_lazy","qf_lazy_path1","lazy_keys"):
         from vendor.queryfoundry_recipes import rewrite as original_queryfoundry

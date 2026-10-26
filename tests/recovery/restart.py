@@ -2,7 +2,9 @@
 import argparse
 from pathlib import Path
 import subprocess
+import time
 import uuid
+import psycopg
 from bench.common import ROOT,connect,write_report
 from pipeline.checkpoints import ChunkRunner
 from tests.recovery.run import Service,fixture,InjectedFailure,check
@@ -28,14 +30,26 @@ def main():
         before=conn.execute("SELECT lo,hi,completed_at FROM pipeline_recovery.chunks WHERE job_id=%s ORDER BY lo",(job,)).fetchall()
         assert len(before)==1
     subprocess.run([args.pg_ctl,"-D",str(directory),"-m","immediate","-w","stop"],check=True)
-    subprocess.run([args.pg_ctl,"-D",str(directory),"-l",str(runtime/"postgres.log"),"-o",f"-h 127.0.0.1 -p {args.port}","-w","start"],check=True)
+    started=time.monotonic()
+    subprocess.run([args.pg_ctl,"-D",str(directory),"-l",str(runtime/"postgres.log"),"-o",f"-h 127.0.0.1 -p {args.port}","-W","start"],check=True)
+    # A real WAL replay can exceed pg_ctl's default 60-second wait. Poll
+    # readiness instead of treating an otherwise healthy recovery as failure.
+    while True:
+        try:
+            with connect("postgres",autocommit=True) as ready:
+                ready.execute("SELECT 1")
+            break
+        except psycopg.OperationalError:
+            if time.monotonic()-started>600:
+                raise RuntimeError("Server did not finish recovery within 10 minutes")
+            time.sleep(2)
     service=Service();runner=ChunkRunner(service,connect)
     runner.run(database,["group001"],job,chunk_rows=16)
     service.finalize_checkpoint_job(runner,database,job)
     after=check(database,job)
     assert after[:1]==before
     write_report("reports/recovery-restart.json",{"kind":"local_immediate_postgres_stop_and_wal_recovery","passed":True,
-        "database":database,"job":job,"committed_chunks_reused":1,"exact_six_tables":True,"versions_idempotent":True,
+        "database":database,"job":job,"startup_recovery_seconds":time.monotonic()-started,"committed_chunks_reused":1,"exact_six_tables":True,"versions_idempotent":True,
         "not_equivalent_to":["Linux restart","power loss","storage failure"]})
     print("Immediate server stop/start: PASS, committed chunk reused",flush=True)
 

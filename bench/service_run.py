@@ -7,6 +7,7 @@ from bench.common import connect,environment,require_lab,write_report
 from bench.control import seed_initial_versions
 from bench.run import execute
 from pipeline.local_service import LocalService
+from pipeline.planner import Table1PlannerMixin
 from pipeline.recipes import destinations
 from pipeline.upstream import PostgresAdminService
 from tests.equivalence.oracle import snapshot,assert_exact,assert_relationships
@@ -16,7 +17,7 @@ from ui.dialogs import ExpansionTimingReportDialog
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database",default="lab_full_100k")
-    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1"])
+    parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64"])
     parser.add_argument("--output",default="reports/local-service.json")
     args=parser.parse_args()
     with connect(args.database,autocommit=True) as conn:
@@ -29,7 +30,10 @@ def main():
         snapshot(conn)
         conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
     seed_initial_versions(args.database)
-    service=LocalService()
+    class Service(Table1PlannerMixin,LocalService):
+        table1_hash_join=args.mode in ("hash_table1","hash_array","qf_hash1","hash_array64")
+        expansion_work_mem="64MB" if args.mode=="hash_array64" else None
+    service=Service()
     report=PostgresAdminService.create_cross_table_expansion_timing_report(args.database,"public.raw_data",scopes,[d["table_name"] for d in destinations()])
     started=time.perf_counter()
     result=service.execute_cross_table_expansion(args.database,"public.raw_data",scopes,destinations(args.mode),timing_report=report)

@@ -3,15 +3,18 @@ import argparse
 import sys
 from pipeline.recipes import destinations,rewrite
 from pipeline.upstream import APP,PostgresAdminService
+from pipeline.planner import Table1PlannerMixin
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1"],default="baseline")
+    parser.add_argument("--mode",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64"],default="baseline")
     args=parser.parse_args()
     mode=args.mode
     originals={d["table_name"]:d["sql"].strip() for d in destinations()}
-    class ExperimentalService(PostgresAdminService):
+    class ExperimentalService(Table1PlannerMixin,PostgresAdminService):
+        table1_hash_join=mode in ("hash_table1","hash_array","qf_hash1","hash_array64")
+        expansion_work_mem="64MB" if mode=="hash_array64" else None
         def execute_cross_table_expansion(self,database_name,source_full_table_name,raw_schemas,destinations,**kwargs):
             selected=[]
             for destination in destinations:

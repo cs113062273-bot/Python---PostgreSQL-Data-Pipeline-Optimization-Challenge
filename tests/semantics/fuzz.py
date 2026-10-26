@@ -44,11 +44,19 @@ def cases(seed, count):
 def outcome(conn, statements, tables,mode=None,scopes=None):
     conn.execute("SAVEPOINT trial")
     try:
+        if mode=="hash_array64":
+            conn.execute("SET LOCAL work_mem='64MB'")
         for statement in statements:
+            original_mergejoin=None
+            if mode in ("hash_table1","qf_hash1","hash_array","hash_array64") and statement.startswith("INSERT INTO public.table1 "):
+                original_mergejoin=conn.execute("SHOW enable_mergejoin").fetchone()[0]
+                conn.execute("SET LOCAL enable_mergejoin=off")
             if mode=="guarded_qf" and statement.startswith("INSERT INTO public.table2"):
                 from pipeline.guards import choose
                 statement,_=choose(conn,statement,scopes)
             conn.execute(statement)
+            if original_mergejoin is not None:
+                conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name}
     except psycopg.Error as error:

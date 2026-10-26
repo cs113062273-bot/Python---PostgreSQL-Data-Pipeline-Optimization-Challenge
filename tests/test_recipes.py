@@ -40,3 +40,15 @@ def test_direct_queryfoundry_control_uses_pinned_original():
     for baseline,lazy,payload in zip(destinations(),destinations("qf_lazy"),destinations("qf_payload")):
         assert lazy["sql"]==original(baseline["sql"],"lazy_keys")
         assert payload["sql"]==original(baseline["sql"],"payload_once")
+
+
+def test_planner_override_preserves_counter_diagnostics_and_class_helpers():
+    from pipeline.planner import Table1PlannerMixin
+    class Tuned(Table1PlannerMixin,PostgresAdminService):pass
+    original=PostgresAdminService._build_managed_dml_sql("INSERT INTO public.table1 SELECT source_row.raw_id FROM x source_row","public","table1","add")
+    tuned=Tuned._build_managed_dml_sql("INSERT INTO public.table1 SELECT source_row.raw_id FROM x source_row","public","table1","add")
+    assert "GET DIAGNOSTICS pgdm_affected_rows = ROW_COUNT;\n    PERFORM set_config" in tuned
+    assert "UPDATE" in tuned and "row_count = row_count + pgdm_affected_rows" in tuned
+    assert tuned!=original
+    prepared=Tuned._prepare_managed_sql_script("INSERT INTO public.table1 (id_column_2) SELECT 1","public.table1")
+    assert prepared["wrapped_sql"]

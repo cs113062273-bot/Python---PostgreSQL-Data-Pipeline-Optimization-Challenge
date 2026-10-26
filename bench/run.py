@@ -89,8 +89,14 @@ def execute(conn, mode, scopes, *, profile=False):
     try:
         with conn.transaction():
             conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
+            if mode=="hash_array64":
+                conn.execute("SET LOCAL work_mem='64MB'")
             conn.execute(PostgresAdminService._build_cross_table_expansion_lock_sql(recipes))
             for name, statement in stages:
+                original_mergejoin=None
+                if mode in ("hash_table1","qf_hash1","hash_array","hash_array64") and name=="public.table1":
+                    original_mergejoin=conn.execute("SHOW enable_mergejoin").fetchone()[0]
+                    conn.execute("SET LOCAL enable_mergejoin=off")
                 if mode=="guarded_qf" and name=="public.table2":
                     from pipeline.guards import gate_sql,fast_statement
                     gate=gate_sql(scopes)
@@ -105,6 +111,8 @@ def execute(conn, mode, scopes, *, profile=False):
                     body = statement.strip().rstrip(";")
                     conn.execute("DO $diag$ DECLARE started timestamptz := clock_timestamp(); affected bigint; BEGIN " + body +
                         "; GET DIAGNOSTICS affected = ROW_COUNT; INSERT INTO diagnostic_timing VALUES ('" + name + "', EXTRACT(EPOCH FROM clock_timestamp()-started), affected); END $diag$;")
+                if original_mergejoin is not None:
+                    conn.execute("SELECT set_config('enable_mergejoin',%s,true)",(original_mergejoin,))
             timing = conn.execute("SELECT stage,seconds,rows FROM diagnostic_timing").fetchall()
             conn.execute("SELECT pg_stat_force_next_flush()")
             before_commit = time.perf_counter()
@@ -118,7 +126,7 @@ def execute(conn, mode, scopes, *, profile=False):
         exact_sql=gate+";\n\n"+"\n\n".join(s+";" for d in recipes[:-1] for s in d["statements"])+"\n\n"+statement+";"
         sql_sha256=hashlib.sha256(exact_sql.encode()).hexdigest()
         (ROOT/"reports/sql"/(sql_sha256+".sql")).write_text(exact_sql,encoding="utf-8")
-    return {"mode": mode, "executed_sql_sha256":sql_sha256,"guarded_fast_path":safe if mode=="guarded_qf" else None,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
+    return {"mode": mode, "work_mem_override":"64MB" if mode=="hash_array64" else None,"table1_mergejoin_disabled":mode in ("hash_table1","qf_hash1","hash_array","hash_array64"),"executed_sql_sha256":sql_sha256,"guarded_fast_path":safe if mode=="guarded_qf" else None,"official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
             "stages": [{"name": n, "seconds": s, "rows": r} for n,s,r in timing],
             "wal_cluster_delta_bytes": wal, "db_cumulative_temp_files": stats[0], "db_cumulative_temp_bytes": stats[1], **sample}
 
@@ -147,7 +155,7 @@ def main():
         report = {"kind": "diagnostic_sql_only", "official_score": False, "eligible_submission": False,
                   "timestamp_utc": datetime.now(timezone.utc).isoformat(), "environment": environment(conn),
                   "source_rows": conn.execute("SELECT count(*) FROM public.raw_data").fetchone()[0],
-                  "exclusions": ["full preflight", "managed row counters", "version registration", "dump handling", "GUI", "SSH"],
+                  "exclusions": ["full preflight", "managed row counters", "version registration", "dump handling", "GUI", "SSH","destination lock acquisition","commit latency (reported separately)"],
                   "resource_limits": "50ms RSS samples of local backend/application; shared mappings included; no global peak; WAL cluster delta includes background activity", "runs": []}
         schema = schema_signature(conn)
         print("Creating independent official SQL reference / warmup...", flush=True)

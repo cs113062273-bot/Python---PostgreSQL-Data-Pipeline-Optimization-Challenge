@@ -1,6 +1,7 @@
 """Guarded SQL experiments. No casts, filters or output expressions are removed.
 
-Public controls independently implement the QueryFoundry extraction strategies.
+Lazy controls call the pinned QueryFoundry submission directly. The initial
+independent payload projection remains a separate historical experiment.
 All modes except baseline are research candidates until measured and validated.
 """
 from pathlib import Path
@@ -53,26 +54,7 @@ def rewrite(sql, mode):
         expansion = "CROSS JOIN LATERAL unnest("+",\n".join(arrays)+") AS position_data(position_number, declared_number_text, type_text, weight_text, gap_text)"
         sql = sql[:matrix.start()]+expansion+sql[matrix.end():]
         return sql.replace(ANCHOR,ANCHOR+payload)
-    if mode == "lazy_keys" and "AS position_data(" in sql:
-        matrix = re.search(r"CROSS JOIN LATERAL \(\s*VALUES\s*(.*?)\s*\) AS position_data\([^)]*\)", sql, re.S)
-        if not matrix:
-            raise ValueError("Unrecognized table2 matrix")
-        tuples = []
-        for n in range(1, 15):
-            keys = [f"integer_column_{n+1}", f"text_column_{n+3}",
-                    f"numeric_column_{2*n+1}", f"numeric_column_{2*n+2}"]
-            tuples.append(f"({n}::smallint, " + ", ".join(f"'{key}'" for key in keys) + ")")
-        expected = [key for n in range(1, 15) for key in
-                    (f"integer_column_{n+1}", f"text_column_{n+3}", f"numeric_column_{2*n+1}", f"numeric_column_{2*n+2}")]
-        if EXTRACT.findall(matrix[1]) != expected:
-            raise ValueError("Official position mapping changed")
-        replacement = "CROSS JOIN LATERAL (VALUES\n" + ",\n".join(tuples) + ") AS keys(position_number, declared_key, type_key, weight_key, gap_key)"
-        sql = sql[:matrix.start()] + replacement + sql[matrix.end():]
-        for field, key in (("declared_number", "declared"), ("type", "type"), ("weight", "weight"), ("gap", "gap")):
-            sql = sql.replace(f"position_data.{field}_text", f"(projected.payload ->> keys.{key}_key)")
-        sql = sql.replace("position_data.position_number", "keys.position_number")
-        return sql.replace(ANCHOR, ANCHOR + payload)
-    if mode in ("payload_once", "lazy_keys"):
+    if mode == "payload_once":
         return EXTRACT.sub(lambda m: "projected.payload ->> '" + m[1] + "'", sql).replace(ANCHOR, ANCHOR + payload)
     # Extraction operators yield NULL for non-object inputs. SRFs throw on them;
     # normalize only the SRF's input shape to retain the operator behavior.

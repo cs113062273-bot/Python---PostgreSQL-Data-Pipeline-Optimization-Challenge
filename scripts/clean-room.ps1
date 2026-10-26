@@ -1,6 +1,8 @@
 param([string]$Ref='HEAD',[string]$PythonExe='python')
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path -Parent $PSScriptRoot
+New-Item -ItemType Directory -Force (Join-Path $taskRoot '.runtime') | Out-Null
+$taskPreviousPythonPath=$env:PYTHONPATH
 $taskName='reproduce_'+[guid]::NewGuid().ToString('N').Substring(0,10)
 $taskDestination=Join-Path $taskRoot ".runtime/$taskName"
 $taskArchive=Join-Path $taskRoot ".runtime/$taskName.zip"
@@ -19,5 +21,9 @@ try {
     $env:PYTHONPATH=Join-Path $taskDestination 'app'
     & .venv/Scripts/python.exe -m unittest discover -s app/tests -v
     if ($LASTEXITCODE -ne 0) { throw 'Organizer regression failed' }
-} finally { Pop-Location }
+} finally {
+    if ($null -eq $taskPreviousPythonPath) { Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue }
+    else { $env:PYTHONPATH=$taskPreviousPythonPath }
+    Pop-Location
+}
 Write-Host "Clean-room source/dependency regression passed for $Ref in $taskDestination"

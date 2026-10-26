@@ -44,6 +44,10 @@ def cases(seed, count):
 def outcome(conn, statements, tables,mode=None,scopes=None):
     conn.execute("SAVEPOINT trial")
     try:
+        if mode=="bulk_fks" and len(statements)>1:
+            from pipeline.bulk_fks import prepare_sql,restore_sql
+            conn.execute("LOCK TABLE public.raw_data IN SHARE MODE")
+            conn.execute(prepare_sql())
         if mode in ("hash_array64","hash_array64_nomemo"):
             conn.execute("SET LOCAL work_mem='64MB'")
         if mode=="analyze_base" and len(statements)==1:
@@ -69,6 +73,8 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             for table in maintained:
                 if statement.startswith(f"INSERT INTO public.{table} "):
                     conn.execute(f"ANALYZE public.{table}")
+        if mode=="bulk_fks" and len(statements)>1:
+            conn.execute(restore_sql())
         outputs = {table: [r[0] for r in conn.execute(f"SELECT value::text FROM ({canonical(table)}) c ORDER BY value::text")] for table in tables}
         return {"sqlstate": "00000", "outputs": outputs, "transaction_state": conn.info.transaction_status.name}
     except psycopg.Error as error:

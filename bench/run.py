@@ -94,9 +94,14 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
     try:
         with conn.transaction():
             conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
+            if mode=="bulk_fks":
+                conn.execute("LOCK TABLE public.raw_data IN SHARE MODE")
             if mode in ("hash_array64","hash_array64_nomemo"):
                 conn.execute("SET LOCAL work_mem='64MB'")
             conn.execute(PostgresAdminService._build_cross_table_expansion_lock_sql(recipes))
+            if mode=="bulk_fks":
+                from pipeline.bulk_fks import prepare_sql,restore_sql
+                conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_sql()+" INSERT INTO diagnostic_timing VALUES('bulk_fk_prepare',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
             for name, statement in stages:
                 original_mergejoin=None
                 if mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo") and name=="public.table1":
@@ -127,6 +132,8 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                 maintained=("public.table3","public.table4","public.table1") if mode=="analyze_base" else ("public.table3","public.table4") if mode=="analyze_dims" else ()
                 if name in maintained:
                     conn.execute("DO $stats$ DECLARE started timestamptz:=clock_timestamp(); BEGIN ANALYZE "+name+"; INSERT INTO diagnostic_timing VALUES ('analyze_"+name+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $stats$;")
+            if mode=="bulk_fks":
+                conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+restore_sql()+" INSERT INTO diagnostic_timing VALUES('bulk_fk_restore_validate',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
             timing = conn.execute("SELECT stage,seconds,rows FROM diagnostic_timing").fetchall()
             conn.execute("SELECT pg_stat_force_next_flush()")
             before_commit = time.perf_counter()

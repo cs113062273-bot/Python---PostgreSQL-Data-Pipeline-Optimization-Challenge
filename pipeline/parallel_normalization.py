@@ -35,7 +35,7 @@ def restore_settings_sql():
 
 def prepare_sql(scopes,*,logged=False):
     from pipeline.recipes import ORDER
-    names=('max_parallel_workers_per_gather','min_parallel_table_scan_size','parallel_setup_cost','parallel_tuple_cost')
+    names=('max_parallel_workers_per_gather','min_parallel_table_scan_size','parallel_setup_cost','parallel_tuple_cost','enable_parallel_hash')
     save="CREATE TEMP TABLE pipeline_parallel_settings ON COMMIT DROP AS SELECT name,setting FROM pg_settings WHERE name IN ("+','.join("'"+n+"'" for n in names)+");"
     restore=restore_settings_sql()
     empty=' AND '.join(f'NOT EXISTS(SELECT 1 FROM public.{t})' for t in ORDER)
@@ -45,7 +45,7 @@ def prepare_sql(scopes,*,logged=False):
     return namespace+save+'\n'+settings_sql()+'\n'+prepare_input_sql(scopes,logged=logged)+'\n'+restore+'\n'+domain
 
 
-def materialize_statement(statement):
+def materialize_statement(statement,*,mode=None):
     """Lab-only CTAS transformation; identity allocation stays in final INSERT."""
     import re
     m=re.fullmatch(r'(INSERT INTO public\.(table[1-6])\s*\((.*?)\))\s*(SELECT\s.*?);?',statement,re.S)
@@ -53,6 +53,7 @@ def materialize_statement(statement):
     header,table,columns,select=m.groups()
     columns=','.join(c.strip() for c in columns.split(','))
     name='pipeline_ready_'+table
-    prepare=settings_sql()+f'\nCREATE TEMP TABLE {name} ({columns}) ON COMMIT DROP AS '+select.rstrip(';')+';\n'+restore_settings_sql()
+    tune='SET LOCAL enable_parallel_hash=off;\n' if mode=='lab_parallel_cache' and table=='table1' else ''
+    prepare=settings_sql()+'\n'+tune+f'CREATE TEMP TABLE {name} ({columns}) ON COMMIT DROP AS '+select.rstrip(';')+';\n'+restore_settings_sql()
     insert=header+' SELECT '+columns+' FROM pg_temp.'+name
     return prepare,insert,'DROP TABLE pg_temp.'+name+';'

@@ -3,7 +3,7 @@ import time
 import re
 import hashlib
 from pipeline.normalization import prepare_sql as normalize_sql,rewrite
-from pipeline.recipes import EXTRACT,compiler_sha256,ORDER,CTAS_MODES
+from pipeline.recipes import EXTRACT,compiler_sha256,ORDER,CTAS_MODES,BULK_CTAS_MODES
 from pipeline.safe_domain import gate_sql
 from pipeline.bulk_fks import instrument
 
@@ -40,7 +40,7 @@ def prepare_sql(scopes,mode=MODE):
 def fast_statement(statement,scopes,mode=MODE):
     if mode in CTAS_MODES:
         result=fast_statement(statement,scopes,'guarded_prefix').replace('pg_temp.pipeline_normalized_input','challenge_lab.pipeline_normalized_input')
-        if mode=='lab_parallel_bulk' and statement.startswith('INSERT INTO public.table2 ('):
+        if mode in BULK_CTAS_MODES and statement.startswith('INSERT INTO public.table2 ('):
             start='CROSS JOIN LATERAL (SELECT position_number FROM pg_catalog.unnest('
             end=') AS expanded(position_number) OFFSET 0) AS position_keys'
             if result.count(start)!=1 or result.count(end)!=1:raise RuntimeError('Unknown position barrier')

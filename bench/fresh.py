@@ -15,7 +15,7 @@ from psycopg import sql
 from bench.common import connect,environment,require_lab,write_report
 from bench.run import execute
 from pipeline.recipes import MODES,ORDER,compiler_sha256,ROOT
-from tests.equivalence.oracle import canonical,fingerprints,schema_signature,assert_relationships
+from tests.equivalence.oracle import canonical,fingerprints,schema_signature,sequence_signature,assert_relationships
 
 
 def expected_fingerprints(conn):
@@ -91,6 +91,7 @@ def main():
                         backend.cpu_affinity([args.cpu_affinity])
                     scopes=[r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")]
                     before=schema_signature(conn)
+                    sequences_before=sequence_signature(conn)
                     stats=conn.execute("SELECT c.relname,c.reltuples,(SELECT count(*) FROM pg_stats s WHERE s.schemaname='public' AND s.tablename=c.relname) FROM pg_class c WHERE c.relnamespace='public'::regnamespace AND c.relname=ANY(%s) ORDER BY c.relname",(list(ORDER),)).fetchall()
                     if any(n!=-1 or count!=0 for _,n,count in stats):
                         raise RuntimeError("Template destinations are not in original unanalyzed empty state")
@@ -98,13 +99,14 @@ def main():
                     if implementation_identity()!=implementation:raise RuntimeError('Implementation changed during timed execution; discard this cohort')
                     print(f"fresh {repeat+1}: {mode}: SQL stages {result['sql_seconds']:.4f}s; verification pending",flush=True)
                     assert schema_signature(conn)==before
+                    assert sequence_signature(conn)==sequences_before,'Sequence options/identity ownership changed'
                     assert_relationships(conn)
                     if fingerprints(conn)!=expected:raise AssertionError("Fresh output fingerprints differ: "+mode)
                     if mode not in checked:
                         result["verification_schema"]=exact_to_reference(conn,reference)
                         result["exact_except_all"]=True
                         checked.add(mode)
-                    result.update(database=database,repeat=repeat,initial_statistics=stats,fingerprints_equivalent=True,schema_equivalent=True)
+                    result.update(database=database,repeat=repeat,initial_statistics=stats,fingerprints_equivalent=True,schema_equivalent=True,sequence_options_and_ownership_equivalent=True)
                     report["runs"].append(result)
                     write_report(args.output,report)
                     print(f"fresh {repeat+1}: {mode}: {result['sql_seconds']:.4f}s; six outputs equivalent",flush=True)

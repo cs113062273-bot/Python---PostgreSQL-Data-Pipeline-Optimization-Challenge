@@ -43,11 +43,13 @@ def prepare_primary_sql(table):
 
 
 def prepare_mode_sql(mode,table):
-    from pipeline.recipes import bulk_unique_tables,CTAS_MODES
+    from pipeline.recipes import bulk_unique_tables,CTAS_MODES,BULK_CTAS_MODES
     unique=prepare_sql(table) if table in bulk_unique_tables(mode) and table in ("table1","table2") else ""
     primary=prepare_primary_sql(table) if mode in ("bulk_full","bulk_full64","guarded_normalize","guarded_prefix","guarded_parallel")+CTAS_MODES else ""
-    extra=(prepare_sql('table6') if table=='table6' else prepare_partial_sql() if table=='table5' else '') if mode=='lab_parallel_bulk' else ''
-    return unique+"\n"+extra+'\n'+primary
+    extra=(prepare_sql('table6') if table=='table6' else prepare_partial_sql() if table=='table5' else '') if mode in BULK_CTAS_MODES else ''
+    from pipeline.bulk_sequences import prepare_sql as sequence_sql
+    sequence=sequence_sql(table) if mode=='lab_parallel_cache' and table in ('table1','table2','table5','table6') else ''
+    return unique+"\n"+extra+'\n'+primary+'\n'+sequence
 
 
 def prepare_sql(table):
@@ -126,7 +128,8 @@ def restore_sql(table,*,mode=None):
       PERFORM set_config('maintenance_work_mem',previous_memory,true);
       PERFORM set_config('search_path',previous_path,true);
     END $index_restore$;"""
-    if table=='table5' and mode=='lab_parallel_bulk':
+    from pipeline.recipes import BULK_CTAS_MODES
+    if table=='table5' and mode in BULK_CTAS_MODES:
         result+='\n'+"""DO $partial_restore$ DECLARE item record; previous_memory text:=pg_catalog.current_setting('maintenance_work_mem'); BEGIN
           IF to_regclass('pg_temp.pipeline_bulk_partial_indexes') IS NULL THEN RETURN; END IF;
           PERFORM pg_catalog.set_config('maintenance_work_mem','128MB',true);
@@ -136,6 +139,9 @@ def restore_sql(table,*,mode=None):
           END LOOP;
           PERFORM pg_catalog.set_config('maintenance_work_mem',previous_memory,true);
         END $partial_restore$;"""
+    if mode=='lab_parallel_cache':
+        from pipeline.bulk_sequences import restore_sql as restore_sequence
+        result+='\n'+restore_sequence(table)
     return result
 
 

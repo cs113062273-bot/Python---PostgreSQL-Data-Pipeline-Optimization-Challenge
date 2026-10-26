@@ -77,7 +77,7 @@ def outcome(conn, statements, tables,mode=None,scopes=None):
             ctas_cleanup=None
             if mode in CTAS_MODES and guarded_safe:
                 from pipeline.parallel_normalization import materialize_statement
-                prep,statement,ctas_cleanup=materialize_statement(statement)
+                prep,statement,ctas_cleanup=materialize_statement(statement,mode=mode)
                 conn.execute(prep)
             original_mergejoin=None
             if mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo") and statement.startswith("INSERT INTO public.table1 "):

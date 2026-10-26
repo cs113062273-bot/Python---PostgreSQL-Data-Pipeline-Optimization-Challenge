@@ -1,6 +1,16 @@
 from pipeline.recipes import ORDER
 
 
+def sequence_signature(conn):
+    # Sequence current/last values may contain ordinary allocation/rollback
+    # gaps. Their declared type/options and identity ownership must be exact.
+    return conn.execute("""SELECT x.relname,s.seqtypid::regtype::text,s.seqstart,s.seqincrement,s.seqmax,s.seqmin,s.seqcache,s.seqcycle,
+      (SELECT jsonb_agg(jsonb_build_array(t.relname,a.attname,d.deptype) ORDER BY t.relname,a.attname)
+       FROM pg_depend d JOIN pg_class t ON t.oid=d.refobjid JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=d.refobjsubid
+       WHERE d.classid='pg_class'::regclass AND d.objid=x.oid AND d.refclassid='pg_class'::regclass AND d.deptype IN ('a','i'))
+      FROM pg_sequence s JOIN pg_class x ON x.oid=s.seqrelid WHERE x.relnamespace='public'::regnamespace ORDER BY x.relname""").fetchall()
+
+
 def canonical(table):
     if table == "table3":
         return "SELECT to_jsonb(t)-'id_column_1' AS value FROM public.table3 t"

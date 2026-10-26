@@ -1,5 +1,13 @@
 # Current status
 
+The active objective is now **80% less time than the official original**; it
+has not been achieved. The latest fresh 1M, one-run SQL-stage research result is
+**79.9384%** (103.618095s to 20.787423s), with exact six-table and schema checks.
+It misses the 80% threshold by 0.063804s and is not a full-service/repeated claim.
+The earlier parallel projection alone reached 70.44%. These are separate from
+the earlier qualified release below.
+See [parallel research and its remaining gates](PARALLEL_RESEARCH.md).
+
 The local 100k SQL-stage target is achieved: guarded_prefix reduces the
 three-run median by **51.62% versus the official original**, with all six
 outputs and restored constraints/indexes verified. This is not an official

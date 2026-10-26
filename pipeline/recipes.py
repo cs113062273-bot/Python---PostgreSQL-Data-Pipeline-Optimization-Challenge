@@ -16,7 +16,8 @@ MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
          "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array",
          "qf_payload", "qf_lazy", "qf_lazy_path1", "guarded_qf", "qf_hash1", "hash_table1", "hash_array", "hash_array64", "analyze_base", "analyze_dims", "hash_array64_nomemo", "bulk_fks", "bulk_index2", "bulk_indexes", "bulk_index_payload", "bulk_payload", "bulk_array", "bulk_full", "bulk_full64", "bulk_normalize", "bulk_normalize64", "guarded_normalize", "guarded_prefix", "guarded_parallel")
 
-CTAS_MODES=('lab_parallel_ctas','lab_parallel_bulk')
+CTAS_MODES=('lab_parallel_ctas','lab_parallel_bulk','lab_parallel_cache')
+BULK_CTAS_MODES=('lab_parallel_bulk','lab_parallel_cache')
 BULK_MODES=("bulk_fks","bulk_index2","bulk_indexes","bulk_index_payload", "bulk_payload", "bulk_array", "bulk_full", "bulk_full64", "bulk_normalize", "bulk_normalize64", "guarded_normalize", "guarded_prefix", "guarded_parallel")+CTAS_MODES
 MODES=MODES+CTAS_MODES
 
@@ -27,7 +28,7 @@ def bulk_unique_tables(mode):
 
 
 def compiler_sha256():
-    names=('recipes.py','bulk_fks.py','bulk_indexes.py','normalization.py','safe_domain.py','guarded_normalization.py','parallel_normalization.py','planner.py')
+    names=('recipes.py','bulk_fks.py','bulk_indexes.py','bulk_sequences.py','normalization.py','safe_domain.py','guarded_normalization.py','parallel_normalization.py','planner.py')
     digest=hashlib.sha256()
     for name in names:
         digest.update(name.encode()+b'\0'+(ROOT/'pipeline'/name).read_text(encoding='utf-8').encode('utf-8')+b'\0')

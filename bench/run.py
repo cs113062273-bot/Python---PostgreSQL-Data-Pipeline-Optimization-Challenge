@@ -81,7 +81,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
             if mode in NORMALIZATION_MODES and table=="table1":strategy.append(normalize_sql(scopes))
             for s in d['statements']:
                 if mode in CTAS_MODES:
-                    prep,load,cleanup=materialize_statement(guarded_statement(s,scopes,mode))
+                    prep,load,cleanup=materialize_statement(guarded_statement(s,scopes,mode),mode=mode)
                     strategy.append("DO $lab_ctas$ BEGIN IF (SELECT safe FROM pg_temp.pipeline_normalization_domain) THEN\n"+prep+'\n'+load+';\n'+cleanup+'\nELSE\n'+s+';\nEND IF; END $lab_ctas$;')
                 else:strategy.append("DO $guarded_insert$ BEGIN\n"+guarded_insert(s,scopes,mode)+"; END $guarded_insert$;" if mode in GUARDED_MODES else (normalized_statement(s,scopes) if mode in NORMALIZATION_MODES else s)+";")
             if mode in PREFIX_MODES and table in ('table3','table4'):strategy.append(conditional_sql('ANALYZE public.'+table+';'))
@@ -181,7 +181,7 @@ def execute(conn, mode, scopes, *, profile=False, reset_destinations=True):
                     conn.execute("DO $timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+prepare_index(mode,unique_table)+" INSERT INTO diagnostic_timing VALUES('bulk_unique_prepare_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $timer$;")
                 ctas_cleanup=None
                 if mode in CTAS_MODES and guarded_safe and name!='source_manifest':
-                    ctas_prepare,statement,ctas_cleanup=materialize_statement(statement)
+                    ctas_prepare,statement,ctas_cleanup=materialize_statement(statement,mode=mode)
                     conn.execute("DO $ctas_timer$ DECLARE started timestamptz:=clock_timestamp(); BEGIN "+ctas_prepare+" INSERT INTO diagnostic_timing VALUES('parallel_transform_"+unique_table+"',EXTRACT(EPOCH FROM clock_timestamp()-started),NULL); END $ctas_timer$;")
                 original_mergejoin=None
                 if mode in ("hash_table1","qf_hash1","hash_array","hash_array64","hash_array64_nomemo") and name=="public.table1":

@@ -34,9 +34,10 @@ def main():
             for d in prepared(args.mode,scopes):
                 table=d['pure_table_name']
                 if table in bulk_unique_tables(args.mode):c.execute(prepare_mode_sql(args.mode,table))
-                stage,insert,cleanup=materialize_statement(fast_statement(d['statements'][0],scopes,args.mode))
+                stage,insert,cleanup=materialize_statement(fast_statement(d['statements'][0],scopes,args.mode),mode=args.mode)
                 ctas=stage[stage.index('CREATE TEMP TABLE'):stage.rindex(';\nDO $restore_parallel$')]
                 c.execute(settings_sql())
+                if args.mode=='lab_parallel_cache' and table=='table1':c.execute('SET LOCAL enable_parallel_hash=off')
                 plan=c.execute('EXPLAIN (ANALYZE,BUFFERS,WAL,SETTINGS,FORMAT JSON,TIMING OFF) '+ctas).fetchone()[0]
                 c.execute(restore_settings_sql())
                 report['plans'][table]=plan

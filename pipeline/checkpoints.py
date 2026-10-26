@@ -50,6 +50,36 @@ LOCK_KEY = 761549992137
 RELATIONS = ("raw_data",) + ORDER
 
 
+def validate_dependencies(service,connection_factory,database,table):
+    """Run every organizer dependency guard, excluding only our exact read-only fence.
+
+    Generic user triggers remain blocked. Definitions are rechecked after table
+    locks via the persisted catalog signature before any chunk is resumed.
+    """
+    with connection_factory(database,autocommit=True) as conn:
+        triggers = conn.execute("""SELECT t.tgname,t.tgtype,t.tgenabled,n.nspname,p.proname,
+            p.prosrc,p.prosecdef,p.proconfig,octet_length(t.tgargs)
+            FROM pg_trigger t JOIN pg_proc p ON p.oid=t.tgfoid JOIN pg_namespace n ON n.oid=p.pronamespace
+            WHERE t.tgrelid=%s::regclass AND NOT t.tgisinternal""",(table,)).fetchall()
+    own = [t for t in triggers if t[0]=="pipeline_write_fence"]
+    if not own:
+        return service._validate_managed_sql_dependencies(database,table,{"insert"})
+    expected_source = INSTALL.split("$fence$")[1]
+    if own!=[("pipeline_write_fence",62,"O","pipeline_recovery","write_fence",expected_source,False,["search_path=pg_catalog"],0)]:
+        raise RuntimeError("Unrecognized pipeline write fence; refusing exemption")
+    class Proxy:
+        def __getattr__(self,name):
+            return getattr(service,name)
+        def run_remote_command(self,command,**kwargs):
+            output=service.run_remote_command(command,**kwargs)
+            metadata=json.loads(output.strip().splitlines()[-1])
+            if "relation_kind" not in metadata or "triggers" not in metadata:
+                raise RuntimeError("Organizer dependency metadata shape changed")
+            metadata["triggers"]=[t for t in metadata["triggers"] if t!="pipeline_write_fence"]
+            return json.dumps(metadata)
+    return PostgresAdminService._validate_managed_sql_dependencies(Proxy(),database,table,{"insert"})
+
+
 def digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(",",":"),ensure_ascii=False,default=str).encode()).hexdigest()
 
@@ -106,7 +136,7 @@ class ChunkRunner:
             if not service.table_exists(database,d["table_name"]):
                 raise RuntimeError("Missing destination " + d["table_name"])
             service.get_table_row_count(database,d["table_name"])
-            service._validate_managed_sql_dependencies(database,d["table_name"],{"insert"})
+            validate_dependencies(service,self.connection_factory,database,d["table_name"])
         return recipes, versions
 
     def run(self, database, scopes, job_id, chunk_rows=100000, mode="baseline", requested_by="research", workstation="research"):
@@ -155,6 +185,8 @@ class ChunkRunner:
                     max_id = conn.execute("SELECT max(raw_id) FROM public.raw_data WHERE raw_schema=ANY(%s)",(scopes,)).fetchone()[0]
                     if max_id is None:
                         raise RuntimeError("Empty source scope")
+                    if conn.execute("SELECT min(raw_id) FROM public.raw_data WHERE raw_schema=ANY(%s)",(scopes,)).fetchone()[0]<1:
+                        raise RuntimeError("Experimental chunk runner requires positive raw_id values")
                     conn.execute("INSERT INTO pipeline_recovery.jobs(job_id,request_sha256,request,state,source_sha256,schema_signature,max_raw_id,chunk_rows) VALUES(%s,%s,%s,'loading',%s,%s,%s,%s)",
                         (job_id,signature,Jsonb(request),source_digest(conn,scopes),Jsonb(catalog(conn)),max_id,chunk_rows))
                     conn.execute("INSERT INTO pipeline_recovery.active(job_id,backend_pid) VALUES(%s,pg_backend_pid())",(job_id,))

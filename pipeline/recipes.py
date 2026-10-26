@@ -11,7 +11,7 @@ ORDER = ("table3", "table4", "table1", "table5", "table6", "table2")
 ANCHOR = "FROM {{source}} AS source_row"
 EXTRACT = re.compile(r"source_row\.raw\s*->\s*'values'\s*->>\s*'([a-z_]+\d+)'")
 MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
-         "record_table1", "record_table2", "each_once", "path_once", "array_values")
+         "record_table1", "record_table2", "each_once", "path_once", "array_values", "path_table1", "path_array")
 
 
 def rewrite(sql, mode):
@@ -19,6 +19,10 @@ def rewrite(sql, mode):
         raise ValueError(f"Unknown recipe mode: {mode}")
     if mode == "baseline":
         return sql
+    if mode == "path_table1":
+        return rewrite(sql,"path_once") if sql.startswith("INSERT INTO public.table1 (") else sql
+    if mode == "path_array":
+        return rewrite(sql,"path_once") if sql.startswith("INSERT INTO public.table1 (") else rewrite(sql,"array_values")
     if mode in ("record_table1", "record_table2"):
         target = "table1" if mode == "record_table1" else "table2"
         mode = "record_once" if sql.startswith(f"INSERT INTO public.{target} (") else "baseline"
@@ -32,7 +36,7 @@ def rewrite(sql, mode):
     payload = "\nCROSS JOIN LATERAL (SELECT source_row.raw -> 'values' AS payload OFFSET 0) AS projected"
     if mode == "array_values":
         if "AS position_data(" not in sql:
-            return rewrite(sql,"payload_once")
+            return sql
         matrix = re.search(r"CROSS JOIN LATERAL \(\s*VALUES\s*(.*?)\s*\) AS position_data\([^)]*\)",sql,re.S)
         if not matrix or len(EXTRACT.findall(matrix[1])) != 56:
             raise ValueError("Unrecognized table2 matrix")
@@ -74,8 +78,8 @@ def rewrite(sql, mode):
         columns = ", ".join(f"projected.payload ->> '{field}' AS {field}" for field in fields)
         extraction = f"\nCROSS JOIN LATERAL (SELECT {columns} OFFSET 0) AS fields"
     elif mode == "each_once":
-        columns = ", ".join(f"max(value) FILTER (WHERE key = '{field}') AS {field}" for field in fields)
-        extraction = f"\nCROSS JOIN LATERAL (SELECT {columns} FROM jsonb_each_text({safe})) AS fields"
+        columns = ", ".join(f"max(CASE WHEN key = '{field}' THEN value END) AS {field}" for field in fields)
+        extraction = f"\nCROSS JOIN LATERAL (SELECT {columns} FROM jsonb_each_text({safe}) OFFSET 0) AS fields"
     else:
         raise AssertionError(mode)
     return EXTRACT.sub(lambda m: "fields." + m[1], sql).replace(ANCHOR, ANCHOR + payload + extraction)

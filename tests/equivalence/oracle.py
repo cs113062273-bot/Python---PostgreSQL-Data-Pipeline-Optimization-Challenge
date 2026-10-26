@@ -31,13 +31,17 @@ def snapshot(conn):
 
 
 def assert_exact(conn):
-    for table in ORDER:
-        different = conn.execute(f"""SELECT EXISTS(
-            ({canonical(table)} EXCEPT ALL SELECT value FROM challenge_reference.{table})
-            UNION ALL (SELECT value FROM challenge_reference.{table} EXCEPT ALL {canonical(table)})
-        )""").fetchone()[0]
-        if different:
-            raise AssertionError(f"Bidirectional EXCEPT ALL mismatch: {table}")
+    with conn.transaction():
+        # Oracle-only setting; transaction-scoped so benchmark settings retain
+        # their recorded values. This comparison is outside every timed stage.
+        conn.execute("SET LOCAL work_mem='256MB'")
+        for table in ORDER:
+            different = conn.execute(f"""SELECT EXISTS(
+                ({canonical(table)} EXCEPT ALL SELECT value FROM challenge_reference.{table})
+                UNION ALL (SELECT value FROM challenge_reference.{table} EXCEPT ALL {canonical(table)})
+            )""").fetchone()[0]
+            if different:
+                raise AssertionError(f"Bidirectional EXCEPT ALL mismatch: {table}")
 
 
 def schema_signature(conn):

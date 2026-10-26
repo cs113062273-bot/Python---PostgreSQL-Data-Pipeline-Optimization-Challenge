@@ -95,9 +95,16 @@ class VersionReceiptMixin:
             runner.failpoint("after_versions_commit",{})
             with conn.transaction():
                 result["registered_versions"] = versions
+                from pipeline.checkpoints import RELATIONS
+                conn.execute("LOCK TABLE "+",".join("public."+table for table in RELATIONS)+" IN SHARE ROW EXCLUSIVE MODE")
+                # Restore compatibility with the organizer's blanket trigger
+                # guard only once both durable saga phases have completed.
+                for table in RELATIONS:
+                    conn.execute(f"DROP TRIGGER IF EXISTS pipeline_write_fence ON public.{table}")
                 conn.execute("UPDATE pipeline_recovery.jobs SET state='complete',result=%s,completed_at=clock_timestamp() WHERE job_id=%s",
                     (__import__('psycopg').types.json.Jsonb(result),job_id))
                 conn.execute("DELETE FROM pipeline_recovery.active WHERE job_id=%s",(job_id,))
+                conn.execute("UPDATE pipeline_recovery.jobs SET schema_signature=%s WHERE job_id=%s",(__import__('psycopg').types.json.Jsonb(catalog(conn)),job_id))
             runner.failpoint("after_complete_commit",{})
             return versions
 

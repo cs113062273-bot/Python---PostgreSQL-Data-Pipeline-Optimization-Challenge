@@ -65,7 +65,13 @@ def execute(conn, mode, scopes, *, profile=False):
     pid = conn.info.backend_pid
     def monitor():
         try:
+            if conn.info.host not in ("127.0.0.1", "localhost", "::1"):
+                sample["backend_rss_peak_bytes"] = None
+                return
             backend = psutil.Process(pid)  # local server only
+            if "postgres" not in backend.name().lower():
+                sample["backend_rss_peak_bytes"] = None
+                return
             while not stop.is_set():
                 sample["backend_rss_peak_bytes"] = max(sample["backend_rss_peak_bytes"], backend.memory_info().rss)
                 sample["application_rss_peak_bytes"] = max(sample["application_rss_peak_bytes"], psutil.Process().memory_info().rss)

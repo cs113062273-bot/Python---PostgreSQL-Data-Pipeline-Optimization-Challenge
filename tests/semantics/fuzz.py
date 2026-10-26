@@ -30,6 +30,7 @@ def cases(seed, count):
         [("integer_column_15", "bad"), ("numeric_column_29", "-1"), ("text_column_17", "?")],
         [("integer_column_2", "40000"), ("numeric_column_3", "bad"), ("text_column_4", "X")],
         [("integer_column_2", "1"), ("numeric_column_3", "1e400"), ("numeric_column_4", "bad")],
+        [("text_column_2", ["X"]), ("numeric_column_7", []), ("integer_column_1", True), ("numeric_column_19", None)],
     ]:
         yield {"name": "multi-error-trap", "edits": edits}
     keys = [f"integer_column_{i}" for i in range(1,16)] + [f"text_column_{i}" for i in range(1,18)] + [f"numeric_column_{i}" for i in range(1,31)] + ["id_column_1", "datetime_column_1"]
@@ -63,6 +64,7 @@ def main():
     parser.add_argument("--modes", nargs="+", choices=MODES, default=["payload_once", "lazy_keys", "record_once", "path_once"])
     parser.add_argument("--output", default="reports/semantics.json")
     args = parser.parse_args()
+    args.modes = list(dict.fromkeys(m for m in args.modes if m!="baseline"))
     db = args.database or "lab_semantics_" + uuid.uuid4().hex[:8]
     if not args.database:
         create_fixture(db)

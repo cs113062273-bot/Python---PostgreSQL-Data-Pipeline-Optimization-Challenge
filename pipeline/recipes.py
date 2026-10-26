@@ -11,7 +11,7 @@ ORDER = ("table3", "table4", "table1", "table5", "table6", "table2")
 ANCHOR = "FROM {{source}} AS source_row"
 EXTRACT = re.compile(r"source_row\.raw\s*->\s*'values'\s*->>\s*'([a-z_]+\d+)'")
 MODES = ("baseline", "payload_once", "fields_once", "lazy_keys", "record_once",
-         "record_table1", "record_table2", "each_once", "path_once")
+         "record_table1", "record_table2", "each_once", "path_once", "array_values")
 
 
 def rewrite(sql, mode):
@@ -30,6 +30,19 @@ def rewrite(sql, mode):
         # A different operator implementation, without changing relational shape.
         return EXTRACT.sub(lambda m: "source_row.raw #>> '{values," + m[1] + "}'", sql)
     payload = "\nCROSS JOIN LATERAL (SELECT source_row.raw -> 'values' AS payload OFFSET 0) AS projected"
+    if mode == "array_values":
+        if "AS position_data(" not in sql:
+            return rewrite(sql,"payload_once")
+        matrix = re.search(r"CROSS JOIN LATERAL \(\s*VALUES\s*(.*?)\s*\) AS position_data\([^)]*\)",sql,re.S)
+        if not matrix or len(EXTRACT.findall(matrix[1])) != 56:
+            raise ValueError("Unrecognized table2 matrix")
+        arrays = ["ARRAY["+",".join(f"{n}::smallint" for n in range(1,15))+"]"]
+        keys = EXTRACT.findall(matrix[1])
+        for attribute in range(4):
+            arrays.append("ARRAY["+",".join(f"projected.payload ->> '{key}'" for key in keys[attribute::4])+"]")
+        expansion = "CROSS JOIN LATERAL unnest("+",\n".join(arrays)+") AS position_data(position_number, declared_number_text, type_text, weight_text, gap_text)"
+        sql = sql[:matrix.start()]+expansion+sql[matrix.end():]
+        return sql.replace(ANCHOR,ANCHOR+payload)
     if mode == "lazy_keys" and "AS position_data(" in sql:
         matrix = re.search(r"CROSS JOIN LATERAL \(\s*VALUES\s*(.*?)\s*\) AS position_data\([^)]*\)", sql, re.S)
         if not matrix:

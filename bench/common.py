@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def connect(database="lab_100k", **kwargs):
     # Credentials stay in libpq environment / pgpass, never in reports.
+    kwargs.setdefault("connect_timeout", 10)
     return psycopg.connect(make_conninfo(os.environ.get("CHALLENGE_DSN", ""), dbname=database), **kwargs)
 
 

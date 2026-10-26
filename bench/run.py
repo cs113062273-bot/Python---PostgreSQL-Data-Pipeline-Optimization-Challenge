@@ -31,12 +31,30 @@ def validate_functions(conn, recipes):
         rows = conn.execute(argv[argv.index("-c")+1]).fetchall()
         return "\n".join(str(row[0]) for row in rows)
     service.run_remote_command = transport
+    # The organizer rejects stable functions, including jsonb_to_record (its
+    # volatility covers arbitrary target input functions). Keep that rejection
+    # intact in the application. Only in this disposable laboratory, authorize
+    # the exact generated, all-TEXT record projection to measure the hypothesis.
+    # Never use this exception for user-supplied SQL or the GUI service.
+    if any("jsonb_to_record" in s for d in recipes for s in d["statements"]):
+        allowed = [prepared(m, [r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")])
+                   for m in ("record_once", "record_table1", "record_table2")]
+        shape = lambda ds: [(d["table_name"], d["statements"]) for d in ds]
+        if shape(recipes) not in [shape(ds) for ds in allowed]:
+            raise RuntimeError("Noncanonical record projection refused")
+        metadata = conn.execute("SELECT n.nspname,p.provolatile,p.prosecdef FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE p.proname='jsonb_to_record' AND pg_function_is_visible(p.oid)").fetchall()
+        if metadata != [("pg_catalog", "s", False)]:
+            raise RuntimeError("Unexpected record function implementation")
+        filtered = [{**d, "function_references": [r for r in d["function_references"] if r[1] != "jsonb_to_record"]} for d in recipes]
+        service._validate_cross_table_expansion_functions("diagnostic", filtered)
+        return False
     service._validate_cross_table_expansion_functions("diagnostic", recipes)
+    return True
 
 
 def execute(conn, mode, scopes, *, profile=False):
     recipes = prepared(mode, scopes)
-    validate_functions(conn, recipes)
+    guard_parity = validate_functions(conn, recipes)
     conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS diagnostic_timing(stage text, seconds double precision, rows bigint) ON COMMIT DELETE ROWS")
     stages = [("source_manifest", PostgresAdminService._build_expansion_manifest_sql("public", "raw_data", scopes).split("SELECT json_build_object(")[0])]
@@ -77,7 +95,7 @@ def execute(conn, mode, scopes, *, profile=False):
         watcher.join(timeout=1)
     wal = conn.execute("SELECT pg_wal_lsn_diff(pg_current_wal_insert_lsn(),%s)::bigint", (start_lsn,)).fetchone()[0]
     stats = conn.execute("SELECT temp_files,temp_bytes FROM pg_stat_database WHERE datname=current_database()").fetchone()
-    return {"mode": mode, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
+    return {"mode": mode, "official_function_guard_parity": guard_parity, "sql_seconds": sum(t[1] for t in timing), "commit_client_wall_seconds": commit_seconds,
             "stages": [{"name": n, "seconds": s, "rows": r} for n,s,r in timing],
             "wal_cluster_delta_bytes": wal, "db_cumulative_temp_files": stats[0], "db_cumulative_temp_bytes": stats[1], **sample}
 

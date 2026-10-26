@@ -4,5 +4,5 @@ import sys
 
 APP = Path(__file__).resolve().parents[1] / "app"
 if str(APP) not in sys.path:
-    sys.path.insert(0, str(APP))
+    sys.path.append(str(APP))
 from services.postgres_service import PostgresAdminService  # noqa: E402

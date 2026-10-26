@@ -1,0 +1,98 @@
+[
+  {
+    "Plan": {
+      "Node Type": "ModifyTable",
+      "Operation": "Insert",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Relation Name": "table1",
+      "Alias": "table1",
+      "Startup Cost": 1.12,
+      "Total Cost": 61283.12,
+      "Plan Rows": 0,
+      "Plan Width": 0,
+      "Plans": [
+        {
+          "Node Type": "Hash Join",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Join Type": "Inner",
+          "Startup Cost": 1.12,
+          "Total Cost": 61283.12,
+          "Plan Rows": 100000,
+          "Plan Width": 168,
+          "Inner Unique": false,
+          "Hash Cond": "((btrim((((raw_data.raw -> 'values'::text)) ->> 'text_column_1'::text)) = (dimension_row.text_column_1)::text) AND (\"left\"(upper(btrim((((raw_data.raw -> 'values'::text)) ->> 'text_column_2'::text))), 1) = (dimension_row.text_column_3)::text) AND (\"right\"(upper(btrim((((raw_data.raw -> 'values'::text)) ->> 'text_column_2'::text))), 1) = (dimension_row.text_column_4)::text))",
+          "Plans": [
+            {
+              "Node Type": "Nested Loop",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Join Type": "Inner",
+              "Startup Cost": 0.0,
+              "Total Cost": 28532.0,
+              "Plan Rows": 100000,
+              "Plan Width": 40,
+              "Inner Unique": false,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "raw_data",
+                  "Alias": "raw_data",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 26282.0,
+                  "Plan Rows": 100000,
+                  "Plan Width": 1631,
+                  "Filter": "(raw_schema = 'group001'::text)"
+                },
+                {
+                  "Node Type": "Result",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 0.0,
+                  "Total Cost": 0.01,
+                  "Plan Rows": 1,
+                  "Plan Width": 32
+                }
+              ]
+            },
+            {
+              "Node Type": "Hash",
+              "Parent Relationship": "Inner",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 1.05,
+              "Total Cost": 1.05,
+              "Plan Rows": 4,
+              "Plan Width": 23,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "table3",
+                  "Alias": "dimension_row",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.05,
+                  "Plan Rows": 4,
+                  "Plan Width": 23,
+                  "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Settings": {
+      "enable_mergejoin": "off"
+    }
+  }
+]

@@ -1,0 +1,568 @@
+{
+  "kind": "diagnostic_sql_only",
+  "official_score": false,
+  "eligible_submission": false,
+  "timestamp_utc": "2026-10-26T09:58:47.473128+00:00",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "8671294f4e1c212e641139927c6ba017959a4633",
+    "git_status": "M bench/run.py\n M pipeline/checkpoints.py\n M pipeline/recipes.py\n M pipeline/version_receipts.py\n M tests/recovery/tamper.py\n M tests/semantics/fuzz.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? pipeline/guards.py\n?? reports/",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 100000,
+  "exclusions": [
+    "full preflight",
+    "managed row counters",
+    "version registration",
+    "dump handling",
+    "GUI",
+    "SSH"
+  ],
+  "resource_limits": "50ms RSS samples of local backend/application; shared mappings included; no global peak; WAL cluster delta includes background activity",
+  "runs": [
+    {
+      "mode": "baseline",
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 26.364674,
+      "commit_client_wall_seconds": 0.011072299996158108,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.179088,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.695089,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.686822,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.957901,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.303368,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.188399,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 11.354007,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 144068376,
+      "db_cumulative_temp_files": 30,
+      "db_cumulative_temp_bytes": 4296376320,
+      "backend_rss_peak_bytes": 172929024,
+      "application_rss_peak_bytes": 95600640,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "qf_lazy",
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 23.646532999999998,
+      "commit_client_wall_seconds": 0.012245500001881737,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.183108,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.644929,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.613678,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 9.942661,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.308131,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.176448,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 6.777578,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 321427456,
+      "db_cumulative_temp_files": 31,
+      "db_cumulative_temp_bytes": 4460371968,
+      "backend_rss_peak_bytes": 173154304,
+      "application_rss_peak_bytes": 95756288,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "qf_lazy_path1",
+      "executed_sql_sha256": "1fb4e0e1673057820505ae29d809b34f1e19c49e4aa2e527a952ac856dac3052",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 21.631197,
+      "commit_client_wall_seconds": 0.008026100003917236,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.198838,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.660213,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.623975,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.665396,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.307267,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.396362,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 6.779146,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 143881512,
+      "db_cumulative_temp_files": 32,
+      "db_cumulative_temp_bytes": 4626784256,
+      "backend_rss_peak_bytes": 173244416,
+      "application_rss_peak_bytes": 95649792,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "516b8401222eb0a5afdcc2b4f7c82b27f5468b1010c448b005ae8720cfc974c6"
+    },
+    {
+      "mode": "qf_lazy_path1",
+      "executed_sql_sha256": "1fb4e0e1673057820505ae29d809b34f1e19c49e4aa2e527a952ac856dac3052",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 23.838248,
+      "commit_client_wall_seconds": 0.010884000002988614,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.177157,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.666676,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.612505,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 10.097973,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.332999,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.095985,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 6.854953,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 323125112,
+      "db_cumulative_temp_files": 33,
+      "db_cumulative_temp_bytes": 4793196544,
+      "backend_rss_peak_bytes": 173441024,
+      "application_rss_peak_bytes": 95625216,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "516b8401222eb0a5afdcc2b4f7c82b27f5468b1010c448b005ae8720cfc974c6"
+    },
+    {
+      "mode": "qf_lazy",
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 21.053851,
+      "commit_client_wall_seconds": 0.007518200000049546,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.169168,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.642243,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.597989,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.140163,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.325974,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.218174,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 6.96014,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 144086120,
+      "db_cumulative_temp_files": 34,
+      "db_cumulative_temp_bytes": 4957192192,
+      "backend_rss_peak_bytes": 173772800,
+      "application_rss_peak_bytes": 95662080,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "baseline",
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 25.522702000000002,
+      "commit_client_wall_seconds": 0.012521299999207258,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.177738,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.664748,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.80225,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 6.85699,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.278924,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.120974,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 11.621078,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 144049960,
+      "db_cumulative_temp_files": 35,
+      "db_cumulative_temp_bytes": 5123604480,
+      "backend_rss_peak_bytes": 174792704,
+      "application_rss_peak_bytes": 95555584,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "baseline",
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 29.062519,
+      "commit_client_wall_seconds": 0.008114899996144231,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.158237,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.669707,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.58847,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 10.614749,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.453642,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.146381,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 11.431333,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 321362120,
+      "db_cumulative_temp_files": 36,
+      "db_cumulative_temp_bytes": 5290016768,
+      "backend_rss_peak_bytes": 175104000,
+      "application_rss_peak_bytes": 95838208,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "qf_lazy",
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 21.490682,
+      "commit_client_wall_seconds": 0.01006999999663094,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.172616,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.88666,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.682771,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.171482,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.284139,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.177999,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 7.115015,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 144005128,
+      "db_cumulative_temp_files": 37,
+      "db_cumulative_temp_bytes": 5454012416,
+      "backend_rss_peak_bytes": 175276032,
+      "application_rss_peak_bytes": 95916032,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "qf_lazy_path1",
+      "executed_sql_sha256": "1fb4e0e1673057820505ae29d809b34f1e19c49e4aa2e527a952ac856dac3052",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 21.695134,
+      "commit_client_wall_seconds": 0.011181100002431776,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.155898,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.620397,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.599496,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.944125,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.450607,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.218404,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 6.706207,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 153286528,
+      "db_cumulative_temp_files": 38,
+      "db_cumulative_temp_bytes": 5620424704,
+      "backend_rss_peak_bytes": 174895104,
+      "application_rss_peak_bytes": 95948800,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "516b8401222eb0a5afdcc2b4f7c82b27f5468b1010c448b005ae8720cfc974c6"
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "individual_seconds": [
+        26.364674,
+        25.522702000000002,
+        29.062519
+      ],
+      "median": 26.364674,
+      "min": 25.522702000000002,
+      "max": 29.062519,
+      "reduction_percent": 0.0
+    },
+    "qf_lazy": {
+      "individual_seconds": [
+        23.646532999999998,
+        21.053851,
+        21.490682
+      ],
+      "median": 21.490682,
+      "min": 21.053851,
+      "max": 23.646532999999998,
+      "reduction_percent": 18.48682824600828
+    },
+    "qf_lazy_path1": {
+      "individual_seconds": [
+        21.631197,
+        23.838248,
+        21.695134
+      ],
+      "median": 21.695134,
+      "min": 21.631197,
+      "max": 23.838248,
+      "reduction_percent": 17.711351181509016
+    }
+  },
+  "database_bytes": 443856563
+}

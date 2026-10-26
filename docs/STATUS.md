@@ -108,8 +108,9 @@ that order, so its ranked transformation SQL is unchanged. The native concurrent
 regression passes; compiler/batch provenance reflects the hardening revision.
 
 The clean source archive at 1a61b98 passed all 45 regression tests, all six
-upstream tests and all 32 source byte hashes. Final archive verification is
-recorded separately after the lock hardening.
+upstream tests and all 32 source byte hashes. Final hardened archive 509e260 also passed the same 45 + six tests and byte
+verification (reports/clean-room-final.txt). Native fast, valid-fallback and
+concurrent-lock checks pass on that revision.
 
 1M SQL diagnostics: sampled backend peak RSS official 182.2 MiB / ours
 231.3 MiB (shared mappings included, not whole-server peaks); cluster WAL delta

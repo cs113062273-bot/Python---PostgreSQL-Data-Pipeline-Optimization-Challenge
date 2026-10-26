@@ -1,0 +1,355 @@
+{
+  "kind": "fresh_database_per_run_sql_diagnostic",
+  "official_score": false,
+  "template": "lab_template_1m",
+  "reference": "lab_1m",
+  "timestamp_utc": "2026-10-26T12:00:47.500850+00:00",
+  "runs": [
+    {
+      "mode": "baseline",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 103.974865,
+      "commit_client_wall_seconds": 0.005621799995424226,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 1.23511,
+          "rows": 2
+        },
+        {
+          "name": "public.table3",
+          "seconds": 3.180567,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 2.458306,
+          "rows": 27
+        },
+        {
+          "name": "public.table1",
+          "seconds": 33.527221,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 10.028388,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 12.261134,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 41.284139,
+          "rows": 2321522
+        }
+      ],
+      "wal_cluster_delta_bytes": 3236137080,
+      "db_cumulative_temp_files": 2,
+      "db_cumulative_temp_bytes": 78315520,
+      "backend_rss_peak_bytes": 191328256,
+      "application_rss_peak_bytes": 103890944,
+      "verification_schema": "verify_41a0b43110",
+      "exact_except_all": true,
+      "database": "lab_fresh_8433766b07",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "qf_lazy",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 91.321733,
+      "commit_client_wall_seconds": 0.008409000001847744,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.579598,
+          "rows": 2
+        },
+        {
+          "name": "public.table3",
+          "seconds": 2.272975,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 2.116353,
+          "rows": 27
+        },
+        {
+          "name": "public.table1",
+          "seconds": 31.468249,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 12.388822,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 12.273174,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 30.222562,
+          "rows": 2321522
+        }
+      ],
+      "wal_cluster_delta_bytes": 3319424096,
+      "db_cumulative_temp_files": 28,
+      "db_cumulative_temp_bytes": 2931245030,
+      "backend_rss_peak_bytes": 264646656,
+      "application_rss_peak_bytes": 105017344,
+      "verification_schema": "verify_87d6af83ed",
+      "exact_except_all": true,
+      "database": "lab_fresh_391a891fca",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "bulk_fks",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 64.92023900000001,
+      "commit_client_wall_seconds": 0.006414699993911199,
+      "stages": [
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.012031,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.5053,
+          "rows": 2
+        },
+        {
+          "name": "public.table3",
+          "seconds": 3.011155,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 2.44517,
+          "rows": 27
+        },
+        {
+          "name": "public.table1",
+          "seconds": 12.937079,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 5.365584,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 5.369473,
+          "rows": 1000000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 33.593645,
+          "rows": 2321522
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 1.680802,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 1257268944,
+      "db_cumulative_temp_files": 2,
+      "db_cumulative_temp_bytes": 78315520,
+      "backend_rss_peak_bytes": 216895488,
+      "application_rss_peak_bytes": 105922560,
+      "verification_schema": "verify_0a0671590b",
+      "exact_except_all": true,
+      "database": "lab_fresh_bf25bad083",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    }
+  ],
+  "method": "new database clone for each run; no destination warmup/TRUNCATE; typed fingerprints each run; central bidirectional EXCEPT ALL once per mode after timing",
+  "exclusions": [
+    "clone",
+    "oracle",
+    "full preflight/counters/versions/GUI/SSH",
+    "locks",
+    "commit latency (reported separately)"
+  ],
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "57b57699112dda3b95396856b15ea3abae596dac",
+    "git_status": "?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? reports/",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 1000000,
+  "summary": {
+    "baseline": {
+      "individual_seconds": [
+        103.974865
+      ],
+      "median": 103.974865,
+      "min": 103.974865,
+      "max": 103.974865,
+      "reduction_percent": 0.0
+    },
+    "qf_lazy": {
+      "individual_seconds": [
+        91.321733
+      ],
+      "median": 91.321733,
+      "min": 91.321733,
+      "max": 91.321733,
+      "reduction_percent": 12.169414213714058
+    },
+    "bulk_fks": {
+      "individual_seconds": [
+        64.92023900000001
+      ],
+      "median": 64.92023900000001,
+      "min": 64.92023900000001,
+      "max": 64.92023900000001,
+      "reduction_percent": 37.56160298933784
+    }
+  }
+}

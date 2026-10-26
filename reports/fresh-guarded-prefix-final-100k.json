@@ -1,0 +1,1098 @@
+{
+  "kind": "fresh_database_per_run_sql_diagnostic",
+  "official_score": false,
+  "template": "lab_generated_100k",
+  "clone_strategy": "FILE_COPY",
+  "measured_backend_cpu_affinity": 2,
+  "order": "latin",
+  "reference": "lab_100k",
+  "timestamp_utc": "2026-10-26T15:24:54.202445+00:00",
+  "runs": [
+    {
+      "mode": "baseline",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 10.635202,
+      "commit_client_wall_seconds": 0.007352899992838502,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.084647,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.262874,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.243674,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.569572,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.942919,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.249627,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 4.281889,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314341840,
+      "db_cumulative_temp_files": 0,
+      "db_cumulative_temp_bytes": 0,
+      "backend_rss_peak_bytes": 172068864,
+      "application_rss_peak_bytes": 104058880,
+      "backend_cpu_seconds_including_commit": 8.984375,
+      "verification_schema": "verify_9fc8495779",
+      "exact_except_all": true,
+      "database": "lab_fresh_fa9e91b9e6",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "qf_lazy",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.484248999999998,
+      "commit_client_wall_seconds": 0.005949899990810081,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.073229,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.232177,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.225975,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.146338,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.910482,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.265502,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.630546,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314341712,
+      "db_cumulative_temp_files": 0,
+      "db_cumulative_temp_bytes": 0,
+      "backend_rss_peak_bytes": 172167168,
+      "application_rss_peak_bytes": 125489152,
+      "backend_cpu_seconds_including_commit": 7.375,
+      "verification_schema": "verify_377c78c8e6",
+      "exact_except_all": true,
+      "database": "lab_fresh_d84cbcd9dd",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "guarded_prefix",
+      "bulk_strategy_sql_sha256": "fe28bb6467df8e81dd503b131063db8eb8f66903a06ee5a252049c2b5717f8c9",
+      "proven_safe_domain": true,
+      "guarded_work_mem_override": "64MB",
+      "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 5.154567999999999,
+      "commit_client_wall_seconds": 0.018655599997146055,
+      "stages": [
+        {
+          "name": "normalize_and_prove_domain",
+          "seconds": 2.089924,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.015606,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.085552,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.106985,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.099786,
+          "rows": 26
+        },
+        {
+          "name": "bulk_unique_prepare_table1",
+          "seconds": 0.004045,
+          "rows": null
+        },
+        {
+          "name": "public.table1",
+          "seconds": 0.667284,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table1",
+          "seconds": 0.110759,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table5",
+          "seconds": 0.001546,
+          "rows": null
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.306181,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table5",
+          "seconds": 0.017945,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table6",
+          "seconds": 0.001371,
+          "rows": null
+        },
+        {
+          "name": "public.table6",
+          "seconds": 0.406698,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table6",
+          "seconds": 0.029324,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table2",
+          "seconds": 0.002531,
+          "rows": null
+        },
+        {
+          "name": "public.table2",
+          "seconds": 0.798564,
+          "rows": 232386
+        },
+        {
+          "name": "bulk_unique_restore_table2",
+          "seconds": 0.208095,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 0.202372,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 89002272,
+      "db_cumulative_temp_files": 16,
+      "db_cumulative_temp_bytes": 15294464,
+      "backend_rss_peak_bytes": 99745792,
+      "application_rss_peak_bytes": 128864256,
+      "backend_cpu_seconds_including_commit": 4.453125,
+      "verification_schema": "verify_faf893f38f",
+      "exact_except_all": true,
+      "database": "lab_fresh_00e126ef94",
+      "repeat": 0,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "qf_lazy",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.407478000000001,
+      "commit_client_wall_seconds": 0.008435299998382106,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.074593,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.232221,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.237286,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.146462,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.915921,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.226872,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.574123,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314707256,
+      "db_cumulative_temp_files": 0,
+      "db_cumulative_temp_bytes": 0,
+      "backend_rss_peak_bytes": 172343296,
+      "application_rss_peak_bytes": 128618496,
+      "backend_cpu_seconds_including_commit": 7.140625,
+      "database": "lab_fresh_8792114cda",
+      "repeat": 1,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "guarded_prefix",
+      "bulk_strategy_sql_sha256": "fe28bb6467df8e81dd503b131063db8eb8f66903a06ee5a252049c2b5717f8c9",
+      "proven_safe_domain": true,
+      "guarded_work_mem_override": "64MB",
+      "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 5.365815999999999,
+      "commit_client_wall_seconds": 0.019747900005313568,
+      "stages": [
+        {
+          "name": "normalize_and_prove_domain",
+          "seconds": 2.075716,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.016171,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.0712,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.10748,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.097969,
+          "rows": 26
+        },
+        {
+          "name": "bulk_unique_prepare_table1",
+          "seconds": 0.004144,
+          "rows": null
+        },
+        {
+          "name": "public.table1",
+          "seconds": 0.672429,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table1",
+          "seconds": 0.318766,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table5",
+          "seconds": 0.001499,
+          "rows": null
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.298477,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table5",
+          "seconds": 0.027646,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table6",
+          "seconds": 0.001368,
+          "rows": null
+        },
+        {
+          "name": "public.table6",
+          "seconds": 0.411347,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table6",
+          "seconds": 0.03176,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table2",
+          "seconds": 0.002635,
+          "rows": null
+        },
+        {
+          "name": "public.table2",
+          "seconds": 0.780126,
+          "rows": 232386
+        },
+        {
+          "name": "bulk_unique_restore_table2",
+          "seconds": 0.258836,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 0.188247,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 88192296,
+      "db_cumulative_temp_files": 16,
+      "db_cumulative_temp_bytes": 15286272,
+      "backend_rss_peak_bytes": 101183488,
+      "application_rss_peak_bytes": 129175552,
+      "backend_cpu_seconds_including_commit": 4.828125,
+      "database": "lab_fresh_eff4f0beca",
+      "repeat": 1,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "baseline",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 10.175979,
+      "commit_client_wall_seconds": 0.01047580000886228,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.08501,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.273824,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.228801,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.2742,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.879842,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.19506,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 4.239242,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314650784,
+      "db_cumulative_temp_files": 0,
+      "db_cumulative_temp_bytes": 0,
+      "backend_rss_peak_bytes": 172597248,
+      "application_rss_peak_bytes": 127205376,
+      "backend_cpu_seconds_including_commit": 8.90625,
+      "database": "lab_fresh_dc636543ad",
+      "repeat": 1,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "guarded_prefix",
+      "bulk_strategy_sql_sha256": "fe28bb6467df8e81dd503b131063db8eb8f66903a06ee5a252049c2b5717f8c9",
+      "proven_safe_domain": true,
+      "guarded_work_mem_override": "64MB",
+      "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 5.099729999999999,
+      "commit_client_wall_seconds": 0.02283890001126565,
+      "stages": [
+        {
+          "name": "normalize_and_prove_domain",
+          "seconds": 2.073515,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_prepare",
+          "seconds": 0.01846,
+          "rows": null
+        },
+        {
+          "name": "source_manifest",
+          "seconds": 0.066785,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.1065,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.098495,
+          "rows": 26
+        },
+        {
+          "name": "bulk_unique_prepare_table1",
+          "seconds": 0.005044,
+          "rows": null
+        },
+        {
+          "name": "public.table1",
+          "seconds": 0.647264,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table1",
+          "seconds": 0.107708,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table5",
+          "seconds": 0.001575,
+          "rows": null
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.319338,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table5",
+          "seconds": 0.029087,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table6",
+          "seconds": 0.00139,
+          "rows": null
+        },
+        {
+          "name": "public.table6",
+          "seconds": 0.417093,
+          "rows": 100000
+        },
+        {
+          "name": "bulk_unique_restore_table6",
+          "seconds": 0.030395,
+          "rows": null
+        },
+        {
+          "name": "bulk_unique_prepare_table2",
+          "seconds": 0.002683,
+          "rows": null
+        },
+        {
+          "name": "public.table2",
+          "seconds": 0.771601,
+          "rows": 232386
+        },
+        {
+          "name": "bulk_unique_restore_table2",
+          "seconds": 0.207979,
+          "rows": null
+        },
+        {
+          "name": "bulk_fk_restore_validate",
+          "seconds": 0.194818,
+          "rows": null
+        }
+      ],
+      "wal_cluster_delta_bytes": 88192248,
+      "db_cumulative_temp_files": 16,
+      "db_cumulative_temp_bytes": 15286272,
+      "backend_rss_peak_bytes": 99983360,
+      "application_rss_peak_bytes": 127959040,
+      "backend_cpu_seconds_including_commit": 4.59375,
+      "database": "lab_fresh_344eb9ed52",
+      "repeat": 2,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "baseline",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 10.209957,
+      "commit_client_wall_seconds": 0.010388499998953193,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.171507,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.266869,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.22201,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.211865,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.898901,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.190045,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 4.24876,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314507016,
+      "db_cumulative_temp_files": 0,
+      "db_cumulative_temp_bytes": 0,
+      "backend_rss_peak_bytes": 172621824,
+      "application_rss_peak_bytes": 128983040,
+      "backend_cpu_seconds_including_commit": 9.0625,
+      "database": "lab_fresh_64801eac83",
+      "repeat": 2,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    },
+    {
+      "mode": "qf_lazy",
+      "bulk_strategy_sql_sha256": null,
+      "proven_safe_domain": null,
+      "guarded_work_mem_override": null,
+      "bulk_index_maintenance_work_mem": null,
+      "table2_memoize_disabled": false,
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.237424,
+      "commit_client_wall_seconds": 0.007641400006832555,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.076358,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.248863,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.208938,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.982471,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.923769,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.203455,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.59357,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314511672,
+      "db_cumulative_temp_files": 0,
+      "db_cumulative_temp_bytes": 0,
+      "backend_rss_peak_bytes": 172478464,
+      "application_rss_peak_bytes": 128606208,
+      "backend_cpu_seconds_including_commit": 7.046875,
+      "database": "lab_fresh_d8d3b0233d",
+      "repeat": 2,
+      "initial_statistics": [
+        [
+          "table1",
+          -1.0,
+          0
+        ],
+        [
+          "table2",
+          -1.0,
+          0
+        ],
+        [
+          "table3",
+          -1.0,
+          0
+        ],
+        [
+          "table4",
+          -1.0,
+          0
+        ],
+        [
+          "table5",
+          -1.0,
+          0
+        ],
+        [
+          "table6",
+          -1.0,
+          0
+        ]
+      ],
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true
+    }
+  ],
+  "method": "new database clone for each run; no destination warmup/TRUNCATE; typed fingerprints each run; central bidirectional EXCEPT ALL once per mode after timing",
+  "exclusions": [
+    "clone",
+    "oracle",
+    "full preflight/counters/versions/GUI/SSH",
+    "locks",
+    "commit latency (reported separately)"
+  ],
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "5875bc8c7786c570c463bc613fa52c704dbddce3",
+    "git_status": "?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? reports/",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 100000,
+  "summary": {
+    "baseline": {
+      "individual_seconds": [
+        10.635202,
+        10.175979,
+        10.209957
+      ],
+      "median": 10.209957,
+      "min": 10.175979,
+      "max": 10.635202,
+      "reduction_percent": 0.0
+    },
+    "qf_lazy": {
+      "individual_seconds": [
+        8.484248999999998,
+        8.407478000000001,
+        8.237424
+      ],
+      "median": 8.407478000000001,
+      "min": 8.237424,
+      "max": 8.484248999999998,
+      "reduction_percent": 17.654129199564682
+    },
+    "guarded_prefix": {
+      "individual_seconds": [
+        5.154567999999999,
+        5.365815999999999,
+        5.099729999999999
+      ],
+      "median": 5.154567999999999,
+      "min": 5.099729999999999,
+      "max": 5.365815999999999,
+      "reduction_percent": 49.51430255778746
+    }
+  }
+}

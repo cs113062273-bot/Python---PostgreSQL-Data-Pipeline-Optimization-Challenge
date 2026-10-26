@@ -1,0 +1,59 @@
+{
+  "kind": "instrumented_scale_profile_not_ranked",
+  "official_score": false,
+  "database": "lab_profile_3727bb83d3",
+  "mode": "guarded_prefix",
+  "source_rows": 1000000,
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "1a61b98153243695c1f83e8bebfe4ab98a75c7c3",
+    "git_status": "M README.md\n M docs/EXPERIMENTS.md\n M docs/RECOVERY.md\n M docs/STATUS.md\n M docs/WRITEUP.md\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/release_profile.py\n?? reports/\n?? tests/recovery/bulk_dump.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "stage_storage_component": {
+    "heap_bytes": 186122240,
+    "total_relation_bytes": 186130432,
+    "safe_domain": true
+  },
+  "instrumented_run": {
+    "mode": "guarded_prefix",
+    "bulk_strategy_sql_sha256": "94c547634668718f0cdd42714b79ddc68c37b4fecb7b0745552b547030722be0",
+    "proven_safe_domain": true,
+    "guarded_work_mem_override": "64MB",
+    "bulk_index_maintenance_work_mem": "128MB, restored after each build",
+    "table2_memoize_disabled": false,
+    "work_mem_override": null,
+    "table1_mergejoin_disabled": false,
+    "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+    "guarded_fast_path": null,
+    "official_function_guard_parity": true,
+    "commit_client_wall_seconds": 0.04030010000860784,
+    "wal_cluster_delta_bytes": 858011464,
+    "db_cumulative_temp_files": 36,
+    "db_cumulative_temp_bytes": 192020480,
+    "backend_rss_peak_bytes": 237584384,
+    "application_rss_peak_bytes": 104239104,
+    "backend_cpu_seconds_including_commit": 42.6875
+  },
+  "plan_directory": "reports\\plans\\guarded_prefix-1000000",
+  "scope": "Instrumentation is not ranked timing. Stage size measured as a separate component; backend RSS is not whole-server peak. Retained lab clone is intentional."
+}

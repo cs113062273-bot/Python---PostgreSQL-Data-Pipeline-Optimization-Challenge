@@ -1,0 +1,49 @@
+{
+  "kind": "component_only_not_pipeline_ranking",
+  "runs": [
+    {
+      "repeat": 0,
+      "memoize": "on",
+      "seconds": 1.6897655000066152
+    },
+    {
+      "repeat": 0,
+      "memoize": "off",
+      "seconds": 1.581794900004752
+    },
+    {
+      "repeat": 1,
+      "memoize": "off",
+      "seconds": 1.473316599993268
+    },
+    {
+      "repeat": 1,
+      "memoize": "on",
+      "seconds": 1.4528777999948943
+    },
+    {
+      "repeat": 2,
+      "memoize": "on",
+      "seconds": 1.5158950000040932
+    },
+    {
+      "repeat": 2,
+      "memoize": "off",
+      "seconds": 1.4291805000102613
+    },
+    {
+      "repeat": 3,
+      "memoize": "off",
+      "seconds": 1.4476571999985026
+    },
+    {
+      "repeat": 3,
+      "memoize": "on",
+      "seconds": 1.4304428000032203
+    }
+  ],
+  "medians": {
+    "on": 1.4843863999994937,
+    "off": 1.4604868999958853
+  }
+}

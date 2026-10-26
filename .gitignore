@@ -7,3 +7,7 @@ __pycache__/
 *.log
 .env
 reports/plans/*.txt
+
+# Byte-preserved compressed copies of large negative prototype traces are tracked.
+/reports/semantics-guarded-normalize-pilot.json
+/reports/semantics-guarded-prefix-pilot.json

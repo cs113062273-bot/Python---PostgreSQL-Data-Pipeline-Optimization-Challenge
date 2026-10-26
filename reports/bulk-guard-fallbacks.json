@@ -1,0 +1,35 @@
+{
+  "kind": "bulk_index_metadata_fallbacks",
+  "database": "lab_bulk_guards_8fc3286b",
+  "tests": [
+    {
+      "case": "cyclic identity retains PK",
+      "passed": true
+    },
+    {
+      "case": "custom index storage retained",
+      "passed": true
+    },
+    {
+      "case": "bounded dimension strings retain key",
+      "passed": true
+    },
+    {
+      "case": "external FK retains referenced unique",
+      "passed": true
+    },
+    {
+      "case": "external FK retains referenced PK",
+      "passed": true
+    },
+    {
+      "case": "unknown CHECK refused",
+      "passed": true
+    },
+    {
+      "case": "source user trigger refused",
+      "passed": true
+    }
+  ],
+  "all_passed": true
+}

@@ -1,0 +1,189 @@
+{
+  "kind": "atomic_bulk_ddl_data_rollback",
+  "database": "lab_bulk_atomic_7867246a",
+  "mode": "guarded_prefix",
+  "tests": [
+    {
+      "boundary": "after_fk_drop",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_fk_drop",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_normalization",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_normalization",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table3_insert",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table3_insert",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table4_insert",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table4_insert",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table1_index_drop",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table1_index_drop",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table1_insert",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table1_insert",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table1_index_restore",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table1_index_restore",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table5_index_drop",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table5_index_drop",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table5_insert",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table5_insert",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table5_index_restore",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table5_index_restore",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table6_index_drop",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table6_index_drop",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table6_insert",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table6_insert",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table6_index_restore",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table6_index_restore",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table2_index_drop",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table2_index_drop",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table2_insert",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table2_insert",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_table2_index_restore",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_table2_index_restore",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "before_fk_restore",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "before_fk_restore",
+      "failure": "backend_termination",
+      "passed": true
+    },
+    {
+      "boundary": "after_fk_restore",
+      "failure": "exception",
+      "passed": true
+    },
+    {
+      "boundary": "after_fk_restore",
+      "failure": "backend_termination",
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "scope": "All six destination contents and exact constraints/index schema restored; identity sequences may contain ordinary rollback gaps"
+}

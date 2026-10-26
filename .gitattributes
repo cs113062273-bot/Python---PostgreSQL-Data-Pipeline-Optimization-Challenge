@@ -8,5 +8,6 @@ pipeline/** text eol=lf
 bench/** text eol=lf
 tests/** text eol=lf
 scripts/*.py text eol=lf
+reports/sql/** text eol=lf
 app/** -text
 vendor/** -text

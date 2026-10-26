@@ -1,0 +1,948 @@
+{
+  "kind": "diagnostic_sql_only",
+  "official_score": false,
+  "eligible_submission": false,
+  "timestamp_utc": "2026-10-26T10:26:17.424613+00:00",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "183545a5547c103155a69e7182f1888d6ee30e99",
+    "git_status": "M pipeline/checkpoints.py\n M pipeline/version_receipts.py\n M tests/test_recipes.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? reports/",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 100000,
+  "exclusions": [
+    "full preflight",
+    "managed row counters",
+    "version registration",
+    "dump handling",
+    "GUI",
+    "SSH",
+    "destination lock acquisition",
+    "commit latency (reported separately)"
+  ],
+  "resource_limits": "50ms RSS samples of local backend/application; shared mappings included; no global peak; WAL cluster delta includes background activity",
+  "runs": [
+    {
+      "mode": "baseline",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 28.540623000000004,
+      "commit_client_wall_seconds": 0.015356099997006822,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.191793,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.700834,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.62648,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 9.611757,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.330979,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.012673,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 12.066107,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 321447616,
+      "db_cumulative_temp_files": 2,
+      "db_cumulative_temp_bytes": 332824576,
+      "backend_rss_peak_bytes": 172777472,
+      "application_rss_peak_bytes": 103452672,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "qf_lazy",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 23.748846999999998,
+      "commit_client_wall_seconds": 0.009994400003051851,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.168769,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.640626,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.615839,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 9.44426,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.268758,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.36603,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 7.244565,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 321459872,
+      "db_cumulative_temp_files": 3,
+      "db_cumulative_temp_bytes": 496820224,
+      "backend_rss_peak_bytes": 173309952,
+      "application_rss_peak_bytes": 103534592,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "hash_table1",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 26.273801,
+      "commit_client_wall_seconds": 0.009781599997950252,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.163763,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.671613,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.601114,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.63099,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.306258,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.584835,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 11.315228,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 146605536,
+      "db_cumulative_temp_files": 15,
+      "db_cumulative_temp_bytes": 747822474,
+      "backend_rss_peak_bytes": 220741632,
+      "application_rss_peak_bytes": 103636992,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "hash_array64",
+      "work_mem_override": "64MB",
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "38e3b1674decbbdd9cfbfa408c8aeb7874a628ff85a387372e200cee198ef30c",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 24.096595999999998,
+      "commit_client_wall_seconds": 0.009616999996069353,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.171315,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.675084,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.612568,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 7.099608,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 2.28421,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 3.125716,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 10.128095,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 146549024,
+      "db_cumulative_temp_files": 17,
+      "db_cumulative_temp_bytes": 809294684,
+      "backend_rss_peak_bytes": 347684864,
+      "application_rss_peak_bytes": 103600128,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "610d4ee866e2c6d5be1dc12581edd5218147d36c185419ad5bf0b3ebfa432285"
+    },
+    {
+      "mode": "qf_hash1",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.652402,
+      "commit_client_wall_seconds": 160.33842079999886,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.09434,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.207667,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.199611,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.912716,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.849064,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.258365,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.130639,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314387264,
+      "db_cumulative_temp_files": 17,
+      "db_cumulative_temp_bytes": 809294684,
+      "backend_rss_peak_bytes": 173588480,
+      "application_rss_peak_bytes": 103612416,
+      "exact_except_all": true,
+      "repeat": 0,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "qf_hash1",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 7.0646629999999995,
+      "commit_client_wall_seconds": 0.0029192000001785345,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.145781,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.252445,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.218972,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.015433,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.864976,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.14887,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.418186,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 136999768,
+      "db_cumulative_temp_files": 17,
+      "db_cumulative_temp_bytes": 809294684,
+      "backend_rss_peak_bytes": 174424064,
+      "application_rss_peak_bytes": 103714816,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "hash_array64",
+      "work_mem_override": "64MB",
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "38e3b1674decbbdd9cfbfa408c8aeb7874a628ff85a387372e200cee198ef30c",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.337482,
+      "commit_client_wall_seconds": 0.0038581000044359826,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.060957,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.220501,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.194971,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.370554,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.875907,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.126902,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.48769,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 155887608,
+      "db_cumulative_temp_files": 19,
+      "db_cumulative_temp_bytes": 870766894,
+      "backend_rss_peak_bytes": 349114368,
+      "application_rss_peak_bytes": 103743488,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "610d4ee866e2c6d5be1dc12581edd5218147d36c185419ad5bf0b3ebfa432285"
+    },
+    {
+      "mode": "hash_table1",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 10.279534,
+      "commit_client_wall_seconds": 0.0035105999995721504,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.062098,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.227741,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.202306,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.594299,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.9327,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.16359,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 4.0968,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 323964456,
+      "db_cumulative_temp_files": 31,
+      "db_cumulative_temp_bytes": 1121769144,
+      "backend_rss_peak_bytes": 222396416,
+      "application_rss_peak_bytes": 103751680,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "qf_lazy",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 7.9634030000000005,
+      "commit_client_wall_seconds": 0.00670939999690745,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.066905,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.217876,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.207359,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.665587,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.991834,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.215694,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.598148,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 144254720,
+      "db_cumulative_temp_files": 32,
+      "db_cumulative_temp_bytes": 1285764792,
+      "backend_rss_peak_bytes": 175116288,
+      "application_rss_peak_bytes": 103768064,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "baseline",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 9.924958,
+      "commit_client_wall_seconds": 0.005989899997075554,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.14126,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.234753,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.20331,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.485013,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.894008,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.097338,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.869276,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 321262192,
+      "db_cumulative_temp_files": 33,
+      "db_cumulative_temp_bytes": 1452177080,
+      "backend_rss_peak_bytes": 174927872,
+      "application_rss_peak_bytes": 103780352,
+      "repeat": 1,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "baseline",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.860588,
+      "commit_client_wall_seconds": 0.004805399999895599,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.062315,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.219068,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.193911,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.624423,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.815736,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.067804,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.877331,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 143872888,
+      "db_cumulative_temp_files": 34,
+      "db_cumulative_temp_bytes": 1618589368,
+      "backend_rss_peak_bytes": 175067136,
+      "application_rss_peak_bytes": 103776256,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "qf_lazy",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": false,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.302735000000002,
+      "commit_client_wall_seconds": 0.005502200001501478,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.156238,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.228558,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.215732,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.733528,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.987422,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.265893,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.715364,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 152952536,
+      "db_cumulative_temp_files": 35,
+      "db_cumulative_temp_bytes": 1782585016,
+      "backend_rss_peak_bytes": 174968832,
+      "application_rss_peak_bytes": 103866368,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    },
+    {
+      "mode": "hash_table1",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "b9900b1ec5889f8ceeec31d64f8c02e9728cb4170b3c128979c5ecfb924b1f78",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 10.817699000000001,
+      "commit_client_wall_seconds": 0.006539200003317092,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.074101,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.238121,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.215201,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 3.868691,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.94918,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.200833,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 4.271572,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 323976224,
+      "db_cumulative_temp_files": 47,
+      "db_cumulative_temp_bytes": 2033587266,
+      "backend_rss_peak_bytes": 222478336,
+      "application_rss_peak_bytes": 103837696,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "f38025bfb36a3890ed39fd7185b026c23486b53ec82bdddfedece0d1af63cd7a"
+    },
+    {
+      "mode": "hash_array64",
+      "work_mem_override": "64MB",
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "38e3b1674decbbdd9cfbfa408c8aeb7874a628ff85a387372e200cee198ef30c",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 9.152251,
+      "commit_client_wall_seconds": 0.00401150000107009,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.070673,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.251845,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.216374,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.757788,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.914192,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.242812,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 3.698567,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 146554952,
+      "db_cumulative_temp_files": 49,
+      "db_cumulative_temp_bytes": 2095059476,
+      "backend_rss_peak_bytes": 349474816,
+      "application_rss_peak_bytes": 103858176,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "610d4ee866e2c6d5be1dc12581edd5218147d36c185419ad5bf0b3ebfa432285"
+    },
+    {
+      "mode": "qf_hash1",
+      "work_mem_override": null,
+      "table1_mergejoin_disabled": true,
+      "executed_sql_sha256": "36a73f3706564d31bac4fab1f22bd4d0cd02df13a6df285cd639a8f78b30431e",
+      "guarded_fast_path": null,
+      "official_function_guard_parity": true,
+      "sql_seconds": 8.111532,
+      "commit_client_wall_seconds": 0.004336400001193397,
+      "stages": [
+        {
+          "name": "source_manifest",
+          "seconds": 0.07831,
+          "rows": 1
+        },
+        {
+          "name": "public.table3",
+          "seconds": 0.224304,
+          "rows": 4
+        },
+        {
+          "name": "public.table4",
+          "seconds": 0.218021,
+          "rows": 26
+        },
+        {
+          "name": "public.table1",
+          "seconds": 2.992478,
+          "rows": 100000
+        },
+        {
+          "name": "public.table5",
+          "seconds": 0.88956,
+          "rows": 100000
+        },
+        {
+          "name": "public.table6",
+          "seconds": 1.165278,
+          "rows": 100000
+        },
+        {
+          "name": "public.table2",
+          "seconds": 2.543581,
+          "rows": 232386
+        }
+      ],
+      "wal_cluster_delta_bytes": 314395936,
+      "db_cumulative_temp_files": 49,
+      "db_cumulative_temp_bytes": 2095059476,
+      "backend_rss_peak_bytes": 175153152,
+      "application_rss_peak_bytes": 103731200,
+      "repeat": 2,
+      "fingerprints_equivalent": true,
+      "schema_equivalent": true,
+      "recipe_sha256": "7eb8d220993c7524fa58e71f257404881907d5a10ec957743fc07b20e6ab4a04"
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "individual_seconds": [
+        28.540623000000004,
+        9.924958,
+        8.860588
+      ],
+      "median": 9.924958,
+      "min": 8.860588,
+      "max": 28.540623000000004,
+      "reduction_percent": 0.0
+    },
+    "qf_lazy": {
+      "individual_seconds": [
+        23.748846999999998,
+        7.9634030000000005,
+        8.302735000000002
+      ],
+      "median": 8.302735000000002,
+      "min": 7.9634030000000005,
+      "max": 23.748846999999998,
+      "reduction_percent": 16.344885288179533
+    },
+    "hash_table1": {
+      "individual_seconds": [
+        26.273801,
+        10.279534,
+        10.817699000000001
+      ],
+      "median": 10.817699000000001,
+      "min": 10.279534,
+      "max": 26.273801,
+      "reduction_percent": -8.99490960062501
+    },
+    "hash_array64": {
+      "individual_seconds": [
+        24.096595999999998,
+        8.337482,
+        9.152251
+      ],
+      "median": 9.152251,
+      "min": 8.337482,
+      "max": 24.096595999999998,
+      "reduction_percent": 7.785493903349517
+    },
+    "qf_hash1": {
+      "individual_seconds": [
+        8.652402,
+        7.0646629999999995,
+        8.111532
+      ],
+      "median": 8.111532,
+      "min": 7.0646629999999995,
+      "max": 8.652402,
+      "reduction_percent": 18.271372029987432
+    }
+  },
+  "database_bytes": 437769907
+}

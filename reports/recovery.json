@@ -1,0 +1,516 @@
+{
+  "kind": "isolated_functional_recovery",
+  "timestamp_utc": "2026-10-26T09:05:34.044607+00:00",
+  "tests": [
+    {
+      "event": "before_start",
+      "passed": true,
+      "database": "lab_recovery_578b64636e",
+      "job": "b0391ff8-ef66-432b-9c4f-3df81ddadb4f",
+      "committed_chunks_reused": 0,
+      "write_fence_checks": 0,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "during_table3",
+      "passed": true,
+      "database": "lab_recovery_205d38850e",
+      "job": "bfabbe5d-06a0-4e50-a8c4-359a3aaa208e",
+      "committed_chunks_reused": 0,
+      "write_fence_checks": 0,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "during_table1",
+      "passed": true,
+      "database": "lab_recovery_4701254892",
+      "job": "b0b3b6b5-5a33-4713-a8ea-813d4233e266",
+      "committed_chunks_reused": 0,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "during_table2",
+      "passed": true,
+      "database": "lab_recovery_1c671456f3",
+      "job": "1318f42c-998b-43fd-a5cf-c6abada189ac",
+      "committed_chunks_reused": 0,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "before_chunk_commit",
+      "passed": true,
+      "database": "lab_recovery_4bdf6e28a5",
+      "job": "0edc199f-6d1d-4522-90c1-400825e3ca14",
+      "committed_chunks_reused": 0,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "after_chunk_commit",
+      "passed": true,
+      "database": "lab_recovery_ca63e4d028",
+      "job": "b823e884-1607-4fb5-bdd3-d802c131e80d",
+      "committed_chunks_reused": 1,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "after_data_commit",
+      "passed": true,
+      "database": "lab_recovery_80333d6aea",
+      "job": "df34500c-6a56-4382-9c3a-789c969119a7",
+      "committed_chunks_reused": 4,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "during_versions",
+      "passed": true,
+      "database": "lab_recovery_013c79a0ab",
+      "job": "f567e82f-609f-4781-8580-1348af02fb8c",
+      "committed_chunks_reused": 4,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "after_versions_commit",
+      "passed": true,
+      "database": "lab_recovery_00fe972315",
+      "job": "e9dec42b-2ae4-4929-930e-70eec2700733",
+      "committed_chunks_reused": 4,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "after_complete_commit",
+      "passed": true,
+      "database": "lab_recovery_dc39803a7e",
+      "job": "2cbeacbf-730d-4d91-9873-32320a370c95",
+      "committed_chunks_reused": 4,
+      "write_fence_checks": 0,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "backend_termination",
+      "passed": true,
+      "database": "lab_recovery_d91c4d6af0",
+      "job": "e9d21bae-05ca-43a1-9b60-341db7573287",
+      "committed_chunks_reused": 0,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    },
+    {
+      "event": "client_termination",
+      "passed": true,
+      "database": "lab_recovery_743d99d335",
+      "job": "e19b3db8-1ba5-4118-a68c-8b786e0776e8",
+      "committed_chunks_reused": 1,
+      "write_fence_checks": 3,
+      "exact_six_tables": true,
+      "row_counters": true,
+      "versions": [
+        {
+          "table_name": "public.table3",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table4",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table1",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table5",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table6",
+          "version_code": "0001",
+          "dependency_count": 1
+        },
+        {
+          "table_name": "public.table2",
+          "version_code": "0001",
+          "dependency_count": 1
+        }
+      ]
+    }
+  ],
+  "not_tested": [
+    "real SSH disconnect",
+    "Linux server restart",
+    "GUI process termination",
+    "power loss"
+  ]
+}

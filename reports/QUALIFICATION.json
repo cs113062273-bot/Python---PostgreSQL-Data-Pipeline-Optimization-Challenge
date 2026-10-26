@@ -1,0 +1,38 @@
+{
+  "status": "local_50_percent_target_achieved_official_environment_pending",
+  "timed_data_implementation": "1a61b98",
+  "final_hardened_code": "509e260",
+  "compiler_sha256": "8cd22cfd4e9494287642c16627caf296a28fb562cf639acde486d2f4908304ed",
+  "official_source_files_byte_verified": 32,
+  "exact_queryfoundry_recipe_sha256": "f84d00103da768bc88ed1fb7cfd21cec340bbc218218f858a94fe1037114a31c",
+  "authoritative_reports": [
+    "fresh-guarded-prefix-v2-100k.json",
+    "fresh-guarded-prefix-v2-1m-pilot.json",
+    "local-service-final-baseline-1m.json",
+    "local-service-final-prefix-1m.json"
+  ],
+  "release_checks": {
+    "regression_tests": 45,
+    "original_app_tests": 6,
+    "strict_differential_cases": 3042,
+    "differences": 0,
+    "fast_domain_cases": 587,
+    "exact_fallback_cases": 2455,
+    "native_domain_boundaries": 32,
+    "calendar_style_cases": 6000,
+    "atomic_interruption_boundaries": 36,
+    "metadata_guard_cases": 7,
+    "actual_server_crash_and_retry": true,
+    "actual_dump_restore": true,
+    "concurrent_target_commit": true,
+    "final_native_fast_and_valid_fallback": true,
+    "clean_source_archive": true,
+    "verified_sql_snapshots": 20
+  },
+  "scope": [
+    "Windows local PostgreSQL/psql; official Linux/SSH/GUI not validated",
+    "100k three-run median; 1M SQL/full-service single-run pilots",
+    "Atomic pre-commit retry; independent chunk saga not combined",
+    "No 300M or official scoring claim"
+  ]
+}

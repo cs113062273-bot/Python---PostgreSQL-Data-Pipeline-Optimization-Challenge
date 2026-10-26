@@ -19,6 +19,7 @@ def main():
     parser.add_argument("--database",default="lab_full_100k")
     parser.add_argument("--mode",default="baseline",choices=["baseline","path_table1","path_array","qf_lazy","qf_lazy_path1","hash_table1","hash_array","qf_hash1","hash_array64"])
     parser.add_argument("--output",default="reports/local-service.json")
+    parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     args=parser.parse_args()
     with connect(args.database,autocommit=True) as conn:
         require_lab(conn)
@@ -26,9 +27,10 @@ def main():
         scopes=[r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")]
         if conn.execute("SELECT to_regclass('public.pgdm_table_row_counts')").fetchone()[0]:
             raise RuntimeError("Use a fresh lab clone so metadata/version history remains coherent")
-        execute(conn,"baseline",scopes)
-        snapshot(conn)
-        conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
+        if not args.reference:
+            execute(conn,"baseline",scopes)
+            snapshot(conn)
+            conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
     seed_initial_versions(args.database)
     class Service(Table1PlannerMixin,LocalService):
         table1_hash_join=args.mode in ("hash_table1","hash_array","qf_hash1","hash_array64")
@@ -41,12 +43,20 @@ def main():
     wall=time.perf_counter()-started
     report["completed_at"]=datetime.now(timezone.utc).isoformat()
     with connect(args.database,autocommit=True) as conn:
-        assert_exact(conn);assert_relationships(conn)
+        if args.reference:
+            from bench.fresh import exact_to_reference
+            with connect(args.reference,autocommit=True) as reference:
+                require_lab(reference)
+                exact_to_reference(conn,reference)
+        else:
+            assert_exact(conn)
+        assert_relationships(conn)
         for table in ("table3","table4","table1","table5","table6","table2"):
             count=conn.execute(f"SELECT count(*) FROM public.{table}").fetchone()[0]
             counter=conn.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(table,)).fetchone()[0]
             assert count==counter
     value={"kind":"local_transport_organizer_service","official_score":False,"environment":env,"mode":args.mode,
+           "separate_reference":args.reference,"destination_warmup_before_measured_run":not bool(args.reference),
            "wall_seconds":wall,"exact_six_tables":True,"counter_reconciliation":True,"versions":versions,"timing_report":report,
            "limitations":["local Windows psql substitutes Linux/SSH command transport","GUI cache/refresh excluded","dump filesystem/replay not exercised by this command"]}
     write_report(args.output,value)

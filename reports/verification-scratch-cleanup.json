@@ -149,6 +149,26 @@
         }
       ],
       "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T10:29:41.102754+00:00",
+      "events": [
+        {
+          "database": "lab_1m",
+          "schema": "verify_6d47e596e3",
+          "receipt": "reports/native-official-recheck-after-recovery-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_a814f1e470",
+          "receipt": "reports/native-official-recheck-after-recovery-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        }
+      ],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
     }
   ]
 }

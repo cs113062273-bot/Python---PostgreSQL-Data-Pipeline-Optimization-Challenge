@@ -33,3 +33,17 @@ competition recovery score or a measurement of one batch's replay cost.
 
 Root cause remains unresolved. Subsequent deliberate crash/retry and dump
 checks must be recorded separately and cannot retroactively explain this fault.
+
+Later, when work resumed, the private server was absent and pg_ctl reported no
+running server. The last old log checkpoint completed at 13:12:51; at 13:11:27
+the postmaster had logged Windows error 487 reserving shared memory for a child.
+No new postgres crash dump was found. Neither that message nor the absence of
+a dump proves why the server later stopped. This is distinct from the earlier
+confirmed heap-corruption exception; do not conflate them.
+
+The private cluster was started again at 17:39:15 and ready at 17:42:31 after
+fsync/WAL recovery, with no durability settings weakened. Subsequent fresh
+official/candidate runs and eight-database exact logical-row/source/counter/
+version/catalog checks passed. They show retained committed data consistency,
+not a diagnosed stop cause or a scored recovery-duration result. Original log
+tail/SHA and chronology: unexpected-postgres-unavailable-audit.json.

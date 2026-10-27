@@ -1,8 +1,12 @@
 # Active 80% objective handoff
 
-The user has raised the active target to 95%; see ACTIVE_95.md. The local 1M
-performance threshold now has repeated complete-service evidence. Broader
-submission gates in RELEASE_80_AUDIT.md remain incomplete; do not claim an
+The user has raised the active target to 95%; see ACTIVE_95.md. The earlier
+local 1M cohort crossed 80% with repeated complete-service evidence.
+The later fresh paired recheck measured only 77.78% less time; do not describe
+the historical 81.88% as an every-run guarantee. Eight retained databases have
+passed independent full logical-row/source/counter/version/catalog checks;
+see VERIFIED_RESULTS.md. The private-server stop cause remains unresolved.
+Broader submission gates in RELEASE_80_AUDIT.md remain incomplete; do not claim an
 official score, Linux/SSH readiness or combined bounded chunk/COPY recovery.
 The user has no Linux/SSH host and requested local validation first.
 

@@ -11,7 +11,17 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest 80% research: fresh 1M **complete local-service three-run medians** are
+Latest fresh 1M recheck after a private-server recovery: **107.542s official
+versus 23.898s guarded_copy, 77.78% less complete processing time**, one paired
+run, both with exact six-table/counter/version/schema checks. The earlier
+three-run cohort below reached 81.88%; that figure is not an every-run guarantee.
+The 95% target remains unachieved. See [current status](docs/STATUS.md).
+The original six and two new benchmark databases have since passed 48 full
+logical-table comparisons against a newly executed official original. Source,
+counters, actual versions and durability/index metadata were also rechecked:
+[reproduction commands and verification limits](docs/VERIFIED_RESULTS.md).
+
+Historical 80% research: fresh 1M **complete local-service three-run medians** are
 110.524s official versus 20.030s guarded_copy (**81.88% less time**). Every
 paired run exceeds 80%, with actual preflight/counters/six versions, COPY I/O
 and cleanup, rebuilding and full validation included. Real private-server

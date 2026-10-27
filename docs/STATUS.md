@@ -1,21 +1,30 @@
 # Current status
 
 The active objective is now **95% less time than the official original**;
-see [active research](ACTIVE_95.md). The proven local result remains **81.88%**.
+see [active research](ACTIVE_95.md). The historical three-run result is **81.88%**.
+A new fresh paired recheck measured **77.78%** (107.541923s official,
+23.898150s candidate), with exact six outputs/counters/versions/schema/sequence
+checks on both. This slower result is retained; 81.88% is not an every-run
+guarantee or the latest measured percentage.
 Local complete-service three-run medians crossed the prior 80% threshold, but broader
 submission qualification is incomplete.
 Do not interpret these results as an official score or a completed submission.
+The eight retained benchmark databases have now passed independent post-recovery
+source/full logical-row/counter/version checks. Read
+[reproducible evidence and limits](VERIFIED_RESULTS.md); the new 77.78% result
+and the unresolved private-server stop are both retained there.
 
 New bounded-COPY research has passed a four-chunk/64-row restart experiment,
 with at most 17 normalized rows, actual backend loss, file/row/source tamper
 checks and six exact final outputs. This is not the managed counter/version/
 fencing integration. A phased-psql 1M single pilot took 17.7371s, but has no
-paired repeated official control; the authoritative percentage remains 81.88%.
+paired repeated official control; it does not update either paired cohort.
 See [bounded research](BOUNDED_COPY_RESEARCH.md) and
 [compatible source hashing](SOURCE_FINGERPRINT.md).
 
 | Fresh 1M cohort | Official original | Candidate | Time reduction |
 |---|---:|---:|---:|
+| New complete local-service paired recheck after recovery, one run/mode | 107.541923s | guarded_copy 23.898150s | **77.78%** |
 | Complete local original service, three-run medians | 110.523788s | guarded_copy 20.030262s | **81.88%** |
 | SQL stages, three-run medians | 107.190432s | lab_parallel_cache 20.111344s | **81.24%** |
 | Complete local original service, single-run pilot | 113.008988s | guarded_copy 20.975695s | **81.44%** |

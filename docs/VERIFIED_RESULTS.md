@@ -1,0 +1,89 @@
+# 可重跑的實測結果與查核範圍
+
+目前沒有達到耗時減少 95%。最新重新配對的本機完整流程，官方原始版
+107.541923 秒、我們的 guarded_copy 23.898150 秒，減少 **77.777829%**。
+這不是只計 SQL：包含原始流程的 preflight、轉換、暫存、COPY 檔案、索引／
+外鍵重建與驗證、提交、實際計數器及六筆版本註冊。
+
+| 測試組 | 官方原始版 | guarded_copy | 耗時降幅 |
+|---|---:|---:|---:|
+| 舊三輪的中位數 | 110.523788s | 20.030262s | 81.876967% |
+| 服務恢復後的新配對，各一輪 | 107.541923s | 23.898150s | 77.777829% |
+
+保留較慢的新結果，不將兩組混算，也不把 81.88% 說成每次都能達到。
+95% 的定義是候選耗時不超過同組官方耗時的 5%；以新配對計，需要低於
+5.377096 秒。這些都是本機 Windows 資料，不是官方排名或驗收成績。
+
+## 已實際核對
+
+- 原始 app 的 32 個檔案，在目前工作目錄及舊實測的固定 7b0f077 工作樹中，
+  都符合 upstream.json 的位元組 SHA。generator 與 seed 沒有修改。
+- 舊實測及新配對使用相同 atomic compiler SHA：
+  ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd。
+  實際 SQL 快照與原生版本紀錄中的 batch SHA 相符。
+- 兩組共八個實際資料庫都重新讀取 100 萬筆原始資料；實際 JSON 與 metadata
+  的完整來源摘要相同，不只相信來源提供的 raw_hash。
+- 八個資料庫共 48 次整表雙向 EXCEPT ALL，涵蓋 42,572,424 筆關聯結果資料列。
+  參考結果來自新執行的官方原始流程，不是先前儲存的預期雜湊。
+- 流水號按照關聯語義對齊：保留所有業務欄位、來源 raw_id 和 dimension
+  內容；不要求不同執行順序產生相同的 surrogate ID。缺少 dimension 與其
+  欄位全為 NULL 的情形有獨立標記。文字採 C collation 比較。
+- 原始六個 destination 計數器與實際資料列數相符，六筆 control versions
+  及其 SQL provenance 仍存在。來源筆數另外直接讀取，沒有虛構第七個計數器。
+- schema／constraint／index 定義、sequence options／ownership 一致。
+  另查全部 index 的 valid／ready／live、owner、ACL、reloptions、tablespace、
+  RLS／partition flags，以及結果／metadata／control tables 的 logged 狀態。
+  fsync、full_page_writes、synchronous_commit 均開啟。
+- 檢查器反例：故意修改一筆輸出、保持筆數不變，必須被拒絕；修改 JSON
+  但保留 raw_hash，也必須被偵測。反例只在 64 筆獨立 fixture 中執行並回滾。
+- 51 個 compiler tests、六個原始 app tests、32 個官方檔案 SHA 再次通過。
+
+原生欄位比較採 session-private TEMP 表及 EXCEPT ALL，比較每個值與重複次數。
+指紋僅作額外診斷，沒有取代逐筆比較。稽核在所有計時結束後執行，不會被算成
+新 benchmark，也不會回頭改寫歷史耗時。
+
+## 自己重跑
+
+以下使用目前私有 PostgreSQL 測試環境。每次選新的 output 檔名，避免覆蓋證據。
+
+```powershell
+$env:PGHOST='127.0.0.1'
+$env:PGPORT='55432'
+$env:PGUSER='challenge'
+.venv/Scripts/python.exe -m bench.audit_ranked_result --offline --output reports/my-offline-audit.json
+.venv/Scripts/python.exe -m bench.audit_ranked_result --output reports/my-live-audit.json
+```
+
+offline 查算式、來源檔案、SQL SHA、計時項目和版本證據；live 另外重查八個
+資料庫、建立獨立反例 fixture，並以自動刪除的 TEMP 表做逐筆比對。它不修改
+八個既有資料庫的業務資料。歷史報告本身無法證明另一台機器的耗時；要量新
+耗時，必須另外執行 fresh cohort driver。
+
+## 負面結果與尚未完成事項
+
+UNLOGGED 只用於可重建、交易提交前刪除的 cache：局部 CTAS 中位數
+4.211855s → 3.793340s、該階段 WAL 大幅下降，但完整新配對是
+18.649798s → 18.976154s，慢 1.75%，因此沒有採用。
+整數安全檢查的 planner barrier 在 100k 三輪局部測試也沒有產生 Memoize，
+中位數 0.495796s → 0.501394s，沒有採用。局部改善不等於全流程勝出。
+
+17.74 秒的 phased 單次測試沒有配對，且只有六表指紋驗證，不能冒充逐筆驗證。
+舊文件中該處「exact」用詞已修正。
+
+私有 PostgreSQL 曾非正常停止。重新接續時沒有發現伺服器程序，WAL 恢復後
+才進行本次完整重查。13:11 的 Windows shared-memory error 487 不足以證明
+後續停機原因；根因仍未釐清，這也不等於原先 0xc0000374 的原因已查明。
+原先六個已提交結果在恢復後仍一致，另外兩個新配對資料庫也完成逐筆重查；
+這不能被誇大成所有故障模式均已解決。
+
+Linux／SSH、最終 GUI/default 整合、300M 資源界線和 managed COPY chunk recovery
+仍未完成。有限測試不是所有 malformed input 或官方 eligibility 的完整證明。
+
+原始證據：
+[新配對](../reports/native-official-recheck-after-recovery-1m.json)、
+[八庫逐筆稽核](../reports/ranked-cohort-live-audit-v4.json)、
+[catalog 補查](../reports/ranked-cohort-catalog-supplement.json)、
+[未預期停機](../reports/unexpected-postgres-unavailable-audit.json)。
+稽核程式早期的兩個假設錯誤（兩種 excluded envelope、六個 destination counters）
+已修正，失敗報告保留。v3 的 JSONB 逐筆比較由我們主動取消，改用更小的原生
+欄位表示；v4 仍完整執行雙向 EXCEPT ALL，並通過全部八庫。

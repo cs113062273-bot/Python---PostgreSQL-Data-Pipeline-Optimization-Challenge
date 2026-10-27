@@ -12,7 +12,8 @@ a universal semantic proof.
 
 | Requirement | Current authoritative evidence | State |
 |---|---|---|
-| Complete-processing time reduced by 80% | `native-fresh-copy-1m-repeated-v2.json`: medians 110.523788s to 20.030262s, 81.876967%, fresh 1M, three runs per mode, no affinity override | Passed local complete-service cohort; not an official score |
+| Complete-processing time reduced by 80% | Historical `native-fresh-copy-1m-repeated-v2.json`: medians 110.523788s to 20.030262s, 81.876967%. New fresh post-recovery pair: 107.541923s to 23.898150s, 77.777829% | Historical cohort passed; 80% is not stable across all rechecks. Not an official score |
+| Independent integrity recheck | `ranked-cohort-live-audit-v4.json` and catalog supplement: eight databases, 48 bidirectional logical-table comparisons, 42,572,424 result rows, actual full source SHA/counts, six counters/versions, valid indexes/logged metadata; checker rejects deliberate faults | Passed tested retained datasets; does not diagnose server stop or prove universal eligibility |
 | Repeated SQL processing result | `fresh-parallel-cache-1m-repeated.json`: three-run medians 107.190432s and 20.111344s, 81.237743%, frozen `9b6e61c` | Passed within SQL-only scope |
 | Six exact outputs | Bidirectional EXCEPT ALL once per mode in the repeated cohort, every run typed fingerprints/graph/protected schema/sequence checks | Passed repeated cohort |
 | Preserve malformed-input behavior | `semantics-native-copy-pilot.json`, 121 actual native batches, zero differences; conservative proof or original fallback | Passed tested cases |

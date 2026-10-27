@@ -7,7 +7,18 @@ workload. At the existing official median of 110.5237876s, 95% requires at most
 qualified 20.0302624s candidate. A 120% time reduction is impossible; speed
 increase and time reduction must never be confused.
 
-The 95% target is NOT achieved. The authoritative result remains the fresh
+The 95% target is NOT achieved. A new fresh complete-service paired recheck
+after recovery measured 107.541923s official and 23.898150s guarded_copy:
+77.777829% less time, exact six outputs/counters/six versions/schema/sequence
+checks passed on both. Retain this slower result and do not advertise 81.88%
+as an every-run guarantee. The atomic compiler remains byte-identical.
+For this latest pair, 95% would require 5.377096s. Eight retained benchmark
+databases (48 full logical-table comparisons, 42,572,424 result rows) passed
+independent rechecking against the newly executed official original, including
+actual source SHA/counters/six versions and native catalog/durability metadata.
+See VERIFIED_RESULTS.md and ranked-cohort-live-audit-v4.json for scope.
+
+The historical three-run result remains the fresh
 1M three-run complete-service cohort at frozen 7b0f077: 110.5237876s official
 versus 20.0302624s candidate, 81.876967% less time. The newer 17.7371s phased
 transport pilot is unpaired and does not replace that repeated comparison.

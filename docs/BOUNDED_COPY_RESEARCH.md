@@ -24,8 +24,9 @@ not affect binary COPY files, which psql opens in binary mode.
 
 The isolated adapter `bench/phased_transport.py` passed 121 native semantic
 cases against the original one-shot baseline, with zero differences. Its fresh
-1M complete-service pilot took 17.7371s with exact outputs/schema/sequence/
-counters/six versions. This is one unpaired pilot, not a qualified improvement
+1M complete-service pilot took 17.7371s with six-table typed fingerprints and
+schema/sequence/counters/six versions. That pilot used fingerprint verification,
+not bidirectional EXCEPT ALL. This is one unpaired pilot, not a qualified improvement
 over 20.0303s or a new percentage. The initial attempt rejected `-f -` before
 the protected data batch; that failed attempt is retained separately. No GUI
 default or ordinary SSH transport has been changed.

@@ -6,6 +6,17 @@ experiments; their presence is not an eligibility/performance claim.
 
 Current 80% successor (`7b0f077`):
 
+Latest paired recheck is **77.777829%**, not a guaranteed 81.88%:
+`native-official-recheck-after-recovery-1m.json`, 107.541923s official versus
+23.898150s guarded_copy, one fresh run per mode, exact six outputs/counters/
+versions/schema checks. Keep this slower result alongside the historical n=3
+cohort. `ranked-cohort-live-audit-v4.json` and
+`ranked-cohort-catalog-supplement.json` independently recheck all eight retained
+benchmark databases against the newly executed original, with 48 full logical
+table comparisons. `verified-results-evidence.json` seals source/evidence hashes
+and scope; `docs/VERIFIED_RESULTS.md` provides commands and limits. Older failed
+checker receipts and the deliberately cancelled v3 are retained and explained.
+
 The active target is now 95% less time, still unachieved. See
 `docs/ACTIVE_95.md` and `target95-research-round.json` for four new isolated
 directions. The typed stage and JSON_TABLE lost their component/service tests;

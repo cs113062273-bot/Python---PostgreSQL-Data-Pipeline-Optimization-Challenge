@@ -71,5 +71,9 @@
     "Compact encoding is a bounded-data algorithm only after the exact conservative grammar proof; future promotion must retain that bound and qualify crash/resource/scale behavior.",
     "No default, durability, original generator/seed, dependency guard exemption or Linux/SSH qualification change.",
     "95 percent remains an unachieved target, not a claimed limit or guaranteed outcome."
-  ]
+  ],
+  "formatting_check": {
+    "implementation_and_docs": "git diff --check passes with content-addressed SQL evidence excluded",
+    "executed_sql_snapshots": "Canonical executed SQL contains original whitespace-only lines; preserved verbatim after LF normalization so version-bound batch SHA remains exact. All snapshot filename SHA checks pass."
+  }
 }

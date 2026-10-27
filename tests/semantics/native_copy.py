@@ -31,7 +31,7 @@ def main():
     p.add_argument('--count',type=int,default=150)
     p.add_argument('--seed',type=int,default=718)
     p.add_argument('--output',default='reports/semantics-native-copy.json')
-    p.add_argument('--transport',choices=['oneshot','phased'],default='oneshot',help='Candidate transport; official control always uses the original one-shot psql')
+    p.add_argument('--transport',choices=['oneshot','phased','server'],default='oneshot',help='Candidate transport; official control always uses the original one-shot psql')
     args=p.parse_args()
     identity=compiler_sha256()
     db='lab_native_copy_fuzz_'+uuid.uuid4().hex[:8]
@@ -49,6 +49,9 @@ def main():
         c.execute("UPDATE public.pgdm_table_row_counts SET row_count=0 WHERE schema_name='public' AND table_name=ANY(%s)",(list(ORDER),))
     report={'kind':'actual_psql_native_copy_differential','baseline_transport':'oneshot','transport':args.transport,'database':db,'compiler_sha256':identity,'seed':args.seed,'cases':[],'mismatches':[],
             'policy':'Same acceptance, all six canonical outputs and native counters; same first SQLSTATE/primary message; exact protected schema/sequence options and workspace restoration after every success/error. Deliberately mutated fixtures, never ranking data.'}
+    if args.transport=='server':
+        from bench.server_copy_probe import source_identity as server_identity
+        report['transport_hook_sha256']=server_identity()
     with connect(db,autocommit=True) as c:
         scopes=[r[0] for r in c.execute('SELECT DISTINCT raw_schema FROM public.raw_data')]
         report['environment']=environment(c)
@@ -66,6 +69,7 @@ def main():
         base=ROOT/'.runtime'/'native_copy_fuzz';base.mkdir(parents=True,exist_ok=True)
         for index,case in enumerate(cases(args.seed,args.count)):
             if compiler_sha256()!=identity:raise RuntimeError('Native compiler changed during differential cohort')
+            if args.transport=='server' and server_identity()!=report['transport_hook_sha256']:raise RuntimeError('Server COPY hook changed during differential cohort')
             raw=copy.deepcopy(original)
             if 'shape' in case:raw['values']=case['shape']
             elif case.get('missing_values'):raw.pop('values',None)
@@ -74,6 +78,7 @@ def main():
                 raw['values'].pop(case.get('remove'),None)
             c.execute('UPDATE public.raw_data SET raw=%s WHERE raw_id=%s',(Jsonb(raw),raw_id))
             outcomes={}
+            transport_diagnostics={}
             for mode in ['baseline','guarded_copy']:
                 reset(c)
                 # Trusted native settings, same in both executions. No data
@@ -87,7 +92,11 @@ def main():
                     if args.transport=='phased' and mode!='baseline':
                         from bench.phased_transport import run as run_phased
                         result=run_phased(argv,prefix+'\n'+scripts[mode],cwd=directory)
+                    elif args.transport=='server' and mode!='baseline':
+                        from bench.server_copy_probe import run as run_server
+                        result=run_server(argv,prefix+'\n'+scripts[mode],cwd=directory)
                     else:result=subprocess.run(argv,input=prefix+'\n'+scripts[mode],text=True,encoding='utf-8',errors='replace',capture_output=True,cwd=directory)
+                    if getattr(result,'local_backend_diagnostics',None):transport_diagnostics[mode]=result.local_backend_diagnostics
                 finally:
                     for table in ORDER:(directory/(table+'.bin')).unlink(missing_ok=True)
                     directory.rmdir()
@@ -107,6 +116,7 @@ def main():
                     outcomes[mode]={'sqlstate':'00000','outputs':outputs,'counter_match':True}
             mismatch=outcomes['baseline']!=outcomes['guarded_copy']
             row={'index':index,'case':case,'sqlstates':{m:o['sqlstate'] for m,o in outcomes.items()},'equivalent':not mismatch}
+            if transport_diagnostics:row['transport_diagnostics']=transport_diagnostics
             report['cases'].append(row)
             if mismatch:report['mismatches'].append({'index':index,'case':case,'outcomes':outcomes})
             if index%25==0:print('Native COPY case',index,'differences',len(report['mismatches']),flush=True)

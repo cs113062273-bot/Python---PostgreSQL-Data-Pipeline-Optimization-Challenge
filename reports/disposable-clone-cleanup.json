@@ -61,6 +61,54 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T11:24:47.076954+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_038988fab7",
+          "mode": "bulk_array",
+          "receipt": "reports/fresh-bulk-full-1m-pilot.json",
+          "bytes": 2745644723,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_275a25d5c5",
+          "mode": "guarded_parallel",
+          "receipt": "reports/fresh-guarded-parallel-1m-pilot.json",
+          "bytes": 2745751219,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_6b0079757a",
+          "mode": "bulk_full",
+          "receipt": "reports/fresh-bulk-full-1m-pilot.json",
+          "bytes": 2745652915,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_a2b96a7021",
+          "mode": "guarded_prefix",
+          "receipt": "reports/fresh-guarded-prefix-v2-1m-pilot.json",
+          "bytes": 2745685683,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_bf25bad083",
+          "mode": "bulk_fks",
+          "receipt": "reports/fresh-bulk-1m-pilot.json",
+          "bytes": 2745702067,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_ebaa25670c",
+          "mode": "hash_array64",
+          "receipt": "reports/fresh-1m-pilot.json",
+          "bytes": 2745685683,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "kind": "server_file_privilege_fallback_primitive",
+  "passed": true,
+  "database": "lab_server_roles_8e8ceaa4",
+  "hook_sha256": "e5cd51b6c2c54d1b4bd552a7b1200d653c27527ecb250e979c6878c981556d97",
+  "six_actual_copy_receipts_total": 18,
+  "native_default_identity_three_rows_each": true,
+  "no_server_file_role_granted": true,
+  "diagnostics": {
+    "transport": "private_server_file_copy_probe",
+    "server_files_used": false,
+    "server_file_privileges_available": false,
+    "privilege_fallback_to_client": true,
+    "actual_binary_files": 6,
+    "hook_sha256": "e5cd51b6c2c54d1b4bd552a7b1200d653c27527ecb250e979c6878c981556d97",
+    "actual_batch_sql_sha256": "d5ee53c612661a1af8408ba804a363097e3ae0c075dd89af50e520d95b7eb4e1",
+    "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification."
+  },
+  "scope": "Small transport primitive only. The role is deliberately unprivileged, TEMP objects drop at commit; not a full managed-role benchmark."
+}

@@ -1,7 +1,7 @@
 # Current status
 
-The active objective is now **95% less time than the official original**;
-see [active research](ACTIVE_95.md). The historical three-run result is **81.88%**.
+The active objective is now **at least 85% less time than the official original**;
+see [active research](ACTIVE_85.md). The historical three-run result is **81.88%**.
 A new fresh paired recheck measured **77.78%** (107.541923s official,
 23.898150s candidate), with exact six outputs/counters/versions/schema/sequence
 checks on both. This slower result is retained; 81.88% is not an every-run

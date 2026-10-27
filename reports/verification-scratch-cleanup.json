@@ -169,6 +169,19 @@
         }
       ],
       "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T11:29:47.310260+00:00",
+      "events": [
+        {
+          "database": "lab_1m",
+          "schema": "verify_d28c2a812d",
+          "receipt": "reports\\native-server-copy-1m-pilot\\1-server_copy.json",
+          "bytes": 1538277376,
+          "removed": true
+        }
+      ],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
     }
   ]
 }

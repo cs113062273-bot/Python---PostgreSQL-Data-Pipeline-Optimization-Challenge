@@ -15,16 +15,18 @@ from psycopg import sql
 from bench.common import ROOT,connect,environment,write_report
 from pipeline.recipes import compiler_sha256
 from bench.unlogged_stage_probe import source_identity
+from bench.server_copy_probe import source_identity as server_identity
 
 VARIANTS={
     'official':('bench.service_run',[],'baseline'),
     'guarded_copy':('bench.service_run',[],'guarded_copy'),
     'unlogged_copy':('bench.unlogged_stage_probe',['service'],'guarded_copy'),
+    'server_copy':('bench.server_copy_probe',[],'guarded_copy'),
 }
 
 
 def identity():
-    return {'atomic_compiler_sha256':compiler_sha256(),'unlogged_hook_sha256':source_identity(),'driver_sha256':hashlib.sha256(Path(__file__).read_text(encoding='utf-8').encode()).hexdigest(),'service_driver_sha256':hashlib.sha256((ROOT/'bench/service_run.py').read_text(encoding='utf-8').encode()).hexdigest()}
+    return {'atomic_compiler_sha256':compiler_sha256(),'unlogged_hook_sha256':source_identity(),'server_copy_hook_sha256':server_identity(),'driver_sha256':hashlib.sha256(Path(__file__).read_text(encoding='utf-8').encode()).hexdigest(),'service_driver_sha256':hashlib.sha256((ROOT/'bench/service_run.py').read_text(encoding='utf-8').encode()).hexdigest()}
 
 
 def main():
@@ -32,6 +34,7 @@ def main():
     p.add_argument('--variants',nargs='+',choices=list(VARIANTS),default=['guarded_copy','unlogged_copy'])
     p.add_argument('--repeats',type=int,default=1)
     p.add_argument('--output',default='reports/native-ephemeral-stage-paired-1m.json')
+    p.add_argument('--clean-verification-after-checks',action='store_true',help='Reclaim only the exact-comparison scratch schema after its validated receipt is written')
     args=p.parse_args()
     if args.repeats<1 or len(set(args.variants))!=len(args.variants):p.error('Positive repeats and distinct variants required')
     frozen=identity();output=Path(args.output).resolve();directory=output.with_suffix('');directory.mkdir(parents=True,exist_ok=True)
@@ -55,6 +58,8 @@ def main():
             assert all(value[k] for k in ['six_table_fingerprints_equivalent','counter_reconciliation','protected_schema_equivalent','sequence_options_and_ownership_equivalent','workspace_namespace_restored']) and len(value['versions'])==6
             report['runs'].append({'repeat':repeat,'mode':variant,'variant':variant,'database':db,'wall_seconds':value['wall_seconds'],'native_measured_seconds':sum(i['seconds'] for i in value['timing_report']['items'] if i.get('include_in_total',True)),'exact_six_tables':value['exact_six_tables'],'six_table_fingerprints_equivalent':True,'counter_reconciliation':True,'versions':6,'verification_schema':value['verification_schema'],'report':str(path),'execution_architecture':value.get('execution_architecture')})
             checked.add(variant);write_report(output,report)
+            if args.clean_verification_after_checks and value['exact_six_tables']:
+                subprocess.run([sys.executable,'-m','bench.clean_verification','--reports',str(path.relative_to(ROOT)),'--apply'],check=True,cwd=ROOT,env=env)
     control=statistics.median(r['wall_seconds'] for r in report['runs'] if r['variant']==args.variants[0])
     report['summary']={variant:{'individual_wall_seconds':[r['wall_seconds'] for r in report['runs'] if r['variant']==variant],'median_wall_seconds':statistics.median(r['wall_seconds'] for r in report['runs'] if r['variant']==variant),'time_reduction_percent_vs_comparison_variant':100*(1-statistics.median(r['wall_seconds'] for r in report['runs'] if r['variant']==variant)/control)} for variant in args.variants}
     write_report(output,report);print(json.dumps(report['summary'],indent=2),flush=True)

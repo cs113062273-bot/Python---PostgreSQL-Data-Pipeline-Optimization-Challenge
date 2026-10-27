@@ -15,7 +15,7 @@ Latest fresh 1M recheck after a private-server recovery: **107.542s official
 versus 23.898s guarded_copy, 77.78% less complete processing time**, one paired
 run, both with exact six-table/counter/version/schema checks. The earlier
 three-run cohort below reached 81.88%; that figure is not an every-run guarantee.
-The 95% target remains unachieved. See [current status](docs/STATUS.md).
+The current 85% target remains unachieved. See [current status](docs/STATUS.md).
 The original six and two new benchmark databases have since passed 48 full
 logical-table comparisons against a newly executed official original. Source,
 counters, actual versions and durability/index metadata were also rechecked:

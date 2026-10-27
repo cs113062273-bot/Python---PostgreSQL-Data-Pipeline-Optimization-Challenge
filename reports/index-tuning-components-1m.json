@@ -1,0 +1,109 @@
+{
+  "kind": "paired_rollback_index_rebuild_component",
+  "official_score": false,
+  "database": "lab_index_tuned_fc6c8e6e3d",
+  "hook_sha256": "2eac066b3e4d49b44a639c41684982d2966495b8fa115de05ebac6bb50b6512f",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "original",
+      "four_tables_key_rebuild_seconds": 2.88215930001752,
+      "per_table_seconds": {
+        "table1": 0.5037679000088247,
+        "table5": 0.5197316000121646,
+        "table6": 0.5621020999969915,
+        "table2": 1.2965576999995392
+      }
+    },
+    {
+      "repeat": 0,
+      "mode": "tuned",
+      "four_tables_key_rebuild_seconds": 2.8038670000241837,
+      "per_table_seconds": {
+        "table1": 0.4965974000078859,
+        "table5": 0.5875487000012072,
+        "table6": 0.5286597000085749,
+        "table2": 1.1910612000065157
+      }
+    },
+    {
+      "repeat": 1,
+      "mode": "tuned",
+      "four_tables_key_rebuild_seconds": 2.689111200001207,
+      "per_table_seconds": {
+        "table1": 0.48190810000232887,
+        "table5": 0.5160972000012407,
+        "table6": 0.5455977999954484,
+        "table2": 1.1455081000021892
+      }
+    },
+    {
+      "repeat": 1,
+      "mode": "original",
+      "four_tables_key_rebuild_seconds": 2.8810928000166314,
+      "per_table_seconds": {
+        "table1": 0.4973271000053501,
+        "table5": 0.5030869000038365,
+        "table6": 0.6416152000019792,
+        "table2": 1.2390636000054656
+      }
+    },
+    {
+      "repeat": 2,
+      "mode": "original",
+      "four_tables_key_rebuild_seconds": 2.6937751000077697,
+      "per_table_seconds": {
+        "table1": 0.5227205999981379,
+        "table5": 0.5184261999966111,
+        "table6": 0.5308072000043467,
+        "table2": 1.121821100008674
+      }
+    },
+    {
+      "repeat": 2,
+      "mode": "tuned",
+      "four_tables_key_rebuild_seconds": 2.864104700012831,
+      "per_table_seconds": {
+        "table1": 0.4892794000043068,
+        "table5": 0.5861202999949455,
+        "table6": 0.6751269000087632,
+        "table2": 1.1135781000048155
+      }
+    }
+  ],
+  "scope": "Existing loaded 1M results, no insert/transform/COPY or source processing. FK drop/restore outside key-build timer. All DDL/settings roll back. Not full-service timing or a new reduction versus official.",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "6949d3b52925cacf402a0a183cfaae13c5842e41",
+    "git_status": "?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/index_tuning_component.py\n?? bench/index_tuning_probe.py\n?? bench/json_table_probe.py\n?? bench/typed_stage_component.py\n?? bench/typed_stage_probe.py\n?? reports/index-tuned-native-1m-start.json\n?? reports/json-table-projection-100k.json\n?? reports/local-service-index-tuned-1m.json\n?? reports/local-service-index-tuned-1m.txt\n?? reports/local-service-typed-stage-1m.json\n?? reports/local-service-typed-stage-1m.txt\n?? reports/semantics-typed-stage-smoke.json\n?? reports/shadow-publication-probe-log.txt\n?? reports/sql/0d7932a001ba7cd345a8bf3791cb390d6aca469a6ed850511dc2ef8a5f9e50a3.sql\n?? reports/sql/148f171250041086976124b44ddcbed23489a442243550f93bddc86aa9b1e2c7.sql\n?? reports/sql/881c2d0f8d0083722368caa6627d2717c2a235736a9fc48830fa856ab9b1b33a.sql\n?? reports/sql/c0c44a5055f7ef4ca10b2d9ce00dcc9d8e296595631f89ff0a81ee4b7f571c28.sql\n?? reports/sql/c9078f314959822a90297ae580b51377a9d0c94b35bf73a90862faed40f04108.sql\n?? reports/typed-stage-component-1m.json\n?? reports/typed-stage-native-1m-start.json",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "all_changes_transactionally_rolled_back": true,
+  "summary": {
+    "original": {
+      "median_four_tables_key_rebuild_seconds": 2.8810928000166314
+    },
+    "tuned": {
+      "median_four_tables_key_rebuild_seconds": 2.8038670000241837
+    }
+  }
+}

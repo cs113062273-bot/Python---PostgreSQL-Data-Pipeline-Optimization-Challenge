@@ -20,6 +20,11 @@ Source and caveats: [current status](docs/STATUS.md). COPY currently supports
 only the local transport, the 300M shared stage is not yet bounded, and broader
 submission qualification continues. These succeed the older release below.
 
+The current user target is **95% less time** (5.526s at that official median),
+which is **not achieved**. Four newer isolated experiments and their negative
+results are recorded in [active 95% research](docs/ACTIVE_95.md); unpaired pilots
+do not replace the repeated comparison or change the default implementation.
+
 ## Install and launch
 
 Python 3.10+ and PostgreSQL 17 are the tested API target. Actual tests used Python

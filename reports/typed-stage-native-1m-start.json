@@ -1,0 +1,8 @@
+{
+  "kind": "fresh_typed_stage_native_service_start",
+  "database": "lab_typed_fresh_521b9508ef",
+  "template": "lab_template_1m",
+  "destination_warmup": false,
+  "hook_source_sha256": "71c8d9a809512142a8643792b4054ba26c2b97df77dab5e97b3de270ba116e1c",
+  "ranked": false
+}

@@ -1,6 +1,6 @@
 # Active 80% objective handoff
 
-The active goal remains the user's 80% challenge objective. The local 1M
+The user has raised the active target to 95%; see ACTIVE_95.md. The local 1M
 performance threshold now has repeated complete-service evidence. Broader
 submission gates in RELEASE_80_AUDIT.md remain incomplete; do not claim an
 official score, Linux/SSH readiness or combined bounded chunk/COPY recovery.

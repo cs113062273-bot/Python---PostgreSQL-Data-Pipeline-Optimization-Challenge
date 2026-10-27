@@ -6,6 +6,15 @@ experiments; their presence is not an eligibility/performance claim.
 
 Current 80% successor (`7b0f077`):
 
+The active target is now 95% less time, still unachieved. See
+`docs/ACTIVE_95.md` and `target95-research-round.json` for four new isolated
+directions. The typed stage and JSON_TABLE lost their component/service tests;
+index memory/worker tuning had a small noisy paired component gain. Compact
+axes passed 121 native semantic plus 48 numeric-boundary cases and a fresh
+19.165993s complete-service pilot with exact six outputs/counters/versions.
+The pilots are unpaired; none replaces the three-run 81.876967% result or
+changes the default. All actual batch SQL and negative results are retained.
+
 New bounded/native research (separate qualification, no new ranked percentage):
 `recovery-source-fingerprint-final-v2.json` has 57 compatibility cases;
 `recovery-streaming-source-final.json` and

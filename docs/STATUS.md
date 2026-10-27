@@ -1,7 +1,8 @@
 # Current status
 
-The active objective is **80% less time than the official original**. Local
-complete-service three-run medians have crossed that threshold, but broader
+The active objective is now **95% less time than the official original**;
+see [active research](ACTIVE_95.md). The proven local result remains **81.88%**.
+Local complete-service three-run medians crossed the prior 80% threshold, but broader
 submission qualification is incomplete.
 Do not interpret these results as an official score or a completed submission.
 

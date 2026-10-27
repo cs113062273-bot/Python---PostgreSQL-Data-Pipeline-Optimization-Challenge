@@ -1,0 +1,14 @@
+{
+  "kind": "aborted_cohort_before_any_accepted_timing",
+  "official_score": false,
+  "database": "lab_native_fresh_40060aca32",
+  "reason": "Initial baseline overlapped the final clean-room dependency/test process. Aborted before accepting any timing, to avoid inflating the baseline. The fresh repeated cohort starts only after that process is confirmed terminal.",
+  "cohort_accepted": false,
+  "owned_processes_stopped": [
+    22128,
+    26280,
+    27416,
+    13576,
+    15432
+  ]
+}

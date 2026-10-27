@@ -11,13 +11,14 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest 80% research: fresh 1M SQL-stage three-run medians are 107.190s official
-versus 20.111s candidate (81.24% less time). A separate complete local-service
-single-run pilot is 113.009s versus 20.976s for guarded_copy (81.44%). The latter
-includes actual preflight/counters/six versions and COPY cleanup. Repeated
-complete-service timing and final recovery qualification are pending; COPY
-currently supports only the local transport, and the 300M shared stage is not
-yet bounded. These are experimental successors to the older release below.
+Latest 80% research: fresh 1M **complete local-service three-run medians** are
+110.524s official versus 20.030s guarded_copy (**81.88% less time**). Every
+paired run exceeds 80%, with actual preflight/counters/six versions, COPY I/O
+and cleanup, rebuilding and full validation included. Real private-server
+crash/retry, dump/restore and the concurrent-writer fallback also passed.
+Source and caveats: [current status](docs/STATUS.md). COPY currently supports
+only the local transport, the 300M shared stage is not yet bounded, and broader
+submission qualification continues. These succeed the older release below.
 
 ## Install and launch
 
@@ -171,6 +172,22 @@ For native guarded recovery and detailed unranked scale profiles:
 .venv/Scripts/python.exe -m tests.recovery.bulk_concurrency
 .venv/Scripts/python.exe -m bench.release_profile --template lab_template_1m
 ```
+
+For the 80% successor, prepare a 1M template/reference using the same pattern
+above after untouched generation with `--rows 1000000` on a fresh cluster (or
+preserve the existing generated DB first). With those lab databases available:
+
+```powershell
+.venv/Scripts/python.exe -m bench.native_fresh --template lab_template_1m --reference lab_1m --modes baseline guarded_copy --repeats 3 --output reports/native-reproduced-1m.json
+.venv/Scripts/python.exe -m bench.native_resources --template lab_template_1m --reference lab_1m --mode guarded_copy --output reports/native-resources-reproduced-1m.json
+.venv/Scripts/python.exe -m tests.recovery.bulk_concurrency --mode guarded_copy --output reports/native-concurrency-reproduced.json
+```
+
+Run timing and resource probes separately with no competing test jobs. Resource
+sampling and its explicit stage-size observation are unranked diagnostics.
+The server-crash test intentionally stops only the verified project-private
+cluster and must run without another active job. See tests/recovery and the
+gate-by-gate [audit](docs/RELEASE_80_AUDIT.md) before interpreting results.
 
 The actual crash test stops only the verified private project cluster; run it
 without other database work. The dump test preserves the prior database under

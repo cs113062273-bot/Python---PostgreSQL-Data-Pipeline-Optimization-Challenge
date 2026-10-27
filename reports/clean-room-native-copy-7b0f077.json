@@ -1,0 +1,22 @@
+{
+  "kind": "fresh_archive_dependency_install_and_offline_regression",
+  "commit": "7b0f077",
+  "source_directory": ".runtime/reproduce_494216b658",
+  "command": "scripts/clean-room.ps1 -Ref 7b0f077 -PythonExe .venv/Scripts/python.exe",
+  "exit_code": 0,
+  "locked_dependencies_installed": true,
+  "organizer_files_unchanged": 32,
+  "compiler_unit_tests_passed": 51,
+  "organizer_application_tests_passed": 6,
+  "scope": "Fresh source archive and fresh venv, dependency install and offline regression. Does not by itself prove a clean-room database benchmark or Linux/SSH behavior.",
+  "native_database_execution": {
+    "service_report": "reports\\clean-room-native-copy-service64.json",
+    "fixture_rows": 64,
+    "exact_six_tables": true,
+    "actual_counters": true,
+    "versions": 6,
+    "schema_sequences_and_workspace": true,
+    "compiler_sha256_matches_repeated_1m_cohort": true,
+    "scope": "Actual service execution from the fresh archive and fresh locked venv; 64-row functional fixture, not a clean-room 1M timing reproduction."
+  }
+}

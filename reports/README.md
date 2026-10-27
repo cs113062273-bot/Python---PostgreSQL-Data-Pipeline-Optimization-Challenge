@@ -4,6 +4,41 @@ These are local diagnostics, not an official Kaggle score. Comparisons use only
 matching cohorts and metrics. Keep historical raw reports, including failed
 experiments; their presence is not an eligibility/performance claim.
 
+Current 80% successor (`7b0f077`):
+
+- native-fresh-copy-1m-repeated-v2.json: fresh complete-service 1M, three runs
+  per mode, official median 110.523788s / guarded_copy 20.030262s, **81.876967%
+  less time**. No CPU pin; exact six-table comparison once per mode, every run
+  fingerprints/schema/sequence/counters/six native versions. Child reports and
+  text timing reports live in the same-stem directory. Native accounted-item
+  medians are 110.340067s / 19.940298s (81.928325%), still a local substitute.
+- native-fresh-copy-1m-overlap-rejected.json: first attempt aborted before any
+  timing was accepted because clean-room installation/testing overlapped it.
+- fresh-parallel-cache-1m-repeated.json: separate SQL-only 1M n=3, 81.237743%
+  reduction; CPU 2 leader pin equally applied. Do not pool with service timings.
+- semantics-native-copy-pilot.json / semantics-copy-layout.json: 121 native
+  differential batches and six binary-layout fallback cases.
+- recovery-native-copy-atomic.json / recovery-native-copy-server-crash.json:
+  22 actual-batch exceptions/terminations plus actual immediate server stop,
+  WAL recovery, exact rollback and full native retry with six versions.
+- recovery-native-copy-dump-values.json / recovery-native-copy-concurrency.json:
+  actual same-name dump/restore including physical identity rows and sequence
+  state, plus a concurrent writer observed after the protected lock wait.
+- clean-room-native-copy-7b0f077.json / clean-room-native-copy-service64.json:
+  fresh archive/venv/locked installation, 51+6 tests, upstream byte verification
+  and actual 64-row native execution. Functional reproduction, not another 1M
+  timing cohort.
+- native-copy-resources-1m-v2.json: separate sampled resource probe; the stage
+  size is read inside its owning transaction and actual instrumented SQL SHA
+  is archived/retained in versions. The preceding resource report corrects an
+  invalid outside-transaction stage observation to unknown, not zero.
+- native-unexpected-crash-dump.json: limited read-only metadata from an
+  unexpected Windows child-process failure; see CRASH_INVESTIGATION.md.
+
+Broader 300M bounded staging, combined checkpoint/COPY recovery, ordinary SSH
+COPY transport and final default integration are not qualified. The records
+below describe the earlier release and retain their original scope.
+
 - fresh-guarded-prefix-v2-100k.json: fresh 100k, three runs/mode, balanced order,
   51.62% lower SQL-stage median than official. Exact six-table/schema verification.
 - fresh-guarded-prefix-v2-1m-pilot.json: fresh 1M, one run/mode, 56.42% lower SQL

@@ -103,3 +103,16 @@ its counter while our job waits; the later empty-target proof sees it, falls bac
 to original SQL, preserves it and maintains exact counters. See
 recovery-guarded-concurrency.json. This closes a timing-table/snapshot race; the
 ranked SQL diagnostic driver already acquired locks in that order.
+
+The 80% native COPY successor at `7b0f077` now has its own qualification:
+22 real-batch exception/backend-termination cases, actual private-server
+immediate stop and complete native retry, same-name pg_dump/pg_restore and
+concurrent-writer fallback. The strengthened dump check preserves physical
+identity values plus sequence last_value/is_called as well as sequence options,
+source SHA, logical graph, schema, counters and six version records. Reports:
+recovery-native-copy-atomic.json, recovery-native-copy-server-crash.json,
+recovery-native-copy-dump-values.json and recovery-native-copy-concurrency.json.
+These are local Windows checks; atomic COPY still retries the whole transaction
+before commit and retains the original post-commit control-version gap. The
+independent durable chunk saga is not combined with COPY. Client hard-kill /
+SSH publication behavior is not established by backend-kill tests alone.

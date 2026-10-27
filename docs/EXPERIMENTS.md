@@ -244,3 +244,40 @@ The unranked 1M profile records an explicit staged relation of 186,130,432 bytes
 1M sampled backend RSS was 182.2 MiB official / 231.3 MiB ours; WAL cluster delta
 3085.6 MiB / 818.1 MiB. These are bounded diagnostic observations, not total peak
 storage/memory or an official resource score.
+
+
+## Repeated 80% native COPY successor, 2026-10-27
+
+Frozen source 7b0f077, fresh 1M, complete original-service pipeline, no CPU pin:
+official runs 109.854989 / 110.523788 / 111.100602s; guarded_copy runs
+20.030262 / 19.728010 / 20.746827s. Medians 110.523788 versus 20.030262s,
+81.876967% less full processing wall. Included native timing-item medians give
+81.928325% less locally accounted time. All original preparation/preflight,
+managed counters, proof/staging/COPY, cleanup, rebuilding/validation, commit and
+six versions are included. Exact six-table EXCEPT ALL passed once per mode;
+fingerprints/schema/sequence/counters/provenance checks passed every run.
+Report: native-fresh-copy-1m-repeated-v2.json. The overlapping installation/test
+first start was rejected before accepting a timing, with its own receipt.
+
+This follows the separate frozen 9b6e61c SQL-stage n=3 result, 81.237743% less
+time. The earlier single native pilot, 81.438914%, remains historical evidence.
+Do not pool these cohorts or advertise an official MEASURED PROCESSING TOTAL.
+
+Native COPY-specific qualification now includes 121 differential cases, six
+altered receiving-layout fallbacks, 22 actual-batch faults, a real immediate
+private-server stop/WAL recovery/full native retry, same-name dump/restore
+including physical identities and sequence state, and concurrent-writer
+fallback. Fresh archive/venv/locked install passed 51+6 tests and an actual
+64-row service run with the same compiler identity. The earlier unexpected
+Windows child heap corruption remains documented and unexplained.
+
+Separate native resource probes record 78.63% lower observed cluster WAL,
+but larger summed working sets and temp bytes. The exact normalized stage is
+177.51 MiB; sampled COPY-file peak 273.74 MiB. An external transaction's invisible
+stage was initially mistaken for zero, corrected to unknown, and replaced by
+an explicit in-owning-transaction observation with archived actual SQL SHA.
+See NATIVE_RESOURCES.md and native-resource-comparison-1m.json for scope.
+
+The faster shared stage is still whole-batch, ordinary SSH COPY is blocked,
+and the durable chunk saga remains a separate prototype. These local results
+do not establish bounded 300M use, final default integration or official score.

@@ -7,12 +7,19 @@ import subprocess
 import uuid
 from psycopg import sql
 from bench.common import ROOT,connect,require_lab,write_report
-from pipeline.checkpoints import source_digest,normalize_catalog
+from pipeline.checkpoints import source_digest,normalize_catalog,physical_fingerprints
 from tests.equivalence.oracle import schema_signature,sequence_signature,fingerprints,assert_exact,assert_relationships
 
 
 def history(conn,database):
     return conn.execute('SELECT to_jsonb(v) FROM app_control.table_versions v WHERE database_name=%s ORDER BY schema_name,table_name,version_code',(database,)).fetchall()
+
+
+def sequence_state(conn):
+    result={}
+    for schema,name in conn.execute("SELECT schemaname,sequencename FROM pg_sequences WHERE schemaname='public' ORDER BY sequencename").fetchall():
+        result[schema+'.'+name]=conn.execute(sql.SQL('SELECT last_value,is_called FROM {}').format(sql.Identifier(schema,name))).fetchone()
+    return result
 
 
 def main():
@@ -28,7 +35,8 @@ def main():
         require_lab(conn)
         assert conn.info.host in ('127.0.0.1','localhost','::1')
         assert (ROOT/'.runtime').resolve() in Path(conn.execute('SHOW data_directory').fetchone()[0]).resolve().parents
-        before=schema_signature(conn);sequence_before=sequence_signature(conn);footprints=fingerprints(conn)
+        before=schema_signature(conn);sequence_before=sequence_signature(conn);sequence_values=sequence_state(conn);footprints=fingerprints(conn)
+        physical_before=physical_fingerprints(conn)
         scopes=[r[0] for r in conn.execute('SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1')]
         source=source_digest(conn,scopes)
         counters=conn.execute('SELECT to_jsonb(c) FROM public.pgdm_table_row_counts c ORDER BY schema_name,table_name').fetchall()
@@ -50,6 +58,8 @@ def main():
         require_lab(conn)
         assert normalize_catalog(schema_signature(conn))==normalize_catalog(before)
         assert sequence_signature(conn)==sequence_before
+        assert sequence_state(conn)==sequence_values
+        assert physical_fingerprints(conn)==physical_before
         assert fingerprints(conn)==footprints
         assert source_digest(conn,scopes)==source
         assert conn.execute('SELECT to_jsonb(c) FROM public.pgdm_table_row_counts c ORDER BY schema_name,table_name').fetchall()==counters
@@ -59,6 +69,7 @@ def main():
         'database':database,'preserved_original':preserved,'dump_bytes':archive.stat().st_size,
         'exact_six_tables':True,'schema_indexes_validated_constraints':True,'actual_source_sha256_preserved':True,
         'counters_preserved':True,'native_sequence_options_and_ownership_preserved':True,'six_versions_and_compiler_provenance_preserved':True,
+        'physical_rows_including_native_identity_values_preserved':True,'sequence_last_value_and_is_called_preserved':True,
         'scope':'same PostgreSQL 17, role and database name; control database retained; GUI snapshot filesystem flow not tested'})
     print('Completed guarded pipeline pg_dump/pg_restore: PASS; all six outputs, constraints, source, counters and versions preserved',flush=True)
 

@@ -1,16 +1,32 @@
 # Current status
 
 The active objective is **80% less time than the official original**. Local
-timings have crossed that threshold, but final qualification is incomplete.
+complete-service three-run medians have crossed that threshold, but broader
+submission qualification is incomplete.
 Do not interpret these results as an official score or a completed submission.
 
 | Fresh 1M cohort | Official original | Candidate | Time reduction |
 |---|---:|---:|---:|
+| Complete local original service, three-run medians | 110.523788s | guarded_copy 20.030262s | **81.88%** |
 | SQL stages, three-run medians | 107.190432s | lab_parallel_cache 20.111344s | **81.24%** |
 | Complete local original service, single-run pilot | 113.008988s | guarded_copy 20.975695s | **81.44%** |
 | Same complete-service pilot | 113.008988s | guarded_ctas 22.581307s | **80.02%** |
 
-Sources: [repeated SQL cohort](../reports/fresh-parallel-cache-1m-repeated.json)
+The repeated complete-service cohort is frozen at `7b0f077`, with no CPU
+affinity override. Official runs: 109.854989s, 110.523788s, 111.100602s.
+COPY runs: 20.030262s, 19.728010s, 20.746827s. Every individual paired run
+exceeds 80%; this is not a single best-run claim. Exact six-table comparisons
+passed once per mode, typed fingerprints/schema/sequence/counters/six versions
+passed every run. Fresh FILE_COPY databases, alternating starting modes,
+unchanged original service preflight and all COPY/rebuild/validation/cleanup
+costs included. An earlier start that overlapped the clean-room installation
+was aborted before accepting a timing and retained as a rejected attempt.
+The native report's included-item medians in this same cohort are 110.340067s
+and 19.940298s (81.928325% less locally accounted processing time). That total
+also remains a local substitute, not the official Linux/SSH measurement.
+
+Sources: [repeated complete service](../reports/native-fresh-copy-1m-repeated-v2.json),
+[repeated SQL cohort](../reports/fresh-parallel-cache-1m-repeated.json)
 and [complete-service pilot](../reports/native-fresh-ctas-copy-1m-pilot.json).
 The latter includes native preflight, actual counters, transformation, proof,
 staging, COPY files, all rebuilding/validation, commit and six control versions.
@@ -20,12 +36,28 @@ six-table output checks plus restored schema/sequence metadata checks.
 
 Native COPY additionally passed 121 actual-batch semantic differential cases,
 six changed-schema binary-layout fallback cases and 22 actual-batch exception /
-backend termination cases. Real server-crash/retry, dump/restore, concurrency
-and repeated complete-service timing remain qualification work. A separate
+backend termination cases. Actual server immediate-stop/WAL-recovery/full
+native retry, same-name dump/restore, and a concurrent commit during the target
+lock wait have now passed for native COPY. Reports are
+[server crash/retry](../reports/recovery-native-copy-server-crash.json),
+[dump/restore](../reports/recovery-native-copy-dump.json) and
+[concurrency](../reports/recovery-native-copy-concurrency.json).
+A fresh archive/venv/locked-install regression passed for `7b0f077`
+([receipt](../reports/clean-room-native-copy-7b0f077.json)); that is not a
+clean-room DB timing run. Actual native COPY from that fresh archive/venv also
+passed a 64-row functional DB execution, with exact outputs, actual counters,
+six versions, restored schema/sequence/workspace and the same compiler SHA as
+the repeated 1M cohort. It is not an additional clean-room 1M timing cohort.
+Repeated complete-service timing is now complete.
+A separate
 unexpected Windows child-process heap corruption is recorded in
 [the incident note](CRASH_INVESTIGATION.md); its root cause is not established.
 The COPY transport is local-only, the GUI/default remains unchanged, and the
 whole-batch shared stage still needs a bounded architecture for 300M rows.
+Separate native resource probes record a 177.5 MiB normalized stage, 273.7 MiB
+sampled COPY-file peak and 78.63% lower observed cluster WAL delta, with higher
+summed backend RSS and temp I/O. Read [resource methods and tradeoffs](NATIVE_RESOURCES.md);
+RSS sums include shared pages and are not physical-RAM measurements.
 These candidates are separate from the earlier qualified release below.
 See [parallel research and its remaining gates](PARALLEL_RESEARCH.md).
 

@@ -7,6 +7,7 @@ so external dependencies or unexpected contents abort rather than cascade.
 import argparse
 from datetime import datetime,timezone
 import json
+from pathlib import Path
 import re
 from psycopg import sql
 from bench.common import ROOT,connect,require_lab,write_report
@@ -23,18 +24,24 @@ def main():
         path=(ROOT/name).resolve()
         if not path.is_relative_to(ROOT/'reports'):p.error('Use project report files')
         r=json.loads(path.read_text())
-        if r.get('kind')!='fresh_database_per_run_sql_diagnostic':p.error('Not a fresh-run receipt: '+name)
+        native=r.get('kind')=='fresh_local_original_service_complete_processing'
+        if not native and r.get('kind')!='fresh_database_per_run_sql_diagnostic':p.error('Not a fresh-run receipt: '+name)
+        if native and not r.get('summary'):p.error('Native cohort is not complete: '+name)
         database=r['reference']
         if database not in ('lab_100k','lab_1m'):p.error('Unknown retained reference: '+database)
         for run in r['runs']:
             namespace=run.get('verification_schema')
-            if namespace and run.get('exact_except_all') is True:
+            verified=run.get('exact_except_all') is True
+            if native:verified=run.get('exact_six_tables') is True and run.get('six_table_fingerprints_equivalent') is True and run.get('counter_reconciliation') is True and run.get('versions')==6
+            if namespace and verified:
                 if not re.fullmatch(r'verify_[0-9a-f]{10}',namespace):p.error('Unexpected namespace')
                 receipts[(database,namespace)]=name
     events=[]
     for (database,namespace),receipt in sorted(receipts.items()):
         with connect(database,autocommit=True) as c:
             require_lab(c)
+            assert c.info.host in ('localhost','127.0.0.1','::1')
+            assert (ROOT/'.runtime').resolve() in Path(c.execute('SHOW data_directory').fetchone()[0]).resolve().parents
             with c.transaction():
                 present=c.execute('SELECT oid FROM pg_namespace WHERE nspname=%s',(namespace,)).fetchone()
                 if not present:continue

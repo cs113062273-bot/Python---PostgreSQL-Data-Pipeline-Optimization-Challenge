@@ -1,0 +1,57 @@
+{
+  "kind": "supplementary_resource_comparison_not_ranked_timing",
+  "official_score": false,
+  "reports": {
+    "baseline": "reports/native-baseline-resources-1m.json",
+    "guarded_copy": "reports/native-copy-resources-1m-v2.json"
+  },
+  "source_rows_verified": {
+    "baseline": 1000000,
+    "guarded_copy": 1000000
+  },
+  "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+  "harness_sha256": {
+    "bench/native_resources.py": "dcd9056da208d947fca25ae11e74cccf49b5d7cb7280a0d4563dec3cb5e934eb",
+    "bench/native_resource_worker.py": "93a278c7502cf9de968d48b326094f1c26983078fe83416ca2d4ff2bc8ad3a81"
+  },
+  "native_output_schema_sequence_counters_versions_passed": true,
+  "metrics": {
+    "baseline": {
+      "database_backend_sum_rss_bytes": 190013440,
+      "parallel_workers_observed": 2,
+      "client_tree_sum_rss_bytes": 126369792,
+      "private_copy_files_bytes": 0,
+      "data_database_bytes": 2745824947,
+      "logged_normalized_stage_bytes": null,
+      "cluster_wal_delta_bytes": 3237565824,
+      "processing_temp_bytes_delta": 78315520,
+      "sampled_cpu_seconds_lower_bound": {
+        "postgres": 98.390625,
+        "client": 0.90625
+      }
+    },
+    "guarded_copy": {
+      "database_backend_sum_rss_bytes": 1835909120,
+      "parallel_workers_observed": 7,
+      "client_tree_sum_rss_bytes": 127172608,
+      "private_copy_files_bytes": 287041703,
+      "data_database_bytes": 2933405363,
+      "logged_normalized_stage_bytes": 186130432,
+      "cluster_wal_delta_bytes": 691910472,
+      "processing_temp_bytes_delta": 240230400,
+      "sampled_cpu_seconds_lower_bound": {
+        "postgres": 57.546875,
+        "client": 2.59375
+      }
+    }
+  },
+  "wal_reduction_percent": 78.62868248512868,
+  "limitations": [
+    "Single instrumented run per mode, separate from the ranked repeated service cohort.",
+    "RSS sums double-count shared pages and are not physical RAM; sampled CPU and peaks can miss process lifetimes.",
+    "Private COPY file peak is sampled; stage pg_total_relation_size is exact inside its own transaction, includes its TOAST/free-space maps.",
+    "WAL delta is cluster-wide and includes control/background work; temp snapshots can have stats flush lag.",
+    "The resource window includes child imports/initial version seeding before the timed operation; output fingerprint verification follows outside the window.",
+    "Whole-batch normalized stage remains unbounded by chunk size; no 300M resource claim."
+  ]
+}

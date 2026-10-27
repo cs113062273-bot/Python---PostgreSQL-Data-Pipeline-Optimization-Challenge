@@ -1,87 +1,99 @@
 # Active 80% objective handoff
 
-Goal is active. Do not mark complete on the SQL-only result or a single native
-pilot; finish repeated native timing and recovery/dump/clean-room qualification.
-The user has no Linux/SSH environment and requested local verification first.
+The active goal remains the user's 80% challenge objective. The local 1M
+performance threshold now has repeated complete-service evidence. Broader
+submission gates in RELEASE_80_AUDIT.md remain incomplete; do not claim an
+official score, Linux/SSH readiness or combined bounded chunk/COPY recovery.
+The user has no Linux/SSH host and requested local validation first.
 
-Authoritative new evidence:
+Authoritative repeated native result, frozen source 7b0f077 in detached
+.runtime/bench_native_80 (retain the worktree):
+reports/native-fresh-copy-1m-repeated-v2.json and its same-stem child directory.
+Fresh FILE_COPY clone per run, no destination warmup, no CPU pin, alternating
+starting modes, three runs/mode. Official 109.854989 / 110.523788 / 111.100602s;
+COPY 20.030262 / 19.728010 / 20.746827s. Medians 110.523788 versus 20.030262s:
+81.876967% less complete processing wall. Every paired run exceeds 80%.
+Native included-item medians 110.340067 versus 19.940298s: 81.928325% less
+locally accounted time. All preflight/counters/proof/staging/COPY/rebuild/FK
+validation/commit/six versions included. Every child validated schema/sequence/
+namespace/counters/six versions; exact EXCEPT ALL once/mode, fingerprints every
+run. Frozen compiler ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd.
+Batch SQL copied into root reports/sql after normalized-LF SHA verification.
+The overlapping first attempt was deliberately aborted before accepting any
+timing; native-fresh-copy-1m-overlap-rejected.json is retained. Accepted handle
+63153 is terminal success. Do not resume/restart it.
 
-- Frozen SQL cohort commit `9b6e61c`, worktree `.runtime/bench_cache_80`:
-  `reports/fresh-parallel-cache-1m-repeated.json`, fresh 1M n=3. Official median
-  107.190432s, lab_parallel_cache 20.111344s: 81.237743% reduction. All six
-  canonical outputs, restored schema/constraints and sequence options checked.
-  Main/leader CPU 2 pin; workers use the ordinary server pool. SQL snapshots
-  referenced by this report have been copied from the frozen worktree to reports/sql.
-- Complete native-service pilot commit `8246596`:
-  `reports/native-fresh-ctas-copy-1m-pilot.json` and its child report directory.
-  Fresh 1M n=1, original preflight, counters, commit and six control versions:
-  official wall 113.0089881s; guarded_ctas 22.5813069s (80.018132%);
-  guarded_copy 20.9756955s (81.438914%). Exact six-table comparisons, protected
-  schema, sequence options/ownership, workspace cleanup and versions passed.
-  This cohort had no affinity override. It is not an official score.
-- tests/semantics/native_copy.py: 121 actual captured psql-batch differential
-  cases, zero differences, including actual COPY receipts/counters, rollback,
-  schema/sequence/workspace checks. Report semantics-native-copy-pilot.json.
-- tests/recovery/native_branches.py: full native CTAS fast, COPY valid fallback
-  (`1e2`), and preexisting work-schema collision. Exact output/counters/six
-  versions; unrelated sentinel preserved. recovery-native-branches.json.
-- Earlier common-core tests: guarded_parallel and lab_parallel_bulk 642 cases
-  each, zero differences; lab_parallel_cache 342 cases, zero differences;
-  32 native sequence-cache metadata/rollback/termination/commit checks;
-  nine additional unique-index fallback/rollback checks; 36 guarded_parallel
-  atomic interruption boundaries. Prior qualified guarded_prefix has its own
-  3,042 semantic/crash/dump/concurrency evidence, not new-COPY qualification.
-- Latest unit suite 51 passes, all 32 organizer files byte-identical. Generator
-  and fixed seed unchanged. fsync/full_page_writes/synchronous_commit remain ON.
+The earlier SQL n=3 81.237743% cohort is a different metric/source (9b6e61c in
+.runtime/bench_cache_80); retain its explicit scope. Full-service n=1 pilot is
+113.008988 versus 20.975695s (81.438914%); superseded for ranking by n=3 above.
 
-Native implementation:
+Additional completed local qualification:
+- recovery-native-copy-atomic.json: 22 actual native COPY exception/backend
+  termination boundaries; native-copy differential 121 zero differences;
+  semantics-copy-layout.json six altered-type/index/check fallback cases.
+- recovery-native-copy-server-crash.json: actual immediate stop after COPY
+  before FK restore, exact WAL rollback of schema/outputs/source/counters/seq
+  options, full native retry/six versions. Handle 47169 terminal success.
+  Recovery 283.84s includes fsync of the whole huge retained research cluster;
+  not a competition recovery duration. Do not stop a running benchmark again.
+- recovery-native-copy-dump-values.json: real same-name custom dump/restore,
+  all source/physical identity rows/graph/schema/sequence options AND last_value/
+  is_called/counters/control history preserved. Earlier dump receipt retained.
+- recovery-native-copy-concurrency.json: concurrent target commit during lock
+  wait becomes visible, selects original fallback and preserves writer/counters.
+- clean-room-native-copy-7b0f077.json: fresh archive/venv/locked install, 51
+  compiler tests + six app tests + 32 upstream byte hashes. Actual service from
+  that archive/venv also passed 64-row exact/counter/version/schema/seq checks,
+  matching compiler SHA. Not a separate clean-room 1M timing cohort.
 
-- pipeline/workspace.py creates a logged work relation in an otherwise absent
-  pgdm_pipeline_work namespace, in the atomic data transaction. Collision/no
-  CREATE permission chooses original fallback. DROP RESTRICT before COMMIT.
-- guarded_ctas: parallel CTAS of exact transformed SELECT, then original
-  INSERT/default identities, native counters and six versions. No filesystem.
-- guarded_copy: psql binary-aware `\\copy` of the transformed SELECT to a
-  private client directory, then `\\copy` into the original targets. Actual
-  psql ROW_COUNT captured immediately in a temp receipt feeds the unchanged
-  managed counter updates. Outside proof, exact original INSERT+GET DIAGNOSTICS.
-  Generic `\\g` binary redirection was rejected after a Windows CRLF signature
-  corruption; psql-binary-redirection-probe.json records actual bytes.
-- LocalService creates/cleans a private per-batch cwd, only six fixed filenames;
-  setup/cleanup costs counted. COPY is deliberately blocked on ordinary SSH
-  transport until a private cwd/cleanup implementation is qualified. CTAS can
-  use ordinary SQL transport. GUI/default not promoted yet.
-- Native cache tuning uses real sequences, CACHE 1000 only under native known
-  metadata, restores declared options. No manual IDs/sequence rewind. Ordinary
-  rollback/preallocation gaps are allowed, checked metadata exact.
+Separate resource probes, all terminal success (55407 initial, 91628 v2,
+82613 baseline), source compiler matches ranked cohort:
+reports/native-resource-comparison-1m.json and docs/NATIVE_RESOURCES.md.
+COPY stage exact 186130432 bytes, private files sampled peak 287041703 bytes;
+7 workers observed, summed PostgreSQL RSS about 1750.86 MiB versus baseline
+181.21 MiB (shared pages double-counted; not physical RAM). Observed WAL about
+659.86 versus 3087.58 MiB, 78.63% lower. Temp about 229.10 versus 74.69 MiB.
+Read precise sampling/window limits. The first resource report corrected an
+invalid external uncommitted-stage lookup to unknown, not zero. New
+bench/native_resource_worker.py reads stage size in its owning transaction,
+archives actual instrumented SQL SHA and updates native version provenance.
+No ranked run imports that hook.
 
-Next work:
+Unexpected earlier Windows fault remains unresolved:
+05:53:29 PID19876 0xc0000374, postmaster reinitializes05:53:33, ready05:58:47.
+It preceded any deliberate stop in native crash testing. Limited dump metadata
+shows --forkchild and raw candidate addresses near directory/timezone routines;
+these are not unwound frames or proof of root cause. See CRASH_INVESTIGATION.md.
+All subsequent new tests and cohorts passed without repeating that heap fault;
+do not claim that this explains or resolves it. Original dump remains outside
+Git at the user's Local CrashDumps directory; no security/OS/binary change made.
 
-1. Add stronger binary-layout metadata gate for COPY (e.g. changed target
-   timestamp/timestamptz or int widths must select original fallback, not receive
-   incompatible binary bytes). Current official fixed schema is already exact.
-2. Consider identical local big-batch backend CPU affinity for a controlled
-   repeated native cohort; baseline and candidate must share it, all overhead
-   included/reported. If implemented, record actual backend PID/CPU. The SQL
-   cohort already used CPU 2. Avoid source edits in a running benchmark; freeze
-   a detached worktree if implementing independently.
-3. New native COPY failure boundaries, actual private-server immediate crash,
-   retry, dump/restore, concurrency; full native repeated 1M baseline/candidate.
-4. Clean-room from final exact commit, docs/default/SSH readiness. Whole-batch
-   shared stage is not yet bounded for 300M; chunk protocol remains independent.
+Current open gates:
+1. Whole-batch logged normalized stage and COPY files still scale with batch;
+   bounded shared staging at 300M is not established.
+2. pipeline/checkpoints.py provides separate durable chunk/source-fence/control
+   saga recovery, not combined with fast COPY. Atomic COPY pre-commit failure
+   retries the batch; post-commit control gap retains original service behavior.
+   Client hard-kill/SSH behavior is not proved by backend termination tests.
+3. COPY is blocked on ordinary SSH until a private cwd/cleanup transport is
+   implemented and qualified. CTAS uses ordinary SQL transport. GUI/default
+   still original/older guarded choices; do not promote unqualified modes.
+4. Full official GUI/Linux/SSH/dump replay/public exact submission commit and
+   300M resource claims remain unverified. Local 80% result is real but not a
+   completed end-to-end contest submission.
 
-Disk: about 20 GB free after native pilot. Before further 1M repeated clones,
-reclaim only our reproducible oracle copies/old disposable SQL-only clones.
-bench/clean_verification.py validates explicit completed receipts, six JSONB
-tables and uses DROP RESTRICT. verification-scratch-cleanup.json audits an
-earlier 9.03 GiB reclamation. Native service_run currently discards the returned
-verification schema name; record it for future cleanup receipts. Do not delete
-raw templates, canonical challenge_reference, successful chosen output or user
-files. The old SQL-only lab_fresh clones have no control-version registrations
-and are safer cleanup candidates than native-versioned databases.
+Disk after resource probes about 17 GB free. Only our reproducible verification
+schemas were removed after n=3 completion (two copies, 2.865 GiB); receipts and
+candidate/native-versioned databases remain. bench/clean_verification.py now
+accepts completed native receipts and enforces this private local cluster,
+exact six jsonb tables, NOWAIT locks and DROP RESTRICT. Do not remove canonical
+references, chosen outputs, control versions or user files. Existing clean_clones
+only supports explicitly disposed SQL-only clones, not native-versioned DBs.
 
-No processes were running when this note was written. Last native pilot handle
-17040 and frozen SQL handle 6777 both returned terminal success. Main tracked
-code is commit 8246596, with many new reports still untracked; the user's Chinese
-prompt is also untracked and must remain untouched. Do not spawn agents. The
-unrelated Downloads/lab4_adv.sv is untouched.
+Connection in every fresh shell: PGHOST127.0.0.1, PGPORT55432, PGUSERchallenge,
+CHALLENGE_PSQL absolute root/.runtime/postgresql/pgsql/bin/psql.exe. Python is
+root/.venv/Scripts/python.exe. fsync/full_page_writes/synchronous_commit ON;
+no UNLOGGED durable state, no generator/seed change, no volatility spoof.
+Do not spawn agents. Preserve the untracked user Chinese prompt and unrelated
+Downloads/lab4_adv.sv. Consult live processes before assuming any handle running;
+the last listed handles above are terminal, no deliberate jobs remain.

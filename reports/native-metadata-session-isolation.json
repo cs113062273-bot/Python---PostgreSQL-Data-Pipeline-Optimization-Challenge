@@ -1,0 +1,72 @@
+{
+  "database": "lab_metadata_16acdfea",
+  "passed": true,
+  "hook_sha256": "d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a",
+  "results_cached": false,
+  "cases": [
+    {
+      "name": "native_output_format",
+      "flags": [
+        "-qAt"
+      ],
+      "passed": true
+    },
+    {
+      "name": "native_output_format",
+      "flags": [
+        "-At"
+      ],
+      "passed": true
+    },
+    {
+      "name": "native_output_format",
+      "flags": [
+        "--csv"
+      ],
+      "passed": true
+    },
+    {
+      "name": "native_output_format",
+      "flags": [
+        "-q",
+        "--csv"
+      ],
+      "passed": true
+    },
+    {
+      "name": "native_output_format",
+      "flags": [],
+      "passed": true
+    },
+    {
+      "name": "native_output_format",
+      "flags": [
+        "-t"
+      ],
+      "passed": true
+    },
+    {
+      "name": "native_output_format",
+      "flags": [
+        "-A"
+      ],
+      "passed": true
+    },
+    {
+      "name": "non_ascii_command_preserves_original_windows_transport",
+      "passed": true
+    },
+    {
+      "name": "query_results_reexecuted_after_external_commit",
+      "passed": true
+    },
+    {
+      "name": "guc_temp_open_transaction_advisory_state_cleaned",
+      "passed": true
+    },
+    {
+      "name": "one_request_multi_statement_implicit_rollback_and_retry",
+      "passed": true
+    }
+  ]
+}

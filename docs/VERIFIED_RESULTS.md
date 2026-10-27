@@ -1,3 +1,10 @@
+Latest update: a newer fresh 1M three-run cohort measured 83.674682% less
+complete local-service time: 103.941286s official versus 16.968745s refined_copy.
+Its first run per mode passed exact six-table comparison, and every run passed
+fingerprints/counters/six versions/schema/sequence checks. Independent full
+live auditing of those six new databases is pending. The eight-database audit
+and older percentages below are historical and retained separately.
+
 # 可重跑的實測結果與查核範圍
 
 目前沒有達到耗時減少 95%。最新重新配對的本機完整流程，官方原始版

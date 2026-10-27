@@ -1,0 +1,8 @@
+{
+  "kind": "own_research_query_over_60s",
+  "pid": 22484,
+  "backend_start_epoch": "1793102860.903399",
+  "elapsed_seconds": 74.779542,
+  "query": "SELECT count(*),sum(hash_record_extended(q,17)::numeric)::text,sum(hash_record_extended(q,97)::numeric)::text FROM (SELECT\n    ROUND(\n        NULLIF(BTRIM(source_row.integer_column_1), '')::numeric,\n        1\n    ),\n    NULL::numeric,\n    NULL::integer,\n    NULL::integer,\n    main_row.id_column_1,\n    NULL::bigint\nFROM parent_probe_57e8dadf.input AS source_row\nCROSS JOIN LATERAL pg_catalog.unnest(ARRAY[ROW((SELECT pg_catalog.array_cat(ids,ARRAY[]::bigint[]) FROM parent_probe_57e8dadf.map)[(source_row.raw_id-(1)+1)::integer:(source_row.raw_id-(1)+1)::integer])]) lookup(pair bigint[])\nCROSS JOIN LATERAL pg_catalog.unnest(ARRAY[ROW(lookup.pair[1][1],lookup.pair[1][2]::smallint)]) main_row(id_column_1 bigint,integer_column_1 smallint)\nWHERE NULLIF(BTRIM(source_row.integer_column_1), '')::numeric > 0 AND main_row.id_column_1 IS NOT NULL) q",
+  "reason": "Mapped component already over 60s versus 0.3102s original; cancel only this exact own query identity."
+}

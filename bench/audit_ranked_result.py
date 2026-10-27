@@ -173,7 +173,9 @@ def main():
             groups={}
             for row in r['runs']:
                 child_path=Path(row['report']).resolve();assert child_path.is_relative_to(ROOT/'reports')
-                child=load(child_path);mode=row['mode'];actual_mode='baseline' if mode=='official' else mode
+                child=load(child_path);mode=row['mode']
+                from bench.native_variant_fresh import VARIANTS
+                actual_mode=VARIANTS[mode][2] if mode in VARIANTS else mode
                 assert child['mode']==actual_mode and child['wall_seconds']==row['wall_seconds']
                 assert child['destination_warmup_before_measured_run'] is False
                 assert all(child['environment']['settings'][key]=='on' for key in ('fsync','full_page_writes','synchronous_commit'))

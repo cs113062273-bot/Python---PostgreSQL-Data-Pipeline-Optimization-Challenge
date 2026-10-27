@@ -13,6 +13,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--reports',nargs='+',required=True)
     p.add_argument('--modes',nargs='+',default=['baseline'])
+    p.add_argument('--databases',nargs='+',help='Further restrict cleanup to these explicitly receipted databases')
     p.add_argument('--apply',action='store_true')
     args=p.parse_args()
     candidates={}
@@ -26,7 +27,9 @@ def main():
             if not row.get('schema_equivalent') or not row.get('fingerprints_equivalent'):raise RuntimeError('Unverified run cannot authorize cleanup')
             db=row['database']
             if not re.fullmatch(r'lab_fresh_[0-9a-f]{10}',db):raise RuntimeError('Unexpected clone name')
+            if args.databases and db not in args.databases:continue
             candidates[db]={'database':db,'mode':row['mode'],'receipt':name}
+    if args.databases and set(args.databases)!=set(candidates):p.error('Every explicitly named database must have a verified selected-mode receipt')
     events=[]
     with connect('postgres',autocommit=True) as admin,connect(os.environ.get('PDM_CONTROL_DB','postgres_data_manager'),autocommit=True) as control:
         data=Path(admin.execute('SHOW data_directory').fetchone()[0]).resolve()

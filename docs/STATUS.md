@@ -1,11 +1,13 @@
 # Current status
 
-The active objective is now **at least 85% less time than the official original**;
-see [active research](ACTIVE_85.md). The historical three-run result is **81.88%**.
-A new fresh paired recheck measured **77.78%** (107.541923s official,
-23.898150s candidate), with exact six outputs/counters/versions/schema/sequence
-checks on both. This slower result is retained; 81.88% is not an every-run
-guarantee or the latest measured percentage.
+The active objective is **at least 85% less time than the official original**;
+see [active research](ACTIVE_85.md). The latest fresh 1M three-run comparison
+measures **83.674682%**: medians 103.941286s official and 16.968745s refined_copy.
+The target remains unachieved. Every run checks all six outputs, counters, six
+versions and schema/sequence metadata; exact six-table comparison runs once
+per mode. An independent full live audit of these six new databases is pending.
+Earlier 77.78% and 81.88% cohorts remain separate, with all unfavorable results
+retained. The eight-database independent audit below predates this new cohort.
 Local complete-service three-run medians crossed the prior 80% threshold, but broader
 submission qualification is incomplete.
 Do not interpret these results as an official score or a completed submission.
@@ -24,6 +26,7 @@ See [bounded research](BOUNDED_COPY_RESEARCH.md) and
 
 | Fresh 1M cohort | Official original | Candidate | Time reduction |
 |---|---:|---:|---:|
+| Latest complete local-service comparison, three-run medians | 103.941286s | refined_copy 16.968745s | **83.67%** |
 | New complete local-service paired recheck after recovery, one run/mode | 107.541923s | guarded_copy 23.898150s | **77.78%** |
 | Complete local original service, three-run medians | 110.523788s | guarded_copy 20.030262s | **81.88%** |
 | SQL stages, three-run medians | 107.190432s | lab_parallel_cache 20.111344s | **81.24%** |

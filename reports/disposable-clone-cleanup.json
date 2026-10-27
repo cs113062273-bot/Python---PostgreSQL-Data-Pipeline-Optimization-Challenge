@@ -109,6 +109,88 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:15:23.586405+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_391a891fca",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-1m-pilot.json",
+          "bytes": 2788456115,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_8433766b07",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-1m-pilot.json",
+          "bytes": 2745685683,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_98e1268750",
+          "mode": "baseline",
+          "receipt": "reports/fresh-1m-pilot.json",
+          "bytes": 2745685683,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_af1cbff23e",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-full-1m-pilot.json",
+          "bytes": 2745685683,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_c0d19a13af",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-1m-pilot.json",
+          "bytes": 2788456115,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_e8f514a50f",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-full-1m-pilot.json",
+          "bytes": 2788456115,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T13:10:07.532634+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_6bd76c4114",
+          "mode": "lab_parallel_cache",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 2745849523,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_76366e6e84",
+          "mode": "lab_parallel_cache",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 2745841331,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_92c2245723",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-ctas-1m-harness-failure.json",
+          "bytes": 2745759411,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_d90a07a36e",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-prefix-v2-1m-pilot.json",
+          "bytes": 2745685683,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

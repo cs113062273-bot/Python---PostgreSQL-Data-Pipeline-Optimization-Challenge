@@ -11,11 +11,13 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest fresh 1M recheck after a private-server recovery: **107.542s official
-versus 23.898s guarded_copy, 77.78% less complete processing time**, one paired
-run, both with exact six-table/counter/version/schema checks. The earlier
-three-run cohort below reached 81.88%; that figure is not an every-run guarantee.
-The current 85% target remains unachieved. See [current status](docs/STATUS.md).
+Latest fresh 1M three-run comparison: **103.941s official versus 16.969s
+refined_copy, 83.67% less complete processing time**. Every run checks six
+outputs, counters, six versions and protected schema/sequence metadata; the
+first run per mode also compares all six outputs exactly. The **85% target
+remains unachieved**. See [active research](docs/ACTIVE_85.md).
+The earlier post-recovery 77.78% recheck and historical 81.88% cohort are retained
+separately; the independent eight-database audit below predates this new cohort.
 The original six and two new benchmark databases have since passed 48 full
 logical-table comparisons against a newly executed official original. Source,
 counters, actual versions and durability/index metadata were also rechecked:
@@ -30,10 +32,9 @@ Source and caveats: [current status](docs/STATUS.md). COPY currently supports
 only the local transport, the 300M shared stage is not yet bounded, and broader
 submission qualification continues. These succeed the older release below.
 
-The current user target is **95% less time** (5.526s at that official median),
-which is **not achieved**. Four newer isolated experiments and their negative
-results are recorded in [active 95% research](docs/ACTIVE_95.md); unpaired pilots
-do not replace the repeated comparison or change the default implementation.
+The prior 95% request was superseded by the current **85%** objective. Earlier
+negative experiments remain in [95% research history](docs/ACTIVE_95.md).
+Unpaired pilots do not replace repeated comparisons or change the default.
 
 ## Install and launch
 

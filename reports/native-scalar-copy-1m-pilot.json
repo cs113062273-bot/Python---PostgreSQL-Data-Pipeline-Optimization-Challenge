@@ -1,0 +1,82 @@
+{
+  "kind": "fresh_local_original_service_complete_processing",
+  "official_score": false,
+  "timestamp_utc": "2026-10-27T12:27:00.380131+00:00",
+  "template": "lab_template_1m",
+  "reference": "lab_1m",
+  "comparison_variant": "scalar_copy",
+  "implementation_identity": {
+    "atomic_compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+    "unlogged_hook_sha256": "2f9e93b5add713ff0235dbe1d8fbbf028018d684f660e2b2e9bbfda50bcea469",
+    "server_copy_hook_sha256": "e5cd51b6c2c54d1b4bd552a7b1200d653c27527ecb250e979c6878c981556d97",
+    "fast_transport_hook_sha256": "6e35edcea3abd17ca19e84e14189ca0a5023376b5f4f7fbbebb62d4636d57ec1",
+    "refined_copy_hook_sha256": "3edab05b9c403605638f2c67ef5a1e9a28490ff6ad6ba8693af67beecc197f5a",
+    "scalar_copy_hook_sha256": "7150611131ff46f0d73844a5122991ca726b323b70365d3bebcf1d97040eb299",
+    "driver_sha256": "86267a2ff2e61824a47877a0e0220de320ddc7e3348f40dea299a8cd8cfc5c95",
+    "service_driver_sha256": "c26d834f0ab8fe51b21c0cbba0d0c8eca5c7ebe76409de8f0e6ab8847fdabe9b"
+  },
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "scalar_copy",
+      "variant": "scalar_copy",
+      "database": "lab_native_variant_671191a0a6",
+      "wall_seconds": 17.12692479999896,
+      "native_measured_seconds": 16.938767499993617,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": "verify_f3bf174804",
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-scalar-copy-1m-pilot\\1-scalar_copy.json",
+      "execution_architecture": {
+        "mode": "guarded_copy",
+        "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+        "batch_sql_sha256": "7d03560d4b3daabb82c6ae17116b984c9120dcce999736fa8fc89bc881d902ad",
+        "copy_workspace": {
+          "cleanup_success": true,
+          "cleanup_errors": [],
+          "setup_seconds": 0.0007096000008459669,
+          "cleanup_seconds": 0.02517269999952987
+        },
+        "safe_domain": true
+      }
+    }
+  ],
+  "method": "Fresh FILE_COPY per variant/run, rotating order, no affinity or destination warmup. Exact six-table comparison first run per variant; fingerprints/schema/sequence/counters/six versions every run. All preflight/proof/COPY/index/FK/commit/version work inside complete processing wall. Clone/oracle checks excluded. This compares the explicitly named variants, not an unmeasured official baseline.",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "e927f588920037b580fbddbaa39dbedec49e2746",
+    "git_status": "M bench/fast_transport_probe.py\n M bench/native_variant_fresh.py\n M reports/disposable-clone-cleanup.json\n M reports/verification-scratch-cleanup.json\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/parent_map_probe.py\n?? bench/proof_pattern_probe.py\n?? bench/refined_copy_probe.py\n?? bench/scalar_copy_probe.py\n?? bench/text_stage_probe.py\n?? bench/worker_degree_probe.py\n?? reports/native-fast-gexec-1m-pilot-log.txt\n?? reports/native-fast-gexec-1m-pilot.json\n?? reports/native-fast-gexec-1m-pilot/\n?? reports/native-fast-gexec-smoke-log.txt\n?? reports/native-fast-gexec-smoke-start.json\n?? reports/native-fast-gexec-smoke-v2-log.txt\n?? reports/native-fast-gexec-smoke-v2.json\n?? reports/native-fast-gexec-smoke-v2.txt\n?? reports/native-metadata-session-isolation-log-v2.txt\n?? reports/native-metadata-session-isolation-log-v3.txt\n?? reports/native-metadata-session-isolation-log-v4.txt\n?? reports/native-metadata-session-isolation-log-v5.txt\n?? reports/native-metadata-session-isolation-log-v6.txt\n?? reports/native-metadata-session-isolation-log.txt\n?? reports/native-metadata-session-isolation.json\n?? reports/native-refined-copy-1m-pilot-log.txt\n?? reports/native-refined-copy-1m-pilot.json\n?? reports/native-refined-copy-1m-pilot/\n?? reports/native-scalar-copy-1m-pilot-log.txt\n?? reports/parent-map-components-1m-log.txt\n?? reports/parent-map-components-1m-v2-log.txt\n?? reports/parent-map-components-1m-v3-log.txt\n?? reports/parent-map-components-1m-v4-log.txt\n?? reports/parent-map-components-1m-v4.json\n?? reports/parent-map-expensive-query-cancellation.json\n?? reports/parent-map-table2-plan-v4.json\n?? reports/parent-map-table5-plan-v3.json\n?? reports/parent-map-table5-plan-v4.json\n?? reports/parent-map-table6-plan-v4.json\n?? reports/proof-pattern-components-1m-log.txt\n?? reports/proof-pattern-components-1m.json\n?? reports/recovery-refined-copy-atomic-log.txt\n?? reports/recovery-refined-copy-atomic.json\n?? reports/semantics-refined-copy-121-log.txt\n?? reports/semantics-refined-copy-121.json\n?? reports/semantics-scalar-copy-121-log.txt\n?? reports/semantics-scalar-copy-121.json\n?? reports/shadow-publication-probe-log.txt\n?? reports/sql/06b63014299a1e8755e0cc825b528a479db67b8e2a77ce16857b80a08fa799bb.sql\n?? reports/sql/1c79174e17488db9c74922fb595b7a6766f57bb0baab87eb163c934449ae2c58.sql\n?? reports/sql/1d9475d61fe50594dda69da6132e38611b384bde57197c5fdff3762201629724.sql\n?? reports/sql/270abaed5a1505dbddd25628e6a99d8fea7cd4885ac22a1467bbb22c8d3ecab8.sql\n?? reports/sql/28ee43b47ef1b9e0786d655b9a6c4131333a0c840d30c8e55f7caf0dfd9bf8e5.sql\n?? reports/sql/484bf60397887d974d15bf654c014e0b4e9dfb773819dc21d29a0f06d51da160.sql\n?? reports/sql/5eb9faab8a9dd67c99cbbe7821acf6ab4f4cfa2edf230d73410c2a8a4279c8b5.sql\n?? reports/sql/62d922893ccf38ed530933c3eb72eabb0d4b09f55808ca45b8ccac9828be9425.sql\n?? reports/sql/6f853df6b0a92c8f3f72a1f3f36d1ef76d52d66ce6c01d90b9ca8a1d236d57e4.sql\n?? reports/sql/88917c8055deeec030204f8c7f52a63d16b0412cc8188fb15117c00220323f8a.sql\n?? reports/sql/88fa829f4e601042af99fac053203bf68ae00bcc6ef0f383c96f1332fd302375.sql\n?? reports/sql/979677569edec7c4b2c396fc010b3e874b1c3d1c7f09e44689dd53c49e8d905b.sql\n?? reports/sql/9e9c83485ccf152796d643ef9f9d0a599a49f3c55e13742c97c77c2aa1f915f8.sql\n?? reports/sql/a5d74604e8acf9e2e5517bdae0c1a50513aa9e035373d5db0b27b4e2880d063b.sql\n?? reports/sql/a992c97b5013909d0a4670032e6fb6fdc4aa5b618cf01f90e791ff0eb9a309df.sql\n?? reports/sql/ac74416d8aefcebbc421a4d3109d84882f56ec061128441bf1fcd0550a5e43b0.sql\n?? reports/sql/c056e429528c3022dcb571908ba9204f8f6a56e4e1f77a7091b11e6df4f26336.sql\n?? reports/sql/c125f6acf4d47764e3e5d9c58d9c1d67d6193dd2f6ac77760ec88cd051641a40.sql\n?? reports/sql/cf5014a160aeb43cf505d774e57d7e3c7cbef5f4d72cfb50bc3cad59fb712be7.sql\n?? reports/sql/d014d612c966f8e808139e2ac5f60c44fc847e0e9fc301914d653b65f9a22e2e.sql\n?? reports/sql/d44c479d596a1081af023ff324f52f44a5238fa1213d41b94ac35a78d0826d7c.sql\n?? reports/sql/dc27fe1496fe6ff549d364889950a0d0b5cbda8d093cde284a0814340cd29df1.sql\n?? reports/sql/dd4ff4a26f13870c12907e0f695318271d9a1f7e77e8cb450820642aa62c9911.sql\n?? reports/sql/df5ab6f2951301e63d9ed40d083f4f9dd67860f20c7a543248d7744c69fd2ce8.sql\n?? reports/sql/e1d133e2ba825538b247ca01180b5128783d463dd6788f4d3ae4aa6edb0c7727.sql\n?? reports/sql/f7724fd67fe684f5a51793a1d563e15d24a785ef1e02b38c69751a2f3a9dcb39.sql\n?? reports/worker-degree-components-1m-log.txt\n?? reports/worker-degree-components-1m.json\n?? tests/recovery/metadata_sessions.py\n?? tests/recovery/refined_copy_atomic.py\n?? tests/recovery/scalar_copy_atomic.py\n?? tests/semantics/scalar_boundaries.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 1000000,
+  "summary": {
+    "scalar_copy": {
+      "individual_wall_seconds": [
+        17.12692479999896
+      ],
+      "median_wall_seconds": 17.12692479999896,
+      "time_reduction_percent_vs_comparison_variant": 0.0
+    }
+  }
+}

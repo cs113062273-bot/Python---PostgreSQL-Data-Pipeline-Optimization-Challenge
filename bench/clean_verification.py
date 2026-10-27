@@ -24,15 +24,20 @@ def main():
         path=(ROOT/name).resolve()
         if not path.is_relative_to(ROOT/'reports'):p.error('Use project report files')
         r=json.loads(path.read_text())
+        single=r.get('kind')=='local_transport_organizer_service'
         native=r.get('kind')=='fresh_local_original_service_complete_processing'
-        if not native and r.get('kind')!='fresh_database_per_run_sql_diagnostic':p.error('Not a fresh-run receipt: '+name)
+        if not single and not native and r.get('kind')!='fresh_database_per_run_sql_diagnostic':p.error('Not a completed-run receipt: '+name)
         if native and not r.get('summary'):p.error('Native cohort is not complete: '+name)
-        database=r['reference']
+        if single:
+            gates=('exact_six_tables','six_table_fingerprints_equivalent','counter_reconciliation','protected_schema_equivalent','sequence_options_and_ownership_equivalent','workspace_namespace_restored')
+            if not all(r.get(k) is True for k in gates) or len(r.get('versions',[]))!=6:p.error('Single service exact verification is not complete: '+name)
+        database=r.get('separate_reference') if single else r['reference']
         if database not in ('lab_100k','lab_1m'):p.error('Unknown retained reference: '+database)
-        for run in r['runs']:
+        for run in [r] if single else r['runs']:
             namespace=run.get('verification_schema')
             verified=run.get('exact_except_all') is True
             if native:verified=run.get('exact_six_tables') is True and run.get('six_table_fingerprints_equivalent') is True and run.get('counter_reconciliation') is True and run.get('versions')==6
+            if single:verified=True # All complete-service gates checked above.
             if namespace and verified:
                 if not re.fullmatch(r'verify_[0-9a-f]{10}',namespace):p.error('Unexpected namespace')
                 receipts[(database,namespace)]=name

@@ -41,6 +41,26 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T09:47:04.028591+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_12dbfcc314",
+          "mode": "lab_parallel_bulk",
+          "receipt": "reports/fresh-parallel-ctas-bulk-1m.json",
+          "bytes": 2745980595,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_981b452043",
+          "mode": "lab_parallel_ctas",
+          "receipt": "reports/fresh-parallel-ctas-bulk-1m.json",
+          "bytes": 2775971507,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

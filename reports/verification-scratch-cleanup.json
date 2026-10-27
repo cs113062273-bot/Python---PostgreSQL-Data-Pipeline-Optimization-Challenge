@@ -109,6 +109,46 @@
         }
       ],
       "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T05:03:21.747606+00:00",
+      "events": [
+        {
+          "database": "lab_1m",
+          "schema": "verify_25698a843f",
+          "receipt": "reports/local-service-compact-axes-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_9cf066e49d",
+          "receipt": "reports/local-service-typed-stage-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        }
+      ],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T09:45:55.520113+00:00",
+      "events": [
+        {
+          "database": "lab_1m",
+          "schema": "verify_32b7e3a842",
+          "receipt": "reports/native-ephemeral-stage-paired-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        },
+        {
+          "database": "lab_1m",
+          "schema": "verify_ec22239b24",
+          "receipt": "reports/native-ephemeral-stage-paired-1m.json",
+          "bytes": 1538277376,
+          "removed": true
+        }
+      ],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
     }
   ]
 }

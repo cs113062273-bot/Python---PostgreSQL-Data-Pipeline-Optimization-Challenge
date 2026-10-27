@@ -6,6 +6,25 @@ experiments; their presence is not an eligibility/performance claim.
 
 Current 80% successor (`7b0f077`):
 
+New bounded/native research (separate qualification, no new ranked percentage):
+`recovery-source-fingerprint-final-v2.json` has 57 compatibility cases;
+`recovery-streaming-source-final.json` and
+`recovery-streaming-source-tamper-final.json` pass the existing 12 interruption
+and five tamper cases after the compatible hash acceleration.
+`recovery-psql-session-file-stdin-final.json` passes five transport cases and
+`semantics-phased-native-copy.json` passes 121 native differential cases.
+`local-service-phased-native-copy-1m.json` is an **unpaired single** 17.7371s
+pilot, not a replacement for the three-run percentage below.
+`shadow-publication-primitives.json` rejects table replacement on older-RR
+visibility and validates the original-object alternative.
+`bounded-native-copy-resume-final.json` passes nine fixture-only checks with
+four committed chunks, 17-row stage cap, 24 receipts, actual backend loss,
+valid binary corruption rollback, verifier tamper rejection and six exact
+final outputs. Managed fencing/counters/versions are not integrated.
+`chunk-projection-bounded997.json` checks a bounded slice within the 1M source;
+the 1M fused-hash component variants lost and were not promoted. See
+`docs/BOUNDED_COPY_RESEARCH.md` for limits and reproduction entry points.
+
 - native-fresh-copy-1m-repeated-v2.json: fresh complete-service 1M, three runs
   per mode, official median 110.523788s / guarded_copy 20.030262s, **81.876967%
   less time**. No CPU pin; exact six-table comparison once per mode, every run

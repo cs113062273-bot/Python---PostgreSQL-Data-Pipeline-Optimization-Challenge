@@ -1,0 +1,38 @@
+{
+  "kind": "phased_native_psql_primitive_not_full_chunk_protocol",
+  "database": "lab_psql_session_53413e19",
+  "passed": true,
+  "cases": [
+    {
+      "name": "native_phased_binary_copy_and_real_command_tag",
+      "passed": true,
+      "rows": 3,
+      "unicode_cr_lf_tab_backslash_and_null_preserved": true,
+      "native_identity_defaults": true,
+      "if_gset_and_false_branch": true
+    },
+    {
+      "name": "clean_eof_rolls_back_uncommitted_ddl_and_data",
+      "passed": true
+    },
+    {
+      "name": "actual_sqlstate_and_transaction_rollback",
+      "passed": true,
+      "sqlstate": "22012"
+    },
+    {
+      "name": "native_query_timeout",
+      "passed": true,
+      "elapsed_seconds": 0.26600000000325963,
+      "exact_backend_identity_verified_before_termination": true
+    },
+    {
+      "name": "blocked_input_pipe_timeout",
+      "passed": true,
+      "elapsed_seconds": 0.23500000000058208,
+      "exact_backend_identity_verified_before_termination": true
+    }
+  ],
+  "source_and_original_destinations_unchanged": true,
+  "scope": "Actual psql process and binary files; no SQL/metacommand interpreter, no pure-Python data-row serialization. This is a transport primitive, not final bounded-stage/checkpoint integration."
+}

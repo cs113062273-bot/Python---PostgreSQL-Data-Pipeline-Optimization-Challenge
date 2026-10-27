@@ -1,0 +1,72 @@
+{
+  "kind": "compatible_source_hash_and_bounded_native_research_qualification",
+  "timestamp_utc": "2026-10-27T04:18:31.049578+00:00",
+  "parent_commit": "bccdf50ae5ca7f16c48138010cac83c9555de38e",
+  "source_sha256_normalized_lf": {
+    "pipeline/checkpoints.py": "672e9d38a28d303c91d5d5f6d9cc9044ef3766ba6ff519522417786de09eb71a",
+    "pipeline/psql_session.py": "1c85b461a88fd8df6cc4dc73dea170618664ddd1f9653b3d19947e8a5ae81a4e",
+    "bench/source_hash_probe.py": "a45c1a8f78d1bf7fb33be81ca93d0a1d27914d74e5ce52f2bd0f5571292150c1",
+    "bench/chunk_projection_probe.py": "543df2f65c1d4dcc6104330f03a8c068e6cedfea3c9c8bde8ceabed1b428a0ea",
+    "bench/phased_transport.py": "1b9c59368681fb0cada5556a4ea967eead28a5c12ba15f7ab28d049c01e6be1b",
+    "bench/shadow_publish_probe.py": "4643c023ef71f889dac0ee76f502c29af3011a4bd0e44966f74baad7ecc30e4c",
+    "bench/bounded_copy_resume_probe.py": "255417ab9b4b6ecbc70f1b0cc3e9e626b12a7493babefea600ae5d242048fec4",
+    "tests/recovery/source_fingerprint.py": "83b73bd68bcea9930ecea467f2d7745a0df13ad6ecd89ec3c46e3ffdc20def66",
+    "tests/recovery/psql_session.py": "ef15a568b3089e3ea8c06e12173c767642b19919f365a9100f03cbe09f55230d",
+    "tests/recovery/tamper.py": "3f2982de5e6614a0b052012e030bcf1d9a2b3d03b7acbbf49dd2c4dfa1e1eb8a",
+    "tests/semantics/native_copy.py": "62cb9ae9416f64bc2a812ccdfadb5d800bacda10a8adedc8bb4d969b1ddedd54"
+  },
+  "atomic_compiler_sha256_unchanged": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+  "receipts": {
+    "reports/recovery-source-fingerprint-final-v2.json": {
+      "cases": 57,
+      "sha256_normalized_lf": "ec65af7a48ab6b246b895b59fe46a5ec6122b4a4bdd84c30594e57fb3202efde"
+    },
+    "reports/recovery-streaming-source-final.json": {
+      "cases": 12,
+      "sha256_normalized_lf": "1f5c3ac6a5b35d37afaf61751272b51b13b42fa48c39f17ca314d1c4052311cc"
+    },
+    "reports/recovery-streaming-source-tamper-final.json": {
+      "cases": 5,
+      "sha256_normalized_lf": "f968a16945bf512975d9e7533368bef18d3e82f95ad737a17431194e3bbd7da9"
+    },
+    "reports/recovery-psql-session-file-stdin-final.json": {
+      "cases": 5,
+      "sha256_normalized_lf": "d87a39753e1ae1e849134b0447674d5ce82f2cda445ebc7ac97e29c5cb58f955"
+    },
+    "reports/semantics-phased-native-copy.json": {
+      "cases": 121,
+      "sha256_normalized_lf": "033769e5aebab027aa12583ce70098217f8c8a36f83ee26c3287f87964553c16"
+    },
+    "reports/bounded-native-copy-resume-final.json": {
+      "cases": 9,
+      "sha256_normalized_lf": "8d1f513c2311a80a7ef6e6253096612305253aa4905bfc9a285526b31fb84a33"
+    },
+    "reports/shadow-publication-primitives.json": {
+      "sha256_normalized_lf": "0808b68f676fa4e69bf6fa380406b432da97fbdfa53c4ec8306b34da780963f4"
+    },
+    "reports/chunk-projection-bounded997.json": {
+      "sha256_normalized_lf": "93e8d863134c0a079ba3819207243c571efce1bac70fc38adb10ed8c394c4d0b"
+    },
+    "reports/local-service-phased-native-copy-1m.json": {
+      "sha256_normalized_lf": "bb3a53c9e50123092df64eaba475206e638ae81f40669a5f309310d7133f147d"
+    }
+  },
+  "regression_checks": {
+    "compiler_pytest": 51,
+    "unchanged_original_app_unittest": 6,
+    "unchanged_upstream_file_hashes": 32,
+    "normalized_sql_snapshot_hashes": 40
+  },
+  "ranked_result_unchanged": {
+    "receipt": "reports/native-fresh-copy-1m-repeated-v2.json",
+    "official_median_seconds": 110.5237876,
+    "candidate_median_seconds": 20.0302624,
+    "less_complete_processing_wall_percent": 81.876967
+  },
+  "limits": [
+    "Phased 17.7371s pilot is unpaired, not a new ranked comparison.",
+    "Bounded COPY uses 64-row functional fixture, not managed fences/counters/versions/full error fallback.",
+    "Original-object publication passes; replacement by rename is rejected on older RR visibility.",
+    "No new Linux/SSH/default/public submission/300M qualification."
+  ]
+}

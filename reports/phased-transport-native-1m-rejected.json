@@ -1,0 +1,8 @@
+{
+  "kind": "fresh_phased_transport_native_service_start",
+  "database": "lab_phased_fresh_ec97e5383a",
+  "template": "lab_template_1m",
+  "destination_warmup": false,
+  "accepted": false,
+  "reason": "The first native-service adapter attempt rejected the original -f - stdin option before launching the protected data batch. No processing time was accepted. PsqlSession now accepts stdin file mode and the five actual native-session cases pass with that option."
+}

@@ -1,0 +1,33 @@
+{
+  "kind": "shadow_publication_strategy_experiments",
+  "results": [
+    {
+      "method": "rename",
+      "database": "lab_publish_dd8433c3",
+      "publication_rollback_preserves_private_progress_and_empty_public": true,
+      "exact_six_outputs_and_schema": true,
+      "native_sequence_options_ownership_preserved": true,
+      "sequence_state_forward_only": true,
+      "source_unchanged": true,
+      "public_object_oids_preserved": false,
+      "older_rr_reader_table1_rows": 64,
+      "expected_old_snapshot_rows": 0,
+      "satisfies_original_rr_visibility": false,
+      "scope": "Small publication primitive only. No native managed-counter/version integration, no whole-pipeline performance claim, no completed chunk protocol."
+    },
+    {
+      "method": "copy_into_original",
+      "database": "lab_publish_2c514548",
+      "publication_rollback_preserves_private_progress_and_empty_public": true,
+      "exact_six_outputs_and_schema": true,
+      "native_sequence_options_ownership_preserved": true,
+      "sequence_state_forward_only": true,
+      "source_unchanged": true,
+      "public_object_oids_preserved": true,
+      "older_rr_reader_table1_rows": 0,
+      "expected_old_snapshot_rows": 0,
+      "satisfies_original_rr_visibility": true,
+      "scope": "Small publication primitive only. No native managed-counter/version integration, no whole-pipeline performance claim, no completed chunk protocol."
+    }
+  ]
+}

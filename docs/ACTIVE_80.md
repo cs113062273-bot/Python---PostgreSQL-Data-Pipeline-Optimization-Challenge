@@ -82,6 +82,27 @@ Current open gates:
    300M resource claims remain unverified. Local 80% result is real but not a
    completed end-to-end contest submission.
 
+Additional bounded/native research since bccdf50:
+- source_digest preserves protocol 1/2 bytes with ordered TEXT COPY, actual
+  six-column/native-PK/no-RLS/no-inheritance guard and exact legacy fallback.
+  57 real-DB compatibility/cancel/old-job-resume cases passed; source hash
+  component median 20.8401 -> 4.0994s, not a new complete-pipeline score.
+- Persistent native PsqlSession passed five actual transport checks and the
+  isolated phased candidate passed 121 semantic cases with zero differences.
+  A fresh 1M pilot was 17.7371s, UNPAIRED: retain 81.876967% as ranked result.
+- Publication by table replacement is rejected: older RR reader saw 64 rows
+  outside its snapshot; original-object publication passed visibility/OID gates.
+- bounded-native-copy-resume-final.json: nine fixture-only checks, four durable
+  private chunks, 17 normalized rows maximum, 24 actual COPY receipts, real
+  backend loss/valid binary corruption rollback and exact six final outputs.
+  Actual restart verifier rejects payload/identity/extra-row/source tampering.
+  This is NOT managed counter/version/fencing or performance qualification.
+- A 997-row stage inside the 1M source stayed bounded; fused legacy/binary
+  source hashes lost to separate projection+hash, and were not promoted.
+- Read BOUNDED_COPY_RESEARCH.md and SOURCE_FINGERPRINT.md for exact scope.
+  Final existing chunk regression: recovery-streaming-source-final.json,
+  all 12 interruption/idempotency cases passed. No new ranked cohort running.
+
 Disk after resource probes about 17 GB free. Only our reproducible verification
 schemas were removed after n=3 completion (two copies, 2.865 GiB); receipts and
 candidate/native-versioned databases remain. bench/clean_verification.py now

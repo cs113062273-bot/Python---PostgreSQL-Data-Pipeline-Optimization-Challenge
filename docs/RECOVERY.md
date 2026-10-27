@@ -116,3 +116,11 @@ These are local Windows checks; atomic COPY still retries the whole transaction
 before commit and retains the original post-commit control-version gap. The
 independent durable chunk saga is not combined with COPY. Client hard-kill /
 SSH publication behavior is not established by backend-kill tests alone.
+
+Later fixture-only bounded COPY work is documented in BOUNDED_COPY_RESEARCH.md:
+four private logged chunks, 17-row maximum normalized stage, 24 actual native
+COPY receipts, binary-file SHA plus native identity ranges, actual backend loss,
+prefix reuse, tamper rejection and exact six-table publication. It does not
+yet inherit this independent managed saga's fencing/counter/version guarantees.
+Table-renaming publication failed older-RR visibility; original-object
+publication passed the primitive gate. The atomic 81.88% mode remains unchanged.

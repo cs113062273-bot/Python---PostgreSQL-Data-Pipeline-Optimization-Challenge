@@ -84,7 +84,7 @@ def digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(",",":"),ensure_ascii=False,default=str).encode()).hexdigest()
 
 
-def source_digest(conn, scopes):
+def source_digest_legacy(conn, scopes):
     # Ordered server-side SHA-256 per actual row, reduced in bounded 10k batches.
     # Binds payload AND metadata. Stored raw_hash alone is never trusted.
     result = hashlib.sha256()
@@ -99,6 +99,62 @@ def source_digest(conn, scopes):
             result.update(f"{raw_id}:{checksum}\n".encode("ascii"))
         last = rows[-1][0]
     return result.hexdigest()
+
+
+def _source_digest_copy(conn,scopes):
+    # A single text column contains only an integer ID, ':', and lowercase
+    # hex. COPY's text escaping cannot change any byte of the legacy framing
+    # f'{raw_id}:{checksum}\n'. Raw JSON and metadata are hashed on PostgreSQL.
+    # The received stream is incremental; no full-source array/string is built.
+    names=['max_parallel_workers_per_gather','min_parallel_table_scan_size','parallel_setup_cost','parallel_tuple_cost','work_mem']
+    saved=[]
+    large=conn.execute("SELECT pg_relation_size('public.raw_data')>=16777216").fetchone()[0]
+    try:
+        if large:
+            saved=conn.execute('SELECT name,current_setting(name) FROM unnest(%s::text[]) AS s(name)',(names,)).fetchall()
+            conn.execute("SELECT set_config(name,value,true) FROM unnest(%s::text[],%s::text[]) AS s(name,value)",(names,['8','0','0','0','64MB']))
+        result=hashlib.sha256()
+        with conn.cursor().copy("""COPY (SELECT raw_id::text||':'||encode(sha256(convert_to(to_jsonb(t)::text,'UTF8')),'hex')
+            FROM public.raw_data t WHERE raw_schema=ANY(%s) ORDER BY raw_id) TO STDOUT""",(scopes,)) as copy:
+            for block in copy:result.update(block)
+        return result.hexdigest()
+    finally:
+        # A failed PostgreSQL transaction restores SET LOCAL on rollback. Do
+        # not obscure the original exception with an aborted-transaction error.
+        from psycopg.pq import TransactionStatus
+        if saved and not conn.closed and conn.info.transaction_status==TransactionStatus.INTRANS:
+            conn.execute('SELECT set_config(name,value,true) FROM unnest(%s::text[],%s::text[]) AS s(name,value)',([r[0] for r in saved],[r[1] for r in saved]))
+
+
+def source_digest(conn,scopes):
+    """Preserve the protocol 1/2 SHA while streaming a parallel-safe query.
+
+    Only the exact six native source columns use this path. Altered/custom
+    composite output types retain the legacy function and its exact framing.
+    The 16 MiB heap threshold amortizes worker startup; it is not a generator
+    distribution assumption. Settings are local and restored before returning.
+    """
+    from psycopg.pq import TransactionStatus
+    if conn.autocommit and conn.info.transaction_status==TransactionStatus.IDLE:
+        with conn.transaction():return source_digest(conn,scopes)
+    columns=conn.execute("""SELECT attname,atttypid FROM pg_catalog.pg_attribute
+        WHERE attrelid='public.raw_data'::regclass AND attnum>0 AND NOT attisdropped ORDER BY attnum""").fetchall()
+    expected=[('raw_id',20),('raw_hash',25),('raw_ingested_at',1184),('raw_schema',25),('raw_tab',25),('raw',3802)]
+    if columns!=expected:return source_digest_legacy(conn,scopes)
+    ordinary_unique_source=conn.execute("""SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_class r
+        WHERE r.oid='public.raw_data'::regclass AND r.relkind='r' AND NOT r.relispartition
+          AND NOT r.relrowsecurity AND NOT r.relforcerowsecurity
+          AND NOT EXISTS(SELECT 1 FROM pg_catalog.pg_inherits WHERE inhrelid=r.oid OR inhparent=r.oid)
+          AND EXISTS(SELECT 1 FROM pg_catalog.pg_constraint k
+            JOIN pg_catalog.pg_index i ON i.indexrelid=k.conindid
+            JOIN pg_catalog.pg_opclass op ON op.oid=i.indclass[0]
+            JOIN pg_catalog.pg_am am ON am.oid=op.opcmethod
+            WHERE k.conrelid=r.oid AND k.contype='p' AND k.conkey=ARRAY[1]::smallint[]
+              AND NOT k.condeferrable AND k.convalidated AND i.indisunique AND i.indisvalid AND i.indisready
+              AND i.indnkeyatts=1 AND i.indnatts=1 AND i.indkey[0]=1
+              AND op.opcnamespace='pg_catalog'::regnamespace AND op.opcname='int8_ops' AND am.amname='btree'))""").fetchone()[0]
+    if not ordinary_unique_source:return source_digest_legacy(conn,scopes)
+    return _source_digest_copy(conn,scopes)
 
 
 def normalize_catalog(value):

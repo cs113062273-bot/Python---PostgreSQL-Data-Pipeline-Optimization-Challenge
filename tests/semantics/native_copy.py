@@ -31,6 +31,7 @@ def main():
     p.add_argument('--count',type=int,default=150)
     p.add_argument('--seed',type=int,default=718)
     p.add_argument('--output',default='reports/semantics-native-copy.json')
+    p.add_argument('--transport',choices=['oneshot','phased'],default='oneshot',help='Candidate transport; official control always uses the original one-shot psql')
     args=p.parse_args()
     identity=compiler_sha256()
     db='lab_native_copy_fuzz_'+uuid.uuid4().hex[:8]
@@ -46,7 +47,7 @@ def main():
     def reset(c):
         c.execute('TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY')
         c.execute("UPDATE public.pgdm_table_row_counts SET row_count=0 WHERE schema_name='public' AND table_name=ANY(%s)",(list(ORDER),))
-    report={'kind':'actual_psql_native_copy_differential','database':db,'compiler_sha256':identity,'seed':args.seed,'cases':[],'mismatches':[],
+    report={'kind':'actual_psql_native_copy_differential','baseline_transport':'oneshot','transport':args.transport,'database':db,'compiler_sha256':identity,'seed':args.seed,'cases':[],'mismatches':[],
             'policy':'Same acceptance, all six canonical outputs and native counters; same first SQLSTATE/primary message; exact protected schema/sequence options and workspace restoration after every success/error. Deliberately mutated fixtures, never ranking data.'}
     with connect(db,autocommit=True) as c:
         scopes=[r[0] for r in c.execute('SELECT DISTINCT raw_schema FROM public.raw_data')]
@@ -82,7 +83,11 @@ def main():
                 directory=Path(tempfile.mkdtemp(prefix='trial_',dir=base)).resolve()
                 assert directory.parent==base.resolve()
                 try:
-                    result=subprocess.run([os.environ.get('CHALLENGE_PSQL',str(ROOT/'.runtime/postgresql/pgsql/bin/psql.exe')),'-X','-q','-A','-t','-w','-v','ON_ERROR_STOP=1','-v','VERBOSITY=verbose','-d',db],input=prefix+'\n'+scripts[mode],text=True,encoding='utf-8',errors='replace',capture_output=True,cwd=directory)
+                    argv=[os.environ.get('CHALLENGE_PSQL',str(ROOT/'.runtime/postgresql/pgsql/bin/psql.exe')),'-X','-q','-A','-t','-w','-v','ON_ERROR_STOP=1','-v','VERBOSITY=verbose','-d',db]
+                    if args.transport=='phased' and mode!='baseline':
+                        from bench.phased_transport import run as run_phased
+                        result=run_phased(argv,prefix+'\n'+scripts[mode],cwd=directory)
+                    else:result=subprocess.run(argv,input=prefix+'\n'+scripts[mode],text=True,encoding='utf-8',errors='replace',capture_output=True,cwd=directory)
                 finally:
                     for table in ORDER:(directory/(table+'.bin')).unlink(missing_ok=True)
                     directory.rmdir()

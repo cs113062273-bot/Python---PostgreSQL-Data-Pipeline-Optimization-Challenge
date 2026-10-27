@@ -1,4 +1,5 @@
 """Detect content edits preserving stored hashes, schema edits and receipt edits."""
+import argparse
 import uuid
 from bench.common import connect,write_report
 from pipeline.checkpoints import ChunkRunner
@@ -6,6 +7,9 @@ from tests.recovery.run import Service,fixture
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',default='reports/recovery-tamper.json')
+    args=parser.parse_args()
     records=[]
     for kind in ("source_same_raw_hash","destination_same_count","schema_rename","version_dependency","row_counter"):
         database=fixture(); job=str(uuid.uuid4()); service=Service(); runner=ChunkRunner(service,connect)
@@ -38,7 +42,7 @@ def main():
             print(kind,"PASS",flush=True)
         else:
             raise AssertionError("Tampering accepted: "+kind)
-    write_report("reports/recovery-tamper.json",{"tests":records})
+    write_report(args.output,{"tests":records})
 
 
 if __name__=="__main__":main()

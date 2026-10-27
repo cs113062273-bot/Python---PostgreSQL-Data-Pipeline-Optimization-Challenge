@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "kind": "source_same_raw_hash",
+      "database": "lab_recovery_bf41eb24c1",
+      "passed": true,
+      "rejection": "Source content, schema or write fence changed"
+    },
+    {
+      "kind": "destination_same_count",
+      "database": "lab_recovery_95f11f04f5",
+      "passed": true,
+      "rejection": "Committed destination counts/content changed"
+    },
+    {
+      "kind": "schema_rename",
+      "database": "lab_recovery_af14b1f395",
+      "passed": true,
+      "rejection": "Source content, schema or write fence changed"
+    },
+    {
+      "kind": "version_dependency",
+      "database": "lab_recovery_97385240d6",
+      "passed": true,
+      "rejection": "Registered versions/dependencies changed or disappeared"
+    },
+    {
+      "kind": "row_counter",
+      "database": "lab_recovery_8e1f43538e",
+      "passed": true,
+      "rejection": "Managed row counter differs from actual output: table2"
+    }
+  ]
+}

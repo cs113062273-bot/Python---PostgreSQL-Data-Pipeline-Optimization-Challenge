@@ -5,6 +5,14 @@ complete-service three-run medians have crossed that threshold, but broader
 submission qualification is incomplete.
 Do not interpret these results as an official score or a completed submission.
 
+New bounded-COPY research has passed a four-chunk/64-row restart experiment,
+with at most 17 normalized rows, actual backend loss, file/row/source tamper
+checks and six exact final outputs. This is not the managed counter/version/
+fencing integration. A phased-psql 1M single pilot took 17.7371s, but has no
+paired repeated official control; the authoritative percentage remains 81.88%.
+See [bounded research](BOUNDED_COPY_RESEARCH.md) and
+[compatible source hashing](SOURCE_FINGERPRINT.md).
+
 | Fresh 1M cohort | Official original | Candidate | Time reduction |
 |---|---:|---:|---:|
 | Complete local original service, three-run medians | 110.523788s | guarded_copy 20.030262s | **81.88%** |

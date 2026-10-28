@@ -30,6 +30,7 @@ from bench.backend_cpu_probe import source_identity as cpu_identity
 from bench.t1_inline_probe import source_identity as inline_identity
 from bench.date_shape_probe import source_identity as shape_identity
 from bench.combined_metadata_probe import source_identity as combined_identity
+from bench.parent_hint_probe import source_identity as parent_hint_identity
 
 VARIANTS={
     'official':('bench.service_run',[],'baseline'),
@@ -49,6 +50,7 @@ VARIANTS={
     'inline_copy':('bench.t1_inline_probe',[],'guarded_copy'),
     'shape_copy':('bench.date_shape_probe',[],'guarded_copy'),
     'combined_shape_copy':('bench.combined_metadata_probe',[],'guarded_copy'),
+    'parent_hint_copy':('bench.parent_hint_probe',[],'guarded_copy'),
 }
 
 
@@ -60,7 +62,7 @@ def identity():
            ('scaled_int_hook_sha256',scaled_identity),('memo_hook_sha256',memo_identity),
            ('calendar_hook_sha256',calendar_identity),('backend_cpu_hook_sha256',cpu_identity),
            ('inline_hook_sha256',inline_identity),('date_shape_hook_sha256',shape_identity),
-           ('combined_metadata_hook_sha256',combined_identity)]
+           ('combined_metadata_hook_sha256',combined_identity),('parent_hint_hook_sha256',parent_hint_identity)]
     result={'atomic_compiler_sha256':compiler_sha256(),**{name:function() for name,function in hooks}}
     for name,path in [('driver_sha256',Path(__file__)),('service_driver_sha256',ROOT/'bench/service_run.py'),('source_snapshot_sha256',ROOT/'bench/source_snapshot.py')]:
         result[name]=hashlib.sha256(path.read_text(encoding='utf8').encode()).hexdigest()

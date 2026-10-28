@@ -12,10 +12,10 @@ All exact-output/integrity gates still passed; this slower result is retained
 and is not promoted. Candidate leader CPU increased from 14.140625s in the
 inline pair to 20.812500s, while the two official leaders used 92.437500s and
 92.453125s. This does not prove a scheduling/clock cause; many data SQL stages
-became slower, and controlled diagnosis remains necessary. A separate
-identical-CPU-2 comparison for both official/candidate is being prepared;
-64-row actual-affinity/exact-output/six-version smoke tests pass for both.
-Any fixed-core result must remain labeled with that condition.
+became slower, and controlled diagnosis remains necessary. The separate identical-CPU-2 comparison completed three runs per mode:
+official median 109.057611s, candidate median 18.036482s, **83.461510%**
+reduction. All gates passed. This fixed-core diagnostic does not replace the
+slower default-affinity result or establish the target.
 
 The preceding complete-service 1M comparison comprises
 three fully verified pairs with identical processing engine/SQL, in AB/BA/AB
@@ -62,8 +62,10 @@ Report: native-refined-copy-official-1m-repeated.json.
 Every run includes preflight, source manifest, proof/extraction, native COPY,
 all key rebuilding and complete FK validation, commit and six control versions.
 Exact six-table comparison passed first per mode; fingerprints, counters,
-protected schema/sequence metadata and provenance passed every run. All six
-native databases and their control history are retained. Independent full live
+protected schema/sequence metadata and provenance passed every run. All six results and control history are retained; two refined candidate
+databases (e753668678, 5ed5af86c7) now have independently verified full dump
+streams and restored native metadata in offline archives, rather than live
+copies. The archive receipts explicitly do not claim a populated full restore. Independent full live
 auditing of this new cohort is pending; the earlier eight-database live audit
 does not automatically cover these six.
 
@@ -255,3 +257,21 @@ manifests under reports/native-archives record whether a live copy was retired.
   SQL controls, all winning variants, canonical references/templates and all
   native official controls remain. No generator, source data or user file was
   changed. This creates space for a complete six-database comparison.
+
+
+## Fresh-parent statistics experiment (awaiting 1M measurement)
+
+Native nested-plan profiling found that position expansion executes 1M times
+without Memoize, although weight/gap parsing already memoizes correctly. The
+fresh table1 has no axis-count statistics yet. Adding ANALYZE of just that
+column after its load and native key rebuild introduces position Memoize in
+the actual 64-row native pipeline (59 hits, five misses). Its entire cost
+stays inside processing. Profiling is instrumented and excluded from scoring.
+
+The parent_hint_copy research worker combines these statistics with temporary
+file attributes on the six disposable COPY files, within the same native data
+program and without extra commits. It passed 121 SQL semantic cases, 82
+boundaries, 16 actual fault/retry cases, and exact 64-row full-service output
+with six versions. No 1M improvement is claimed before a fresh paired run.
+Qualification: reports/parent-hint-qualification.json. Linux/SSH, large-scale
+resource bounds and submission integration remain unqualified.

@@ -1,5 +1,6 @@
 """Build an isolated PG17 research DLL using the verified portable Zig SDK."""
 import hashlib
+import argparse
 import json
 import os
 from pathlib import Path
@@ -13,7 +14,12 @@ from bench.common import write_report
 
 
 def main():
-    source=ROOT/'native/challenge_probe.c';data=source.read_bytes();sha=hashlib.sha256(data).hexdigest()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source',default='native/challenge_probe.c')
+    parser.add_argument('--output',default='reports/native-c-probe-build.json')
+    args=parser.parse_args()
+    source=(ROOT/args.source).resolve();assert source.is_relative_to(ROOT/'native') and source.suffix=='.c'
+    data=source.read_bytes();sha=hashlib.sha256(data).hexdigest()
     compiler=ROOT/'.runtime/toolchains/zig-x86_64-windows-0.14.1/zig.exe'
     if not compiler.exists():compiler=ROOT/'.runtime/toolchains/mirror/zig-x86_64-windows-0.14.1/zig.exe'
     include=ROOT/'.runtime/postgresql/pgsql/include'
@@ -38,8 +44,9 @@ def main():
     metadata['source_archive']=str(source_archive.relative_to(ROOT))
     receipt=archive/(sha[:16]+'-'+uuid.uuid4().hex[:8]+'.json');write_report(receipt,metadata)
     metadata['retained_build_receipt']=str(receipt.relative_to(ROOT))
-    output=ROOT/'reports/native-c-probe-build.json';write_report(output,metadata)
-    print(result.stdout);print(result.stderr,file=sys.stderr)
+    output=(ROOT/args.output).resolve();assert output.is_relative_to(ROOT/'reports');write_report(output,metadata)
+    if result.stdout:print(result.stdout)
+    if result.stderr:print(result.stderr,file=sys.stderr)
     if result.returncode:raise SystemExit(result.returncode)
     print('Native isolated probe built:',library,flush=True)
 

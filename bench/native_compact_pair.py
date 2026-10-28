@@ -26,7 +26,13 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--rows',type=int,choices=[100000,1000000],default=100000)
     p.add_argument('--output',required=True)
+    p.add_argument('--candidate',choices=['compact','minimal'],default='compact')
     args=p.parse_args()
+    candidate_module='bench.native_compact_probe'
+    if args.candidate=='minimal':
+        global candidate
+        from bench import native_minimal_probe as candidate
+        candidate_module='bench.native_minimal_probe'
     output=(ROOT/args.output).resolve()
     assert output.is_relative_to(ROOT/'reports') and not output.exists()
     directory=output.with_suffix('');directory.mkdir(exist_ok=False)
@@ -45,6 +51,7 @@ def main():
     baseline='lab_native_official_'+uuid.uuid4().hex[:10]
     compact='lab_native_compact_'+uuid.uuid4().hex[:10]
     report={'kind':'fresh_native_compact_complete_processing_pair','official_score':False,
+            'candidate_implementation':args.candidate,
             'official_eligibility_unproven':True,'timestamp_utc':datetime.now(timezone.utc).isoformat(),
             'rows':args.rows,'official_database':baseline,'candidate_database':compact,
             'implementation_identity':frozen,'source_snapshot':snapshot(),'runs':[],
@@ -67,7 +74,7 @@ def main():
     assert inputs[0]==inputs[1]
     report['identical_input_digest']=inputs[0];write_report(output,report)
     for mode,name,module,extra in [('official',baseline,'bench.service_run',['--establish-reference']),
-                                    ('native_compact',compact,'bench.native_compact_probe',['--reference',baseline])]:
+                                    ('native_compact',compact,candidate_module,['--reference',baseline])]:
         assert identity()==frozen
         with lab.connect('postgres',autocommit=True) as admin:
             assert not admin.execute("SELECT pid FROM pg_stat_activity WHERE backend_type='client backend' AND state<>'idle' AND pid<>%s",(admin.info.backend_pid,)).fetchall(), 'No overlapping native jobs during timing'
@@ -86,13 +93,14 @@ def main():
             assert child['unmodified_reference_established'] is True and child['exact_six_tables'] is False
         else:
             assert child['exact_six_tables'] is True and child['execution_architecture']['safe_domain'] is True
-            assert child['native_compact_hook_sha256']==frozen['hook_sha256']
+            assert child['native_minimal_hook_sha256' if args.candidate=='minimal' else 'native_compact_hook_sha256']==frozen['hook_sha256']
             assert len(child['exact_comparison_details'])==6
         assert child['destination_warmup_before_measured_run'] is False
         with lab.connect(name,autocommit=True) as c:
             assert source_digest(c,scopes)==inputs[0]
             assert c.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0] is None
-            assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(candidate.package()['extension'],)).fetchall()
+            from bench.native_compact_probe import package
+            assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(package()['extension'],)).fetchall()
         row={'mode':mode,'database':name,'report':str(path.relative_to(ROOT)),
              'wall_seconds':child['wall_seconds'],
              'native_measured_seconds':sum(i['seconds'] for i in child['timing_report']['items'] if i.get('include_in_total',True)),

@@ -19,9 +19,11 @@ from tests.equivalence.oracle import protected_schema_signature,sequence_signatu
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--database',required=True);p.add_argument('--repeats',type=int,default=3)
+    p.add_argument('--wide-parallel',action='store_true',help='Compare the prior control to 4/8 maintenance workers with sufficient shared sort memory')
     p.add_argument('--output',required=True);args=p.parse_args()
     output=(ROOT/args.output).resolve();assert output.is_relative_to(ROOT/'reports') and not output.exists()
     modes=[('128m_workers2',128,2),('128m_workers0',128,0),('512m_workers0',512,0),('512m_workers2',512,2)]
+    if args.wide_parallel:modes=[('128m_workers2',128,2),('512m_workers4',512,4),('512m_workers8',512,8),('1024m_workers8',1024,8)]
     report={'kind':'native_maintenance_rollback_component','database':args.database,
             'timestamp_utc':datetime.now(timezone.utc).isoformat(),'driver_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'runs':[],'whole_pipeline_score':False,'scope':'Real original four-table index rebuild and six complete FK validations on already populated retained output, warmed repeated rotating order. Every trial rolls back. No row DML, final ingest/commit/version cost or complete-processing improvement claimed.'}

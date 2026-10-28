@@ -63,3 +63,12 @@ compact (87.274601% reduction), with all exact six outputs and original
 mandatory gates. A separate live full EXCEPT ALL/source/catalog/version audit
 also passes after component experiments. This remains a single local pair;
 90%, repeated stability and official deployment/eligibility are not established.
+
+The next opt-in minimal-WAL empty-target storage reset gives a fresh 1M pair
+of 103.818006s original / 11.689431s candidate (88.740459%), both on identical
+durable server settings. All full-output/native gates and independent live
+EXCEPT ALL checks pass, as do pre/post-commit server-stop recovery and populated
+dump/restore. It still falls short of 90%. The separate typed-axis COPY loader
+is only a superuser-restricted component experiment and is not in that pair;
+see docs/NATIVE_AXIS_RESEARCH.md. The research cluster is restored to replica
+after the bounded minimal-WAL experiment.

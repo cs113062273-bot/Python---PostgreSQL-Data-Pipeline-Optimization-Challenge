@@ -1,6 +1,15 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
+Latest single local 1M pair: **103.818006s original / 11.689431s compact C
+with durable minimal-WAL empty-table reset, 88.740459% reduction**. Identical
+server settings, exact six outputs, source, native integrity/counters/versions
+and independent live EXCEPT ALL audit pass. Pre/post-commit actual server
+crashes, exact retry and populated dump/restore also pass. Native sequence
+crash gaps are checked against recorded WAL reservations, not claimed gapless.
+One AB pair; no 90%, repeated stability, Linux/SSH or official eligibility claim.
+See native-minimal-official-1m-pair.json and ACTIVE_90.md for all limitations.
+
 New best single local 1M pair (2026-10-29): **106.639991s original /
 13.570365s compact C, 87.274601% less complete service wall**. Candidate
 passes six exact typed outputs, counters, protected catalog/sequence/source

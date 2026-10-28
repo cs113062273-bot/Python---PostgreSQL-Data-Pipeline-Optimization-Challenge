@@ -1125,6 +1125,97 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-28T17:46:59.310098+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_de2663851f",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-v2-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_dfb8e0d086",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_e8f1f2b163",
+          "mode": "baseline",
+          "receipt": "reports/fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_efb596d78c",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-v2-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_f5b800b8cc",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

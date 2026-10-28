@@ -26,6 +26,7 @@ def main():
     p.add_argument('--data-dir',required=True)
     p.add_argument('--port',type=int,default=55432)
     p.add_argument('--startup-log',help='Optional project-private recovery log')
+    p.add_argument('--wal-level',choices=['minimal','replica'],help='Preserve the explicit research WAL setting across restart')
     p.add_argument('--fresh-service-retry',action='store_true',help='Model a restarted processing worker with fresh connection state after server recovery')
     args=p.parse_args()
     directory=Path(args.data_dir).resolve();runtime=(ROOT/'.runtime').resolve()
@@ -36,6 +37,7 @@ def main():
         assert c.info.host in ('localhost','127.0.0.1','::1')
         assert Path(c.execute('SHOW data_directory').fetchone()[0]).resolve()==directory
         assert c.execute('SELECT inet_server_port()').fetchone()[0]==args.port
+        if args.wal_level:assert c.execute('SHOW wal_level').fetchone()==(args.wal_level,)
         assert not c.execute("SELECT 1 FROM pg_stat_activity WHERE backend_type='client backend' AND state<>'idle' AND pid<>pg_backend_pid()").fetchall(),'Another active job exists'
     db='lab_native_crash_'+uuid.uuid4().hex[:8]
     create_fixture(db);seed_initial_versions(db)
@@ -82,7 +84,9 @@ def main():
     print('Actual COPY data/counters uncommitted, six FKs absent; immediate private-server stop',flush=True)
     subprocess.run([args.pg_ctl,'-D',str(directory),'-m','immediate','-w','stop'],check=True)
     restart=time.monotonic()
-    subprocess.run([args.pg_ctl,'-D',str(directory),'-l',str(startup_log),'-o',f'-h 127.0.0.1 -p {args.port}','-W','start'],check=True)
+    options=f'-h 127.0.0.1 -p {args.port}'
+    if args.wal_level:options+=f' -c wal_level={args.wal_level} -c max_wal_senders={0 if args.wal_level=="minimal" else 10}'
+    subprocess.run([args.pg_ctl,'-D',str(directory),'-l',str(startup_log),'-o',options,'-W','start'],check=True)
     last_status=restart
     while True:
         try:
@@ -98,6 +102,7 @@ def main():
     assert not thread.is_alive() and outcome.get('error')
     assert outcome['copy_cleanup']['cleanup_success'],outcome
     with connect(db,autocommit=True) as c:
+        if args.wal_level:assert c.execute('SHOW wal_level').fetchone()==(args.wal_level,)
         assert protected_schema_signature(c)==before_schema
         assert sequence_signature(c)==before_sequences
         assert fingerprints(c)==before_empty and source_sha(c)==before_source

@@ -1,0 +1,16 @@
+{
+  "kind": "actual_custom_dump_restore_completed_guarded_pipeline",
+  "passed": true,
+  "database": "lab_native_minimal_durable_35b468b7",
+  "preserved_original": "lab_dump_archive_aa7c371896",
+  "dump_bytes": 40283,
+  "exact_six_tables": true,
+  "schema_indexes_validated_constraints": true,
+  "actual_source_sha256_preserved": true,
+  "counters_preserved": true,
+  "native_sequence_options_and_ownership_preserved": true,
+  "six_versions_and_compiler_provenance_preserved": true,
+  "physical_rows_including_native_identity_values_preserved": true,
+  "sequence_last_value_and_is_called_preserved": true,
+  "scope": "same PostgreSQL 17, role and database name; control database retained; GUI snapshot filesystem flow not tested"
+}

@@ -1,6 +1,16 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
+Latest single local 1M pair: **103.818006s original / 11.689431s candidate,
+88.740459% less complete service wall**. Both use the same durable minimal-WAL
+configuration; the candidate resets only proven empty destination storage in
+the data transaction. All six exact outputs and native gates, independent live
+EXCEPT ALL/source/catalog/version audit, pre/post-commit server crash checks
+and populated dump/restore pass. It remains below 90% by 1.307630s for this
+pair. Repeatability and official Linux/SSH/eligibility remain unproven. The
+isolated cluster is restored to replica afterward, and app defaults stay opt-in.
+See reports/native-minimal-official-1m-pair.json. Replica-mode results follow.
+
 New best single local 1M pair (2026-10-29): **106.639991s original /
 13.570365s compact C, 87.274601% less full-service wall**. All six exact
 outputs/counters/catalog/sequence/source/six-version checks pass. One AB pair,

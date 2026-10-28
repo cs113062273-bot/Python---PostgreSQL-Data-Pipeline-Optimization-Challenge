@@ -1,0 +1,58 @@
+{
+  "kind": "actual_private_server_immediate_stop_during_native_copy",
+  "database": "lab_native_crash_76d2f2b4",
+  "passed": true,
+  "restart_seconds": 6.109000000000378,
+  "rollback_schema_sequence_source_counters": true,
+  "copy_files_removed_after_crash": true,
+  "native_retry_exact_six_tables": true,
+  "versions": [
+    {
+      "table_name": "public.table3",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table4",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table1",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table5",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table6",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table2",
+      "version_code": "0001",
+      "dependency_count": 1
+    }
+  ],
+  "execution_architecture": {
+    "mode": "guarded_copy",
+    "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+    "batch_sql_sha256": "5132be156da8ae6f0676227b392e1d91f544cc115e6f71bcea8106ba5e87acc0",
+    "copy_workspace": {
+      "cleanup_success": true,
+      "cleanup_errors": [],
+      "setup_seconds": 0.0006314000002021203,
+      "cleanup_seconds": 0.0007237000008899486
+    },
+    "safe_domain": true
+  },
+  "fresh_service_retry": true,
+  "scope": "Actual native COPY/pre-commit server crash/WAL recovery/full service retry; startup spans the whole retained research cluster, not a scored recovery duration or post-commit control saga.",
+  "candidate_hook_sha256": "fbbf3b21da2d957fca1e2e26823c1c1c9c9976455fedccc2deed5b33f5284cba",
+  "explicit_wal_level": "minimal",
+  "official_eligibility_unproven": true
+}

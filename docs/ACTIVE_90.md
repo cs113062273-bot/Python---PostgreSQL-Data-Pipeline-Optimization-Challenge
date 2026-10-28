@@ -20,7 +20,54 @@ Historical experiment details remain in ACTIVE_85.md.
 
 ## Current work
 
-**New best single 1M pair (2026-10-29): 87.274601% less complete service wall**,
+**New best single 1M pair: 88.740459% less complete service wall**, unchanged
+official **103.818006s** versus minimal-WAL compact candidate **11.689431s**.
+The actual paired 90% threshold is **10.381801s**, leaving **1.307630s**.
+Both runs use the same explicit `wal_level=minimal` configuration with fsync,
+full_page_writes and synchronous_commit on. This result depends on that
+server configuration; it is separate from the default replica-mode 87.274601%
+pair below, and no cross-cohort control is substituted. One local AB pair,
+not repeatability, Linux/SSH or official eligibility qualification.
+See native-minimal-official-1m-pair.json.
+
+The only new processing step resets the proven empty canonical six-table
+storage inside its data transaction, after original bulk metadata validation.
+TRUNCATE uses CONTINUE IDENTITY and RESTRICT. Missing TRUNCATE privilege,
+external incoming FKs or a different WAL mode skip this extra optimization;
+malformed data/unsupported receiving metadata retain the original full fallback.
+No source row, generator/seed, final persistence, constraint, sequence default
+or application user-function validator is changed. Native full key/FK validation,
+durable commit and six versions remain inside the processing timer.
+
+The new adapter passes 121 actual native COPY/output/first-error cases, eleven
+receiving-layout/default cases, sixteen pre-commit server/backend/file faults
+with exact retry and six versions, a real immediate-server-stop pre-commit
+WAL rollback and retry, a populated dump/restore, and a real post-success
+immediate server stop after data plus all six version commits were acknowledged.
+All committed physical rows, source, counters, catalog and versions survive.
+The first post-success harness incorrectly required gapless crash sequence
+state and failed on table3 4 -> 33. Its record is retained. The passing v2
+captures each native sequence's last_value/log_cnt before stopping and requires
+the recovered value to stay within that exact preexisting WAL reservation;
+table3's upper bound was already 33. Every other state comparison remains exact.
+See recovery-native-minimal-postcommit-durable-v2.json. No power-cut, PITR,
+replication, or post-data/pre-version saga recovery is claimed.
+
+Independent live rechecking after the post-success crash passes six full
+bidirectional EXCEPT ALL comparisons, source bytes, counters, protected catalog,
+sequence options/ownership, native batch SHA and all six versions. It also
+checks that both original and candidate recorded identical server settings.
+See native-minimal-1m-independent-audit.json. The isolated 55433 service is
+restored to replica afterward; 55432 is untouched. Software and app defaults
+remain opt-in. Detailed typed-axis research is in NATIVE_AXIS_RESEARCH.md.
+
+Real six-FK planner components (three rotating trials per mode) give original
+2.511203s / forced merge 2.434900s / lower index cost 2.345354s. A separate
+original-versus-forced-hash comparison gives 2.477318s / 2.510837s. Visibility
+and warm-cache limitations are recorded; neither establishes a reliable whole
+service gain, so neither is adopted.
+
+**Prior best single replica-mode 1M pair: 87.274601% less complete service wall**,
 unchanged official **106.639991s** versus compact native C **13.570365s**.
 The candidate's actual six-table native typed value/multiplicity comparison,
 managed counters, protected catalog, sequence options/ownership, source digest,

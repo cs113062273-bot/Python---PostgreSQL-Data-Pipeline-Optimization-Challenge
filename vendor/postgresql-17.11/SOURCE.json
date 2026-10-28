@@ -1,0 +1,22 @@
+{
+  "upstream": "PostgreSQL",
+  "tag": "REL_17_11",
+  "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+  "files": [
+    {
+      "path": "vendor\\postgresql-17.11\\copyfrom.c",
+      "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+      "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+    },
+    {
+      "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+      "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+      "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+    },
+    {
+      "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+      "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+      "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+    }
+  ]
+}

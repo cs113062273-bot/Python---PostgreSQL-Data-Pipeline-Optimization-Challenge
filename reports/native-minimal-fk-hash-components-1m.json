@@ -1,0 +1,153 @@
+{
+  "kind": "native_full_fk_planner_component",
+  "database": "lab_native_compact_7406da3d92",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "original",
+      "seconds": 2.323416700000962,
+      "constraints": {
+        "table1_id_column_3_fkey": 0.9661582000007911,
+        "table1_id_column_4_fkey": 0.14937079999981506,
+        "table2_id_column_2_fkey": 0.4581417999997939,
+        "table5_id_column_2_fkey": 0.35424390000116546,
+        "table6_id_column_2_fkey": 0.2992668999995658,
+        "table6_id_column_3_fkey": 0.09623509999983071
+      },
+      "all_six_full_native_validations": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 0,
+      "mode": "hash_only",
+      "seconds": 2.5108368000019254,
+      "constraints": {
+        "table1_id_column_3_fkey": 1.1569925000003423,
+        "table1_id_column_4_fkey": 0.1569082999994862,
+        "table2_id_column_2_fkey": 0.4738116999997146,
+        "table5_id_column_2_fkey": 0.34610330000032263,
+        "table6_id_column_2_fkey": 0.2822924000010971,
+        "table6_id_column_3_fkey": 0.09472860000096262
+      },
+      "all_six_full_native_validations": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 1,
+      "mode": "hash_only",
+      "seconds": 2.5338168000034784,
+      "constraints": {
+        "table1_id_column_3_fkey": 1.1699007000006532,
+        "table1_id_column_4_fkey": 0.15558840000085183,
+        "table2_id_column_2_fkey": 0.4673794000009366,
+        "table5_id_column_2_fkey": 0.3367097999998805,
+        "table6_id_column_2_fkey": 0.30969110000114597,
+        "table6_id_column_3_fkey": 0.09454740000001038
+      },
+      "all_six_full_native_validations": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 1,
+      "mode": "original",
+      "seconds": 2.4773184999994555,
+      "constraints": {
+        "table1_id_column_3_fkey": 1.1280244999998104,
+        "table1_id_column_4_fkey": 0.15570280000065395,
+        "table2_id_column_2_fkey": 0.47890430000006745,
+        "table5_id_column_2_fkey": 0.3099313999991864,
+        "table6_id_column_2_fkey": 0.3113286000007065,
+        "table6_id_column_3_fkey": 0.09342689999903087
+      },
+      "all_six_full_native_validations": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 2,
+      "mode": "original",
+      "seconds": 2.5399662000017997,
+      "constraints": {
+        "table1_id_column_3_fkey": 1.2018155000005208,
+        "table1_id_column_4_fkey": 0.15883859999848937,
+        "table2_id_column_2_fkey": 0.47446640000089246,
+        "table5_id_column_2_fkey": 0.30240000000048894,
+        "table6_id_column_2_fkey": 0.30858900000021094,
+        "table6_id_column_3_fkey": 0.09385670000119717
+      },
+      "all_six_full_native_validations": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 2,
+      "mode": "hash_only",
+      "seconds": 2.4144123999994918,
+      "constraints": {
+        "table1_id_column_3_fkey": 1.1232774999989488,
+        "table1_id_column_4_fkey": 0.15610519999972894,
+        "table2_id_column_2_fkey": 0.44600700000046345,
+        "table5_id_column_2_fkey": 0.30658819999916886,
+        "table6_id_column_2_fkey": 0.2884393000003911,
+        "table6_id_column_3_fkey": 0.09399520000079065
+      },
+      "all_six_full_native_validations": true,
+      "all_private_ddl_rolled_back": true
+    }
+  ],
+  "driver_sha256": "13bdccf75266cfeeee3eeb4519bef4aaaa06aa3b3b926cbce5e7e2cda29f4b9a",
+  "scope": "Six actual ALTER TABLE ADD validated FKs, rotating retained completed output. All DDL and settings roll back. Existing relation visibility/cache state may differ from freshly ingested rows. No full-service speedup claim.",
+  "relation_visibility": [
+    [
+      "pgdm_table_row_counts",
+      -1.0,
+      0,
+      0
+    ],
+    [
+      "raw_data",
+      999965.0,
+      250008,
+      0
+    ],
+    [
+      "table1",
+      1000000.0,
+      11424,
+      11364
+    ],
+    [
+      "table2",
+      2321522.0,
+      19400,
+      0
+    ],
+    [
+      "table3",
+      4.0,
+      1,
+      0
+    ],
+    [
+      "table4",
+      27.0,
+      1,
+      0
+    ],
+    [
+      "table5",
+      1000000.0,
+      6384,
+      0
+    ],
+    [
+      "table6",
+      1000000.0,
+      6384,
+      0
+    ]
+  ],
+  "summary": {
+    "original": 2.4773184999994555,
+    "hash_only": 2.5108368000019254
+  },
+  "passed": true
+}

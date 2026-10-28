@@ -2750,5 +2750,7 @@
   "dump_bytes": 131190888,
   "incomplete_restore_removed": true,
   "cleanup_timestamp_utc": "2026-10-28T10:39:39.399036+00:00",
-  "cleanup_scope": "Only failed restore removed; full original native bytes/catalog/sequences independently rechecked against the pre-dump manifest; dump SHA verified; original and all versions retained."
+  "cleanup_scope": "Only failed restore removed; full original native bytes/catalog/sequences independently rechecked against the pre-dump manifest; dump SHA verified; original and all versions retained.",
+  "current_original_state": "Retired by subsequently completed template-backed archive; this original full-duplicate restore attempt remains failed.",
+  "subsequent_verified_archive": "reports/native-archives/lab_native_variant_47bfb797fe-template-backed.json"
 }

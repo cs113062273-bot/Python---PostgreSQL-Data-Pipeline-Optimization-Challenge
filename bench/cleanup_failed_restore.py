@@ -12,12 +12,12 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--manifest',required=True);args=p.parse_args()
     manifest=(ROOT/args.manifest).resolve();assert manifest.is_relative_to(ROOT/'reports/native-archives')
     report=json.loads(manifest.read_text(encoding='utf8'))
-    assert report['kind']=='verified_native_clone_archive' and not report['passed'] and not report['original_removed']
+    assert report['kind'] in ('verified_native_clone_archive','native_template_backed_archive') and not report['passed'] and not report['original_removed']
     original=report['database'];restored=report['restore_test_database']
     assert re.fullmatch('lab_native_variant_[0-9a-f]{10}',original)
-    assert re.fullmatch('lab_archive_verify_[0-9a-f]{10}',restored)
-    archive=(ROOT/report['dump']).resolve();assert archive.is_relative_to(ROOT/'.runtime/native_archives')
-    assert digest(archive)==report['dump_sha256']
+    assert re.fullmatch('lab_(archive_verify|template_archive)_[0-9a-f]{10}',restored)
+    archive=(ROOT/report.get('dump',report.get('archive'))).resolve();assert archive.is_relative_to(ROOT/'.runtime/native_archives')
+    assert digest(archive)==report.get('dump_sha256',report.get('archive_sha256'))
     with connect('postgres',autocommit=True) as admin:
         assert admin.info.host in ('127.0.0.1','localhost','::1')
         assert Path(admin.execute('SHOW data_directory').fetchone()[0]).resolve()==(ROOT/'.runtime/pgdata').resolve()

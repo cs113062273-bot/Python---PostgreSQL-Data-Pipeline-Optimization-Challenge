@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import time
 import uuid
@@ -107,6 +108,7 @@ def main():
         assert not admin.execute('SELECT pid FROM pg_stat_activity WHERE datname=%s',(args.database,)).fetchall(),'Do not interrupt clients'
         encoding,collation,ctype=admin.execute('SELECT pg_encoding_to_char(encoding),datcollate,datctype FROM pg_database WHERE datname=%s',(args.database,)).fetchone()
         if not args.apply:print('Would dump, restore, byte-check and archive',args.database);return
+        assert shutil.disk_usage(ROOT).free>=8*1024**3,'Full duplicate restore requires >=8 GiB headroom; use an explicitly qualified template-backed archive for superseded pilots'
         with connect(os.environ.get('PDM_CONTROL_DB','postgres_data_manager'),autocommit=True) as control:
             versions=history(control,args.database);assert len([v for v, in versions if v['version_code']!='0000'])==6
         if args.resume_verified:

@@ -1,0 +1,759 @@
+{
+  "kind": "fresh_local_original_service_complete_processing",
+  "official_score": false,
+  "timestamp_utc": "2026-10-28T12:28:48.519588+00:00",
+  "template": "lab_template_1m",
+  "reference": "lab_1m",
+  "comparison_variant": "official",
+  "implementation_identity": {
+    "atomic_compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+    "unlogged_hook_sha256": "2f9e93b5add713ff0235dbe1d8fbbf028018d684f660e2b2e9bbfda50bcea469",
+    "server_copy_hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+    "fast_transport_hook_sha256": "d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a",
+    "refined_copy_hook_sha256": "c6cf2fa6e758d8b98bd81bbe741a2cafae57d1ec8a0f637cdc95d142c6ad002b",
+    "scalar_copy_hook_sha256": "89e3c4d89cd2c572c0abfeac893298afed6c8a40fbb69b97e8bb966aba2618f1",
+    "early_copy_hook_sha256": "441bc171302d48991a26b9b1c8ba689b967f96b5870c6bc88002f9686d0e4051",
+    "projectset_hook_sha256": "21aa3850fc7f03de82be634b4ef27bd19efd820b343f89ee975068e15a5b7442",
+    "script_transport_hook_sha256": "decf73ea1b040a8135cc1b1d167a51040c9cad123ce72026907ce4f89333ddf5",
+    "scaled_int_hook_sha256": "f1a1eb60a18688e2898a9f9b8289c9618e729554d50677ad1da9cd311eb9a1a0",
+    "memo_hook_sha256": "3e581d86041fc4a60a2ef12a0592d7894ed6eebaed23084f235e947d73ccb49f",
+    "calendar_hook_sha256": "f5998f1a983fd98fa1b6ecd6d0d38e16abbbaffa48f7aeba7a0192f787ad4087",
+    "backend_cpu_hook_sha256": "d7cdb5b4953e7d041a72e1494f9a20c90e07f288b089e77d16c2690afd48f566",
+    "inline_hook_sha256": "f18ae482467eda6b0511ae75dc6b9b3d3a6120c59b41e7f587a42ff86402f74e",
+    "date_shape_hook_sha256": "231d702c30258dd6622d221b6582ddcaf856413b71498e82d25c75a6e278ba61",
+    "combined_metadata_hook_sha256": "09e9af9e004ce5bcae413c4250f77c7ec7eaf27e0041c910b58f7d93cf63db0d",
+    "parent_hint_hook_sha256": "f66a5ba84474973e308872b393ea935a99866c09599f5757fad92893510f6b9b",
+    "driver_sha256": "5fb782ca65adc19be349e179969a7835e31ffa9b1fd903b790e76f08dede5622",
+    "service_driver_sha256": "20cbc97e4af25d628b86ac216c38f27abffa8df7f027d4ba0e724778ac35c84b",
+    "source_snapshot_sha256": "0ab4384b24d840cca3331060e036c8fdfc726f49273bb2a1d3da58e4df12976e"
+  },
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "official",
+      "variant": "official",
+      "database": "lab_native_variant_7e328e96c9",
+      "wall_seconds": 113.17439329999615,
+      "native_measured_seconds": 113.07916809998831,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-parent-hint-official-1m-pair\\1-official.json",
+      "execution_architecture": null
+    },
+    {
+      "repeat": 0,
+      "mode": "parent_hint_copy",
+      "variant": "parent_hint_copy",
+      "database": "lab_native_variant_6c1c55a43e",
+      "wall_seconds": 18.202446900002542,
+      "native_measured_seconds": 18.115297400061355,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-parent-hint-official-1m-pair\\1-parent_hint_copy.json",
+      "execution_architecture": {
+        "mode": "guarded_copy",
+        "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+        "batch_sql_sha256": "8ee12cb7ff812b3842541086b80a740d3c6601f8295ed89e7d1a87d48b4d2ae6",
+        "copy_workspace": {
+          "cleanup_success": true,
+          "cleanup_errors": [],
+          "setup_seconds": 0.0009840999991865829,
+          "cleanup_seconds": 0.027188600011868402
+        },
+        "safe_domain": true
+      }
+    }
+  ],
+  "method": "Fresh FILE_COPY per variant/run, rotating order, no affinity or destination warmup. Exact six-table comparison first run per variant; fingerprints/schema/sequence/counters/six versions every run. All preflight/proof/COPY/index/FK/commit/version work inside complete processing wall. Clone/oracle checks excluded. This compares the explicitly named variants, not an unmeasured official baseline.",
+  "implementation_sources": {
+    "pipeline\\bulk_fks.py": {
+      "sha256_normalized_lf": "11d25c762143c9b278354c8e80a4065e58dae2e557905cf65200cc453e80296d",
+      "archive": "reports\\source\\11d25c762143c9b278354c8e80a4065e58dae2e557905cf65200cc453e80296d.py"
+    },
+    "pipeline\\bulk_indexes.py": {
+      "sha256_normalized_lf": "9a9895dcf557cdb709621c38710d70c7cf89214f337338076a4dedcfdd343937",
+      "archive": "reports\\source\\9a9895dcf557cdb709621c38710d70c7cf89214f337338076a4dedcfdd343937.py"
+    },
+    "pipeline\\bulk_sequences.py": {
+      "sha256_normalized_lf": "4f677bcf78e53b38f98e5e5816817b0869fa6d9a32c56d574b607ba7d9baaea3",
+      "archive": "reports\\source\\4f677bcf78e53b38f98e5e5816817b0869fa6d9a32c56d574b607ba7d9baaea3.py"
+    },
+    "pipeline\\checkpoints.py": {
+      "sha256_normalized_lf": "672e9d38a28d303c91d5d5f6d9cc9044ef3766ba6ff519522417786de09eb71a",
+      "archive": "reports\\source\\672e9d38a28d303c91d5d5f6d9cc9044ef3766ba6ff519522417786de09eb71a.py"
+    },
+    "pipeline\\guarded_normalization.py": {
+      "sha256_normalized_lf": "4d842ca29848c32cb17f4be638faf1c7d354f3235a4e674fe900b6205c80c952",
+      "archive": "reports\\source\\4d842ca29848c32cb17f4be638faf1c7d354f3235a4e674fe900b6205c80c952.py"
+    },
+    "pipeline\\guards.py": {
+      "sha256_normalized_lf": "e22b5844439bfe5a9a390ad6ef8ec98997a66eb9229ef21d679a28288f73cb5e",
+      "archive": "reports\\source\\e22b5844439bfe5a9a390ad6ef8ec98997a66eb9229ef21d679a28288f73cb5e.py"
+    },
+    "pipeline\\local_diagnostics.py": {
+      "sha256_normalized_lf": "7504cf91fd8771b1de949e62c195e03deab17430f2cfa3260aaab2880a2ecf16",
+      "archive": "reports\\source\\7504cf91fd8771b1de949e62c195e03deab17430f2cfa3260aaab2880a2ecf16.py"
+    },
+    "pipeline\\local_service.py": {
+      "sha256_normalized_lf": "8bc79acb206e3530f011c849b4614adbaf7ec58a7a2b97807936b457a9f3c9d9",
+      "archive": "reports\\source\\8bc79acb206e3530f011c849b4614adbaf7ec58a7a2b97807936b457a9f3c9d9.py"
+    },
+    "pipeline\\native_copy.py": {
+      "sha256_normalized_lf": "1db7d1c17739aa0ec900b56b4dac7023875e9e0447924436081433008e31f45b",
+      "archive": "reports\\source\\1db7d1c17739aa0ec900b56b4dac7023875e9e0447924436081433008e31f45b.py"
+    },
+    "pipeline\\normalization.py": {
+      "sha256_normalized_lf": "269905fb8f9b5511a3b9e8eb53b67bc942e745847a9a728d6fada939d6fe58a5",
+      "archive": "reports\\source\\269905fb8f9b5511a3b9e8eb53b67bc942e745847a9a728d6fada939d6fe58a5.py"
+    },
+    "pipeline\\parallel_normalization.py": {
+      "sha256_normalized_lf": "402873faa17946773118731f53deae13f4fc141a28b1ddd3c180275e32bb0202",
+      "archive": "reports\\source\\402873faa17946773118731f53deae13f4fc141a28b1ddd3c180275e32bb0202.py"
+    },
+    "pipeline\\planner.py": {
+      "sha256_normalized_lf": "c9e024eef8184b21d28f7fd99aadeaa053c94406d44ad91898c219f85d60187b",
+      "archive": "reports\\source\\c9e024eef8184b21d28f7fd99aadeaa053c94406d44ad91898c219f85d60187b.py"
+    },
+    "pipeline\\psql_session.py": {
+      "sha256_normalized_lf": "1c85b461a88fd8df6cc4dc73dea170618664ddd1f9653b3d19947e8a5ae81a4e",
+      "archive": "reports\\source\\1c85b461a88fd8df6cc4dc73dea170618664ddd1f9653b3d19947e8a5ae81a4e.py"
+    },
+    "pipeline\\recipes.py": {
+      "sha256_normalized_lf": "75556e925fe060a87913e2dac932fffa6bf15b227167b350e1be200a0cd7ba69",
+      "archive": "reports\\source\\75556e925fe060a87913e2dac932fffa6bf15b227167b350e1be200a0cd7ba69.py"
+    },
+    "pipeline\\safe_domain.py": {
+      "sha256_normalized_lf": "027b6773ce2a4251a1edd54aaff0a2c7218e23fc8fbc0c1d6b7551b8b8c7b2a5",
+      "archive": "reports\\source\\027b6773ce2a4251a1edd54aaff0a2c7218e23fc8fbc0c1d6b7551b8b8c7b2a5.py"
+    },
+    "pipeline\\upstream.py": {
+      "sha256_normalized_lf": "aa90799f6ab37523c55baa7353f1fe92fc84b7e1a3df5e5a14b00694287817a9",
+      "archive": "reports\\source\\aa90799f6ab37523c55baa7353f1fe92fc84b7e1a3df5e5a14b00694287817a9.py"
+    },
+    "pipeline\\version_receipts.py": {
+      "sha256_normalized_lf": "f0b1bd3c053489f2d98e0191919875e91db14997c027d8a118de0fb29a285935",
+      "archive": "reports\\source\\f0b1bd3c053489f2d98e0191919875e91db14997c027d8a118de0fb29a285935.py"
+    },
+    "pipeline\\workspace.py": {
+      "sha256_normalized_lf": "5274bfb89c7cda5925e1afee207009ecd3e973ff3409474aad45f0b6f2bc4b27",
+      "archive": "reports\\source\\5274bfb89c7cda5925e1afee207009ecd3e973ff3409474aad45f0b6f2bc4b27.py"
+    },
+    "pipeline\\__init__.py": {
+      "sha256_normalized_lf": "3bfc13e1246994d2dc97b0ecdbbc2ebadca34a4f4facd3336e564d8767698bf5",
+      "archive": "reports\\source\\3bfc13e1246994d2dc97b0ecdbbc2ebadca34a4f4facd3336e564d8767698bf5.py"
+    },
+    "bench\\archive_native_clone.py": {
+      "sha256_normalized_lf": "a0ddcb9ce95712c026727399606bf106203c1b0a91eb4d2cc380821c075d6c53",
+      "archive": "reports\\source\\a0ddcb9ce95712c026727399606bf106203c1b0a91eb4d2cc380821c075d6c53.py"
+    },
+    "bench\\archive_stream_verified.py": {
+      "sha256_normalized_lf": "71d5e874f6a43694bcb8b098fa0604ebebd4fa6696968a6eac6fb96091e3af3f",
+      "archive": "reports\\source\\71d5e874f6a43694bcb8b098fa0604ebebd4fa6696968a6eac6fb96091e3af3f.py"
+    },
+    "bench\\archive_template_backed.py": {
+      "sha256_normalized_lf": "2bb1f9259068433f4ebcdfa8f7f3d19eee155a35e763adc3246197f676d4eacd",
+      "archive": "reports\\source\\2bb1f9259068433f4ebcdfa8f7f3d19eee155a35e763adc3246197f676d4eacd.py"
+    },
+    "bench\\audit_catalogs.py": {
+      "sha256_normalized_lf": "b435ba006e529c3bf8b5086f5bb8919bc1e2c874ad98b60c9b7e11d7c03e024d",
+      "archive": "reports\\source\\b435ba006e529c3bf8b5086f5bb8919bc1e2c874ad98b60c9b7e11d7c03e024d.py"
+    },
+    "bench\\audit_ranked_result.py": {
+      "sha256_normalized_lf": "861bdab9c03a0d532365d916fa569155ecce3fb0bddf765654e471f787e504a0",
+      "archive": "reports\\source\\861bdab9c03a0d532365d916fa569155ecce3fb0bddf765654e471f787e504a0.py"
+    },
+    "bench\\backend_cpu_probe.py": {
+      "sha256_normalized_lf": "d7cdb5b4953e7d041a72e1494f9a20c90e07f288b089e77d16c2690afd48f566",
+      "archive": "reports\\source\\d7cdb5b4953e7d041a72e1494f9a20c90e07f288b089e77d16c2690afd48f566.py"
+    },
+    "bench\\bounded_copy_resume_probe.py": {
+      "sha256_normalized_lf": "255417ab9b4b6ecbc70f1b0cc3e9e626b12a7493babefea600ae5d242048fec4",
+      "archive": "reports\\source\\255417ab9b4b6ecbc70f1b0cc3e9e626b12a7493babefea600ae5d242048fec4.py"
+    },
+    "bench\\bounded_float_probe.py": {
+      "sha256_normalized_lf": "9b24a3653bf5edba63d0fd0a588e75fc2548df4213c64f992f7e3ec784fa9303",
+      "archive": "reports\\source\\9b24a3653bf5edba63d0fd0a588e75fc2548df4213c64f992f7e3ec784fa9303.py"
+    },
+    "bench\\calendar_proof_probe.py": {
+      "sha256_normalized_lf": "0fb6a54663fa52647a9f5bd78311bd0fa0d2b24a72c2168d8e82161e829cdb3d",
+      "archive": "reports\\source\\0fb6a54663fa52647a9f5bd78311bd0fa0d2b24a72c2168d8e82161e829cdb3d.py"
+    },
+    "bench\\checkpoints.py": {
+      "sha256_normalized_lf": "58f8e60d54228b5eb4b7b93dba02bfebbedd0308ff6d6046aab43ae844afd5c9",
+      "archive": "reports\\source\\58f8e60d54228b5eb4b7b93dba02bfebbedd0308ff6d6046aab43ae844afd5c9.py"
+    },
+    "bench\\chunk_projection_probe.py": {
+      "sha256_normalized_lf": "543df2f65c1d4dcc6104330f03a8c068e6cedfea3c9c8bde8ceabed1b428a0ea",
+      "archive": "reports\\source\\543df2f65c1d4dcc6104330f03a8c068e6cedfea3c9c8bde8ceabed1b428a0ea.py"
+    },
+    "bench\\cleanup_failed_restore.py": {
+      "sha256_normalized_lf": "2e4015f604954d3e99f6d1c8c9b9923bd6cb2c4c592212529901abacfe5f2207",
+      "archive": "reports\\source\\2e4015f604954d3e99f6d1c8c9b9923bd6cb2c4c592212529901abacfe5f2207.py"
+    },
+    "bench\\clean_clones.py": {
+      "sha256_normalized_lf": "80ddbffedbbfda8c91bae9c2fe1c2b3d775a59f231650a31a6c3f047019dbc8b",
+      "archive": "reports\\source\\80ddbffedbbfda8c91bae9c2fe1c2b3d775a59f231650a31a6c3f047019dbc8b.py"
+    },
+    "bench\\clean_verification.py": {
+      "sha256_normalized_lf": "1cf0ee24fcbf787c42006315adf62b21709b35d38d9cbdaae07195bc2d93881e",
+      "archive": "reports\\source\\1cf0ee24fcbf787c42006315adf62b21709b35d38d9cbdaae07195bc2d93881e.py"
+    },
+    "bench\\combined_metadata_probe.py": {
+      "sha256_normalized_lf": "61debb971c75f38e01a2fbda622e8a7e4b58f3546b71f7353251c1d5e2a6126d",
+      "archive": "reports\\source\\61debb971c75f38e01a2fbda622e8a7e4b58f3546b71f7353251c1d5e2a6126d.py"
+    },
+    "bench\\common.py": {
+      "sha256_normalized_lf": "54248fd0f028728cb2c0ef9cc712dd11d951b45092b3982bacecb01d25f18f58",
+      "archive": "reports\\source\\54248fd0f028728cb2c0ef9cc712dd11d951b45092b3982bacecb01d25f18f58.py"
+    },
+    "bench\\compact_axis_boundaries.py": {
+      "sha256_normalized_lf": "072aedaa83b9214ac51d7056525a858c1f67c518a242d2efa3a04bae758e1d3d",
+      "archive": "reports\\source\\072aedaa83b9214ac51d7056525a858c1f67c518a242d2efa3a04bae758e1d3d.py"
+    },
+    "bench\\compact_axis_probe.py": {
+      "sha256_normalized_lf": "9bda512647a2d7b7efb293e94674179819e9557fbd3aafee0ab74b1d6a95fe2b",
+      "archive": "reports\\source\\9bda512647a2d7b7efb293e94674179819e9557fbd3aafee0ab74b1d6a95fe2b.py"
+    },
+    "bench\\control.py": {
+      "sha256_normalized_lf": "9ed5d368b2aba8f3bae75d711dabae722b570ad2e5b97f43a03a800a25cff7a1",
+      "archive": "reports\\source\\9ed5d368b2aba8f3bae75d711dabae722b570ad2e5b97f43a03a800a25cff7a1.py"
+    },
+    "bench\\copy_probe.py": {
+      "sha256_normalized_lf": "9a2eac255878f00b9dc5bbfed7e5e83960494f61d5dc09849614c75424f658b0",
+      "archive": "reports\\source\\9a2eac255878f00b9dc5bbfed7e5e83960494f61d5dc09849614c75424f658b0.py"
+    },
+    "bench\\crash_dump.py": {
+      "sha256_normalized_lf": "4bbee98e4addcc9ec96f8779b410e9ce7f96666ae73204a316ac78d07fcd2844",
+      "archive": "reports\\source\\4bbee98e4addcc9ec96f8779b410e9ce7f96666ae73204a316ac78d07fcd2844.py"
+    },
+    "bench\\ctas_profile.py": {
+      "sha256_normalized_lf": "75d5e5a75f92ec390d43ed44761524e64790721c075938a9607bac65d395485a",
+      "archive": "reports\\source\\75d5e5a75f92ec390d43ed44761524e64790721c075938a9607bac65d395485a.py"
+    },
+    "bench\\ctas_tuning_probe.py": {
+      "sha256_normalized_lf": "6d4ea871df58fbb30269794029c0eee446ce48c2e14e7eabfe280cb517243eba",
+      "archive": "reports\\source\\6d4ea871df58fbb30269794029c0eee446ce48c2e14e7eabfe280cb517243eba.py"
+    },
+    "bench\\date_shape_probe.py": {
+      "sha256_normalized_lf": "737edce6083ba0f46464f527f7136c999966e838937c394f0f8dcd5de02c7071",
+      "archive": "reports\\source\\737edce6083ba0f46464f527f7136c999966e838937c394f0f8dcd5de02c7071.py"
+    },
+    "bench\\early_copy_probe.py": {
+      "sha256_normalized_lf": "f450d7d92bd3ed336d2ab526ae5f4cd4716a8684233659525e993a0e5292c9d7",
+      "archive": "reports\\source\\f450d7d92bd3ed336d2ab526ae5f4cd4716a8684233659525e993a0e5292c9d7.py"
+    },
+    "bench\\extraction_probe.py": {
+      "sha256_normalized_lf": "73c199a228457b263151e6aeb9180d161683afea5dc5c14b1cdcb5fb5d182f39",
+      "archive": "reports\\source\\73c199a228457b263151e6aeb9180d161683afea5dc5c14b1cdcb5fb5d182f39.py"
+    },
+    "bench\\fast_transport_probe.py": {
+      "sha256_normalized_lf": "d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a",
+      "archive": "reports\\source\\d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a.py"
+    },
+    "bench\\fixture.py": {
+      "sha256_normalized_lf": "387d01efe856a400ea05a96282ef5ff1327456c526a51d09995fb38c37c5f740",
+      "archive": "reports\\source\\387d01efe856a400ea05a96282ef5ff1327456c526a51d09995fb38c37c5f740.py"
+    },
+    "bench\\fk_memory_probe.py": {
+      "sha256_normalized_lf": "a3d019417cae2cbe381054dde819d79b61f321512969294a8a2a70d73e851055",
+      "archive": "reports\\source\\a3d019417cae2cbe381054dde819d79b61f321512969294a8a2a70d73e851055.py"
+    },
+    "bench\\fresh.py": {
+      "sha256_normalized_lf": "51877e7212be11993efa24d8beeafdcb59c787e2f88cd4bcd9d575a8c4c1f8a4",
+      "archive": "reports\\source\\51877e7212be11993efa24d8beeafdcb59c787e2f88cd4bcd9d575a8c4c1f8a4.py"
+    },
+    "bench\\index_tuning_component.py": {
+      "sha256_normalized_lf": "103c1030eb9c2532ae1ea8461e6ca1792aa3657e02bcd15e3ef91ef47229766c",
+      "archive": "reports\\source\\103c1030eb9c2532ae1ea8461e6ca1792aa3657e02bcd15e3ef91ef47229766c.py"
+    },
+    "bench\\index_tuning_probe.py": {
+      "sha256_normalized_lf": "2eac066b3e4d49b44a639c41684982d2966495b8fa115de05ebac6bb50b6512f",
+      "archive": "reports\\source\\2eac066b3e4d49b44a639c41684982d2966495b8fa115de05ebac6bb50b6512f.py"
+    },
+    "bench\\json_table_probe.py": {
+      "sha256_normalized_lf": "769a7e12804a9f9e9d030d6e7719f5f212dcd7e025caf38140ba0b43182c729b",
+      "archive": "reports\\source\\769a7e12804a9f9e9d030d6e7719f5f212dcd7e025caf38140ba0b43182c729b.py"
+    },
+    "bench\\maintenance_probe.py": {
+      "sha256_normalized_lf": "734094ecfb8d4a8eaf6276f7f86a882dff667da12f3ce1f51c68b799448bf06e",
+      "archive": "reports\\source\\734094ecfb8d4a8eaf6276f7f86a882dff667da12f3ce1f51c68b799448bf06e.py"
+    },
+    "bench\\max_axis_probe.py": {
+      "sha256_normalized_lf": "a1ad2970bcfc9ecd091523423c67ebe8c59ab2eb9e971ff81fac326b61e3ff93",
+      "archive": "reports\\source\\a1ad2970bcfc9ecd091523423c67ebe8c59ab2eb9e971ff81fac326b61e3ff93.py"
+    },
+    "bench\\memo_axes_probe.py": {
+      "sha256_normalized_lf": "aca9ff2359ecef24d5a9520bcc3f0b9f16b268019eb3d4a36ba39746abcc07ac",
+      "archive": "reports\\source\\aca9ff2359ecef24d5a9520bcc3f0b9f16b268019eb3d4a36ba39746abcc07ac.py"
+    },
+    "bench\\memo_scalar_probe.py": {
+      "sha256_normalized_lf": "95417d45ff9d2259713858be181d81d5e3d0a04790d161a225568249a2d83261",
+      "archive": "reports\\source\\95417d45ff9d2259713858be181d81d5e3d0a04790d161a225568249a2d83261.py"
+    },
+    "bench\\metadata_framing_compare.py": {
+      "sha256_normalized_lf": "54669bf832e8d4bdfdbc006622d68d89791d61983c50532b95432d8b1c64ba34",
+      "archive": "reports\\source\\54669bf832e8d4bdfdbc006622d68d89791d61983c50532b95432d8b1c64ba34.py"
+    },
+    "bench\\native_binary_transfer.py": {
+      "sha256_normalized_lf": "c12419ab4e2d3ec9bc63c54803c90d75a37d6c94b406c2588c93a5cd6010956f",
+      "archive": "reports\\source\\c12419ab4e2d3ec9bc63c54803c90d75a37d6c94b406c2588c93a5cd6010956f.py"
+    },
+    "bench\\native_fresh.py": {
+      "sha256_normalized_lf": "63272c41eb2c51b5776c054d795fd218f9fe21060f40bbe4345ae392e19a6fdd",
+      "archive": "reports\\source\\63272c41eb2c51b5776c054d795fd218f9fe21060f40bbe4345ae392e19a6fdd.py"
+    },
+    "bench\\native_resources.py": {
+      "sha256_normalized_lf": "dcd9056da208d947fca25ae11e74cccf49b5d7cb7280a0d4563dec3cb5e934eb",
+      "archive": "reports\\source\\dcd9056da208d947fca25ae11e74cccf49b5d7cb7280a0d4563dec3cb5e934eb.py"
+    },
+    "bench\\native_resource_worker.py": {
+      "sha256_normalized_lf": "93a278c7502cf9de968d48b326094f1c26983078fe83416ca2d4ff2bc8ad3a81",
+      "archive": "reports\\source\\93a278c7502cf9de968d48b326094f1c26983078fe83416ca2d4ff2bc8ad3a81.py"
+    },
+    "bench\\native_variant_fresh.py": {
+      "sha256_normalized_lf": "5fb782ca65adc19be349e179969a7835e31ffa9b1fd903b790e76f08dede5622",
+      "archive": "reports\\source\\5fb782ca65adc19be349e179969a7835e31ffa9b1fd903b790e76f08dede5622.py"
+    },
+    "bench\\nested_plan_probe.py": {
+      "sha256_normalized_lf": "035aee036380d2ec6cba5a9a498640a28de717e041a1ff016a8aac57f6648362",
+      "archive": "reports\\source\\035aee036380d2ec6cba5a9a498640a28de717e041a1ff016a8aac57f6648362.py"
+    },
+    "bench\\null_first_scaled_probe.py": {
+      "sha256_normalized_lf": "ac574169866927fb704d1590217644e7b579a0c158ae6bf7a6c3ab20885e2a7f",
+      "archive": "reports\\source\\ac574169866927fb704d1590217644e7b579a0c158ae6bf7a6c3ab20885e2a7f.py"
+    },
+    "bench\\offset_projection_probe.py": {
+      "sha256_normalized_lf": "da5ec5d44d9642ef119260973b980a144a01c614f52ae087cc54f3aefa2ccb3a",
+      "archive": "reports\\source\\da5ec5d44d9642ef119260973b980a144a01c614f52ae087cc54f3aefa2ccb3a.py"
+    },
+    "bench\\parallel_probe.py": {
+      "sha256_normalized_lf": "bbc3272e02f10443c37abc7ebaf5d2da68e7a8fb8df6cdac619149958bbf89a1",
+      "archive": "reports\\source\\bbc3272e02f10443c37abc7ebaf5d2da68e7a8fb8df6cdac619149958bbf89a1.py"
+    },
+    "bench\\parent_hint_probe.py": {
+      "sha256_normalized_lf": "9ffe5c647ccab8216dc876cd096bd4a3f48e0c55867cc89edaf8439bd5da69a8",
+      "archive": "reports\\source\\9ffe5c647ccab8216dc876cd096bd4a3f48e0c55867cc89edaf8439bd5da69a8.py"
+    },
+    "bench\\parent_map_probe.py": {
+      "sha256_normalized_lf": "dd2f115a69ee1b3ae9590827175812c69b943a5607f26660fe4944cfa7031eff",
+      "archive": "reports\\source\\dd2f115a69ee1b3ae9590827175812c69b943a5607f26660fe4944cfa7031eff.py"
+    },
+    "bench\\parent_statistics_probe.py": {
+      "sha256_normalized_lf": "93a7ee22bff4753b9e5e14cce700d6ca2af201b1d4e33294bc52179336ca3531",
+      "archive": "reports\\source\\93a7ee22bff4753b9e5e14cce700d6ca2af201b1d4e33294bc52179336ca3531.py"
+    },
+    "bench\\parent_statistics_profile.py": {
+      "sha256_normalized_lf": "8042fd6bfa1705375cbe9f951401b5fe65108ddd0c3a10d5f387dea885cd5d16",
+      "archive": "reports\\source\\8042fd6bfa1705375cbe9f951401b5fe65108ddd0c3a10d5f387dea885cd5d16.py"
+    },
+    "bench\\per_field_proof_probe.py": {
+      "sha256_normalized_lf": "4d566280e7f54681ad5fd39f3631fd5e26a9f74261983cf9f6b4fd37489946f6",
+      "archive": "reports\\source\\4d566280e7f54681ad5fd39f3631fd5e26a9f74261983cf9f6b4fd37489946f6.py"
+    },
+    "bench\\phased_transport.py": {
+      "sha256_normalized_lf": "1b9c59368681fb0cada5556a4ea967eead28a5c12ba15f7ab28d049c01e6be1b",
+      "archive": "reports\\source\\1b9c59368681fb0cada5556a4ea967eead28a5c12ba15f7ab28d049c01e6be1b.py"
+    },
+    "bench\\prepare.py": {
+      "sha256_normalized_lf": "c760fecf521fe28641762ba304ec541bf9b969803630922a93c7953dcbbc8a2c",
+      "archive": "reports\\source\\c760fecf521fe28641762ba304ec541bf9b969803630922a93c7953dcbbc8a2c.py"
+    },
+    "bench\\profile.py": {
+      "sha256_normalized_lf": "459e728f86c210604a14171086e16222e8283be28e750087365d7d9fbd6404d9",
+      "archive": "reports\\source\\459e728f86c210604a14171086e16222e8283be28e750087365d7d9fbd6404d9.py"
+    },
+    "bench\\projection_pair.py": {
+      "sha256_normalized_lf": "1b5cd8d24dd01da16bc14993e6b5b59d14f4926dd2fc880272673c4e6fbc12f8",
+      "archive": "reports\\source\\1b5cd8d24dd01da16bc14993e6b5b59d14f4926dd2fc880272673c4e6fbc12f8.py"
+    },
+    "bench\\projectset_probe.py": {
+      "sha256_normalized_lf": "cf2d4ba2dd5f489af9d1ec87d15886f627c16a88da5bb07600e20a29cd766b14",
+      "archive": "reports\\source\\cf2d4ba2dd5f489af9d1ec87d15886f627c16a88da5bb07600e20a29cd766b14.py"
+    },
+    "bench\\proof_memoize_probe.py": {
+      "sha256_normalized_lf": "74568f48f2cf21fa494fa4eb666c1fe989d34fd2401870c36a280f349b1f26ab",
+      "archive": "reports\\source\\74568f48f2cf21fa494fa4eb666c1fe989d34fd2401870c36a280f349b1f26ab.py"
+    },
+    "bench\\proof_pattern_probe.py": {
+      "sha256_normalized_lf": "63e780f21fcbffa76d352ed4eb2098eec98f0e39767d08504ee4a94faf6cbd3c",
+      "archive": "reports\\source\\63e780f21fcbffa76d352ed4eb2098eec98f0e39767d08504ee4a94faf6cbd3c.py"
+    },
+    "bench\\reference.py": {
+      "sha256_normalized_lf": "0812d25b930f6ddacbe00a3fb15fc84ef8833aaec2226bbe3f4096e815e57c8e",
+      "archive": "reports\\source\\0812d25b930f6ddacbe00a3fb15fc84ef8833aaec2226bbe3f4096e815e57c8e.py"
+    },
+    "bench\\refined_copy_probe.py": {
+      "sha256_normalized_lf": "90d4ae76018ae8dc03ca40d701883c065ad5bec532d3b6718f79678bd8cd78a9",
+      "archive": "reports\\source\\90d4ae76018ae8dc03ca40d701883c065ad5bec532d3b6718f79678bd8cd78a9.py"
+    },
+    "bench\\release_profile.py": {
+      "sha256_normalized_lf": "2887bb0baab8a5e5b7b9eba3653185d5827c3b15bbe86954487a9915423e766a",
+      "archive": "reports\\source\\2887bb0baab8a5e5b7b9eba3653185d5827c3b15bbe86954487a9915423e766a.py"
+    },
+    "bench\\retire_failed_initialization.py": {
+      "sha256_normalized_lf": "b07fba11a8c5a88f6e341dac19f55aa409945b0ed25d8ff49334625a61118c4f",
+      "archive": "reports\\source\\b07fba11a8c5a88f6e341dac19f55aa409945b0ed25d8ff49334625a61118c4f.py"
+    },
+    "bench\\retire_json_oracle.py": {
+      "sha256_normalized_lf": "0c26f49844de4cc57e609de6366e838fad471ba786aeaa1337401ad7d8138c21",
+      "archive": "reports\\source\\0c26f49844de4cc57e609de6366e838fad471ba786aeaa1337401ad7d8138c21.py"
+    },
+    "bench\\run.py": {
+      "sha256_normalized_lf": "2ed34bc4a4fd7242f29e2bd26757a0d5ce127a32d579f6a7223083b479b6d947",
+      "archive": "reports\\source\\2ed34bc4a4fd7242f29e2bd26757a0d5ce127a32d579f6a7223083b479b6d947.py"
+    },
+    "bench\\scalar_copy_probe.py": {
+      "sha256_normalized_lf": "8da3fe49ef9f3d4251bc438821db7129eebb0b90e1f425113b33258557359c06",
+      "archive": "reports\\source\\8da3fe49ef9f3d4251bc438821db7129eebb0b90e1f425113b33258557359c06.py"
+    },
+    "bench\\scaled_int_probe.py": {
+      "sha256_normalized_lf": "ddba8e580333813b1738810aa72cb5c4f1a0d314d70d68942daebbe9e30b4a36",
+      "archive": "reports\\source\\ddba8e580333813b1738810aa72cb5c4f1a0d314d70d68942daebbe9e30b4a36.py"
+    },
+    "bench\\scaled_kernel_compare.py": {
+      "sha256_normalized_lf": "c8553d164bb555f151ec7491d9482cbef463870069cce1eef56ad72fa16ac211",
+      "archive": "reports\\source\\c8553d164bb555f151ec7491d9482cbef463870069cce1eef56ad72fa16ac211.py"
+    },
+    "bench\\script_transport_probe.py": {
+      "sha256_normalized_lf": "caca70c1274f4b6b1d0cf9027f5140d6959fdb0610296c2a86aed4859cea9dd4",
+      "archive": "reports\\source\\caca70c1274f4b6b1d0cf9027f5140d6959fdb0610296c2a86aed4859cea9dd4.py"
+    },
+    "bench\\server_copy_probe.py": {
+      "sha256_normalized_lf": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+      "archive": "reports\\source\\0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da.py"
+    },
+    "bench\\service_run.py": {
+      "sha256_normalized_lf": "20cbc97e4af25d628b86ac216c38f27abffa8df7f027d4ba0e724778ac35c84b",
+      "archive": "reports\\source\\20cbc97e4af25d628b86ac216c38f27abffa8df7f027d4ba0e724778ac35c84b.py"
+    },
+    "bench\\shadow_publish_probe.py": {
+      "sha256_normalized_lf": "4643c023ef71f889dac0ee76f502c29af3011a4bd0e44966f74baad7ecc30e4c",
+      "archive": "reports\\source\\4643c023ef71f889dac0ee76f502c29af3011a4bd0e44966f74baad7ecc30e4c.py"
+    },
+    "bench\\six_worker_probe.py": {
+      "sha256_normalized_lf": "6c341d692728ec88d4bb32d7c3788bbdcf76e157c315392322afb187e1475428",
+      "archive": "reports\\source\\6c341d692728ec88d4bb32d7c3788bbdcf76e157c315392322afb187e1475428.py"
+    },
+    "bench\\source_hash_probe.py": {
+      "sha256_normalized_lf": "a45c1a8f78d1bf7fb33be81ca93d0a1d27914d74e5ce52f2bd0f5571292150c1",
+      "archive": "reports\\source\\a45c1a8f78d1bf7fb33be81ca93d0a1d27914d74e5ce52f2bd0f5571292150c1.py"
+    },
+    "bench\\source_snapshot.py": {
+      "sha256_normalized_lf": "0ab4384b24d840cca3331060e036c8fdfc726f49273bb2a1d3da58e4df12976e",
+      "archive": "reports\\source\\0ab4384b24d840cca3331060e036c8fdfc726f49273bb2a1d3da58e4df12976e.py"
+    },
+    "bench\\sparse_proof_probe.py": {
+      "sha256_normalized_lf": "25f357b33d70a58a3abaf69da549f57e0e22303d8d953c7c624d4cf709f79d71",
+      "archive": "reports\\source\\25f357b33d70a58a3abaf69da549f57e0e22303d8d953c7c624d4cf709f79d71.py"
+    },
+    "bench\\summarize.py": {
+      "sha256_normalized_lf": "88cc1134777475d223712249b7b739c5c37ffc5ca00fab8395958c764a3f2f09",
+      "archive": "reports\\source\\88cc1134777475d223712249b7b739c5c37ffc5ca00fab8395958c764a3f2f09.py"
+    },
+    "bench\\t1_inline_probe.py": {
+      "sha256_normalized_lf": "1d417305a6de0a597e4d926bf9547c84c52920952313157d5c579045fe928dfe",
+      "archive": "reports\\source\\1d417305a6de0a597e4d926bf9547c84c52920952313157d5c579045fe928dfe.py"
+    },
+    "bench\\temporary_hint_probe.py": {
+      "sha256_normalized_lf": "8ba2819d4ecd4e8c7f8475de5ce41a2a62c24bdedc7cd10bb6d0c323d856d4ad",
+      "archive": "reports\\source\\8ba2819d4ecd4e8c7f8475de5ce41a2a62c24bdedc7cd10bb6d0c323d856d4ad.py"
+    },
+    "bench\\text_stage_probe.py": {
+      "sha256_normalized_lf": "e336edd535f832b64fc3305da635f9cb9ad599ab72b28074e42238be9e8c6c1f",
+      "archive": "reports\\source\\e336edd535f832b64fc3305da635f9cb9ad599ab72b28074e42238be9e8c6c1f.py"
+    },
+    "bench\\typed_stage_component.py": {
+      "sha256_normalized_lf": "3778a1e6916fabbf3d68f37a6cdf20838b676c00c6194438ebbe86407eedfbfc",
+      "archive": "reports\\source\\3778a1e6916fabbf3d68f37a6cdf20838b676c00c6194438ebbe86407eedfbfc.py"
+    },
+    "bench\\typed_stage_probe.py": {
+      "sha256_normalized_lf": "71c8d9a809512142a8643792b4054ba26c2b97df77dab5e97b3de270ba116e1c",
+      "archive": "reports\\source\\71c8d9a809512142a8643792b4054ba26c2b97df77dab5e97b3de270ba116e1c.py"
+    },
+    "bench\\unlogged_stage_probe.py": {
+      "sha256_normalized_lf": "2f9e93b5add713ff0235dbe1d8fbbf028018d684f660e2b2e9bbfda50bcea469",
+      "archive": "reports\\source\\2f9e93b5add713ff0235dbe1d8fbbf028018d684f660e2b2e9bbfda50bcea469.py"
+    },
+    "bench\\worker_degree_probe.py": {
+      "sha256_normalized_lf": "bed86a0250cc9a375c2a3ab79625125801e3eb165a513d7b20c31aa08a609d7d",
+      "archive": "reports\\source\\bed86a0250cc9a375c2a3ab79625125801e3eb165a513d7b20c31aa08a609d7d.py"
+    },
+    "bench\\__init__.py": {
+      "sha256_normalized_lf": "510c17d39d0caa350c29647d1fb93a8c607643cc2940679de71287de2863a86b",
+      "archive": "reports\\source\\510c17d39d0caa350c29647d1fb93a8c607643cc2940679de71287de2863a86b.py"
+    },
+    "tests\\test_recipes.py": {
+      "sha256_normalized_lf": "2cb86eab8bb1e5a03b4174b9151481ccde0630f9eb2748c38a24b0f5e814bb4f",
+      "archive": "reports\\source\\2cb86eab8bb1e5a03b4174b9151481ccde0630f9eb2748c38a24b0f5e814bb4f.py"
+    },
+    "tests\\__init__.py": {
+      "sha256_normalized_lf": "446621aec13fee13c564f60b3808aae95ffb94a6c5599d9a35dd5a382564db0d",
+      "archive": "reports\\source\\446621aec13fee13c564f60b3808aae95ffb94a6c5599d9a35dd5a382564db0d.py"
+    },
+    "tests\\equivalence\\oracle.py": {
+      "sha256_normalized_lf": "1853eea6f1f4372034c1469d66df65154283f2c56b0e0ec9076d2fa03f8bf381",
+      "archive": "reports\\source\\1853eea6f1f4372034c1469d66df65154283f2c56b0e0ec9076d2fa03f8bf381.py"
+    },
+    "tests\\equivalence\\tagged_comparator.py": {
+      "sha256_normalized_lf": "8ab472dd7e2cf7e790521d158a7174b7d129bcddb96d585a066bc7bbef29a7e1",
+      "archive": "reports\\source\\8ab472dd7e2cf7e790521d158a7174b7d129bcddb96d585a066bc7bbef29a7e1.py"
+    },
+    "tests\\equivalence\\__init__.py": {
+      "sha256_normalized_lf": "d0576b52e30995715481563c401a56ff3a4ec05938a34e8c888087a79346b943",
+      "archive": "reports\\source\\d0576b52e30995715481563c401a56ff3a4ec05938a34e8c888087a79346b943.py"
+    },
+    "tests\\recovery\\archive_streams.py": {
+      "sha256_normalized_lf": "8c1ba54a7b1ccbebc435179eef140cfdb0bdffe135ca7511313b35e4be8dad58",
+      "archive": "reports\\source\\8c1ba54a7b1ccbebc435179eef140cfdb0bdffe135ca7511313b35e4be8dad58.py"
+    },
+    "tests\\recovery\\bulk_atomic.py": {
+      "sha256_normalized_lf": "82d50f20ed8fe09dd76cb83b6138aff6924ab73ebc721ae0df5a640504c751b3",
+      "archive": "reports\\source\\82d50f20ed8fe09dd76cb83b6138aff6924ab73ebc721ae0df5a640504c751b3.py"
+    },
+    "tests\\recovery\\bulk_concurrency.py": {
+      "sha256_normalized_lf": "e46186f0fb547602f4c9ec23f615a4b5b1b349d25ae18782b3397a41558cec04",
+      "archive": "reports\\source\\e46186f0fb547602f4c9ec23f615a4b5b1b349d25ae18782b3397a41558cec04.py"
+    },
+    "tests\\recovery\\bulk_dump.py": {
+      "sha256_normalized_lf": "19b5b963f0d0c0237159faaaf534e2d6e25f74c302d9563e1c8a1ab47443301b",
+      "archive": "reports\\source\\19b5b963f0d0c0237159faaaf534e2d6e25f74c302d9563e1c8a1ab47443301b.py"
+    },
+    "tests\\recovery\\bulk_guards.py": {
+      "sha256_normalized_lf": "a710eae12ab734c5d18ac1a6088b25114681f88120d42e95650f86440911e93b",
+      "archive": "reports\\source\\a710eae12ab734c5d18ac1a6088b25114681f88120d42e95650f86440911e93b.py"
+    },
+    "tests\\recovery\\bulk_server_crash.py": {
+      "sha256_normalized_lf": "7e4178fc503f4bef00a725fc58e945e584afc13ed8fc77b64cd81c8df1709ef6",
+      "archive": "reports\\source\\7e4178fc503f4bef00a725fc58e945e584afc13ed8fc77b64cd81c8df1709ef6.py"
+    },
+    "tests\\recovery\\calendar_copy_atomic.py": {
+      "sha256_normalized_lf": "8889170b9b8881a749e91f5ab9ff3deffe829150c22497c3ad19d107d1154165",
+      "archive": "reports\\source\\8889170b9b8881a749e91f5ab9ff3deffe829150c22497c3ad19d107d1154165.py"
+    },
+    "tests\\recovery\\calendar_table5_atomic.py": {
+      "sha256_normalized_lf": "1c92a8813b1373b230166e9f528ea8a8d908439d17628aae32ee81f076ef4935",
+      "archive": "reports\\source\\1c92a8813b1373b230166e9f528ea8a8d908439d17628aae32ee81f076ef4935.py"
+    },
+    "tests\\recovery\\combined_metadata.py": {
+      "sha256_normalized_lf": "35485c5cd271cb0381d47eace90a2ea1ac540ff7ee4cacb6765cc035cc37389b",
+      "archive": "reports\\source\\35485c5cd271cb0381d47eace90a2ea1ac540ff7ee4cacb6765cc035cc37389b.py"
+    },
+    "tests\\recovery\\combined_shape_atomic.py": {
+      "sha256_normalized_lf": "957ba1cdd971bd45ce1bbc1a9fa47b659146cdb26e456d3edfc60e75101b2a0c",
+      "archive": "reports\\source\\957ba1cdd971bd45ce1bbc1a9fa47b659146cdb26e456d3edfc60e75101b2a0c.py"
+    },
+    "tests\\recovery\\date_shape_atomic.py": {
+      "sha256_normalized_lf": "c7b9c0333eb02fefece24ccd349971a786dad90dbedecd2a437a09910e84c912",
+      "archive": "reports\\source\\c7b9c0333eb02fefece24ccd349971a786dad90dbedecd2a437a09910e84c912.py"
+    },
+    "tests\\recovery\\dump_roundtrip.py": {
+      "sha256_normalized_lf": "99141547524a55b9b3bd6a08fefd22dce5e7e3744585aaa6605fc05e1f718949",
+      "archive": "reports\\source\\99141547524a55b9b3bd6a08fefd22dce5e7e3744585aaa6605fc05e1f718949.py"
+    },
+    "tests\\recovery\\memo_copy_atomic.py": {
+      "sha256_normalized_lf": "b17e615ee61725db394ef0ede29c8d9c61c0b446055ea80fd4bda8e292878259",
+      "archive": "reports\\source\\b17e615ee61725db394ef0ede29c8d9c61c0b446055ea80fd4bda8e292878259.py"
+    },
+    "tests\\recovery\\metadata_sessions.py": {
+      "sha256_normalized_lf": "eed4a3e6c29334632a1003d9acaaf24cbbe8bedb00dc622c6416780499bea5a2",
+      "archive": "reports\\source\\eed4a3e6c29334632a1003d9acaaf24cbbe8bedb00dc622c6416780499bea5a2.py"
+    },
+    "tests\\recovery\\metadata_stdin.py": {
+      "sha256_normalized_lf": "e167644cf0e6ecfbebb2b785a33defa99f722a524dd83fc73bd692f4d59bb5a9",
+      "archive": "reports\\source\\e167644cf0e6ecfbebb2b785a33defa99f722a524dd83fc73bd692f4d59bb5a9.py"
+    },
+    "tests\\recovery\\native_archive_pipe.py": {
+      "sha256_normalized_lf": "a965aedfc027bab873011640c0832415ca71b85432dfb087a8fb52c48a684b65",
+      "archive": "reports\\source\\a965aedfc027bab873011640c0832415ca71b85432dfb087a8fb52c48a684b65.py"
+    },
+    "tests\\recovery\\native_branches.py": {
+      "sha256_normalized_lf": "e1bb1b1b693effc0195f940676de45b6277c48c9161f94c332c3c206215c4d1f",
+      "archive": "reports\\source\\e1bb1b1b693effc0195f940676de45b6277c48c9161f94c332c3c206215c4d1f.py"
+    },
+    "tests\\recovery\\native_copy_atomic.py": {
+      "sha256_normalized_lf": "8eb21c65a069e7720b47586f9482b9cd35a496698d4b83cdd6da9cda0de0716b",
+      "archive": "reports\\source\\8eb21c65a069e7720b47586f9482b9cd35a496698d4b83cdd6da9cda0de0716b.py"
+    },
+    "tests\\recovery\\native_copy_crash.py": {
+      "sha256_normalized_lf": "9c03ffaaabcde86c9091a415d4a02a26c50bf1bf65e8b165998816c65256b881",
+      "archive": "reports\\source\\9c03ffaaabcde86c9091a415d4a02a26c50bf1bf65e8b165998816c65256b881.py"
+    },
+    "tests\\recovery\\parallel_indexes.py": {
+      "sha256_normalized_lf": "21d5232c8940cb4d4aa6cee110d5520a40af0ccf94d1a72e645b5765f93cc047",
+      "archive": "reports\\source\\21d5232c8940cb4d4aa6cee110d5520a40af0ccf94d1a72e645b5765f93cc047.py"
+    },
+    "tests\\recovery\\parent_hint_atomic.py": {
+      "sha256_normalized_lf": "0fabe409b827f6aa6b527d08c09828f105980543dfb075ec3a7f3ec6a84fcc85",
+      "archive": "reports\\source\\0fabe409b827f6aa6b527d08c09828f105980543dfb075ec3a7f3ec6a84fcc85.py"
+    },
+    "tests\\recovery\\psql_session.py": {
+      "sha256_normalized_lf": "ef15a568b3089e3ea8c06e12173c767642b19919f365a9100f03cbe09f55230d",
+      "archive": "reports\\source\\ef15a568b3089e3ea8c06e12173c767642b19919f365a9100f03cbe09f55230d.py"
+    },
+    "tests\\recovery\\refined_copy_atomic.py": {
+      "sha256_normalized_lf": "d0a1c2eb94f1c14bcb35d64064005eeca498df66643d3b484844663640d7cbb6",
+      "archive": "reports\\source\\d0a1c2eb94f1c14bcb35d64064005eeca498df66643d3b484844663640d7cbb6.py"
+    },
+    "tests\\recovery\\restart.py": {
+      "sha256_normalized_lf": "9dac5885031c81ff3bfc16252e759a507fe2524845aa32720d6f19f32c4570f4",
+      "archive": "reports\\source\\9dac5885031c81ff3bfc16252e759a507fe2524845aa32720d6f19f32c4570f4.py"
+    },
+    "tests\\recovery\\run.py": {
+      "sha256_normalized_lf": "7586639f4b06e47812f372db16b9a4c665539c1881d38d7e75e2762287553783",
+      "archive": "reports\\source\\7586639f4b06e47812f372db16b9a4c665539c1881d38d7e75e2762287553783.py"
+    },
+    "tests\\recovery\\scalar_copy_atomic.py": {
+      "sha256_normalized_lf": "ea7e554a0759033cdefe9b1d6360bb512c1e84d629c5b0d8a53551b219b93c47",
+      "archive": "reports\\source\\ea7e554a0759033cdefe9b1d6360bb512c1e84d629c5b0d8a53551b219b93c47.py"
+    },
+    "tests\\recovery\\scaled_script_atomic.py": {
+      "sha256_normalized_lf": "c34c0bde5ca86b97a84a7605c8f7068ac9f5bd25588447572f502a898198def6",
+      "archive": "reports\\source\\c34c0bde5ca86b97a84a7605c8f7068ac9f5bd25588447572f502a898198def6.py"
+    },
+    "tests\\recovery\\scaled_script_crash.py": {
+      "sha256_normalized_lf": "7158108524b9d2f6160a6bd40bcb536797dc402bc588a6a8d413a481f21efc28",
+      "archive": "reports\\source\\7158108524b9d2f6160a6bd40bcb536797dc402bc588a6a8d413a481f21efc28.py"
+    },
+    "tests\\recovery\\sequences.py": {
+      "sha256_normalized_lf": "bd8d6033ee19e3567b09035043a0abda15eabfe43655f82dfcf92e869b5ed8f4",
+      "archive": "reports\\source\\bd8d6033ee19e3567b09035043a0abda15eabfe43655f82dfcf92e869b5ed8f4.py"
+    },
+    "tests\\recovery\\server_copy_roles.py": {
+      "sha256_normalized_lf": "45540f44514e68ea33a5178b796254b9055c5a7a84a79ca33e2c597a6a65edec",
+      "archive": "reports\\source\\45540f44514e68ea33a5178b796254b9055c5a7a84a79ca33e2c597a6a65edec.py"
+    },
+    "tests\\recovery\\source_fingerprint.py": {
+      "sha256_normalized_lf": "83b73bd68bcea9930ecea467f2d7745a0df13ad6ecd89ec3c46e3ffdc20def66",
+      "archive": "reports\\source\\83b73bd68bcea9930ecea467f2d7745a0df13ad6ecd89ec3c46e3ffdc20def66.py"
+    },
+    "tests\\recovery\\t1_inline_atomic.py": {
+      "sha256_normalized_lf": "8a323a2907dda0fe2c2f4c3c465f5a98b29d5df22f1373f965398dfddd1ac6e5",
+      "archive": "reports\\source\\8a323a2907dda0fe2c2f4c3c465f5a98b29d5df22f1373f965398dfddd1ac6e5.py"
+    },
+    "tests\\recovery\\tamper.py": {
+      "sha256_normalized_lf": "3f2982de5e6614a0b052012e030bcf1d9a2b3d03b7acbbf49dd2c4dfa1e1eb8a",
+      "archive": "reports\\source\\3f2982de5e6614a0b052012e030bcf1d9a2b3d03b7acbbf49dd2c4dfa1e1eb8a.py"
+    },
+    "tests\\recovery\\temporary_hint_atomic.py": {
+      "sha256_normalized_lf": "affd24dd68332dd6955924f88c03b3df5fddf9b20440ca8de19f6be02af209e0",
+      "archive": "reports\\source\\affd24dd68332dd6955924f88c03b3df5fddf9b20440ca8de19f6be02af209e0.py"
+    },
+    "tests\\recovery\\worker.py": {
+      "sha256_normalized_lf": "a57f37a78da5f8596a64c1a389038fab62edd7c6eccad1709e0eb01e0ded727c",
+      "archive": "reports\\source\\a57f37a78da5f8596a64c1a389038fab62edd7c6eccad1709e0eb01e0ded727c.py"
+    },
+    "tests\\recovery\\__init__.py": {
+      "sha256_normalized_lf": "1fb1ea0be5235e980845c3dfc2b2068ed3350bfe9c5b4074920b96abee9ac57e",
+      "archive": "reports\\source\\1fb1ea0be5235e980845c3dfc2b2068ed3350bfe9c5b4074920b96abee9ac57e.py"
+    },
+    "tests\\semantics\\calendar_copy.py": {
+      "sha256_normalized_lf": "aac8c02e4469d75423ff8ef96683678bc450793976ee540117a25f86dbb81a65",
+      "archive": "reports\\source\\aac8c02e4469d75423ff8ef96683678bc450793976ee540117a25f86dbb81a65.py"
+    },
+    "tests\\semantics\\calendar_table5_boundaries.py": {
+      "sha256_normalized_lf": "fe3d0b0acc15f40bb16d4f14d2b5ec799450e956dea03e54d78839c47ca77c6c",
+      "archive": "reports\\source\\fe3d0b0acc15f40bb16d4f14d2b5ec799450e956dea03e54d78839c47ca77c6c.py"
+    },
+    "tests\\semantics\\copy_layout.py": {
+      "sha256_normalized_lf": "93158cb04c072b0dab03b9459a5013f66cac2bcf99e5fe0f644d8c2bf67b5935",
+      "archive": "reports\\source\\93158cb04c072b0dab03b9459a5013f66cac2bcf99e5fe0f644d8c2bf67b5935.py"
+    },
+    "tests\\semantics\\date_shape_copy.py": {
+      "sha256_normalized_lf": "0687ac3694448ae9e1498e0d643660af19881a310cea22d4c69999f3fc0a8bd9",
+      "archive": "reports\\source\\0687ac3694448ae9e1498e0d643660af19881a310cea22d4c69999f3fc0a8bd9.py"
+    },
+    "tests\\semantics\\domain.py": {
+      "sha256_normalized_lf": "f55c7fed112c9ecb15bfe62cda2d5bcd4d30abcbea1f8fdb1be3e2a9ee71da3f",
+      "archive": "reports\\source\\f55c7fed112c9ecb15bfe62cda2d5bcd4d30abcbea1f8fdb1be3e2a9ee71da3f.py"
+    },
+    "tests\\semantics\\fuzz.py": {
+      "sha256_normalized_lf": "33cb08b2b45c28d27d23364aa0cbf538a6c347287b43b51b5a5a5953bc2f7701",
+      "archive": "reports\\source\\33cb08b2b45c28d27d23364aa0cbf538a6c347287b43b51b5a5a5953bc2f7701.py"
+    },
+    "tests\\semantics\\memo_copy.py": {
+      "sha256_normalized_lf": "5341d52f2ed26f18169274348a41bd6d6cc799ec2ae3dacbcf3912be6075c060",
+      "archive": "reports\\source\\5341d52f2ed26f18169274348a41bd6d6cc799ec2ae3dacbcf3912be6075c060.py"
+    },
+    "tests\\semantics\\native_copy.py": {
+      "sha256_normalized_lf": "4c19b3e1d3795f94a8ecff222f7626ba198d9c54d12815c3f3fb77e9470ea881",
+      "archive": "reports\\source\\4c19b3e1d3795f94a8ecff222f7626ba198d9c54d12815c3f3fb77e9470ea881.py"
+    },
+    "tests\\semantics\\parent_hint_copy.py": {
+      "sha256_normalized_lf": "847229691dd9405143220cf6611a17f35549d00818cd2cdd65583a8bea82cf4b",
+      "archive": "reports\\source\\847229691dd9405143220cf6611a17f35549d00818cd2cdd65583a8bea82cf4b.py"
+    },
+    "tests\\semantics\\scalar_boundaries.py": {
+      "sha256_normalized_lf": "152a6447b960f0f0340f44231ff29a1f06c81c8d4f01ad32f07938f864ec4f3b",
+      "archive": "reports\\source\\152a6447b960f0f0340f44231ff29a1f06c81c8d4f01ad32f07938f864ec4f3b.py"
+    },
+    "tests\\semantics\\scaled_copy.py": {
+      "sha256_normalized_lf": "9dd76bc90fcfdd1cfafb28ada47b7e8863148319f5131c0fc0d04c48075b82d1",
+      "archive": "reports\\source\\9dd76bc90fcfdd1cfafb28ada47b7e8863148319f5131c0fc0d04c48075b82d1.py"
+    },
+    "tests\\semantics\\t1_inline_boundaries.py": {
+      "sha256_normalized_lf": "917c0e4db337c6d5960488fb349a9214c5ea3a2bf577894a099eb6ef4cd36114",
+      "archive": "reports\\source\\917c0e4db337c6d5960488fb349a9214c5ea3a2bf577894a099eb6ef4cd36114.py"
+    },
+    "tests\\semantics\\t1_inline_copy.py": {
+      "sha256_normalized_lf": "818074642d20f2c14f7ed0b79c1dcb345f3a907991964eb43958d893d4d3edb9",
+      "archive": "reports\\source\\818074642d20f2c14f7ed0b79c1dcb345f3a907991964eb43958d893d4d3edb9.py"
+    },
+    "tests\\semantics\\__init__.py": {
+      "sha256_normalized_lf": "011aa49957f0aa86149d15fe840b286c6332b1e4ce7aef5b728af771c531bc5d",
+      "archive": "reports\\source\\011aa49957f0aa86149d15fe840b286c6332b1e4ce7aef5b728af771c531bc5d.py"
+    },
+    "scripts\\verify_upstream.py": {
+      "sha256_normalized_lf": "f594e533536e3689950be9cdf7045e5d10352f7c0ab32bc504c7915c8ec20cf0",
+      "archive": "reports\\source\\f594e533536e3689950be9cdf7045e5d10352f7c0ab32bc504c7915c8ec20cf0.py"
+    }
+  },
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "bad24e8ad49f162eafd5898eddc7fdb60f64cb73",
+    "git_status": "M reports/disposable-clone-cleanup.json\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? reports/native-archives/lab_native_variant_5ed5af86c7-stream-verified.json\n?? reports/native-archives/lab_native_variant_e753668678-stream-verified.json\n?? reports/native-combined-shape-same-cpu2-1m-repeated-log.txt\n?? reports/native-combined-shape-same-cpu2-1m-repeated.json\n?? reports/native-combined-shape-same-cpu2-1m-repeated/\n?? reports/native-nested-plans-1m-log.txt\n?? reports/native-nested-plans-1m.json\n?? reports/native-nested-plans-1m.txt\n?? reports/native-nested-plans-64-log.txt\n?? reports/native-nested-plans-64-visible-log.txt\n?? reports/native-nested-plans-64-visible.json\n?? reports/native-nested-plans-64-visible.txt\n?? reports/native-nested-plans-64.json\n?? reports/native-nested-plans-64.txt\n?? reports/native-parent-hint-64-log.txt\n?? reports/native-parent-hint-64.json\n?? reports/native-parent-hint-64.txt\n?? reports/native-parent-hint-official-1m-pair-log.txt\n?? reports/native-parent-stats-plans-64-log.txt\n?? reports/native-parent-stats-plans-64.json\n?? reports/native-parent-stats-plans-64.txt\n?? reports/native-temporary-hint-64-log.txt\n?? reports/native-temporary-hint-64.json\n?? reports/native-temporary-hint-64.txt\n?? reports/parent-hint-qualification.json\n?? reports/profiles/\n?? reports/recovery-parent-hint-copy-atomic-log.txt\n?? reports/recovery-parent-hint-copy-atomic.json\n?? reports/recovery-temporary-hint-copy-atomic-log.txt\n?? reports/recovery-temporary-hint-copy-atomic.json\n?? reports/semantics-parent-hint-boundaries-82-log.txt\n?? reports/semantics-parent-hint-boundaries-82.json\n?? reports/semantics-parent-hint-copy-121-log.txt\n?? reports/semantics-parent-hint-copy-121.json\n?? reports/shadow-publication-probe-log.txt\n?? reports/source/035aee036380d2ec6cba5a9a498640a28de717e041a1ff016a8aac57f6648362.py\n?? reports/source/0fabe409b827f6aa6b527d08c09828f105980543dfb075ec3a7f3ec6a84fcc85.py\n?? reports/source/5fb782ca65adc19be349e179969a7835e31ffa9b1fd903b790e76f08dede5622.py\n?? reports/source/6038522ab36d8a84db2b6886ea2f44ce5d710ecef4e0972b97e90b3299262181.py\n?? reports/source/8042fd6bfa1705375cbe9f951401b5fe65108ddd0c3a10d5f387dea885cd5d16.py\n?? reports/source/847229691dd9405143220cf6611a17f35549d00818cd2cdd65583a8bea82cf4b.py\n?? reports/source/8ba2819d4ecd4e8c7f8475de5ce41a2a62c24bdedc7cd10bb6d0c323d856d4ad.py\n?? reports/source/93a7ee22bff4753b9e5e14cce700d6ca2af201b1d4e33294bc52179336ca3531.py\n?? reports/source/9ffe5c647ccab8216dc876cd096bd4a3f48e0c55867cc89edaf8439bd5da69a8.py\n?? reports/source/affd24dd68332dd6955924f88c03b3df5fddf9b20440ca8de19f6be02af209e0.py\n?? reports/sql-only-100k-tuning-duplicate-cleanup-log.txt\n?? reports/sql-only-100k-tuning-duplicate-selection.json\n?? reports/sql/06748a9f7c7f68ae2e41836b53ee533593b022d63fcddbe0acac8c053a0f8911.sql\n?? reports/sql/084c1328fb6d4a7e78472617598af07964dfbb2a312bf6f39097c5ece87daacc.sql\n?? reports/sql/124db679b8d649f0e3978638fdff1a6b0afbc29cf98448eef2649a7bcb4a8c70.sql\n?? reports/sql/17214d3afe8e63028c19f693db477ef4ab3741e079863a877814d73ab37d21cb.sql\n?? reports/sql/1785d748e88aaa4a3d6e047d9cd6d607268bdcf503f03a68d260699663a1ba86.sql\n?? reports/sql/183b91e91011f36affda83f6bc3c3589109237719e0563b57a7de13967a307fc.sql\n?? reports/sql/1af72865a4ba4cf509aa7396e2da018aa3b13a7692b2663dc820a7e712c53966.sql\n?? reports/sql/2df0706290736ba8bbebf5d4d63c76f440c3b33d0b1554c927f1ce1478253f84.sql\n?? reports/sql/2f14e50b96e18c409592b821336d38c9f1a97486c738d560193f41c7382d7365.sql\n?? reports/sql/30a2980b5ca32bf8e55e5811bfa5db8ad3bd3b1b2ed24ab78874f22542e3b0c7.sql\n?? reports/sql/31a65b1ac236df36edae7ff498398f3c8318df5e463b69a6b0a6ec90f48273b0.sql\n?? reports/sql/37bd90208be5c42375408c7df303e03cce726e5d3243b33057d8f9b855c309ed.sql\n?? reports/sql/3b608fab5ccad8ef4317f0872d2be47d3e285600aa6e170b871b1db111110f57.sql\n?? reports/sql/467c6d259db4dbbbe95251d9dd1c3fe96ca9c1a45c15bed06ca6066dcd90fac4.sql\n?? reports/sql/4a1852a81c3348cb78ae5e7b0c68a0b105a46f20ca22317a00ad4160bc67f89b.sql\n?? reports/sql/4e9747b700d9d746b7941b757cb3d146768c3c3c34836baa4824420316229bfa.sql\n?? reports/sql/5bedc1ce3a17e8feacd98c60fd54b7097f108c37769edd1dd68a7c0bbf1e358a.sql\n?? reports/sql/5cde8ad41d6aae6d1afa85c8b91c4e9c128974e4441dbd84cb7ac096aebd77b6.sql\n?? reports/sql/5d9b260e89b58fbe2b1c1f8dc595e7009e56df47bad6d1b58a80536ab437bfe2.sql\n?? reports/sql/6e09fa36f553693e8afc33f48413b4171d37c60355bb02b7b52592baa7098a84.sql\n?? reports/sql/6ee733b0f985c5856fe17464599d6783dc13ad9ba487ec828d3d3c62f36e0bae.sql\n?? reports/sql/7239d231eef7126636b7802401319a014dec6eed7f475f186074da383131e936.sql\n?? reports/sql/7269799ac4ce000c2acd4509a06331e8250d0737c33492c3cafef2da87b1a3d8.sql\n?? reports/sql/7391e81c039f95194fa3a2793ffbbcab594f6bba19b3c12868c2914394baa980.sql\n?? reports/sql/75d4b3c37983e7be867319edfe4ba5bf40210cceb7f33a1fc9b4ceb93c035d78.sql\n?? reports/sql/92b763d0cd6a8024e1563e5e0f352f9984bae5132b50887c33f913299de006c3.sql\n?? reports/sql/94880b593a4df6b0c39fd4ca5b76b44a65a91bf2b987e202f581be35060c2c62.sql\n?? reports/sql/955f2b394a71e50629d0f4d789023dd56712beaab83828e44fe81570bb857c9c.sql\n?? reports/sql/96f9f1c91a3c963ff1307cafdefedf4476af98b8e2aff7a6ee6c1526edd3972b.sql\n?? reports/sql/9a6f7f1dbb3113f1021154178058a85ea36d677c38629531ff14d4dc3025826e.sql\n?? reports/sql/9f88150771d9e54080d7592fd46c0f59caf1644be07a0dc186a12f0787633abd.sql\n?? reports/sql/a7ea54986522c97a9f87e65b09fb3875a17cac0915d4cfbd03c43cf258ec00e3.sql\n?? reports/sql/aaa88648aea61236f2827f6912ac2098662c6537d7546f5de460266748c63f5d.sql\n?? reports/sql/b7c46062a235db16139aa588351333922a386b3134dbfcd0746865734028b924.sql\n?? reports/sql/bb10921e2d527f7ea99cb46d23a810f9aba253e909e02ac367ebfec1cd8e9421.sql\n?? reports/sql/bbaf0cfa17e69f923b689cf86f31de6aeec838209950123fe6e802a155bc2a49.sql\n?? reports/sql/c13e5ef7ef35f6ac6b81dd96c69264e2ca71e28a3513df53471639d37c6620f3.sql\n?? reports/sql/c42defd2d1f8101174170202ddfb750e65e25fe4b9de208cbdfb802e7b8d1759.sql\n?? reports/sql/c79001a8706fb9f0612f1c09be403381e120b586b3af6d158d0f08bb67c4b3b1.sql\n?? reports/sql/d7f2db7a680c893c0bc37b409571529b136d96226be8f966d1557ca12a5c810d.sql\n?? reports/sql/df4636d1736aa3ad327fa547e836052fd06336041ddd09f2fdfc95c6a0235f55.sql\n?? reports/sql/df5e9962005c647d12c0f921b1da9b6e110754e9ab59641bf45abf6f34c810d1.sql\n?? reports/sql/e5cd42ff54b26a9fa2aeb0b0a461341a73fb8ec5c96fe8639f5a4f30a6d3405b.sql\n?? reports/sql/f181dcd0bce3c2cf91278cb631f7a7bc1b7431b157e62233929c3614f6a169e2.sql\n?? reports/sql/f6db18d10143c1080757278786dc7d29d52184a8008ddcaa69fdc9ac3286ea63.sql\n?? reports/sql/fc20b560158814d503651322cabf727f363469060aec8a3bcb80417a61c26029.sql\n?? reports/sql/fcf370ad330156a1f7151188e216f12b94c7e000f5ea9f02aedaea06f80053c9.sql\n?? reports/sql/fd4f61b2e79d796aa48960d49138d7a2210ec911464508309711e3f461301a3b.sql\n?? reports/sql/ff594de6f4b9770a5fd4bc57584b127f65e92e3745e4e034ff6e6feb6c057953.sql\n?? reports/stream-archive-lab_native_variant_5ed5af86c7-log.txt\n?? reports/stream-archive-lab_native_variant_e753668678-log.txt",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "source_rows": 1000000,
+  "rotation_offset": 0,
+  "summary": {
+    "official": {
+      "individual_wall_seconds": [
+        113.17439329999615
+      ],
+      "median_wall_seconds": 113.17439329999615,
+      "time_reduction_percent_vs_comparison_variant": 0.0
+    },
+    "parent_hint_copy": {
+      "individual_wall_seconds": [
+        18.202446900002542
+      ],
+      "median_wall_seconds": 18.202446900002542,
+      "time_reduction_percent_vs_comparison_variant": 83.91646169310354
+    }
+  }
+}

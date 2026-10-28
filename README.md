@@ -11,7 +11,12 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest complete 1M comparison, three verified pairs: **272.560s official
+Latest fresh pair: **83.92% less time** (113.174s unchanged official versus
+18.202s parent statistics/scratch hints), with all six output/integrity/version
+gates passed. It does not improve the best single inline pair (84.81%) or
+achieve 85%. See [current research](docs/ACTIVE_85.md).
+
+Historical complete 1M comparison, three verified pairs: **272.560s official
 versus 41.900s calendar_copy, 84.63% less complete processing time**.
 The first complete pair and two continuation pairs retain AB/BA/AB order;
 post-timer verification and CPU-observer startup repairs are documented.

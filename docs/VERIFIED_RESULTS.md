@@ -1,3 +1,12 @@
+Latest fresh 1M pair (2026-10-28): **113.174393s unchanged official versus
+18.202447s parent_hint_copy, 83.916462% less complete processing wall time**.
+This is one pair, passes all native output/integrity/version gates, and does
+not achieve 85% or replace the best single inline pair (84.811364%). The
+native MEASURED PROCESSING TOTAL values are separately 113.079168s versus
+18.115297s (83.979987% less). No cross-cohort control is used.
+The three-pair calendar result below remains a separate historical repeated
+comparison. See ACTIVE_85.md and reports/parent-hint-pair-analysis.json.
+
 Latest local result: three verified 1M pairs measure 84.627281% less complete
 processing time, official median 272.559992s versus calendar_copy 41.899881s.
 The first complete pair and two continuation pairs retain AB/BA/AB order;
@@ -99,3 +108,22 @@ Linux／SSH、最終 GUI/default 整合、300M 資源界線和 managed COPY chun
 稽核程式早期的兩個假設錯誤（兩種 excluded envelope、六個 destination counters）
 已修正，失敗報告保留。v3 的 JSONB 逐筆比較由我們主動取消，改用更小的原生
 欄位表示；v4 仍完整執行雙向 EXCEPT ALL，並通過全部八庫。
+
+
+## Independent recheck of the latest and best single pairs
+
+reports/parent-hint-inline-live-audit.json passed both cohorts and four live
+databases (two unchanged official, parent_hint_copy, inline_copy). The auditor
+recomputed arithmetic and provenance, then compared every logical result table
+with full EXCEPT ALL multiplicities against the newly executed official rows,
+rehashed actual source contents, and checked counters plus six native versions
+per database. Its edited-output/edited-source negative controls passed.
+The separate parent-hint-inline-catalog-audit.json also passed all four
+databases: original owners/ACL/schema, native sequence metadata, valid/ready/live
+indexes, and logged source/final/counter/control tables with fsync,
+full_page_writes, synchronous_commit ON. These audits do not remeasure time,
+prove Linux/SSH eligibility or upgrade a single pair into a repeated result.
+
+Post-change regression checks: 51 compiler tests, six organizer tests, and
+byte equality of all 32 pinned organizer files passed. The physical cache layout
+experiment remains unselected; no submission/default implementation changed.

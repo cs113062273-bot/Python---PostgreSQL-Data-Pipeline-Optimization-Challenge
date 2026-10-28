@@ -275,3 +275,42 @@ boundaries, 16 actual fault/retry cases, and exact 64-row full-service output
 with six versions. No 1M improvement is claimed before a fresh paired run.
 Qualification: reports/parent-hint-qualification.json. Linux/SSH, large-scale
 resource bounds and submission integration remain unqualified.
+
+
+## Parent statistics/scratch hint full pair: no target win
+
+The fresh default-affinity complete native pair completed: unchanged official
+113.174393s, parent_hint_copy 18.202447s, **83.916462%** less wall time.
+Both exact six-table outputs, counters, six versions, catalog/sequence and
+workspace gates passed. The separate native measured totals are 113.079168s
+and 18.115297s (83.979987% less). At the actual wall-time control the 85%
+threshold is 16.976159s; this candidate misses by 1.226288s. It is not promoted.
+Report: native-parent-hint-official-1m-pair.json; implementation bad24e8.
+
+A subsequent same-session rollback-only experiment compared original cache
+column order, proof-first, and proof/text-first layouts, three runs each in
+rotating order. Every named cache value and all six transform fingerprints
+match; schema/sequences are unchanged after rollback. Median component sums
+are 8.070432s, 7.741173s, 7.783655s, respectively, with overlapping/reversing
+runs and substantial temporal drift. The proof scan alone drops about 75ms;
+no full-service gain is established. No layout change is selected.
+See layout-components-1m.json and layout-components-decision.json.
+
+
+## Independent recheck of the latest and best single pairs
+
+reports/parent-hint-inline-live-audit.json passed both cohorts and four live
+databases (two unchanged official, parent_hint_copy, inline_copy). The auditor
+recomputed arithmetic and provenance, then compared every logical result table
+with full EXCEPT ALL multiplicities against the newly executed official rows,
+rehashed actual source contents, and checked counters plus six native versions
+per database. Its edited-output/edited-source negative controls passed.
+The separate parent-hint-inline-catalog-audit.json also passed all four
+databases: original owners/ACL/schema, native sequence metadata, valid/ready/live
+indexes, and logged source/final/counter/control tables with fsync,
+full_page_writes, synchronous_commit ON. These audits do not remeasure time,
+prove Linux/SSH eligibility or upgrade a single pair into a repeated result.
+
+Post-change regression checks: 51 compiler tests, six organizer tests, and
+byte equality of all 32 pinned organizer files passed. The physical cache layout
+experiment remains unselected; no submission/default implementation changed.

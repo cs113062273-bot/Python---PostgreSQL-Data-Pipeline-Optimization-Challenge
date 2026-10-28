@@ -1,0 +1,17 @@
+{
+  "source_receipt": "reports\\fresh-100k.json",
+  "selected_databases": [
+    "lab_fresh_4084add462",
+    "lab_fresh_d8a321ef19",
+    "lab_fresh_e49861efa1",
+    "lab_fresh_babf0baadf",
+    "lab_fresh_062f0c3d2e",
+    "lab_fresh_2949009789"
+  ],
+  "retained_one_live_clone_per_tuning_variant": [
+    "lab_fresh_b076309a30",
+    "lab_fresh_89ef350cce",
+    "lab_fresh_b4e1c529d3"
+  ],
+  "scope": "Only duplicate verified SQL-only 100k tuning runs, not native versioned outputs. Same exact source/catalog/sequence/no-extra-object/no-native-history gates."
+}

@@ -286,6 +286,16 @@
         }
       ],
       "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-28T12:31:19.987659+00:00",
+      "events": [],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
+    },
+    {
+      "timestamp_utc": "2026-10-28T12:32:16.646362+00:00",
+      "events": [],
+      "scope": "Only oracle copies removed. Canonical reference, all candidate databases and timing/verification receipts retained."
     }
   ]
 }

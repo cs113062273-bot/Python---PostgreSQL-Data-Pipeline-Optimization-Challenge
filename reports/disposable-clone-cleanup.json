@@ -875,6 +875,114 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-28T11:55:17.983265+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_062f0c3d2e",
+          "mode": "hash_array64",
+          "receipt": "reports\\fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_2949009789",
+          "mode": "hash_array64",
+          "receipt": "reports\\fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_4084add462",
+          "mode": "analyze_base",
+          "receipt": "reports\\fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282662579,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_babf0baadf",
+          "mode": "analyze_dims",
+          "receipt": "reports\\fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282662579,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_d8a321ef19",
+          "mode": "analyze_base",
+          "receipt": "reports\\fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282662579,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_e49861efa1",
+          "mode": "analyze_dims",
+          "receipt": "reports\\fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282501647,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

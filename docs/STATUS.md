@@ -1,3 +1,15 @@
+Latest fresh 1M pair (2026-10-28): **113.174393s unchanged official versus
+18.202447s parent_hint_copy, 83.916462% less complete processing wall time**.
+This is one pair, passes all native output/integrity/version gates, and does
+not achieve 85% or replace the best single inline pair (84.811364%). The
+native MEASURED PROCESSING TOTAL values are separately 113.079168s versus
+18.115297s (83.979987% less). No cross-cohort control is used.
+Independent full EXCEPT ALL/source/version rechecking and catalog/durability
+audits now pass the four live databases in this pair and the best inline pair
+(parent-hint-inline-live-audit.json; parent-hint-inline-catalog-audit.json).
+The three-pair calendar result below remains a separate historical repeated
+comparison. See ACTIVE_85.md and reports/parent-hint-pair-analysis.json.
+
 # Current status
 
 Latest local result: **84.627281% less complete processing time**, official

@@ -35,7 +35,7 @@ def run(args,text,*,cwd,timeout,cpu=None):
             deadline=time.monotonic()+10;row=None
             while process.poll() is None and time.monotonic()<deadline:
                 row=observer.execute('SELECT pid,state,extract(epoch FROM backend_start)::float8 FROM pg_stat_activity WHERE application_name=%s',(tag,)).fetchone()
-                if row:break
+                if row and row[1]=='idle':break
                 time.sleep(.01)
         if row is None or row[1]!='idle':raise RuntimeError('Could not identify an idle native SQL backend')
         pid,state,backend_start=row;backend=psutil.Process(pid)

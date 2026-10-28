@@ -79,7 +79,12 @@ def main():
     cohort=json.loads(receipt.read_text(encoding='utf8'))
     assert cohort['kind']=='fresh_local_original_service_complete_processing' and cohort.get('summary')
     run=next(r for r in cohort['runs'] if r['database']==args.database)
-    assert run['mode'] in ('fast_copy','scalar_copy','early_copy','scaled_copy'),'Retain all official controls and selected refined/memo workers live'
+    permitted=run['mode'] in ('fast_copy','scalar_copy','early_copy','scaled_copy','unlogged_copy','server_copy')
+    # Preserve the complete paired refined cohort live; only the superseded
+    # unpaired pilot is eligible here. Every byte remains restorable in archive.
+    permitted=permitted or (run['mode']=='refined_copy' and args.database=='lab_native_variant_7913643ace')
+    permitted=permitted or (run['mode']=='memo_copy' and args.database=='lab_native_variant_bb5fad3206')
+    assert permitted,'Retain all official controls and selected paired refined/memo workers live'
     assert re.fullmatch('lab_native_variant_[0-9a-f]{10}',args.database)
     child_path=Path(run['report']);child_path=child_path if child_path.is_absolute() else ROOT/child_path
     assert child_path.resolve().is_relative_to(ROOT/'reports')

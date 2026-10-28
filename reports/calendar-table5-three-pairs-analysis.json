@@ -1,0 +1,197 @@
+{
+  "kind": "combined_verified_processing_pairs",
+  "official_score": false,
+  "source_cohorts": [
+    "reports/native-calendar-table5-first-complete-pair.json",
+    "reports/native-calendar-table5-continuation-1m-v2.json"
+  ],
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "official",
+      "variant": "official",
+      "database": "lab_native_variant_553cb7bba0",
+      "wall_seconds": 268.91269339999417,
+      "native_measured_seconds": 268.7099948999738,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-calendar-table5-official-1m-repeated\\1-official.json",
+      "execution_architecture": null,
+      "global_pair": 1,
+      "source_cohort": "reports/native-calendar-table5-first-complete-pair.json"
+    },
+    {
+      "repeat": 0,
+      "mode": "calendar_copy",
+      "variant": "calendar_copy",
+      "database": "lab_native_variant_3f985472fe",
+      "wall_seconds": 40.65222000000358,
+      "native_measured_seconds": 40.43779360001659,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-calendar-table5-official-1m-repeated\\1-calendar_copy.json",
+      "execution_architecture": {
+        "mode": "guarded_copy",
+        "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+        "batch_sql_sha256": "af08f09914f051056cb749e0343733ceaaf7e7c5470ceb327591ee932c38a253",
+        "copy_workspace": {
+          "cleanup_success": true,
+          "cleanup_errors": [],
+          "setup_seconds": 0.0015508999931626022,
+          "cleanup_seconds": 0.05490560000180267
+        },
+        "safe_domain": true
+      },
+      "global_pair": 1,
+      "source_cohort": "reports/native-calendar-table5-first-complete-pair.json"
+    },
+    {
+      "repeat": 0,
+      "mode": "calendar_copy",
+      "variant": "calendar_copy",
+      "database": "lab_native_variant_eb6a991ce6",
+      "wall_seconds": 43.3135450000118,
+      "native_measured_seconds": 42.986004599999596,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-calendar-table5-continuation-1m-v2\\1-calendar_copy.json",
+      "execution_architecture": {
+        "mode": "guarded_copy",
+        "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+        "batch_sql_sha256": "5870d2dc39f114006c9d02903e2a25f2fa3dde64fc4dfdee4c2fde3cfb35bdaf",
+        "copy_workspace": {
+          "cleanup_success": true,
+          "cleanup_errors": [],
+          "setup_seconds": 0.0031334999948740005,
+          "cleanup_seconds": 0.07003760000225157
+        },
+        "safe_domain": true
+      },
+      "global_pair": 2,
+      "source_cohort": "reports/native-calendar-table5-continuation-1m-v2.json"
+    },
+    {
+      "repeat": 0,
+      "mode": "official",
+      "variant": "official",
+      "database": "lab_native_variant_68212c439f",
+      "wall_seconds": 272.5599915000057,
+      "native_measured_seconds": 272.33386760004174,
+      "exact_six_tables": true,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-calendar-table5-continuation-1m-v2\\1-official.json",
+      "execution_architecture": null,
+      "global_pair": 2,
+      "source_cohort": "reports/native-calendar-table5-continuation-1m-v2.json"
+    },
+    {
+      "repeat": 1,
+      "mode": "official",
+      "variant": "official",
+      "database": "lab_native_variant_fd346a72d8",
+      "wall_seconds": 275.796548600003,
+      "native_measured_seconds": 275.5815412000012,
+      "exact_six_tables": false,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-calendar-table5-continuation-1m-v2\\2-official.json",
+      "execution_architecture": null,
+      "global_pair": 3,
+      "source_cohort": "reports/native-calendar-table5-continuation-1m-v2.json"
+    },
+    {
+      "repeat": 1,
+      "mode": "calendar_copy",
+      "variant": "calendar_copy",
+      "database": "lab_native_variant_6ce6c5d286",
+      "wall_seconds": 41.89988050000102,
+      "native_measured_seconds": 41.64190570005132,
+      "exact_six_tables": false,
+      "six_table_fingerprints_equivalent": true,
+      "counter_reconciliation": true,
+      "versions": 6,
+      "verification_schema": null,
+      "report": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\reports\\native-calendar-table5-continuation-1m-v2\\2-calendar_copy.json",
+      "execution_architecture": {
+        "mode": "guarded_copy",
+        "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+        "batch_sql_sha256": "c562c4b6dd50c85c14003fcec51731a0f178e5ca431514f7ae63c9c8bdbc20be",
+        "copy_workspace": {
+          "cleanup_success": true,
+          "cleanup_errors": [],
+          "setup_seconds": 0.0020936999935656786,
+          "cleanup_seconds": 0.06175059999804944
+        },
+        "safe_domain": true
+      },
+      "global_pair": 3,
+      "source_cohort": "reports/native-calendar-table5-continuation-1m-v2.json"
+    }
+  ],
+  "summary": {
+    "official": {
+      "individual_seconds": [
+        268.91269339999417,
+        272.5599915000057,
+        275.796548600003
+      ],
+      "median_seconds": 272.5599915000057,
+      "min_seconds": 268.91269339999417,
+      "max_seconds": 275.796548600003
+    },
+    "calendar_copy": {
+      "individual_seconds": [
+        40.65222000000358,
+        43.3135450000118,
+        41.89988050000102
+      ],
+      "median_seconds": 41.89988050000102,
+      "min_seconds": 40.65222000000358,
+      "max_seconds": 43.3135450000118
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "official": 268.91269339999417,
+      "calendar_copy": 40.65222000000358,
+      "time_reduction_percent": 84.88274410329323
+    },
+    {
+      "pair": 2,
+      "calendar_copy": 43.3135450000118,
+      "official": 272.5599915000057,
+      "time_reduction_percent": 84.10861962475117
+    },
+    {
+      "pair": 3,
+      "official": 275.796548600003,
+      "calendar_copy": 41.89988050000102,
+      "time_reduction_percent": 84.80768497187765
+    }
+  ],
+  "time_reduction_percent": 84.62728140347768,
+  "goal_85_reached": false,
+  "required_candidate_median_seconds": 40.88399872500086,
+  "additional_candidate_seconds_to_remove": 1.0158817750001603,
+  "processing_engine_identities_identical": true,
+  "harness_changes_documented_in": [
+    "reports/calendar-verifier-repair-processing-prefix.json",
+    "reports/cpu-readiness-repair-processing-equivalence.json"
+  ],
+  "method": "First complete pair retained plus two continuation pairs in original AB BA AB order. Actual processing engine/SQL unchanged; post-timer oracle-cache reference and diagnostic readiness were repaired between cohorts. Two failed attempts are excluded and retained separately. No favorable historical control substituted."
+}

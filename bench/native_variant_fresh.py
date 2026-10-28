@@ -27,6 +27,7 @@ from bench.scaled_int_probe import source_identity as scaled_identity
 from bench.memo_axes_probe import source_identity as memo_identity
 from bench.calendar_proof_probe import source_identity as calendar_identity
 from bench.backend_cpu_probe import source_identity as cpu_identity
+from bench.t1_inline_probe import source_identity as inline_identity
 
 VARIANTS={
     'official':('bench.service_run',[],'baseline'),
@@ -43,6 +44,7 @@ VARIANTS={
     'projectset_script':('bench.script_transport_probe',['projectset'],'guarded_copy'),
     'memo_copy':('bench.memo_axes_probe',['function'],'guarded_copy'),
     'calendar_copy':('bench.calendar_proof_probe',[],'guarded_copy'),
+    'inline_copy':('bench.t1_inline_probe',[],'guarded_copy'),
 }
 
 
@@ -52,7 +54,8 @@ def identity():
            ('scalar_copy_hook_sha256',scalar_identity),('early_copy_hook_sha256',early_identity),
            ('projectset_hook_sha256',projectset_identity),('script_transport_hook_sha256',script_identity),
            ('scaled_int_hook_sha256',scaled_identity),('memo_hook_sha256',memo_identity),
-           ('calendar_hook_sha256',calendar_identity),('backend_cpu_hook_sha256',cpu_identity)]
+           ('calendar_hook_sha256',calendar_identity),('backend_cpu_hook_sha256',cpu_identity),
+           ('inline_hook_sha256',inline_identity)]
     result={'atomic_compiler_sha256':compiler_sha256(),**{name:function() for name,function in hooks}}
     for name,path in [('driver_sha256',Path(__file__)),('service_driver_sha256',ROOT/'bench/service_run.py'),('source_snapshot_sha256',ROOT/'bench/source_snapshot.py')]:
         result[name]=hashlib.sha256(path.read_text(encoding='utf8').encode()).hexdigest()

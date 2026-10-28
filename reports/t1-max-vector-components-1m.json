@@ -1,0 +1,963 @@
+{
+  "kind": "rollback_only_table1_max_vector_reuse",
+  "official_score": false,
+  "source_sha256": "658e56569db6b28fd3d3e1021ca921160ef9b6bc5fb475d9a02fa8824f9092df",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "calendar",
+      "seconds": 0.837549100004253,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ],
+      "plan": [
+        {
+          "Plan": {
+            "Node Type": "Gather",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 1.12,
+            "Total Cost": 26473.94,
+            "Plan Rows": 100,
+            "Plan Width": 160,
+            "Workers Planned": 8,
+            "Single Copy": false,
+            "Plans": [
+              {
+                "Node Type": "Hash Join",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Join Type": "Inner",
+                "Startup Cost": 1.12,
+                "Total Cost": 26473.94,
+                "Plan Rows": 12,
+                "Plan Width": 160,
+                "Inner Unique": false,
+                "Hash Cond": "((source_row.text_column_1 = (dimension_row.text_column_1)::text) AND (\"left\"(source_row.text_column_2, 1) = (dimension_row.text_column_3)::text) AND (\"right\"(source_row.text_column_2, 1) = (dimension_row.text_column_4)::text))",
+                "Plans": [
+                  {
+                    "Node Type": "Seq Scan",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": true,
+                    "Async Capable": false,
+                    "Relation Name": "input",
+                    "Alias": "source_row",
+                    "Startup Cost": 0.0,
+                    "Total Cost": 23970.0,
+                    "Plan Rows": 125000,
+                    "Plan Width": 598
+                  },
+                  {
+                    "Node Type": "Hash",
+                    "Parent Relationship": "Inner",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Startup Cost": 1.05,
+                    "Total Cost": 1.05,
+                    "Plan Rows": 4,
+                    "Plan Width": 23,
+                    "Plans": [
+                      {
+                        "Node Type": "Seq Scan",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Async Capable": false,
+                        "Relation Name": "table3",
+                        "Alias": "dimension_row",
+                        "Startup Cost": 0.0,
+                        "Total Cost": 1.05,
+                        "Plan Rows": 4,
+                        "Plan Width": 23,
+                        "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "repeat": 0,
+      "mode": "inline_max",
+      "seconds": 0.9367705000040587,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ],
+      "plan": [
+        {
+          "Plan": {
+            "Node Type": "Gather",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 1.27,
+            "Total Cost": 26480.97,
+            "Plan Rows": 1000,
+            "Plan Width": 160,
+            "Workers Planned": 8,
+            "Single Copy": false,
+            "Plans": [
+              {
+                "Node Type": "Nested Loop",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Join Type": "Inner",
+                "Startup Cost": 1.27,
+                "Total Cost": 26480.97,
+                "Plan Rows": 125,
+                "Plan Width": 160,
+                "Inner Unique": false,
+                "Plans": [
+                  {
+                    "Node Type": "Hash Join",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Join Type": "Inner",
+                    "Startup Cost": 1.12,
+                    "Total Cost": 26471.24,
+                    "Plan Rows": 12,
+                    "Plan Width": 592,
+                    "Inner Unique": false,
+                    "Hash Cond": "((source_row.text_column_1 = (dimension_row.text_column_1)::text) AND (\"left\"(source_row.text_column_2, 1) = (dimension_row.text_column_3)::text) AND (\"right\"(source_row.text_column_2, 1) = (dimension_row.text_column_4)::text))",
+                    "Plans": [
+                      {
+                        "Node Type": "Seq Scan",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": true,
+                        "Async Capable": false,
+                        "Relation Name": "input",
+                        "Alias": "source_row",
+                        "Startup Cost": 0.0,
+                        "Total Cost": 23970.0,
+                        "Plan Rows": 125000,
+                        "Plan Width": 598
+                      },
+                      {
+                        "Node Type": "Hash",
+                        "Parent Relationship": "Inner",
+                        "Parallel Aware": false,
+                        "Async Capable": false,
+                        "Startup Cost": 1.05,
+                        "Total Cost": 1.05,
+                        "Plan Rows": 4,
+                        "Plan Width": 23,
+                        "Plans": [
+                          {
+                            "Node Type": "Seq Scan",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Async Capable": false,
+                            "Relation Name": "table3",
+                            "Alias": "dimension_row",
+                            "Startup Cost": 0.0,
+                            "Total Cost": 1.05,
+                            "Plan Rows": 4,
+                            "Plan Width": 23,
+                            "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Node Type": "Function Scan",
+                    "Parent Relationship": "Inner",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Function Name": "unnest",
+                    "Alias": "parsed_axis_maximum",
+                    "Startup Cost": 0.15,
+                    "Total Cost": 0.25,
+                    "Plan Rows": 10,
+                    "Plan Width": 2
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "repeat": 0,
+      "mode": "inline_trim_max",
+      "seconds": 0.8272407000040403,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ],
+      "plan": [
+        {
+          "Plan": {
+            "Node Type": "Gather",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 1.23,
+            "Total Cost": 26480.31,
+            "Plan Rows": 1000,
+            "Plan Width": 160,
+            "Workers Planned": 8,
+            "Single Copy": false,
+            "Plans": [
+              {
+                "Node Type": "Nested Loop",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Join Type": "Inner",
+                "Startup Cost": 1.23,
+                "Total Cost": 26480.31,
+                "Plan Rows": 125,
+                "Plan Width": 160,
+                "Inner Unique": false,
+                "Plans": [
+                  {
+                    "Node Type": "Hash Join",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Join Type": "Inner",
+                    "Startup Cost": 1.12,
+                    "Total Cost": 26471.24,
+                    "Plan Rows": 12,
+                    "Plan Width": 592,
+                    "Inner Unique": false,
+                    "Hash Cond": "((source_row.text_column_1 = (dimension_row.text_column_1)::text) AND (\"left\"(source_row.text_column_2, 1) = (dimension_row.text_column_3)::text) AND (\"right\"(source_row.text_column_2, 1) = (dimension_row.text_column_4)::text))",
+                    "Plans": [
+                      {
+                        "Node Type": "Seq Scan",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": true,
+                        "Async Capable": false,
+                        "Relation Name": "input",
+                        "Alias": "source_row",
+                        "Startup Cost": 0.0,
+                        "Total Cost": 23970.0,
+                        "Plan Rows": 125000,
+                        "Plan Width": 598
+                      },
+                      {
+                        "Node Type": "Hash",
+                        "Parent Relationship": "Inner",
+                        "Parallel Aware": false,
+                        "Async Capable": false,
+                        "Startup Cost": 1.05,
+                        "Total Cost": 1.05,
+                        "Plan Rows": 4,
+                        "Plan Width": 23,
+                        "Plans": [
+                          {
+                            "Node Type": "Seq Scan",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Async Capable": false,
+                            "Relation Name": "table3",
+                            "Alias": "dimension_row",
+                            "Startup Cost": 0.0,
+                            "Total Cost": 1.05,
+                            "Plan Rows": 4,
+                            "Plan Width": 23,
+                            "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Node Type": "Function Scan",
+                    "Parent Relationship": "Inner",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Function Name": "unnest",
+                    "Alias": "parsed_axis_maximum",
+                    "Startup Cost": 0.11,
+                    "Total Cost": 0.21,
+                    "Plan Rows": 10,
+                    "Plan Width": 2
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "inline_max",
+      "seconds": 0.969804699998349,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "inline_trim_max",
+      "seconds": 0.8386885999934748,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "calendar",
+      "seconds": 0.8609900000010384,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "inline_trim_max",
+      "seconds": 0.9088148999871919,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "calendar",
+      "seconds": 0.9296628000010969,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "inline_max",
+      "seconds": 1.0282011000090279,
+      "binary_bytes": 103999283,
+      "command_tag": "COPY 1000000",
+      "complete_typed_fingerprint": [
+        1000000,
+        "5625640168359967603205",
+        "4521965893763930506354"
+      ]
+    }
+  ],
+  "scope": "Same normalized/proven 1M cache and same public dimensions, rotating order. Real binary COPY TO and complete typed transform fingerprints; no final insertion/index/FK/version/commit cost. Not a full processing score.",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "a1a8f752d10fc86a1162d29f29699e2146cbc76b",
+    "git_status": "M README.md\n M bench/archive_native_clone.py\n M bench/fk_memory_probe.py\n M bench/native_variant_fresh.py\n M bench/scaled_kernel_compare.py\n M docs/ACTIVE_85.md\n M docs/STATUS.md\n M docs/VERIFIED_RESULTS.md\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/cleanup_failed_restore.py\n?? bench/max_axis_probe.py\n?? bench/retire_failed_initialization.py\n?? bench/t1_inline_probe.py\n?? reports/calendar-table5-three-pairs-analysis.json\n?? reports/calendar-three-pairs-offline-audit.json\n?? reports/incomplete-server-pilot-restore-cleanup-log.txt\n?? reports/native-archive-lab_native_variant_004d9febc4-log.txt\n?? reports/native-archive-lab_native_variant_47bfb797fe-log.txt\n?? reports/native-archives/lab_native_variant_004d9febc4.json\n?? reports/native-archives/lab_native_variant_08fad60ca3-failed-initialization.json\n?? reports/native-archives/lab_native_variant_47bfb797fe.json\n?? reports/native-calendar-table5-continuation-1m-v2-log.txt\n?? reports/native-calendar-table5-continuation-1m-v2.json\n?? reports/native-calendar-table5-continuation-1m-v2/\n?? reports/recovery-t1-inline-copy-atomic-log.txt\n?? reports/recovery-t1-inline-copy-atomic.json\n?? reports/retire-failed-initialization-log.txt\n?? reports/semantics-t1-inline-boundaries-82-log.txt\n?? reports/semantics-t1-inline-boundaries-82.json\n?? reports/semantics-t1-inline-copy-121-log.txt\n?? reports/semantics-t1-inline-copy-121.json\n?? reports/shadow-publication-probe-log.txt\n?? reports/source/1d417305a6de0a597e4d926bf9547c84c52920952313157d5c579045fe928dfe.py\n?? reports/source/818074642d20f2c14f7ed0b79c1dcb345f3a907991964eb43958d893d4d3edb9.py\n?? reports/source/8a323a2907dda0fe2c2f4c3c465f5a98b29d5df22f1373f965398dfddd1ac6e5.py\n?? reports/source/917c0e4db337c6d5960488fb349a9214c5ea3a2bf577894a099eb6ef4cd36114.py\n?? reports/source/921b34acf3a4c1bc8cd0519ba78edb2126d6a7f75be3714a46fad66ca68f862f.py\n?? reports/source/b07fba11a8c5a88f6e341dac19f55aa409945b0ed25d8ff49334625a61118c4f.py\n?? reports/source/d7cdb5b4953e7d041a72e1494f9a20c90e07f288b089e77d16c2690afd48f566.py\n?? reports/source/ef8f7b74289a1c2b80e57e428a0502751be6ded15a233e16ade9d1fc947d9381.py\n?? reports/source/f4d312458ee7539d22968bb5fed7c129f6045643086eea53ae2ccd6edf8242f8.py\n?? reports/sql/08159678f9d623854622f686907b0b1e3cc7baaaa36467babbd5028c937420a0.sql\n?? reports/sql/0c1df1635b8b2eb7670fd43055959cbb4644e2aedda2a95bd3321996dffc31e3.sql\n?? reports/sql/183d83f2dfe5a78a0423b0b19c12078d4cb4cb83ed15b9eb571dab22fefdd0a8.sql\n?? reports/sql/3407cac4879d108b37c7654da316d9d5735950eef66f31746f3ab8fa14764546.sql\n?? reports/sql/4dea19e395c10470890b8de477e34c3b42d86c3017219e17589504daa73d6fa1.sql\n?? reports/sql/5870d2dc39f114006c9d02903e2a25f2fa3dde64fc4dfdee4c2fde3cfb35bdaf.sql\n?? reports/sql/5a68fca3d1d25c3fd43c9d639976260dd1885415bda6ef2da6f289fae9129be8.sql\n?? reports/sql/752fefddeccc0a807759883795647c36a1cee2a7d14400c8659722e46db0ee4f.sql\n?? reports/sql/7709865acc398e7744df20509e2c0fed3363980da70bc55af11a5c11262c63de.sql\n?? reports/sql/80a827c29b518db8c17ef2cdf36b0a6ce86df9106ff4eeff6646190c6a344bc7.sql\n?? reports/sql/85175302587e152797c13855295e3d1ec1c582318b4a83adb5865b02e6ec2721.sql\n?? reports/sql/897ddbb844a5433a623a1dba2dc8df9d1658e661068e4f85c7109fdc8ef7e4a5.sql\n?? reports/sql/98742c9b09b6fc9f3e956ec10c5520391dda70a1f9ab205b28a7da45b09c8fcb.sql\n?? reports/sql/a6f8808a76fb79f9a3636eb2fd5babd8d8f269c289f197bef30262d46edd9b4b.sql\n?? reports/sql/b5d922723778992756b65cf2c74159c5ec6538cbcf47b15c5f9a73f1f50cbb0f.sql\n?? reports/sql/b9ddf7c26716c10cd94f6bcd58dd36db2ad4f990f92c1bc506fedc45cf93d52b.sql\n?? reports/sql/c3d241ab8ae4afe41497bb60fd608c23686b805f09ba7cd69a64c9098d123d66.sql\n?? reports/sql/c562c4b6dd50c85c14003fcec51731a0f178e5ca431514f7ae63c9c8bdbc20be.sql\n?? reports/sql/d561d487433c46483a6f484e16687a447f9a528000314838e0a20978771cd7ac.sql\n?? reports/sql/edf9de8f8efd40391caf8999f41708bd95d6f87df6af12fd05fc99c8e279109c.sql\n?? reports/sql/f9061d8be89ef144b8e19a527daa93898d752f48444642b96d95d8c78730f96f.sql\n?? reports/sql/fa8341362ce9df364b1ecee9ca5fd45a7ccb31ac40f466e1de917bc7bb7077b0.sql\n?? reports/t1-inline-components-1m-log.txt\n?? reports/t1-inline-components-1m.json\n?? reports/t1-inline-qualification.json\n?? reports/t1-inline-trim-components-1m-log.txt\n?? reports/t1-inline-trim-components-1m.json\n?? reports/t1-max-vector-components-1m-log.txt\n?? tests/recovery/t1_inline_atomic.py\n?? tests/semantics/t1_inline_boundaries.py\n?? tests/semantics/t1_inline_copy.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "differential": {
+    "safe_numeric_vectors": 3012,
+    "differences": 0,
+    "reason": "Unchanged full proof excludes whitespace, >3 fractional digits and magnitude outside int32 scaling bounds."
+  },
+  "summary": {
+    "calendar": 0.8609900000010384,
+    "inline_max": 0.969804699998349,
+    "inline_trim_max": 0.8386885999934748
+  },
+  "all_private_work_rolled_back_no_identity_allocation": true,
+  "max_vector_hook_sha256": "658e56569db6b28fd3d3e1021ca921160ef9b6bc5fb475d9a02fa8824f9092df",
+  "implementation_sources": {
+    "pipeline\\bulk_fks.py": {
+      "sha256_normalized_lf": "11d25c762143c9b278354c8e80a4065e58dae2e557905cf65200cc453e80296d",
+      "archive": "reports\\source\\11d25c762143c9b278354c8e80a4065e58dae2e557905cf65200cc453e80296d.py"
+    },
+    "pipeline\\bulk_indexes.py": {
+      "sha256_normalized_lf": "9a9895dcf557cdb709621c38710d70c7cf89214f337338076a4dedcfdd343937",
+      "archive": "reports\\source\\9a9895dcf557cdb709621c38710d70c7cf89214f337338076a4dedcfdd343937.py"
+    },
+    "pipeline\\bulk_sequences.py": {
+      "sha256_normalized_lf": "4f677bcf78e53b38f98e5e5816817b0869fa6d9a32c56d574b607ba7d9baaea3",
+      "archive": "reports\\source\\4f677bcf78e53b38f98e5e5816817b0869fa6d9a32c56d574b607ba7d9baaea3.py"
+    },
+    "pipeline\\checkpoints.py": {
+      "sha256_normalized_lf": "672e9d38a28d303c91d5d5f6d9cc9044ef3766ba6ff519522417786de09eb71a",
+      "archive": "reports\\source\\672e9d38a28d303c91d5d5f6d9cc9044ef3766ba6ff519522417786de09eb71a.py"
+    },
+    "pipeline\\guarded_normalization.py": {
+      "sha256_normalized_lf": "4d842ca29848c32cb17f4be638faf1c7d354f3235a4e674fe900b6205c80c952",
+      "archive": "reports\\source\\4d842ca29848c32cb17f4be638faf1c7d354f3235a4e674fe900b6205c80c952.py"
+    },
+    "pipeline\\guards.py": {
+      "sha256_normalized_lf": "e22b5844439bfe5a9a390ad6ef8ec98997a66eb9229ef21d679a28288f73cb5e",
+      "archive": "reports\\source\\e22b5844439bfe5a9a390ad6ef8ec98997a66eb9229ef21d679a28288f73cb5e.py"
+    },
+    "pipeline\\local_diagnostics.py": {
+      "sha256_normalized_lf": "7504cf91fd8771b1de949e62c195e03deab17430f2cfa3260aaab2880a2ecf16",
+      "archive": "reports\\source\\7504cf91fd8771b1de949e62c195e03deab17430f2cfa3260aaab2880a2ecf16.py"
+    },
+    "pipeline\\local_service.py": {
+      "sha256_normalized_lf": "8bc79acb206e3530f011c849b4614adbaf7ec58a7a2b97807936b457a9f3c9d9",
+      "archive": "reports\\source\\8bc79acb206e3530f011c849b4614adbaf7ec58a7a2b97807936b457a9f3c9d9.py"
+    },
+    "pipeline\\native_copy.py": {
+      "sha256_normalized_lf": "1db7d1c17739aa0ec900b56b4dac7023875e9e0447924436081433008e31f45b",
+      "archive": "reports\\source\\1db7d1c17739aa0ec900b56b4dac7023875e9e0447924436081433008e31f45b.py"
+    },
+    "pipeline\\normalization.py": {
+      "sha256_normalized_lf": "269905fb8f9b5511a3b9e8eb53b67bc942e745847a9a728d6fada939d6fe58a5",
+      "archive": "reports\\source\\269905fb8f9b5511a3b9e8eb53b67bc942e745847a9a728d6fada939d6fe58a5.py"
+    },
+    "pipeline\\parallel_normalization.py": {
+      "sha256_normalized_lf": "402873faa17946773118731f53deae13f4fc141a28b1ddd3c180275e32bb0202",
+      "archive": "reports\\source\\402873faa17946773118731f53deae13f4fc141a28b1ddd3c180275e32bb0202.py"
+    },
+    "pipeline\\planner.py": {
+      "sha256_normalized_lf": "c9e024eef8184b21d28f7fd99aadeaa053c94406d44ad91898c219f85d60187b",
+      "archive": "reports\\source\\c9e024eef8184b21d28f7fd99aadeaa053c94406d44ad91898c219f85d60187b.py"
+    },
+    "pipeline\\psql_session.py": {
+      "sha256_normalized_lf": "1c85b461a88fd8df6cc4dc73dea170618664ddd1f9653b3d19947e8a5ae81a4e",
+      "archive": "reports\\source\\1c85b461a88fd8df6cc4dc73dea170618664ddd1f9653b3d19947e8a5ae81a4e.py"
+    },
+    "pipeline\\recipes.py": {
+      "sha256_normalized_lf": "75556e925fe060a87913e2dac932fffa6bf15b227167b350e1be200a0cd7ba69",
+      "archive": "reports\\source\\75556e925fe060a87913e2dac932fffa6bf15b227167b350e1be200a0cd7ba69.py"
+    },
+    "pipeline\\safe_domain.py": {
+      "sha256_normalized_lf": "027b6773ce2a4251a1edd54aaff0a2c7218e23fc8fbc0c1d6b7551b8b8c7b2a5",
+      "archive": "reports\\source\\027b6773ce2a4251a1edd54aaff0a2c7218e23fc8fbc0c1d6b7551b8b8c7b2a5.py"
+    },
+    "pipeline\\upstream.py": {
+      "sha256_normalized_lf": "aa90799f6ab37523c55baa7353f1fe92fc84b7e1a3df5e5a14b00694287817a9",
+      "archive": "reports\\source\\aa90799f6ab37523c55baa7353f1fe92fc84b7e1a3df5e5a14b00694287817a9.py"
+    },
+    "pipeline\\version_receipts.py": {
+      "sha256_normalized_lf": "f0b1bd3c053489f2d98e0191919875e91db14997c027d8a118de0fb29a285935",
+      "archive": "reports\\source\\f0b1bd3c053489f2d98e0191919875e91db14997c027d8a118de0fb29a285935.py"
+    },
+    "pipeline\\workspace.py": {
+      "sha256_normalized_lf": "5274bfb89c7cda5925e1afee207009ecd3e973ff3409474aad45f0b6f2bc4b27",
+      "archive": "reports\\source\\5274bfb89c7cda5925e1afee207009ecd3e973ff3409474aad45f0b6f2bc4b27.py"
+    },
+    "pipeline\\__init__.py": {
+      "sha256_normalized_lf": "3bfc13e1246994d2dc97b0ecdbbc2ebadca34a4f4facd3336e564d8767698bf5",
+      "archive": "reports\\source\\3bfc13e1246994d2dc97b0ecdbbc2ebadca34a4f4facd3336e564d8767698bf5.py"
+    },
+    "bench\\archive_native_clone.py": {
+      "sha256_normalized_lf": "ef8f7b74289a1c2b80e57e428a0502751be6ded15a233e16ade9d1fc947d9381",
+      "archive": "reports\\source\\ef8f7b74289a1c2b80e57e428a0502751be6ded15a233e16ade9d1fc947d9381.py"
+    },
+    "bench\\audit_catalogs.py": {
+      "sha256_normalized_lf": "b435ba006e529c3bf8b5086f5bb8919bc1e2c874ad98b60c9b7e11d7c03e024d",
+      "archive": "reports\\source\\b435ba006e529c3bf8b5086f5bb8919bc1e2c874ad98b60c9b7e11d7c03e024d.py"
+    },
+    "bench\\audit_ranked_result.py": {
+      "sha256_normalized_lf": "861bdab9c03a0d532365d916fa569155ecce3fb0bddf765654e471f787e504a0",
+      "archive": "reports\\source\\861bdab9c03a0d532365d916fa569155ecce3fb0bddf765654e471f787e504a0.py"
+    },
+    "bench\\backend_cpu_probe.py": {
+      "sha256_normalized_lf": "d7cdb5b4953e7d041a72e1494f9a20c90e07f288b089e77d16c2690afd48f566",
+      "archive": "reports\\source\\d7cdb5b4953e7d041a72e1494f9a20c90e07f288b089e77d16c2690afd48f566.py"
+    },
+    "bench\\bounded_copy_resume_probe.py": {
+      "sha256_normalized_lf": "255417ab9b4b6ecbc70f1b0cc3e9e626b12a7493babefea600ae5d242048fec4",
+      "archive": "reports\\source\\255417ab9b4b6ecbc70f1b0cc3e9e626b12a7493babefea600ae5d242048fec4.py"
+    },
+    "bench\\calendar_proof_probe.py": {
+      "sha256_normalized_lf": "0fb6a54663fa52647a9f5bd78311bd0fa0d2b24a72c2168d8e82161e829cdb3d",
+      "archive": "reports\\source\\0fb6a54663fa52647a9f5bd78311bd0fa0d2b24a72c2168d8e82161e829cdb3d.py"
+    },
+    "bench\\checkpoints.py": {
+      "sha256_normalized_lf": "58f8e60d54228b5eb4b7b93dba02bfebbedd0308ff6d6046aab43ae844afd5c9",
+      "archive": "reports\\source\\58f8e60d54228b5eb4b7b93dba02bfebbedd0308ff6d6046aab43ae844afd5c9.py"
+    },
+    "bench\\chunk_projection_probe.py": {
+      "sha256_normalized_lf": "543df2f65c1d4dcc6104330f03a8c068e6cedfea3c9c8bde8ceabed1b428a0ea",
+      "archive": "reports\\source\\543df2f65c1d4dcc6104330f03a8c068e6cedfea3c9c8bde8ceabed1b428a0ea.py"
+    },
+    "bench\\cleanup_failed_restore.py": {
+      "sha256_normalized_lf": "909bf11e94fd3f2cbe224b9d920ca840af55c572cd17fd0dd2c9e94e6c5bc305",
+      "archive": "reports\\source\\909bf11e94fd3f2cbe224b9d920ca840af55c572cd17fd0dd2c9e94e6c5bc305.py"
+    },
+    "bench\\clean_clones.py": {
+      "sha256_normalized_lf": "88b66ebf8bfe12bfb3e5349e6ea06f88a1abd9c335bb5512db9e26ae76efbb69",
+      "archive": "reports\\source\\88b66ebf8bfe12bfb3e5349e6ea06f88a1abd9c335bb5512db9e26ae76efbb69.py"
+    },
+    "bench\\clean_verification.py": {
+      "sha256_normalized_lf": "1cf0ee24fcbf787c42006315adf62b21709b35d38d9cbdaae07195bc2d93881e",
+      "archive": "reports\\source\\1cf0ee24fcbf787c42006315adf62b21709b35d38d9cbdaae07195bc2d93881e.py"
+    },
+    "bench\\common.py": {
+      "sha256_normalized_lf": "54248fd0f028728cb2c0ef9cc712dd11d951b45092b3982bacecb01d25f18f58",
+      "archive": "reports\\source\\54248fd0f028728cb2c0ef9cc712dd11d951b45092b3982bacecb01d25f18f58.py"
+    },
+    "bench\\compact_axis_boundaries.py": {
+      "sha256_normalized_lf": "072aedaa83b9214ac51d7056525a858c1f67c518a242d2efa3a04bae758e1d3d",
+      "archive": "reports\\source\\072aedaa83b9214ac51d7056525a858c1f67c518a242d2efa3a04bae758e1d3d.py"
+    },
+    "bench\\compact_axis_probe.py": {
+      "sha256_normalized_lf": "9bda512647a2d7b7efb293e94674179819e9557fbd3aafee0ab74b1d6a95fe2b",
+      "archive": "reports\\source\\9bda512647a2d7b7efb293e94674179819e9557fbd3aafee0ab74b1d6a95fe2b.py"
+    },
+    "bench\\control.py": {
+      "sha256_normalized_lf": "9ed5d368b2aba8f3bae75d711dabae722b570ad2e5b97f43a03a800a25cff7a1",
+      "archive": "reports\\source\\9ed5d368b2aba8f3bae75d711dabae722b570ad2e5b97f43a03a800a25cff7a1.py"
+    },
+    "bench\\copy_probe.py": {
+      "sha256_normalized_lf": "9a2eac255878f00b9dc5bbfed7e5e83960494f61d5dc09849614c75424f658b0",
+      "archive": "reports\\source\\9a2eac255878f00b9dc5bbfed7e5e83960494f61d5dc09849614c75424f658b0.py"
+    },
+    "bench\\crash_dump.py": {
+      "sha256_normalized_lf": "4bbee98e4addcc9ec96f8779b410e9ce7f96666ae73204a316ac78d07fcd2844",
+      "archive": "reports\\source\\4bbee98e4addcc9ec96f8779b410e9ce7f96666ae73204a316ac78d07fcd2844.py"
+    },
+    "bench\\ctas_profile.py": {
+      "sha256_normalized_lf": "75d5e5a75f92ec390d43ed44761524e64790721c075938a9607bac65d395485a",
+      "archive": "reports\\source\\75d5e5a75f92ec390d43ed44761524e64790721c075938a9607bac65d395485a.py"
+    },
+    "bench\\ctas_tuning_probe.py": {
+      "sha256_normalized_lf": "6d4ea871df58fbb30269794029c0eee446ce48c2e14e7eabfe280cb517243eba",
+      "archive": "reports\\source\\6d4ea871df58fbb30269794029c0eee446ce48c2e14e7eabfe280cb517243eba.py"
+    },
+    "bench\\early_copy_probe.py": {
+      "sha256_normalized_lf": "f450d7d92bd3ed336d2ab526ae5f4cd4716a8684233659525e993a0e5292c9d7",
+      "archive": "reports\\source\\f450d7d92bd3ed336d2ab526ae5f4cd4716a8684233659525e993a0e5292c9d7.py"
+    },
+    "bench\\extraction_probe.py": {
+      "sha256_normalized_lf": "73c199a228457b263151e6aeb9180d161683afea5dc5c14b1cdcb5fb5d182f39",
+      "archive": "reports\\source\\73c199a228457b263151e6aeb9180d161683afea5dc5c14b1cdcb5fb5d182f39.py"
+    },
+    "bench\\fast_transport_probe.py": {
+      "sha256_normalized_lf": "d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a",
+      "archive": "reports\\source\\d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a.py"
+    },
+    "bench\\fixture.py": {
+      "sha256_normalized_lf": "387d01efe856a400ea05a96282ef5ff1327456c526a51d09995fb38c37c5f740",
+      "archive": "reports\\source\\387d01efe856a400ea05a96282ef5ff1327456c526a51d09995fb38c37c5f740.py"
+    },
+    "bench\\fk_memory_probe.py": {
+      "sha256_normalized_lf": "a3d019417cae2cbe381054dde819d79b61f321512969294a8a2a70d73e851055",
+      "archive": "reports\\source\\a3d019417cae2cbe381054dde819d79b61f321512969294a8a2a70d73e851055.py"
+    },
+    "bench\\fresh.py": {
+      "sha256_normalized_lf": "51877e7212be11993efa24d8beeafdcb59c787e2f88cd4bcd9d575a8c4c1f8a4",
+      "archive": "reports\\source\\51877e7212be11993efa24d8beeafdcb59c787e2f88cd4bcd9d575a8c4c1f8a4.py"
+    },
+    "bench\\index_tuning_component.py": {
+      "sha256_normalized_lf": "103c1030eb9c2532ae1ea8461e6ca1792aa3657e02bcd15e3ef91ef47229766c",
+      "archive": "reports\\source\\103c1030eb9c2532ae1ea8461e6ca1792aa3657e02bcd15e3ef91ef47229766c.py"
+    },
+    "bench\\index_tuning_probe.py": {
+      "sha256_normalized_lf": "2eac066b3e4d49b44a639c41684982d2966495b8fa115de05ebac6bb50b6512f",
+      "archive": "reports\\source\\2eac066b3e4d49b44a639c41684982d2966495b8fa115de05ebac6bb50b6512f.py"
+    },
+    "bench\\json_table_probe.py": {
+      "sha256_normalized_lf": "769a7e12804a9f9e9d030d6e7719f5f212dcd7e025caf38140ba0b43182c729b",
+      "archive": "reports\\source\\769a7e12804a9f9e9d030d6e7719f5f212dcd7e025caf38140ba0b43182c729b.py"
+    },
+    "bench\\maintenance_probe.py": {
+      "sha256_normalized_lf": "734094ecfb8d4a8eaf6276f7f86a882dff667da12f3ce1f51c68b799448bf06e",
+      "archive": "reports\\source\\734094ecfb8d4a8eaf6276f7f86a882dff667da12f3ce1f51c68b799448bf06e.py"
+    },
+    "bench\\max_axis_probe.py": {
+      "sha256_normalized_lf": "a1ad2970bcfc9ecd091523423c67ebe8c59ab2eb9e971ff81fac326b61e3ff93",
+      "archive": "reports\\source\\a1ad2970bcfc9ecd091523423c67ebe8c59ab2eb9e971ff81fac326b61e3ff93.py"
+    },
+    "bench\\memo_axes_probe.py": {
+      "sha256_normalized_lf": "aca9ff2359ecef24d5a9520bcc3f0b9f16b268019eb3d4a36ba39746abcc07ac",
+      "archive": "reports\\source\\aca9ff2359ecef24d5a9520bcc3f0b9f16b268019eb3d4a36ba39746abcc07ac.py"
+    },
+    "bench\\memo_scalar_probe.py": {
+      "sha256_normalized_lf": "95417d45ff9d2259713858be181d81d5e3d0a04790d161a225568249a2d83261",
+      "archive": "reports\\source\\95417d45ff9d2259713858be181d81d5e3d0a04790d161a225568249a2d83261.py"
+    },
+    "bench\\native_fresh.py": {
+      "sha256_normalized_lf": "63272c41eb2c51b5776c054d795fd218f9fe21060f40bbe4345ae392e19a6fdd",
+      "archive": "reports\\source\\63272c41eb2c51b5776c054d795fd218f9fe21060f40bbe4345ae392e19a6fdd.py"
+    },
+    "bench\\native_resources.py": {
+      "sha256_normalized_lf": "dcd9056da208d947fca25ae11e74cccf49b5d7cb7280a0d4563dec3cb5e934eb",
+      "archive": "reports\\source\\dcd9056da208d947fca25ae11e74cccf49b5d7cb7280a0d4563dec3cb5e934eb.py"
+    },
+    "bench\\native_resource_worker.py": {
+      "sha256_normalized_lf": "93a278c7502cf9de968d48b326094f1c26983078fe83416ca2d4ff2bc8ad3a81",
+      "archive": "reports\\source\\93a278c7502cf9de968d48b326094f1c26983078fe83416ca2d4ff2bc8ad3a81.py"
+    },
+    "bench\\native_variant_fresh.py": {
+      "sha256_normalized_lf": "f4d312458ee7539d22968bb5fed7c129f6045643086eea53ae2ccd6edf8242f8",
+      "archive": "reports\\source\\f4d312458ee7539d22968bb5fed7c129f6045643086eea53ae2ccd6edf8242f8.py"
+    },
+    "bench\\null_first_scaled_probe.py": {
+      "sha256_normalized_lf": "ac574169866927fb704d1590217644e7b579a0c158ae6bf7a6c3ab20885e2a7f",
+      "archive": "reports\\source\\ac574169866927fb704d1590217644e7b579a0c158ae6bf7a6c3ab20885e2a7f.py"
+    },
+    "bench\\offset_projection_probe.py": {
+      "sha256_normalized_lf": "da5ec5d44d9642ef119260973b980a144a01c614f52ae087cc54f3aefa2ccb3a",
+      "archive": "reports\\source\\da5ec5d44d9642ef119260973b980a144a01c614f52ae087cc54f3aefa2ccb3a.py"
+    },
+    "bench\\parallel_probe.py": {
+      "sha256_normalized_lf": "bbc3272e02f10443c37abc7ebaf5d2da68e7a8fb8df6cdac619149958bbf89a1",
+      "archive": "reports\\source\\bbc3272e02f10443c37abc7ebaf5d2da68e7a8fb8df6cdac619149958bbf89a1.py"
+    },
+    "bench\\parent_map_probe.py": {
+      "sha256_normalized_lf": "dd2f115a69ee1b3ae9590827175812c69b943a5607f26660fe4944cfa7031eff",
+      "archive": "reports\\source\\dd2f115a69ee1b3ae9590827175812c69b943a5607f26660fe4944cfa7031eff.py"
+    },
+    "bench\\per_field_proof_probe.py": {
+      "sha256_normalized_lf": "4d566280e7f54681ad5fd39f3631fd5e26a9f74261983cf9f6b4fd37489946f6",
+      "archive": "reports\\source\\4d566280e7f54681ad5fd39f3631fd5e26a9f74261983cf9f6b4fd37489946f6.py"
+    },
+    "bench\\phased_transport.py": {
+      "sha256_normalized_lf": "1b9c59368681fb0cada5556a4ea967eead28a5c12ba15f7ab28d049c01e6be1b",
+      "archive": "reports\\source\\1b9c59368681fb0cada5556a4ea967eead28a5c12ba15f7ab28d049c01e6be1b.py"
+    },
+    "bench\\prepare.py": {
+      "sha256_normalized_lf": "c760fecf521fe28641762ba304ec541bf9b969803630922a93c7953dcbbc8a2c",
+      "archive": "reports\\source\\c760fecf521fe28641762ba304ec541bf9b969803630922a93c7953dcbbc8a2c.py"
+    },
+    "bench\\profile.py": {
+      "sha256_normalized_lf": "459e728f86c210604a14171086e16222e8283be28e750087365d7d9fbd6404d9",
+      "archive": "reports\\source\\459e728f86c210604a14171086e16222e8283be28e750087365d7d9fbd6404d9.py"
+    },
+    "bench\\projectset_probe.py": {
+      "sha256_normalized_lf": "cf2d4ba2dd5f489af9d1ec87d15886f627c16a88da5bb07600e20a29cd766b14",
+      "archive": "reports\\source\\cf2d4ba2dd5f489af9d1ec87d15886f627c16a88da5bb07600e20a29cd766b14.py"
+    },
+    "bench\\proof_memoize_probe.py": {
+      "sha256_normalized_lf": "74568f48f2cf21fa494fa4eb666c1fe989d34fd2401870c36a280f349b1f26ab",
+      "archive": "reports\\source\\74568f48f2cf21fa494fa4eb666c1fe989d34fd2401870c36a280f349b1f26ab.py"
+    },
+    "bench\\proof_pattern_probe.py": {
+      "sha256_normalized_lf": "63e780f21fcbffa76d352ed4eb2098eec98f0e39767d08504ee4a94faf6cbd3c",
+      "archive": "reports\\source\\63e780f21fcbffa76d352ed4eb2098eec98f0e39767d08504ee4a94faf6cbd3c.py"
+    },
+    "bench\\reference.py": {
+      "sha256_normalized_lf": "0812d25b930f6ddacbe00a3fb15fc84ef8833aaec2226bbe3f4096e815e57c8e",
+      "archive": "reports\\source\\0812d25b930f6ddacbe00a3fb15fc84ef8833aaec2226bbe3f4096e815e57c8e.py"
+    },
+    "bench\\refined_copy_probe.py": {
+      "sha256_normalized_lf": "90d4ae76018ae8dc03ca40d701883c065ad5bec532d3b6718f79678bd8cd78a9",
+      "archive": "reports\\source\\90d4ae76018ae8dc03ca40d701883c065ad5bec532d3b6718f79678bd8cd78a9.py"
+    },
+    "bench\\release_profile.py": {
+      "sha256_normalized_lf": "2887bb0baab8a5e5b7b9eba3653185d5827c3b15bbe86954487a9915423e766a",
+      "archive": "reports\\source\\2887bb0baab8a5e5b7b9eba3653185d5827c3b15bbe86954487a9915423e766a.py"
+    },
+    "bench\\retire_failed_initialization.py": {
+      "sha256_normalized_lf": "b07fba11a8c5a88f6e341dac19f55aa409945b0ed25d8ff49334625a61118c4f",
+      "archive": "reports\\source\\b07fba11a8c5a88f6e341dac19f55aa409945b0ed25d8ff49334625a61118c4f.py"
+    },
+    "bench\\retire_json_oracle.py": {
+      "sha256_normalized_lf": "0c26f49844de4cc57e609de6366e838fad471ba786aeaa1337401ad7d8138c21",
+      "archive": "reports\\source\\0c26f49844de4cc57e609de6366e838fad471ba786aeaa1337401ad7d8138c21.py"
+    },
+    "bench\\run.py": {
+      "sha256_normalized_lf": "2ed34bc4a4fd7242f29e2bd26757a0d5ce127a32d579f6a7223083b479b6d947",
+      "archive": "reports\\source\\2ed34bc4a4fd7242f29e2bd26757a0d5ce127a32d579f6a7223083b479b6d947.py"
+    },
+    "bench\\scalar_copy_probe.py": {
+      "sha256_normalized_lf": "8da3fe49ef9f3d4251bc438821db7129eebb0b90e1f425113b33258557359c06",
+      "archive": "reports\\source\\8da3fe49ef9f3d4251bc438821db7129eebb0b90e1f425113b33258557359c06.py"
+    },
+    "bench\\scaled_int_probe.py": {
+      "sha256_normalized_lf": "ddba8e580333813b1738810aa72cb5c4f1a0d314d70d68942daebbe9e30b4a36",
+      "archive": "reports\\source\\ddba8e580333813b1738810aa72cb5c4f1a0d314d70d68942daebbe9e30b4a36.py"
+    },
+    "bench\\scaled_kernel_compare.py": {
+      "sha256_normalized_lf": "c8553d164bb555f151ec7491d9482cbef463870069cce1eef56ad72fa16ac211",
+      "archive": "reports\\source\\c8553d164bb555f151ec7491d9482cbef463870069cce1eef56ad72fa16ac211.py"
+    },
+    "bench\\script_transport_probe.py": {
+      "sha256_normalized_lf": "caca70c1274f4b6b1d0cf9027f5140d6959fdb0610296c2a86aed4859cea9dd4",
+      "archive": "reports\\source\\caca70c1274f4b6b1d0cf9027f5140d6959fdb0610296c2a86aed4859cea9dd4.py"
+    },
+    "bench\\server_copy_probe.py": {
+      "sha256_normalized_lf": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+      "archive": "reports\\source\\0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da.py"
+    },
+    "bench\\service_run.py": {
+      "sha256_normalized_lf": "20cbc97e4af25d628b86ac216c38f27abffa8df7f027d4ba0e724778ac35c84b",
+      "archive": "reports\\source\\20cbc97e4af25d628b86ac216c38f27abffa8df7f027d4ba0e724778ac35c84b.py"
+    },
+    "bench\\shadow_publish_probe.py": {
+      "sha256_normalized_lf": "4643c023ef71f889dac0ee76f502c29af3011a4bd0e44966f74baad7ecc30e4c",
+      "archive": "reports\\source\\4643c023ef71f889dac0ee76f502c29af3011a4bd0e44966f74baad7ecc30e4c.py"
+    },
+    "bench\\source_hash_probe.py": {
+      "sha256_normalized_lf": "a45c1a8f78d1bf7fb33be81ca93d0a1d27914d74e5ce52f2bd0f5571292150c1",
+      "archive": "reports\\source\\a45c1a8f78d1bf7fb33be81ca93d0a1d27914d74e5ce52f2bd0f5571292150c1.py"
+    },
+    "bench\\source_snapshot.py": {
+      "sha256_normalized_lf": "0ab4384b24d840cca3331060e036c8fdfc726f49273bb2a1d3da58e4df12976e",
+      "archive": "reports\\source\\0ab4384b24d840cca3331060e036c8fdfc726f49273bb2a1d3da58e4df12976e.py"
+    },
+    "bench\\sparse_proof_probe.py": {
+      "sha256_normalized_lf": "25f357b33d70a58a3abaf69da549f57e0e22303d8d953c7c624d4cf709f79d71",
+      "archive": "reports\\source\\25f357b33d70a58a3abaf69da549f57e0e22303d8d953c7c624d4cf709f79d71.py"
+    },
+    "bench\\summarize.py": {
+      "sha256_normalized_lf": "88cc1134777475d223712249b7b739c5c37ffc5ca00fab8395958c764a3f2f09",
+      "archive": "reports\\source\\88cc1134777475d223712249b7b739c5c37ffc5ca00fab8395958c764a3f2f09.py"
+    },
+    "bench\\t1_inline_probe.py": {
+      "sha256_normalized_lf": "1d417305a6de0a597e4d926bf9547c84c52920952313157d5c579045fe928dfe",
+      "archive": "reports\\source\\1d417305a6de0a597e4d926bf9547c84c52920952313157d5c579045fe928dfe.py"
+    },
+    "bench\\text_stage_probe.py": {
+      "sha256_normalized_lf": "e336edd535f832b64fc3305da635f9cb9ad599ab72b28074e42238be9e8c6c1f",
+      "archive": "reports\\source\\e336edd535f832b64fc3305da635f9cb9ad599ab72b28074e42238be9e8c6c1f.py"
+    },
+    "bench\\typed_stage_component.py": {
+      "sha256_normalized_lf": "3778a1e6916fabbf3d68f37a6cdf20838b676c00c6194438ebbe86407eedfbfc",
+      "archive": "reports\\source\\3778a1e6916fabbf3d68f37a6cdf20838b676c00c6194438ebbe86407eedfbfc.py"
+    },
+    "bench\\typed_stage_probe.py": {
+      "sha256_normalized_lf": "71c8d9a809512142a8643792b4054ba26c2b97df77dab5e97b3de270ba116e1c",
+      "archive": "reports\\source\\71c8d9a809512142a8643792b4054ba26c2b97df77dab5e97b3de270ba116e1c.py"
+    },
+    "bench\\unlogged_stage_probe.py": {
+      "sha256_normalized_lf": "2f9e93b5add713ff0235dbe1d8fbbf028018d684f660e2b2e9bbfda50bcea469",
+      "archive": "reports\\source\\2f9e93b5add713ff0235dbe1d8fbbf028018d684f660e2b2e9bbfda50bcea469.py"
+    },
+    "bench\\worker_degree_probe.py": {
+      "sha256_normalized_lf": "bed86a0250cc9a375c2a3ab79625125801e3eb165a513d7b20c31aa08a609d7d",
+      "archive": "reports\\source\\bed86a0250cc9a375c2a3ab79625125801e3eb165a513d7b20c31aa08a609d7d.py"
+    },
+    "bench\\__init__.py": {
+      "sha256_normalized_lf": "510c17d39d0caa350c29647d1fb93a8c607643cc2940679de71287de2863a86b",
+      "archive": "reports\\source\\510c17d39d0caa350c29647d1fb93a8c607643cc2940679de71287de2863a86b.py"
+    },
+    "tests\\test_recipes.py": {
+      "sha256_normalized_lf": "2cb86eab8bb1e5a03b4174b9151481ccde0630f9eb2748c38a24b0f5e814bb4f",
+      "archive": "reports\\source\\2cb86eab8bb1e5a03b4174b9151481ccde0630f9eb2748c38a24b0f5e814bb4f.py"
+    },
+    "tests\\__init__.py": {
+      "sha256_normalized_lf": "446621aec13fee13c564f60b3808aae95ffb94a6c5599d9a35dd5a382564db0d",
+      "archive": "reports\\source\\446621aec13fee13c564f60b3808aae95ffb94a6c5599d9a35dd5a382564db0d.py"
+    },
+    "tests\\equivalence\\oracle.py": {
+      "sha256_normalized_lf": "1853eea6f1f4372034c1469d66df65154283f2c56b0e0ec9076d2fa03f8bf381",
+      "archive": "reports\\source\\1853eea6f1f4372034c1469d66df65154283f2c56b0e0ec9076d2fa03f8bf381.py"
+    },
+    "tests\\equivalence\\tagged_comparator.py": {
+      "sha256_normalized_lf": "8ab472dd7e2cf7e790521d158a7174b7d129bcddb96d585a066bc7bbef29a7e1",
+      "archive": "reports\\source\\8ab472dd7e2cf7e790521d158a7174b7d129bcddb96d585a066bc7bbef29a7e1.py"
+    },
+    "tests\\equivalence\\__init__.py": {
+      "sha256_normalized_lf": "d0576b52e30995715481563c401a56ff3a4ec05938a34e8c888087a79346b943",
+      "archive": "reports\\source\\d0576b52e30995715481563c401a56ff3a4ec05938a34e8c888087a79346b943.py"
+    },
+    "tests\\recovery\\bulk_atomic.py": {
+      "sha256_normalized_lf": "82d50f20ed8fe09dd76cb83b6138aff6924ab73ebc721ae0df5a640504c751b3",
+      "archive": "reports\\source\\82d50f20ed8fe09dd76cb83b6138aff6924ab73ebc721ae0df5a640504c751b3.py"
+    },
+    "tests\\recovery\\bulk_concurrency.py": {
+      "sha256_normalized_lf": "e46186f0fb547602f4c9ec23f615a4b5b1b349d25ae18782b3397a41558cec04",
+      "archive": "reports\\source\\e46186f0fb547602f4c9ec23f615a4b5b1b349d25ae18782b3397a41558cec04.py"
+    },
+    "tests\\recovery\\bulk_dump.py": {
+      "sha256_normalized_lf": "19b5b963f0d0c0237159faaaf534e2d6e25f74c302d9563e1c8a1ab47443301b",
+      "archive": "reports\\source\\19b5b963f0d0c0237159faaaf534e2d6e25f74c302d9563e1c8a1ab47443301b.py"
+    },
+    "tests\\recovery\\bulk_guards.py": {
+      "sha256_normalized_lf": "a710eae12ab734c5d18ac1a6088b25114681f88120d42e95650f86440911e93b",
+      "archive": "reports\\source\\a710eae12ab734c5d18ac1a6088b25114681f88120d42e95650f86440911e93b.py"
+    },
+    "tests\\recovery\\bulk_server_crash.py": {
+      "sha256_normalized_lf": "7e4178fc503f4bef00a725fc58e945e584afc13ed8fc77b64cd81c8df1709ef6",
+      "archive": "reports\\source\\7e4178fc503f4bef00a725fc58e945e584afc13ed8fc77b64cd81c8df1709ef6.py"
+    },
+    "tests\\recovery\\calendar_copy_atomic.py": {
+      "sha256_normalized_lf": "8889170b9b8881a749e91f5ab9ff3deffe829150c22497c3ad19d107d1154165",
+      "archive": "reports\\source\\8889170b9b8881a749e91f5ab9ff3deffe829150c22497c3ad19d107d1154165.py"
+    },
+    "tests\\recovery\\calendar_table5_atomic.py": {
+      "sha256_normalized_lf": "1c92a8813b1373b230166e9f528ea8a8d908439d17628aae32ee81f076ef4935",
+      "archive": "reports\\source\\1c92a8813b1373b230166e9f528ea8a8d908439d17628aae32ee81f076ef4935.py"
+    },
+    "tests\\recovery\\dump_roundtrip.py": {
+      "sha256_normalized_lf": "99141547524a55b9b3bd6a08fefd22dce5e7e3744585aaa6605fc05e1f718949",
+      "archive": "reports\\source\\99141547524a55b9b3bd6a08fefd22dce5e7e3744585aaa6605fc05e1f718949.py"
+    },
+    "tests\\recovery\\memo_copy_atomic.py": {
+      "sha256_normalized_lf": "b17e615ee61725db394ef0ede29c8d9c61c0b446055ea80fd4bda8e292878259",
+      "archive": "reports\\source\\b17e615ee61725db394ef0ede29c8d9c61c0b446055ea80fd4bda8e292878259.py"
+    },
+    "tests\\recovery\\metadata_sessions.py": {
+      "sha256_normalized_lf": "eed4a3e6c29334632a1003d9acaaf24cbbe8bedb00dc622c6416780499bea5a2",
+      "archive": "reports\\source\\eed4a3e6c29334632a1003d9acaaf24cbbe8bedb00dc622c6416780499bea5a2.py"
+    },
+    "tests\\recovery\\metadata_stdin.py": {
+      "sha256_normalized_lf": "e167644cf0e6ecfbebb2b785a33defa99f722a524dd83fc73bd692f4d59bb5a9",
+      "archive": "reports\\source\\e167644cf0e6ecfbebb2b785a33defa99f722a524dd83fc73bd692f4d59bb5a9.py"
+    },
+    "tests\\recovery\\native_branches.py": {
+      "sha256_normalized_lf": "e1bb1b1b693effc0195f940676de45b6277c48c9161f94c332c3c206215c4d1f",
+      "archive": "reports\\source\\e1bb1b1b693effc0195f940676de45b6277c48c9161f94c332c3c206215c4d1f.py"
+    },
+    "tests\\recovery\\native_copy_atomic.py": {
+      "sha256_normalized_lf": "8eb21c65a069e7720b47586f9482b9cd35a496698d4b83cdd6da9cda0de0716b",
+      "archive": "reports\\source\\8eb21c65a069e7720b47586f9482b9cd35a496698d4b83cdd6da9cda0de0716b.py"
+    },
+    "tests\\recovery\\native_copy_crash.py": {
+      "sha256_normalized_lf": "9c03ffaaabcde86c9091a415d4a02a26c50bf1bf65e8b165998816c65256b881",
+      "archive": "reports\\source\\9c03ffaaabcde86c9091a415d4a02a26c50bf1bf65e8b165998816c65256b881.py"
+    },
+    "tests\\recovery\\parallel_indexes.py": {
+      "sha256_normalized_lf": "21d5232c8940cb4d4aa6cee110d5520a40af0ccf94d1a72e645b5765f93cc047",
+      "archive": "reports\\source\\21d5232c8940cb4d4aa6cee110d5520a40af0ccf94d1a72e645b5765f93cc047.py"
+    },
+    "tests\\recovery\\psql_session.py": {
+      "sha256_normalized_lf": "ef15a568b3089e3ea8c06e12173c767642b19919f365a9100f03cbe09f55230d",
+      "archive": "reports\\source\\ef15a568b3089e3ea8c06e12173c767642b19919f365a9100f03cbe09f55230d.py"
+    },
+    "tests\\recovery\\refined_copy_atomic.py": {
+      "sha256_normalized_lf": "d0a1c2eb94f1c14bcb35d64064005eeca498df66643d3b484844663640d7cbb6",
+      "archive": "reports\\source\\d0a1c2eb94f1c14bcb35d64064005eeca498df66643d3b484844663640d7cbb6.py"
+    },
+    "tests\\recovery\\restart.py": {
+      "sha256_normalized_lf": "9dac5885031c81ff3bfc16252e759a507fe2524845aa32720d6f19f32c4570f4",
+      "archive": "reports\\source\\9dac5885031c81ff3bfc16252e759a507fe2524845aa32720d6f19f32c4570f4.py"
+    },
+    "tests\\recovery\\run.py": {
+      "sha256_normalized_lf": "7586639f4b06e47812f372db16b9a4c665539c1881d38d7e75e2762287553783",
+      "archive": "reports\\source\\7586639f4b06e47812f372db16b9a4c665539c1881d38d7e75e2762287553783.py"
+    },
+    "tests\\recovery\\scalar_copy_atomic.py": {
+      "sha256_normalized_lf": "ea7e554a0759033cdefe9b1d6360bb512c1e84d629c5b0d8a53551b219b93c47",
+      "archive": "reports\\source\\ea7e554a0759033cdefe9b1d6360bb512c1e84d629c5b0d8a53551b219b93c47.py"
+    },
+    "tests\\recovery\\scaled_script_atomic.py": {
+      "sha256_normalized_lf": "c34c0bde5ca86b97a84a7605c8f7068ac9f5bd25588447572f502a898198def6",
+      "archive": "reports\\source\\c34c0bde5ca86b97a84a7605c8f7068ac9f5bd25588447572f502a898198def6.py"
+    },
+    "tests\\recovery\\scaled_script_crash.py": {
+      "sha256_normalized_lf": "7158108524b9d2f6160a6bd40bcb536797dc402bc588a6a8d413a481f21efc28",
+      "archive": "reports\\source\\7158108524b9d2f6160a6bd40bcb536797dc402bc588a6a8d413a481f21efc28.py"
+    },
+    "tests\\recovery\\sequences.py": {
+      "sha256_normalized_lf": "bd8d6033ee19e3567b09035043a0abda15eabfe43655f82dfcf92e869b5ed8f4",
+      "archive": "reports\\source\\bd8d6033ee19e3567b09035043a0abda15eabfe43655f82dfcf92e869b5ed8f4.py"
+    },
+    "tests\\recovery\\server_copy_roles.py": {
+      "sha256_normalized_lf": "45540f44514e68ea33a5178b796254b9055c5a7a84a79ca33e2c597a6a65edec",
+      "archive": "reports\\source\\45540f44514e68ea33a5178b796254b9055c5a7a84a79ca33e2c597a6a65edec.py"
+    },
+    "tests\\recovery\\source_fingerprint.py": {
+      "sha256_normalized_lf": "83b73bd68bcea9930ecea467f2d7745a0df13ad6ecd89ec3c46e3ffdc20def66",
+      "archive": "reports\\source\\83b73bd68bcea9930ecea467f2d7745a0df13ad6ecd89ec3c46e3ffdc20def66.py"
+    },
+    "tests\\recovery\\t1_inline_atomic.py": {
+      "sha256_normalized_lf": "8a323a2907dda0fe2c2f4c3c465f5a98b29d5df22f1373f965398dfddd1ac6e5",
+      "archive": "reports\\source\\8a323a2907dda0fe2c2f4c3c465f5a98b29d5df22f1373f965398dfddd1ac6e5.py"
+    },
+    "tests\\recovery\\tamper.py": {
+      "sha256_normalized_lf": "3f2982de5e6614a0b052012e030bcf1d9a2b3d03b7acbbf49dd2c4dfa1e1eb8a",
+      "archive": "reports\\source\\3f2982de5e6614a0b052012e030bcf1d9a2b3d03b7acbbf49dd2c4dfa1e1eb8a.py"
+    },
+    "tests\\recovery\\worker.py": {
+      "sha256_normalized_lf": "a57f37a78da5f8596a64c1a389038fab62edd7c6eccad1709e0eb01e0ded727c",
+      "archive": "reports\\source\\a57f37a78da5f8596a64c1a389038fab62edd7c6eccad1709e0eb01e0ded727c.py"
+    },
+    "tests\\recovery\\__init__.py": {
+      "sha256_normalized_lf": "1fb1ea0be5235e980845c3dfc2b2068ed3350bfe9c5b4074920b96abee9ac57e",
+      "archive": "reports\\source\\1fb1ea0be5235e980845c3dfc2b2068ed3350bfe9c5b4074920b96abee9ac57e.py"
+    },
+    "tests\\semantics\\calendar_copy.py": {
+      "sha256_normalized_lf": "aac8c02e4469d75423ff8ef96683678bc450793976ee540117a25f86dbb81a65",
+      "archive": "reports\\source\\aac8c02e4469d75423ff8ef96683678bc450793976ee540117a25f86dbb81a65.py"
+    },
+    "tests\\semantics\\calendar_table5_boundaries.py": {
+      "sha256_normalized_lf": "fe3d0b0acc15f40bb16d4f14d2b5ec799450e956dea03e54d78839c47ca77c6c",
+      "archive": "reports\\source\\fe3d0b0acc15f40bb16d4f14d2b5ec799450e956dea03e54d78839c47ca77c6c.py"
+    },
+    "tests\\semantics\\copy_layout.py": {
+      "sha256_normalized_lf": "93158cb04c072b0dab03b9459a5013f66cac2bcf99e5fe0f644d8c2bf67b5935",
+      "archive": "reports\\source\\93158cb04c072b0dab03b9459a5013f66cac2bcf99e5fe0f644d8c2bf67b5935.py"
+    },
+    "tests\\semantics\\domain.py": {
+      "sha256_normalized_lf": "f55c7fed112c9ecb15bfe62cda2d5bcd4d30abcbea1f8fdb1be3e2a9ee71da3f",
+      "archive": "reports\\source\\f55c7fed112c9ecb15bfe62cda2d5bcd4d30abcbea1f8fdb1be3e2a9ee71da3f.py"
+    },
+    "tests\\semantics\\fuzz.py": {
+      "sha256_normalized_lf": "33cb08b2b45c28d27d23364aa0cbf538a6c347287b43b51b5a5a5953bc2f7701",
+      "archive": "reports\\source\\33cb08b2b45c28d27d23364aa0cbf538a6c347287b43b51b5a5a5953bc2f7701.py"
+    },
+    "tests\\semantics\\memo_copy.py": {
+      "sha256_normalized_lf": "5341d52f2ed26f18169274348a41bd6d6cc799ec2ae3dacbcf3912be6075c060",
+      "archive": "reports\\source\\5341d52f2ed26f18169274348a41bd6d6cc799ec2ae3dacbcf3912be6075c060.py"
+    },
+    "tests\\semantics\\native_copy.py": {
+      "sha256_normalized_lf": "4c19b3e1d3795f94a8ecff222f7626ba198d9c54d12815c3f3fb77e9470ea881",
+      "archive": "reports\\source\\4c19b3e1d3795f94a8ecff222f7626ba198d9c54d12815c3f3fb77e9470ea881.py"
+    },
+    "tests\\semantics\\scalar_boundaries.py": {
+      "sha256_normalized_lf": "152a6447b960f0f0340f44231ff29a1f06c81c8d4f01ad32f07938f864ec4f3b",
+      "archive": "reports\\source\\152a6447b960f0f0340f44231ff29a1f06c81c8d4f01ad32f07938f864ec4f3b.py"
+    },
+    "tests\\semantics\\scaled_copy.py": {
+      "sha256_normalized_lf": "9dd76bc90fcfdd1cfafb28ada47b7e8863148319f5131c0fc0d04c48075b82d1",
+      "archive": "reports\\source\\9dd76bc90fcfdd1cfafb28ada47b7e8863148319f5131c0fc0d04c48075b82d1.py"
+    },
+    "tests\\semantics\\t1_inline_boundaries.py": {
+      "sha256_normalized_lf": "917c0e4db337c6d5960488fb349a9214c5ea3a2bf577894a099eb6ef4cd36114",
+      "archive": "reports\\source\\917c0e4db337c6d5960488fb349a9214c5ea3a2bf577894a099eb6ef4cd36114.py"
+    },
+    "tests\\semantics\\t1_inline_copy.py": {
+      "sha256_normalized_lf": "818074642d20f2c14f7ed0b79c1dcb345f3a907991964eb43958d893d4d3edb9",
+      "archive": "reports\\source\\818074642d20f2c14f7ed0b79c1dcb345f3a907991964eb43958d893d4d3edb9.py"
+    },
+    "tests\\semantics\\__init__.py": {
+      "sha256_normalized_lf": "011aa49957f0aa86149d15fe840b286c6332b1e4ce7aef5b728af771c531bc5d",
+      "archive": "reports\\source\\011aa49957f0aa86149d15fe840b286c6332b1e4ce7aef5b728af771c531bc5d.py"
+    },
+    "scripts\\verify_upstream.py": {
+      "sha256_normalized_lf": "f594e533536e3689950be9cdf7045e5d10352f7c0ab32bc504c7915c8ec20cf0",
+      "archive": "reports\\source\\f594e533536e3689950be9cdf7045e5d10352f7c0ab32bc504c7915c8ec20cf0.py"
+    }
+  },
+  "decision": "Not selected: marginal total component change versus calendar, overlapping ranges, and lacks a same-cohort comparison against the simpler inline+trim candidate. No end-to-end win claimed."
+}

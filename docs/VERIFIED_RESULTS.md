@@ -1,9 +1,14 @@
-Latest update: a newer fresh 1M three-run cohort measured 83.674682% less
-complete local-service time: 103.941286s official versus 16.968745s refined_copy.
-Its first run per mode passed exact six-table comparison, and every run passed
-fingerprints/counters/six versions/schema/sequence checks. Independent full
-live auditing of those six new databases is pending. The eight-database audit
-and older percentages below are historical and retained separately.
+Latest local result: three verified 1M pairs measure 84.627281% less complete
+processing time, official median 272.559992s versus calendar_copy 41.899881s.
+The first complete pair and two continuation pairs retain AB/BA/AB order;
+processing hooks are identical, while post-timer verifier and observer startup
+repairs are documented. Failed attempts are retained and excluded. Every run
+passes six outputs/counters/six versions/catalog/sequence checks; exact full
+values/multiplicities are checked once per mode in each constituent cohort.
+Independent full live auditing of these six databases remains pending.
+See calendar-table5-three-pairs-analysis.json and ACTIVE_85.md. The 85% target
+is not achieved. Earlier 83.67% and historical eight-database audits below remain
+separate; large absolute timing drift is not attributed to a new algorithm.
 
 # 可重跑的實測結果與查核範圍
 

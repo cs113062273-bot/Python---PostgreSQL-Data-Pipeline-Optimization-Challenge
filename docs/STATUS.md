@@ -1,7 +1,16 @@
 # Current status
 
+Latest local result: **84.627281% less complete processing time**, official
+272.559992s versus calendar_copy 41.899881s, three verified pairs. The first
+complete pair plus two continuation pairs retain AB/BA/AB order with identical
+processing hooks; post-timer verifier and observer-readiness repairs are
+documented in calendar-table5-three-pairs-analysis.json. Failed attempts are
+retained and excluded. All six output/counter/version/catalog/sequence gates
+pass. The 85% target remains unachieved; at this control another 1.015882s must
+be removed. The independently live audit of this new cohort is pending.
+
 The active objective is **at least 85% less time than the official original**;
-see [active research](ACTIVE_85.md). The latest fresh 1M three-run comparison
+see [active research](ACTIVE_85.md). The earlier fresh 1M three-run comparison
 measures **83.674682%**: medians 103.941286s official and 16.968745s refined_copy.
 The target remains unachieved. Every run checks all six outputs, counters, six
 versions and schema/sequence metadata; exact six-table comparison runs once

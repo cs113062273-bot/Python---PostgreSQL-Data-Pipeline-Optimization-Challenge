@@ -13,7 +13,7 @@ from tests.recovery.bulk_dump import sequence_state
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--database',default='lab_native_variant_bb5fad3206')
+    p.add_argument('--database',default='lab_native_variant_3f985472fe')
     p.add_argument('--repeats',type=int,default=3)
     p.add_argument('--output',default='reports/fk-memory-components-1m.json')
     p.add_argument('--leader-cpu',type=int,help='Diagnostic only: identical affinity for all tested settings')

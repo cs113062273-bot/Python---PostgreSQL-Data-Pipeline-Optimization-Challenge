@@ -28,7 +28,7 @@ def identity():
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--database',default='lab_native_variant_4f58c93343')
+    p.add_argument('--database',default='lab_native_variant_3f985472fe')
     p.add_argument('--repeats',type=int,default=3)
     p.add_argument('--output',default='reports/scaled-refined-kernels-1m.json')
     p.add_argument('--leader-cpu',type=int,help='Separate diagnostic: same backend affinity for all kernels')

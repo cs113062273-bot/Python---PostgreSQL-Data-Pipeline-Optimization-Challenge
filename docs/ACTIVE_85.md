@@ -1,6 +1,35 @@
 # Active target: at least 85% less complete processing time
 
-The target is not achieved. Latest fresh 1M complete-service comparison,
+The target is not achieved. Latest complete-service 1M comparison comprises
+three fully verified pairs with identical processing engine/SQL, in AB/BA/AB
+order, retaining the first pair plus two continuation pairs:
+
+| Mode | Individual seconds | Median |
+|---|---|---:|
+| Unchanged official | 268.912693 / 272.559992 / 275.796549 | 272.559992 |
+| calendar_copy | 40.652220 / 43.313545 / 41.899881 | 41.899881 |
+
+**84.627281% less complete processing time.** The 85% threshold for this actual
+control is 40.883999s: another 1.015882s must be removed. Every run passed six
+outputs/counters/six versions/catalog/sequence checks. The first pair and first
+continuation run per mode use exact full-value/multiplicity comparisons;
+remaining runs use live original-row fingerprints. Windows leader CPU usage
+was observed equally in both modes, without SQL/affinity/power changes; setup
+was included. Absolute times drifted substantially from older experiments.
+
+Evidence: calendar-table5-three-pairs-analysis.json. The initial planned n=3
+cohort stopped after one complete pair because its post-timer fingerprint path
+still referenced a retired JSON verifier cache. A continuation attempt then
+failed before data SQL in the new CPU observer's startup wait. Both failures
+are retained and excluded, with actual empty-data/zero-expanded-version checks
+for the startup failure. Only the post-timer verifier and the observer's
+wait-until-idle condition changed; processing hook identities stayed identical.
+The observer subsequently passed 20 consecutive native startup tests.
+The first pair and two continuation pairs are explicitly separate source
+cohorts, not an uninterrupted n=3 claim. The complete independently live audit
+of these six retained databases is still pending.
+
+Previous fresh 1M complete-service comparison,
 three runs per mode, rotating order, no affinity or destination warmup:
 
 | Mode | Individual seconds | Median |
@@ -159,3 +188,15 @@ manifests under reports/native-archives record whether a live copy was retired.
   private-cluster-availability-20261028.json. The server recovered on its
   original loopback port 55432 with all three durability switches ON. This is
   not a scored failure-recovery test or proof of the interruption's cause.
+- Table1 inline quantization plus proof-based trim identity: the complete proof
+  admits <=3 decimal places and <=6 integer digits, so scaled values are exact
+  int32. NULL/zero/negative handling equals the original CASE/ROUND. Numeric
+  parsing happens once without the rejected scalar FunctionScan overhead.
+  Removing BTRIM only on directly referenced proof-covered fields is valid
+  because that domain excludes leading/trailing whitespace; padded inputs
+  still execute the original batch. Three-run table1 real-COPY component
+  medians: 2.014088s current, 1.813362s inline, 1.758480s inline+trim. Every
+  complete typed transform fingerprint matched. Native qualification: 121
+  semantic +82 targeted boundary cases, zero differences, plus 16 actual
+  faults and exact retry with counters/six versions. This remains an isolated
+  candidate until full processing is measured; no new percentage is claimed.

@@ -52,7 +52,13 @@ Actual transformed SQL is archived by hash and referenced in native versions.
   999999.999 and precision to three fractional digits. Scaling by 1000 is
   integral and fits int32. Each conversion is CASE-gated by a once-evaluated
   native ProjectSet proof; all unsafe inputs retain original batch fallback.
-  Native 64-row service and 121 differential cases pass. Full timing pending.
+  Native 64-row service and 121 differential cases pass. A later complete
+  three-run cohort reports a raw 90.68% reduction, but both modes became much
+  slower (official median 371.604866s; scaled 34.632144s). This is not promoted
+  as achievement of the target: controlled same-session transform kernels show
+  scaled is 13.23% slower than refined (15.364058s versus 13.568434s).
+  The full unfavorable cohort and all checks are retained in
+  native-scaled-copy-official-1m-repeated.json and scaled-refined-kernels-1m.json.
 
 ## Retained negative or unqualified experiments
 
@@ -83,5 +89,73 @@ remain separate qualification gates. No public submission is claimed.
 
 To provide space for current controlled tests, only four explicitly receipted
 SQL-only clones without native versions/counters were retired (10.23 GiB).
-One old winning SQL clone, QueryFoundry control, canonical oracle/templates,
-all native-versioned databases and source/report evidence remain retained.
+The remaining old SQL-only winner and QueryFoundry clones were subsequently
+retired using the same explicit-receipt/no-native-history checks. Canonical
+oracle/templates, every native official/refined result and all source/report
+evidence remain. Losing native clones may be archived only after actual
+pg_dump/pg_restore and complete ordered native binary SHA256 checks of every
+table, catalog/sequence/ACL checks and unchanged control history; individual
+manifests under reports/native-archives record whether a live copy was retired.
+
+## Current experiments, not a new paired score
+
+- Per-value native Memoize for table2: three same-session transform-kernel
+  medians 13.654989s refined and 13.458069s candidate, with overlap/reversal.
+  Table2 alone improved by roughly 0.37s. Native differential: 121 cases,
+  zero acceptance/output/SQLSTATE/primary-error differences. Fresh complete
+  1M pilot: 34.305058s, all six full-value/multiplicity comparisons, counters,
+  six versions, protected catalog and sequence options passed. No paired
+  official control exists for this pilot; no new percentage is claimed.
+- The pilot also exercises native typed EXCEPT ALL verification after the
+  complete processing timer. This checks all values in both directions;
+  fingerprints do not substitute for exact comparison. It avoids a persistent
+  1.5GB JSON verification cache, which was safely retired with a receipt.
+- NULL-group proof-string allocation: bitwise string differential and complete
+  TEXT/proof fingerprints pass, but 1M projection medians 5.581354s original,
+  5.610364s sparse4 and 5.705206s sparse8. Rejected.
+- Separate per-field numeric proof: all generated proof vectors and complete
+  TEXT/proof fingerprints pass, but medians 5.204824s refined versus 8.417250s
+  individual predicates. Rejected.
+- Six real FK validations, rotating three-run memory comparison: 64MB
+  4.522987s, 128MB 4.588443s, 256MB 4.543472s. No stable gain; no change.
+- Explicit same-CPU leader diagnostics are now supported separately for both
+  official and candidate batches, with setup inside the full timer and actual
+  affinity receipts preserved by server COPY. Default cohorts still use no
+  affinity. This is an investigation of measurement drift, not submission tuning.
+
+- Pinning that FK component to CPU 2 still shows drift: median validation
+  4.176309s / 4.172682s / 4.187212s at 64/128/256MB. Core placement alone
+  does not explain the change; larger maintenance memory remains unselected.
+- Reusing both table1/table5 scalar parses has no total kernel win (13.121031s
+  versus 13.030589s). Table1 is rejected. Table5's separately timed transform
+  improves in every run (roughly 0.948s to 0.856s); only table5 is selected for
+  the next candidate, alongside the already tested table2 reuse.
+- Equivalent Gregorian calendar proof: 148,800 vectors spanning a complete
+  400-year cycle, including impossible dates, plus 16 shape/boundary cases:
+  zero differences. Complete 1M TEXT/proof fingerprints match in every run.
+  Three-run projection medians 5.593570s refined versus 5.118400s calendar
+  (8.49% less time for this stage). This is not an overall pipeline percentage.
+  This proof plus table2 reuse passes 121 native semantic cases and 16 native
+  faults/exact retry; all source identities have been reconstructed and bound
+  to content-addressed archives. The additional table5 composition now passes
+  121 native semantic cases, 56 targeted rounding/calendar cases and 16 actual
+  failures with exact retry, counters and six versions. Its actual archived SQL
+  contains table5 reuse and excludes the rejected table1 scalar reuse.
+  A fresh paired three-run full-service comparison is the next gate; there is
+  no new overall percentage yet. See regression-before-calendar-cohort.json.
+- New verification option groups by every native typed value and compares
+  signed multiplicities, avoiding repeated sorts in two EXCEPT ALL directions.
+  Both methods pass 14 verifier controls, including rejection of same-count
+  edits, missing/duplicate/NULL rows, dimension-presence changes and edits with
+  an unchanged global numeric sum. This remains full-value verification after
+  the processing timer. Independent live auditing still defaults to EXCEPT ALL.
+- Optional Windows GetProcessTimes observation now records actual leader CPU
+  time on a retained process handle, without changing SQL/affinity/priority or
+  power settings. Both official and calendar 64-row full-service smoke tests
+  pass exact outputs, counters and six versions. Parallel-worker CPU is not
+  included. Observer setup is counted in full processing wall for both modes.
+  No results from this diagnostic are advertised as an algorithmic speedup.
+- A later private-server availability interruption is separately recorded in
+  private-cluster-availability-20261028.json. The server recovered on its
+  original loopback port 55432 with all three durability switches ON. This is
+  not a scored failure-recovery test or proof of the interruption's cause.

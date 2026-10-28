@@ -88,10 +88,11 @@ def typed_canonical(c,table):
     return sql.SQL('SELECT ')+sql.SQL(',').join(expressions)+query,definitions
 
 
-def exact_via_private_temp(candidate,reference):
+def exact_via_private_temp(candidate,reference,*,comparison='except_all'):
     # Native typed rows avoid converting millions of wide rows to JSONB just
     # for verification. EXCEPT ALL still compares every value and multiplicity.
     # Force bounded-memory sort instead of an estimated-size hash set.
+    if comparison not in ('except_all','tagged_count'):raise ValueError(comparison)
     results={}
     for table in ORDER:
         name='audit_'+__import__('uuid').uuid4().hex
@@ -107,9 +108,19 @@ def exact_via_private_temp(candidate,reference):
                         checksum.update(block);size+=len(block);pending.extend(block)
                         if len(pending)>=1024*1024:writer.write(bytes(pending));pending.clear()
                     if pending:writer.write(bytes(pending))
-            comparison=sql.SQL('SELECT EXISTS((SELECT * FROM {} EXCEPT ALL {}) UNION ALL ({} EXCEPT ALL SELECT * FROM {}))').format(sql.Identifier('pg_temp',name),query,query,sql.Identifier('pg_temp',name))
-            if reference.execute(comparison).fetchone()[0]:raise AssertionError('Exact live comparison differs: '+table)
-            results[table]={'bidirectional_except_all':True,'representation':'native typed logical rows; C text collation; dimension presence preserved','transferred_binary_bytes':size,'transfer_sha256':checksum.hexdigest()}
+            if comparison=='except_all':
+                comparison_sql=sql.SQL('SELECT EXISTS((SELECT * FROM {} EXCEPT ALL {}) UNION ALL ({} EXCEPT ALL SELECT * FROM {}))').format(sql.Identifier('pg_temp',name),query,query,sql.Identifier('pg_temp',name))
+            else:
+                columns=[row[0] for row in reference.execute("SELECT attname FROM pg_attribute WHERE attrelid=%s::regclass AND attnum>0 AND NOT attisdropped ORDER BY attnum",('pg_temp.'+name,)).fetchall()]
+                assert '__audit_delta' not in columns
+                keys=sql.SQL(',').join(sql.Identifier(column) for column in columns)
+                # Every typed value remains a GROUP BY key. Summing +1/-1
+                # compares the complete multiplicity of both bags, with NULL
+                # grouping and C text equality identical to native EXCEPT ALL.
+                # A single sort avoids sorting both directions separately.
+                comparison_sql=sql.SQL('SELECT EXISTS(SELECT 1 FROM (SELECT *,1::integer AS __audit_delta FROM {} UNION ALL SELECT original.*,-1::integer FROM ({}) original) differences GROUP BY {} HAVING sum(__audit_delta)<>0)').format(sql.Identifier('pg_temp',name),query,keys)
+            if reference.execute(comparison_sql).fetchone()[0]:raise AssertionError('Exact live comparison differs: '+table)
+            results[table]={'bidirectional_except_all':comparison=='except_all','exact_all_values_and_multiplicities':True,'comparison':comparison,'representation':'native typed logical rows; C text collation; dimension presence preserved','transferred_binary_bytes':size,'transfer_sha256':checksum.hexdigest()}
         assert reference.execute('SELECT to_regclass(%s)',('pg_temp.'+name,)).fetchone()[0] is None
     return results
 

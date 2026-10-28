@@ -191,6 +191,32 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T18:05:13.684204+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_9373d6b9f4",
+          "mode": "lab_parallel_cache",
+          "receipt": "reports/fresh-parallel-cache-1m-repeated.json",
+          "bytes": 2745849523,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-27T18:11:52.432811+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_7895cfe383",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-v2-1m-pilot.json",
+          "bytes": 2788456115,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

@@ -1,0 +1,39 @@
+{
+  "scope": "Read-only process flags, no affinity/priority/QoS changes; observations do not prove a slowdown cause.",
+  "processes": [
+    {
+      "pid": 5620,
+      "backend_type": "client backend",
+      "database": "lab_native_variant_d2a19d7a5c",
+      "backend_start_epoch": "1793120625.128971",
+      "state": "active",
+      "query_prefix": "DO $pgdm_managed_sql$\nDECLARE\n    pgdm_affected_rows bigint;\n    pgdm_",
+      "priority_class": 32,
+      "cpu_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "power_information_success": true,
+      "power_control_mask": 0,
+      "power_state_mask": 0
+    }
+  ]
+}

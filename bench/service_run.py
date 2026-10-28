@@ -27,6 +27,10 @@ def main():
     parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     parser.add_argument('--verification',choices=['exact','fingerprints'],default='exact')
     args=parser.parse_args()
+    import os
+    if os.environ.get('CHALLENGE_RECORD_LEADER_CPU')=='1':
+        from bench.backend_cpu_probe import install as observe_cpu
+        observe_cpu()
     with connect(args.database,autocommit=True) as conn:
         require_lab(conn)
         env=environment(conn)
@@ -57,6 +61,7 @@ def main():
     result=service.execute_cross_table_expansion(args.database,"public.raw_data",scopes,destinations(args.mode),timing_report=report)
     versions=service.register_cross_table_expansion_versions(result,"research","local-diagnostic",timing_report=report)
     wall=time.perf_counter()-started
+    exact_details=None
     print(f'Native {args.mode}: {wall:.4f}s complete processing wall; exact verification pending',flush=True)
     if args.mode in GUARDED_MODES:
         import os
@@ -76,7 +81,14 @@ def main():
             from bench.fresh import exact_to_reference,expected_fingerprints
             with connect(args.reference,autocommit=True) as reference:
                 require_lab(reference)
-                if args.verification=='exact':verification_schema=exact_to_reference(conn,reference)
+                if args.verification=='exact':
+                    # Full values/multiplicities with native typed rows avoid
+                    # a permanent multi-GB JSON oracle copy. This is after the
+                    # processing timer and uses the independently fault-tested
+                    # full-value bag comparator, never a fingerprint substitute.
+                    from bench.audit_ranked_result import exact_via_private_temp
+                    exact_details=exact_via_private_temp(conn,reference,comparison='tagged_count')
+                    verification_schema=None
                 else:
                     from tests.equivalence.oracle import fingerprints
                     assert fingerprints(conn)==expected_fingerprints(reference)
@@ -92,7 +104,7 @@ def main():
     value={"kind":"local_transport_organizer_service","official_score":False,"environment":env,"mode":args.mode,
            "execution_architecture":result.get('execution_architecture'),
            "separate_reference":args.reference,"destination_warmup_before_measured_run":not bool(args.reference),
-           "wall_seconds":wall,"verification":args.verification,"verification_schema":verification_schema,"exact_six_tables":args.verification=='exact',"six_table_fingerprints_equivalent":True,"counter_reconciliation":True,"protected_schema_equivalent":True,"sequence_options_and_ownership_equivalent":True,"workspace_namespace_restored":True,"versions":versions,"timing_report":report,
+           "wall_seconds":wall,"verification":args.verification,"verification_schema":verification_schema,"exact_comparison_details":exact_details,"exact_six_tables":args.verification=='exact',"six_table_fingerprints_equivalent":True,"counter_reconciliation":True,"protected_schema_equivalent":True,"sequence_options_and_ownership_equivalent":True,"workspace_namespace_restored":True,"versions":versions,"timing_report":report,
            "local_backend_diagnostics":getattr(service._expansion_timing_local,'local_backend_diagnostics',None),
            "limitations":["local Windows psql substitutes Linux/SSH command transport","GUI cache/refresh excluded","dump filesystem/replay not exercised by this command"]}
     write_report(args.output,value)

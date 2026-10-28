@@ -61,7 +61,11 @@ def run(args,text,*,cwd,timeout=None,cpu=None):
     if result.returncode==0 and len(choices)!=1:raise RuntimeError('Server/client choice was not observed')
     result.stdout=re.sub(r'^PGDM_SERVER_FILE_COPY=(?:t|f)\r?\n','',result.stdout,flags=re.M)
     files=sum((Path(cwd)/(t+'.bin')).exists() for t in ORDER)
+    upstream_diagnostics=getattr(result,'local_backend_diagnostics',None)
     result.local_backend_diagnostics={'transport':'private_server_file_copy_probe','server_files_used':choices==['t'] and files>0,'server_file_privileges_available':choices==['t'],'privilege_fallback_to_client':choices==['f'],'actual_binary_files':files,'hook_sha256':source_identity(),'actual_batch_sql_sha256':digest,'scope':'Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.'}
+    if upstream_diagnostics is not None:
+        key='backend_cpu_diagnostics' if upstream_diagnostics.get('backend_cpu_observer') else 'leader_affinity_diagnostic'
+        result.local_backend_diagnostics[key]=upstream_diagnostics
     return result
 
 

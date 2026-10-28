@@ -1,5 +1,16 @@
 # Local Windows PostgreSQL incident, 2026-10-27
 
+Later availability observation (2026-10-28): no postgres process or listener
+remained on the private port, although the PID file was present. The last
+prior log reported Windows shared-memory reservation error 487. This does not
+establish why the process subsequently stopped. The cluster was recovered on
+127.0.0.1:55432, with fsync/full_page_writes/synchronous_commit ON. An initial
+restart omitted the original port options; it was stopped during recovery and
+restarted with explicit original options, without configuration-file changes
+or task SQL on the temporary port. Details are in
+[the availability receipt](../reports/private-cluster-availability-20261028.json).
+No speedup or scored recovery duration is inferred from this event.
+
 At 05:53:29 Asia/Taipei, postgres.exe PID 19876 exited with exception
 `0xc0000374` (heap corruption). The postmaster logged the child failure at
 05:53:33, terminated the other processes and performed automatic WAL recovery.

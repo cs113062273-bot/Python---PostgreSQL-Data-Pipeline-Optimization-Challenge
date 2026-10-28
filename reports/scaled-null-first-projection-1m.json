@@ -1,0 +1,138 @@
+{
+  "kind": "rollback_only_scaled_projection_comparison",
+  "official_score": false,
+  "source_sha256": "314286d6f9917edc869dd058fc7ef5a4810b7ed2b7504dd0ebf2f71fe04bb448",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "refined_text",
+      "seconds": 5.444525200000498,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 186138624
+    },
+    {
+      "repeat": 0,
+      "mode": "scaled_int",
+      "seconds": 7.340978500003985,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 169361408
+    },
+    {
+      "repeat": 0,
+      "mode": "null_first_scaled_int",
+      "seconds": 7.2080235999965225,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 169361408
+    },
+    {
+      "repeat": 1,
+      "mode": "scaled_int",
+      "seconds": 7.4886734999963664,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 169361408
+    },
+    {
+      "repeat": 1,
+      "mode": "null_first_scaled_int",
+      "seconds": 7.133870199999365,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 169361408
+    },
+    {
+      "repeat": 1,
+      "mode": "refined_text",
+      "seconds": 5.219262600003276,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 186138624
+    },
+    {
+      "repeat": 2,
+      "mode": "null_first_scaled_int",
+      "seconds": 7.744546300004004,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 169361408
+    },
+    {
+      "repeat": 2,
+      "mode": "refined_text",
+      "seconds": 5.352175599997281,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 186138624
+    },
+    {
+      "repeat": 2,
+      "mode": "scaled_int",
+      "seconds": 7.368185400002403,
+      "full_typed_projection_fingerprint": [
+        1000000,
+        "3144515168562819177178",
+        "1578594746567328419922"
+      ],
+      "stage_bytes": 169361408
+    }
+  ],
+  "scope": "Native CTAS extraction/proof/scaling only. No final transformation/load, counters, keys/FKs, versions or commit. Typed stage fingerprints compare complete contents outside the timer. No source/final-table writes.",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "45e65219585cce77633d4cd3a26f2f9de1814755",
+    "git_status": "M bench/audit_catalogs.py\n M reports/verification-scratch-cleanup.json\n M tests/recovery/native_copy_crash.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/null_first_scaled_probe.py\n?? reports/native-scaled-copy-official-1m-repeated-log.txt\n?? reports/native-scaled-copy-official-1m-repeated.json\n?? reports/native-scaled-copy-official-1m-repeated/\n?? reports/scaled-cohort-cpu-topology-ideal-hints.json\n?? reports/scaled-cohort-official-slow-observer.json\n?? reports/scaled-cohort-readonly-process-power.json\n?? reports/scaled-null-first-projection-1m-log.txt\n?? reports/shadow-publication-probe-log.txt\n?? reports/source/88b66ebf8bfe12bfb3e5349e6ea06f88a1abd9c335bb5512db9e26ae76efbb69.py\n?? reports/source/9dd76bc90fcfdd1cfafb28ada47b7e8863148319f5131c0fc0d04c48075b82d1.py\n?? reports/source/9f20a7322004ee4cdc341fefe62db02b035488ef99d130c51af6a4bbe8b49f2b.py\n?? reports/source/a623494fbb4da34a37961454df9eccf901534da2402ee719823dd64f0c3afec9.py\n?? reports/source/caca70c1274f4b6b1d0cf9027f5140d6959fdb0610296c2a86aed4859cea9dd4.py\n?? reports/source/ddba8e580333813b1738810aa72cb5c4f1a0d314d70d68942daebbe9e30b4a36.py\n?? reports/source/e167644cf0e6ecfbebb2b785a33defa99f722a524dd83fc73bd692f4d59bb5a9.py\n?? reports/sql/6bdeb8bdbb1ce48d13f39de026883993271ca176198e7766bea8a1e52e9b5340.sql\n?? reports/sql/83c60ed29216303c5c57ad03f18515a2636db592ff3d5f898e0c95eae9f7c270.sql\n?? reports/sql/a13a5e0d6c1d9fdeb4df72824a96fcce768c6cdf2b99386e8d9673bdd0e056d2.sql\n?? tests/recovery/scaled_script_atomic.py\n?? tests/recovery/scaled_script_crash.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "summary": {
+    "refined_text": 5.352175599997281,
+    "scaled_int": 7.368185400002403,
+    "null_first_scaled_int": 7.2080235999965225
+  },
+  "all_scratch_transactionally_rolled_back": true
+}

@@ -32,7 +32,9 @@ def main():
     p.add_argument('--output',default='reports/ranked-cohort-catalog-supplement.json')
     args=p.parse_args();source=(ROOT/args.input).resolve();target=(ROOT/args.output).resolve()
     if not source.is_relative_to(ROOT/'reports') or not target.is_relative_to(ROOT/'reports') or target.exists():p.error('Use an existing input and a new output under reports/')
-    audit=json.loads(source.read_text(encoding='utf-8'));assert audit['passed'] and len(audit['live_checks'])==8
+    audit=json.loads(source.read_text(encoding='utf-8'))
+    checks=audit.get('live_checks',[])
+    assert audit['passed'] and checks and len({row['database'] for row in checks})==len(checks)
     result={'kind':'read_only_catalog_and_durability_supplement','observed_at_utc':datetime.now(timezone.utc).isoformat(),'input_audit_sha256_normalized_lf':hashlib.sha256(source.read_text(encoding='utf-8').encode()).hexdigest(),'source_sha256_normalized_lf':hashlib.sha256(Path(__file__).read_text(encoding='utf-8').encode()).hexdigest(),'passed':False,'databases':[],'scope':'Current catalog/session checks after the row audit; no new timing measurement or root-cause diagnosis.'}
     with connect(audit['reference']['database'],autocommit=True) as c:expected=catalog(c)
     for row in audit['live_checks']:

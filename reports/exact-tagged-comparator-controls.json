@@ -1,0 +1,80 @@
+{
+  "kind": "exact_typed_bag_comparator_negative_controls",
+  "database": "lab_tagged_control_d1968a98",
+  "official_score": false,
+  "checks": [
+    {
+      "case": "intact",
+      "method": "except_all",
+      "accepted": true
+    },
+    {
+      "case": "intact",
+      "method": "tagged_count",
+      "accepted": true
+    },
+    {
+      "case": "same_count_wrong_value",
+      "method": "except_all",
+      "rejected": true
+    },
+    {
+      "case": "same_count_wrong_value",
+      "method": "tagged_count",
+      "rejected": true
+    },
+    {
+      "case": "duplicate_logical_row",
+      "method": "except_all",
+      "rejected": true
+    },
+    {
+      "case": "duplicate_logical_row",
+      "method": "tagged_count",
+      "rejected": true
+    },
+    {
+      "case": "missing_row",
+      "method": "except_all",
+      "rejected": true
+    },
+    {
+      "case": "missing_row",
+      "method": "tagged_count",
+      "rejected": true
+    },
+    {
+      "case": "null_changes_value",
+      "method": "except_all",
+      "rejected": true
+    },
+    {
+      "case": "null_changes_value",
+      "method": "tagged_count",
+      "rejected": true
+    },
+    {
+      "case": "missing_vs_all_null_dimension",
+      "method": "except_all",
+      "rejected": true
+    },
+    {
+      "case": "missing_vs_all_null_dimension",
+      "method": "tagged_count",
+      "rejected": true
+    },
+    {
+      "case": "global_numeric_sum_preserved",
+      "method": "except_all",
+      "rejected": true
+    },
+    {
+      "case": "global_numeric_sum_preserved",
+      "method": "tagged_count",
+      "rejected": true
+    }
+  ],
+  "all_passed": true,
+  "all_output_faults_rolled_back": true,
+  "scope": "64-row verifier fixture, not pipeline performance. Every value/multiplicity is compared; deliberately wrong same-count, duplicate, missing, NULL, dimension-presence and zero-global-sum data must fail. Native identity sequence gaps from rolled-back inserts are normal."
+}

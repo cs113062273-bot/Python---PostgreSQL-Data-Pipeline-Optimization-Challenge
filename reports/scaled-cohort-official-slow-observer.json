@@ -1,0 +1,56 @@
+{
+  "kind": "post_processing_observer_after_slow_official_run",
+  "sample_seconds": 1.000473799998872,
+  "cpu_frequency_reported": {
+    "current": 1506.0,
+    "min": 0.0,
+    "max": 2300.0
+  },
+  "virtual_memory": {
+    "total": 16855232512,
+    "available": 4299722752,
+    "percent": 74.5,
+    "used": 12555509760,
+    "free": 4299722752
+  },
+  "top_cpu_processes": [
+    {
+      "pid": 0,
+      "name": "System Idle Process",
+      "cpu_seconds_during_sample": 23.96875
+    },
+    {
+      "pid": 31612,
+      "name": "postgres.exe",
+      "cpu_seconds_during_sample": 1.296875
+    },
+    {
+      "pid": 21992,
+      "name": "python3.11.exe",
+      "cpu_seconds_during_sample": 0.796875
+    },
+    {
+      "pid": 8900,
+      "name": "python3.11.exe",
+      "cpu_seconds_during_sample": 0.3125
+    },
+    {
+      "pid": 2524,
+      "name": "postgres.exe",
+      "cpu_seconds_during_sample": 0.171875
+    },
+    {
+      "pid": 7948,
+      "name": "Code.exe",
+      "cpu_seconds_during_sample": 0.109375
+    },
+    {
+      "pid": 5956,
+      "name": "MsMpEng.exe",
+      "cpu_seconds_during_sample": 0.09375
+    }
+  ],
+  "note": "Read-only one-second sample. No affinity, process priority or server setting changed; no causal attribution. The Native completion line was present when this sample was collected; sampled Python/database work includes untimed exact verification. It cannot explain the earlier processing slowdown.",
+  "logical_cpus_reported": 20,
+  "physical_cpus_reported": 14
+}

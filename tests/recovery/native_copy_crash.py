@@ -25,6 +25,7 @@ def main():
     p.add_argument('--pg-ctl',required=True)
     p.add_argument('--data-dir',required=True)
     p.add_argument('--port',type=int,default=55432)
+    p.add_argument('--fresh-service-retry',action='store_true',help='Model a restarted processing worker with fresh connection state after server recovery')
     args=p.parse_args()
     directory=Path(args.data_dir).resolve();runtime=(ROOT/'.runtime').resolve()
     if runtime not in directory.parents or (directory/'PG_VERSION').read_text().strip()!='17':p.error('Only this private PostgreSQL 17 data directory may be stopped')
@@ -100,6 +101,13 @@ def main():
         assert c.execute('SELECT to_jsonb(c) FROM public.pgdm_table_row_counts c ORDER BY schema_name,table_name').fetchall()==before_counters
         assert c.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0] is None
     print('WAL recovery restored exact native COPY rollback; retrying full service and six versions',flush=True)
+    if args.fresh_service_retry:
+        # Reap the test coordinator's now-dead metadata clients too. The failed
+        # worker already cleaned its own thread-local clients. A restarted
+        # processing worker never inherits either cache.
+        from bench.fast_transport_probe import close_sessions
+        close_sessions(service)
+        service=Service()
     service.pause=False
     report=PostgresAdminService.create_cross_table_expansion_timing_report(db,'public.raw_data',['group001'],[d['table_name'] for d in destinations()])
     result=service.execute_cross_table_expansion(db,'public.raw_data',['group001'],destinations('guarded_copy'),timing_report=report)
@@ -109,7 +117,7 @@ def main():
         assert_exact(c);assert_relationships(c)
         assert sequence_signature(c)==before_sequences and source_sha(c)==before_source
         for table in ORDER:assert c.execute('SELECT count(*) FROM public.'+table).fetchone()[0]==c.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(table,)).fetchone()[0]
-    write_report('reports/recovery-native-copy-server-crash.json',{'kind':'actual_private_server_immediate_stop_during_native_copy','database':db,'passed':True,'restart_seconds':time.monotonic()-restart,'rollback_schema_sequence_source_counters':True,'copy_files_removed_after_crash':True,'native_retry_exact_six_tables':True,'versions':versions,'execution_architecture':result['execution_architecture'],'scope':'Actual native COPY/pre-commit server crash/WAL recovery/full service retry; startup spans the whole retained research cluster, not a scored recovery duration or post-commit control saga.'})
+    write_report('reports/recovery-native-copy-server-crash.json',{'kind':'actual_private_server_immediate_stop_during_native_copy','database':db,'passed':True,'restart_seconds':time.monotonic()-restart,'rollback_schema_sequence_source_counters':True,'copy_files_removed_after_crash':True,'native_retry_exact_six_tables':True,'versions':versions,'execution_architecture':result['execution_architecture'],'fresh_service_retry':args.fresh_service_retry,'scope':'Actual native COPY/pre-commit server crash/WAL recovery/full service retry; startup spans the whole retained research cluster, not a scored recovery duration or post-commit control saga.'})
     print('Actual native COPY server crash and complete native retry: PASS',flush=True)
 
 

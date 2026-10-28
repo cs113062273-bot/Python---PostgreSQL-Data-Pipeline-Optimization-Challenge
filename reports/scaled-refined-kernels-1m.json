@@ -1,0 +1,824 @@
+{
+  "kind": "rollback_only_refined_scaled_sql_kernels",
+  "official_score": false,
+  "source_sha256": "760a7db28f0fad398b35927482f3fb73043236fe7d5dde2098d8f36d4045ec01",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "refined",
+      "projection_proof_analyze_seconds": 5.612339699997392,
+      "transforms": {
+        "table3": {
+          "seconds": 0.17491500000323867,
+          "binary_bytes": 233,
+          "command_tag": "COPY 4",
+          "full_typed_transform_fingerprint": [
+            4,
+            "5723300681663075646",
+            "7129505201068766066"
+          ]
+        },
+        "table4": {
+          "seconds": 0.1489657000056468,
+          "binary_bytes": 966,
+          "command_tag": "COPY 27",
+          "full_typed_transform_fingerprint": [
+            27,
+            "-17206761999489055675",
+            "-8635702990049399863"
+          ]
+        },
+        "table1": {
+          "seconds": 2.1633703999978025,
+          "binary_bytes": 103999283,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "5625640168359967603205",
+            "4521965893763930506354"
+          ]
+        },
+        "table5": {
+          "seconds": 1.128435000005993,
+          "binary_bytes": 44000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-4424747315405478730220",
+            "-610745515626984733183"
+          ]
+        },
+        "table6": {
+          "seconds": 0.720151800000167,
+          "binary_bytes": 20000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-9161980733310557234772",
+            "2888955386367406157050"
+          ]
+        },
+        "table2": {
+          "seconds": 3.2635733999995864,
+          "binary_bytes": 119041179,
+          "command_tag": "COPY 2321522",
+          "full_typed_transform_fingerprint": [
+            2321522,
+            "-1999223434628400058658",
+            "-4592908696301073323096"
+          ]
+        }
+      },
+      "plans": {
+        "table1": [
+          {
+            "Plan": {
+              "Node Type": "Gather",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 1.12,
+              "Total Cost": 26473.94,
+              "Plan Rows": 100,
+              "Plan Width": 160,
+              "Workers Planned": 8,
+              "Single Copy": false,
+              "Plans": [
+                {
+                  "Node Type": "Hash Join",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 1.12,
+                  "Total Cost": 26473.94,
+                  "Plan Rows": 12,
+                  "Plan Width": 160,
+                  "Inner Unique": false,
+                  "Hash Cond": "((source_row.text_column_1 = (dimension_row.text_column_1)::text) AND (\"left\"(source_row.text_column_2, 1) = (dimension_row.text_column_3)::text) AND (\"right\"(source_row.text_column_2, 1) = (dimension_row.text_column_4)::text))",
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "input",
+                      "Alias": "source_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 23970.0,
+                      "Plan Rows": 125000,
+                      "Plan Width": 598
+                    },
+                    {
+                      "Node Type": "Hash",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Startup Cost": 1.05,
+                      "Total Cost": 1.05,
+                      "Plan Rows": 4,
+                      "Plan Width": 23,
+                      "Plans": [
+                        {
+                          "Node Type": "Seq Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Relation Name": "table3",
+                          "Alias": "dimension_row",
+                          "Startup Cost": 0.0,
+                          "Total Cost": 1.05,
+                          "Plan Rows": 4,
+                          "Plan Width": 23,
+                          "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "table2": [
+          {
+            "Plan": {
+              "Node Type": "Gather",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 45487.44,
+              "Total Cost": 92392.94,
+              "Plan Rows": 250,
+              "Plan Width": 62,
+              "Workers Planned": 8,
+              "Single Copy": false,
+              "Plans": [
+                {
+                  "Node Type": "Hash Join",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 45487.44,
+                  "Total Cost": 92392.94,
+                  "Plan Rows": 31,
+                  "Plan Width": 62,
+                  "Inner Unique": false,
+                  "Hash Cond": "(source_row.raw_id = main_row.id_column_3)",
+                  "Join Filter": "((CASE position_keys.position_number WHEN 1 THEN source_row.text_column_4 WHEN 2 THEN source_row.text_column_5 WHEN 3 THEN source_row.text_column_6 WHEN 4 THEN source_row.text_column_7 WHEN 5 THEN source_row.text_column_8 WHEN 6 THEN source_row.text_column_9 WHEN 7 THEN source_row.text_column_10 WHEN 8 THEN source_row.text_column_11 WHEN 9 THEN source_row.text_column_12 WHEN 10 THEN source_row.text_column_13 WHEN 11 THEN source_row.text_column_14 WHEN 12 THEN source_row.text_column_15 WHEN 13 THEN source_row.text_column_16 WHEN 14 THEN source_row.text_column_17 ELSE NULL::text END = ANY ('{X,Y,Z}'::text[])) AND ((NULLIF(btrim(CASE position_keys.position_number WHEN 1 THEN source_row.numeric_column_3 WHEN 2 THEN source_row.numeric_column_5 WHEN 3 THEN source_row.numeric_column_7 WHEN 4 THEN source_row.numeric_column_9 WHEN 5 THEN source_row.numeric_column_11 WHEN 6 THEN source_row.numeric_column_13 WHEN 7 THEN source_row.numeric_column_15 WHEN 8 THEN source_row.numeric_column_17 WHEN 9 THEN source_row.numeric_column_19 WHEN 10 THEN source_row.numeric_column_21 WHEN 11 THEN source_row.numeric_column_23 WHEN 12 THEN source_row.numeric_column_25 WHEN 13 THEN source_row.numeric_column_27 WHEN 14 THEN source_row.numeric_column_29 ELSE NULL::text END), ''::text))::numeric >= '0'::numeric) AND ((NULLIF(btrim(CASE position_keys.position_number WHEN 1 THEN source_row.integer_column_2 WHEN 2 THEN source_row.integer_column_3 WHEN 3 THEN source_row.integer_column_4 WHEN 4 THEN source_row.integer_column_5 WHEN 5 THEN source_row.integer_column_6 WHEN 6 THEN source_row.integer_column_7 WHEN 7 THEN source_row.integer_column_8 WHEN 8 THEN source_row.integer_column_9 WHEN 9 THEN source_row.integer_column_10 WHEN 10 THEN source_row.integer_column_11 WHEN 11 THEN source_row.integer_column_12 WHEN 12 THEN source_row.integer_column_13 WHEN 13 THEN source_row.integer_column_14 WHEN 14 THEN source_row.integer_column_15 ELSE NULL::text END), ''::text))::smallint = position_keys.position_number))",
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "input",
+                      "Alias": "source_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 23970.0,
+                      "Plan Rows": 125000,
+                      "Plan Width": 1800
+                    },
+                    {
+                      "Node Type": "Hash",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Startup Cost": 29862.44,
+                      "Total Cost": 29862.44,
+                      "Plan Rows": 1250000,
+                      "Plan Width": 18,
+                      "Plans": [
+                        {
+                          "Node Type": "Nested Loop",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Join Type": "Inner",
+                          "Startup Cost": 0.02,
+                          "Total Cost": 29862.44,
+                          "Plan Rows": 1250000,
+                          "Plan Width": 18,
+                          "Inner Unique": false,
+                          "Plans": [
+                            {
+                              "Node Type": "Seq Scan",
+                              "Parent Relationship": "Outer",
+                              "Parallel Aware": true,
+                              "Async Capable": false,
+                              "Relation Name": "table1",
+                              "Alias": "main_row",
+                              "Startup Cost": 0.0,
+                              "Total Cost": 12674.0,
+                              "Plan Rows": 125000,
+                              "Plan Width": 18
+                            },
+                            {
+                              "Node Type": "Memoize",
+                              "Parent Relationship": "Inner",
+                              "Parallel Aware": false,
+                              "Async Capable": false,
+                              "Startup Cost": 0.02,
+                              "Total Cost": 0.12,
+                              "Plan Rows": 10,
+                              "Plan Width": 2,
+                              "Cache Key": "main_row.integer_column_1",
+                              "Cache Mode": "binary",
+                              "Plans": [
+                                {
+                                  "Node Type": "Function Scan",
+                                  "Parent Relationship": "Outer",
+                                  "Parallel Aware": false,
+                                  "Async Capable": false,
+                                  "Function Name": "unnest",
+                                  "Alias": "position_keys",
+                                  "Startup Cost": 0.01,
+                                  "Total Cost": 0.11,
+                                  "Plan Rows": 10,
+                                  "Plan Width": 2
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "kernel_seconds": 13.211751000009826
+    },
+    {
+      "repeat": 0,
+      "mode": "scaled",
+      "projection_proof_analyze_seconds": 7.649092200001178,
+      "transforms": {
+        "table3": {
+          "seconds": 0.16476179999881424,
+          "binary_bytes": 233,
+          "command_tag": "COPY 4",
+          "full_typed_transform_fingerprint": [
+            4,
+            "5723300681663075646",
+            "7129505201068766066"
+          ]
+        },
+        "table4": {
+          "seconds": 0.16911070000060135,
+          "binary_bytes": 966,
+          "command_tag": "COPY 27",
+          "full_typed_transform_fingerprint": [
+            27,
+            "-17206761999489055675",
+            "-8635702990049399863"
+          ]
+        },
+        "table1": {
+          "seconds": 2.1295773000019835,
+          "binary_bytes": 103999283,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "5625640168359967603205",
+            "4521965893763930506354"
+          ]
+        },
+        "table5": {
+          "seconds": 1.1232977000036044,
+          "binary_bytes": 44000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-4424747315405478730220",
+            "-610745515626984733183"
+          ]
+        },
+        "table6": {
+          "seconds": 0.6937090999999782,
+          "binary_bytes": 20000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-9161980733310557234772",
+            "2888955386367406157050"
+          ]
+        },
+        "table2": {
+          "seconds": 3.077642399999604,
+          "binary_bytes": 119041179,
+          "command_tag": "COPY 2321522",
+          "full_typed_transform_fingerprint": [
+            2321522,
+            "-1999223434628400058658",
+            "-4592908696301073323096"
+          ]
+        }
+      },
+      "plans": {
+        "table1": [
+          {
+            "Plan": {
+              "Node Type": "Gather",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 1.12,
+              "Total Cost": 24425.28,
+              "Plan Rows": 100,
+              "Plan Width": 160,
+              "Workers Planned": 8,
+              "Single Copy": false,
+              "Plans": [
+                {
+                  "Node Type": "Hash Join",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 1.12,
+                  "Total Cost": 24425.28,
+                  "Plan Rows": 12,
+                  "Plan Width": 160,
+                  "Inner Unique": false,
+                  "Hash Cond": "((source_row.text_column_1 = (dimension_row.text_column_1)::text) AND (\"left\"(source_row.text_column_2, 1) = (dimension_row.text_column_3)::text) AND (\"right\"(source_row.text_column_2, 1) = (dimension_row.text_column_4)::text))",
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Relation Name": "input",
+                      "Alias": "source_row",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 21922.0,
+                      "Plan Rows": 125000,
+                      "Plan Width": 542
+                    },
+                    {
+                      "Node Type": "Hash",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Startup Cost": 1.05,
+                      "Total Cost": 1.05,
+                      "Plan Rows": 4,
+                      "Plan Width": 23,
+                      "Plans": [
+                        {
+                          "Node Type": "Seq Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Relation Name": "table3",
+                          "Alias": "dimension_row",
+                          "Startup Cost": 0.0,
+                          "Total Cost": 1.05,
+                          "Plan Rows": 4,
+                          "Plan Width": 23,
+                          "Filter": "((numeric_column_1 IS NULL) AND ((text_column_2)::text = 'SYNTHETIC/REFERENCE'::text))"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "table2": [
+          {
+            "Plan": {
+              "Node Type": "Gather",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 23484.52,
+              "Total Cost": 78937.29,
+              "Plan Rows": 250,
+              "Plan Width": 62,
+              "Workers Planned": 8,
+              "Single Copy": false,
+              "Plans": [
+                {
+                  "Node Type": "Hash Join",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": true,
+                  "Async Capable": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 23484.52,
+                  "Total Cost": 78937.29,
+                  "Plan Rows": 31,
+                  "Plan Width": 62,
+                  "Inner Unique": false,
+                  "Hash Cond": "(main_row.id_column_3 = source_row.raw_id)",
+                  "Join Filter": "((CASE position_keys.position_number WHEN 1 THEN source_row.numeric_column_3 WHEN 2 THEN source_row.numeric_column_5 WHEN 3 THEN source_row.numeric_column_7 WHEN 4 THEN source_row.numeric_column_9 WHEN 5 THEN source_row.numeric_column_11 WHEN 6 THEN source_row.numeric_column_13 WHEN 7 THEN source_row.numeric_column_15 WHEN 8 THEN source_row.numeric_column_17 WHEN 9 THEN source_row.numeric_column_19 WHEN 10 THEN source_row.numeric_column_21 WHEN 11 THEN source_row.numeric_column_23 WHEN 12 THEN source_row.numeric_column_25 WHEN 13 THEN source_row.numeric_column_27 WHEN 14 THEN source_row.numeric_column_29 ELSE NULL::integer END >= 0) AND (CASE position_keys.position_number WHEN 1 THEN source_row.text_column_4 WHEN 2 THEN source_row.text_column_5 WHEN 3 THEN source_row.text_column_6 WHEN 4 THEN source_row.text_column_7 WHEN 5 THEN source_row.text_column_8 WHEN 6 THEN source_row.text_column_9 WHEN 7 THEN source_row.text_column_10 WHEN 8 THEN source_row.text_column_11 WHEN 9 THEN source_row.text_column_12 WHEN 10 THEN source_row.text_column_13 WHEN 11 THEN source_row.text_column_14 WHEN 12 THEN source_row.text_column_15 WHEN 13 THEN source_row.text_column_16 WHEN 14 THEN source_row.text_column_17 ELSE NULL::text END = ANY ('{X,Y,Z}'::text[])) AND ((NULLIF(btrim(CASE position_keys.position_number WHEN 1 THEN source_row.integer_column_2 WHEN 2 THEN source_row.integer_column_3 WHEN 3 THEN source_row.integer_column_4 WHEN 4 THEN source_row.integer_column_5 WHEN 5 THEN source_row.integer_column_6 WHEN 6 THEN source_row.integer_column_7 WHEN 7 THEN source_row.integer_column_8 WHEN 8 THEN source_row.integer_column_9 WHEN 9 THEN source_row.integer_column_10 WHEN 10 THEN source_row.integer_column_11 WHEN 11 THEN source_row.integer_column_12 WHEN 12 THEN source_row.integer_column_13 WHEN 13 THEN source_row.integer_column_14 WHEN 14 THEN source_row.integer_column_15 ELSE NULL::text END), ''::text))::smallint = position_keys.position_number))",
+                  "Plans": [
+                    {
+                      "Node Type": "Nested Loop",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Join Type": "Inner",
+                      "Startup Cost": 0.02,
+                      "Total Cost": 29862.44,
+                      "Plan Rows": 1250000,
+                      "Plan Width": 18,
+                      "Inner Unique": false,
+                      "Plans": [
+                        {
+                          "Node Type": "Seq Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": true,
+                          "Async Capable": false,
+                          "Relation Name": "table1",
+                          "Alias": "main_row",
+                          "Startup Cost": 0.0,
+                          "Total Cost": 12674.0,
+                          "Plan Rows": 125000,
+                          "Plan Width": 18
+                        },
+                        {
+                          "Node Type": "Memoize",
+                          "Parent Relationship": "Inner",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Startup Cost": 0.02,
+                          "Total Cost": 0.12,
+                          "Plan Rows": 10,
+                          "Plan Width": 2,
+                          "Cache Key": "main_row.integer_column_1",
+                          "Cache Mode": "binary",
+                          "Plans": [
+                            {
+                              "Node Type": "Function Scan",
+                              "Parent Relationship": "Outer",
+                              "Parallel Aware": false,
+                              "Async Capable": false,
+                              "Function Name": "unnest",
+                              "Alias": "position_keys",
+                              "Startup Cost": 0.01,
+                              "Total Cost": 0.11,
+                              "Plan Rows": 10,
+                              "Plan Width": 2
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "Node Type": "Hash",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": true,
+                      "Async Capable": false,
+                      "Startup Cost": 21922.0,
+                      "Total Cost": 21922.0,
+                      "Plan Rows": 125000,
+                      "Plan Width": 1016,
+                      "Plans": [
+                        {
+                          "Node Type": "Seq Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": true,
+                          "Async Capable": false,
+                          "Relation Name": "input",
+                          "Alias": "source_row",
+                          "Startup Cost": 0.0,
+                          "Total Cost": 21922.0,
+                          "Plan Rows": 125000,
+                          "Plan Width": 1016
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "kernel_seconds": 15.007191200005764
+    },
+    {
+      "repeat": 1,
+      "mode": "scaled",
+      "projection_proof_analyze_seconds": 7.811482700002671,
+      "transforms": {
+        "table3": {
+          "seconds": 0.19568040000012843,
+          "binary_bytes": 233,
+          "command_tag": "COPY 4",
+          "full_typed_transform_fingerprint": [
+            4,
+            "5723300681663075646",
+            "7129505201068766066"
+          ]
+        },
+        "table4": {
+          "seconds": 0.16485930000635562,
+          "binary_bytes": 966,
+          "command_tag": "COPY 27",
+          "full_typed_transform_fingerprint": [
+            27,
+            "-17206761999489055675",
+            "-8635702990049399863"
+          ]
+        },
+        "table1": {
+          "seconds": 2.060641800002486,
+          "binary_bytes": 103999283,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "5625640168359967603205",
+            "4521965893763930506354"
+          ]
+        },
+        "table5": {
+          "seconds": 1.1647366999968654,
+          "binary_bytes": 44000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-4424747315405478730220",
+            "-610745515626984733183"
+          ]
+        },
+        "table6": {
+          "seconds": 0.691472700003942,
+          "binary_bytes": 20000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-9161980733310557234772",
+            "2888955386367406157050"
+          ]
+        },
+        "table2": {
+          "seconds": 3.365005999999994,
+          "binary_bytes": 119041179,
+          "command_tag": "COPY 2321522",
+          "full_typed_transform_fingerprint": [
+            2321522,
+            "-1999223434628400058658",
+            "-4592908696301073323096"
+          ]
+        }
+      },
+      "kernel_seconds": 15.453879600012442
+    },
+    {
+      "repeat": 1,
+      "mode": "refined",
+      "projection_proof_analyze_seconds": 5.936642599997867,
+      "transforms": {
+        "table3": {
+          "seconds": 0.1826193000015337,
+          "binary_bytes": 233,
+          "command_tag": "COPY 4",
+          "full_typed_transform_fingerprint": [
+            4,
+            "5723300681663075646",
+            "7129505201068766066"
+          ]
+        },
+        "table4": {
+          "seconds": 0.1587149999977555,
+          "binary_bytes": 966,
+          "command_tag": "COPY 27",
+          "full_typed_transform_fingerprint": [
+            27,
+            "-17206761999489055675",
+            "-8635702990049399863"
+          ]
+        },
+        "table1": {
+          "seconds": 1.9892436000009184,
+          "binary_bytes": 103999283,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "5625640168359967603205",
+            "4521965893763930506354"
+          ]
+        },
+        "table5": {
+          "seconds": 1.1715015999943716,
+          "binary_bytes": 44000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-4424747315405478730220",
+            "-610745515626984733183"
+          ]
+        },
+        "table6": {
+          "seconds": 0.7752392999973381,
+          "binary_bytes": 20000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-9161980733310557234772",
+            "2888955386367406157050"
+          ]
+        },
+        "table2": {
+          "seconds": 3.46871960000135,
+          "binary_bytes": 119041179,
+          "command_tag": "COPY 2321522",
+          "full_typed_transform_fingerprint": [
+            2321522,
+            "-1999223434628400058658",
+            "-4592908696301073323096"
+          ]
+        }
+      },
+      "kernel_seconds": 13.682680999991135
+    },
+    {
+      "repeat": 2,
+      "mode": "refined",
+      "projection_proof_analyze_seconds": 6.134096699999645,
+      "transforms": {
+        "table3": {
+          "seconds": 0.19508869999845047,
+          "binary_bytes": 233,
+          "command_tag": "COPY 4",
+          "full_typed_transform_fingerprint": [
+            4,
+            "5723300681663075646",
+            "7129505201068766066"
+          ]
+        },
+        "table4": {
+          "seconds": 0.1687519999977667,
+          "binary_bytes": 966,
+          "command_tag": "COPY 27",
+          "full_typed_transform_fingerprint": [
+            27,
+            "-17206761999489055675",
+            "-8635702990049399863"
+          ]
+        },
+        "table1": {
+          "seconds": 2.0705331999997725,
+          "binary_bytes": 103999283,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "5625640168359967603205",
+            "4521965893763930506354"
+          ]
+        },
+        "table5": {
+          "seconds": 1.0102793999976711,
+          "binary_bytes": 44000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-4424747315405478730220",
+            "-610745515626984733183"
+          ]
+        },
+        "table6": {
+          "seconds": 0.7218081999963033,
+          "binary_bytes": 20000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-9161980733310557234772",
+            "2888955386367406157050"
+          ]
+        },
+        "table2": {
+          "seconds": 3.2678760000053444,
+          "binary_bytes": 119041179,
+          "command_tag": "COPY 2321522",
+          "full_typed_transform_fingerprint": [
+            2321522,
+            "-1999223434628400058658",
+            "-4592908696301073323096"
+          ]
+        }
+      },
+      "kernel_seconds": 13.568434199994954
+    },
+    {
+      "repeat": 2,
+      "mode": "scaled",
+      "projection_proof_analyze_seconds": 8.11783340000693,
+      "transforms": {
+        "table3": {
+          "seconds": 0.18069670000113547,
+          "binary_bytes": 233,
+          "command_tag": "COPY 4",
+          "full_typed_transform_fingerprint": [
+            4,
+            "5723300681663075646",
+            "7129505201068766066"
+          ]
+        },
+        "table4": {
+          "seconds": 0.16659100000106264,
+          "binary_bytes": 966,
+          "command_tag": "COPY 27",
+          "full_typed_transform_fingerprint": [
+            27,
+            "-17206761999489055675",
+            "-8635702990049399863"
+          ]
+        },
+        "table1": {
+          "seconds": 1.9617423999952734,
+          "binary_bytes": 103999283,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "5625640168359967603205",
+            "4521965893763930506354"
+          ]
+        },
+        "table5": {
+          "seconds": 1.1298227999941446,
+          "binary_bytes": 44000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-4424747315405478730220",
+            "-610745515626984733183"
+          ]
+        },
+        "table6": {
+          "seconds": 0.6766257999988738,
+          "binary_bytes": 20000021,
+          "command_tag": "COPY 1000000",
+          "full_typed_transform_fingerprint": [
+            1000000,
+            "-9161980733310557234772",
+            "2888955386367406157050"
+          ]
+        },
+        "table2": {
+          "seconds": 3.1307460000025458,
+          "binary_bytes": 119041179,
+          "command_tag": "COPY 2321522",
+          "full_typed_transform_fingerprint": [
+            2321522,
+            "-1999223434628400058658",
+            "-4592908696301073323096"
+          ]
+        }
+      },
+      "kernel_seconds": 15.364058099999966
+    }
+  ],
+  "scope": "Same session, rotating order, projection/ANALYZE/domain aggregation plus six transforms exported to real binary files. No final COPY FROM, index/FK rebuild, metadata/versions or commit. Complete typed transform fingerprints outside timers; no native identity allocation or source/final-table writes.",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "45e65219585cce77633d4cd3a26f2f9de1814755",
+    "git_status": "M bench/audit_catalogs.py\n M reports/verification-scratch-cleanup.json\n M tests/recovery/native_copy_crash.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/null_first_scaled_probe.py\n?? bench/scaled_kernel_compare.py\n?? reports/native-scaled-copy-official-1m-repeated-log.txt\n?? reports/native-scaled-copy-official-1m-repeated.json\n?? reports/native-scaled-copy-official-1m-repeated/\n?? reports/scaled-cohort-cpu-topology-ideal-hints.json\n?? reports/scaled-cohort-official-slow-observer.json\n?? reports/scaled-cohort-readonly-process-power.json\n?? reports/scaled-null-first-projection-1m-log.txt\n?? reports/scaled-null-first-projection-1m.json\n?? reports/scaled-refined-kernels-1m-log.txt\n?? reports/shadow-publication-probe-log.txt\n?? reports/source/88b66ebf8bfe12bfb3e5349e6ea06f88a1abd9c335bb5512db9e26ae76efbb69.py\n?? reports/source/9dd76bc90fcfdd1cfafb28ada47b7e8863148319f5131c0fc0d04c48075b82d1.py\n?? reports/source/9f20a7322004ee4cdc341fefe62db02b035488ef99d130c51af6a4bbe8b49f2b.py\n?? reports/source/a623494fbb4da34a37961454df9eccf901534da2402ee719823dd64f0c3afec9.py\n?? reports/source/caca70c1274f4b6b1d0cf9027f5140d6959fdb0610296c2a86aed4859cea9dd4.py\n?? reports/source/ddba8e580333813b1738810aa72cb5c4f1a0d314d70d68942daebbe9e30b4a36.py\n?? reports/source/e167644cf0e6ecfbebb2b785a33defa99f722a524dd83fc73bd692f4d59bb5a9.py\n?? reports/sql/6bdeb8bdbb1ce48d13f39de026883993271ca176198e7766bea8a1e52e9b5340.sql\n?? reports/sql/83c60ed29216303c5c57ad03f18515a2636db592ff3d5f898e0c95eae9f7c270.sql\n?? reports/sql/a13a5e0d6c1d9fdeb4df72824a96fcce768c6cdf2b99386e8d9673bdd0e056d2.sql\n?? tests/recovery/scaled_script_atomic.py\n?? tests/recovery/scaled_script_crash.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "summary": {
+    "refined": {
+      "median_kernel_seconds": 13.568434199994954,
+      "individual_kernel_seconds": [
+        13.211751000009826,
+        13.682680999991135,
+        13.568434199994954
+      ]
+    },
+    "scaled": {
+      "median_kernel_seconds": 15.364058099999966,
+      "individual_kernel_seconds": [
+        15.007191200005764,
+        15.453879600012442,
+        15.364058099999966
+      ]
+    }
+  },
+  "all_private_work_rolled_back_and_native_sequences_unchanged": true,
+  "kernel_driver_source_archive": {
+    "path": "reports\\source\\0f4f7309cb8cadf27049022d4b776619a3896ffdb4308e5b4333340065a08eac.py",
+    "sha256_normalized_lf": "0f4f7309cb8cadf27049022d4b776619a3896ffdb4308e5b4333340065a08eac"
+  }
+}

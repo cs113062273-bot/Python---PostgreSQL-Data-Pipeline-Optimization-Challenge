@@ -11,6 +11,15 @@ retained. The eight-database independent audit below predates this new cohort.
 Local complete-service three-run medians crossed the prior 80% threshold, but broader
 submission qualification is incomplete.
 Do not interpret these results as an official score or a completed submission.
+The subsequent scaled-int cohort has a raw 90.68% reduction with a much slower
+official control; it is not promoted as a win. Same-session kernels show that
+algorithm is 13.23% slower than refined. The newer per-value reuse worker passes
+121 native semantic cases and a complete exact 1M pilot (34.305058s), but still
+needs a fresh paired official control. See ACTIVE_85.md for retained failures
+and the separately labeled same-CPU measurement diagnostic.
+The next candidate combines an equivalent Gregorian proof and table2/table5
+parsing reuse. It passes 177 native semantic/boundary cases and 16 native faults
+with exact retry. No new overall percentage is claimed before paired testing.
 The eight retained benchmark databases have now passed independent post-recovery
 source/full logical-row/counter/version checks. Read
 [reproducible evidence and limits](VERIFIED_RESULTS.md); the new 77.78% result

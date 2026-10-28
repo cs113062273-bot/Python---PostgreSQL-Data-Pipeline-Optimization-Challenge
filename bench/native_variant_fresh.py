@@ -24,6 +24,9 @@ from bench.projectset_probe import source_identity as projectset_identity
 from bench.source_snapshot import snapshot as source_snapshot
 from bench.script_transport_probe import source_identity as script_identity
 from bench.scaled_int_probe import source_identity as scaled_identity
+from bench.memo_axes_probe import source_identity as memo_identity
+from bench.calendar_proof_probe import source_identity as calendar_identity
+from bench.backend_cpu_probe import source_identity as cpu_identity
 
 VARIANTS={
     'official':('bench.service_run',[],'baseline'),
@@ -38,11 +41,22 @@ VARIANTS={
     'script_copy':('bench.script_transport_probe',[],'guarded_copy'),
     'scaled_copy':('bench.script_transport_probe',['scaled'],'guarded_copy'),
     'projectset_script':('bench.script_transport_probe',['projectset'],'guarded_copy'),
+    'memo_copy':('bench.memo_axes_probe',['function'],'guarded_copy'),
+    'calendar_copy':('bench.calendar_proof_probe',[],'guarded_copy'),
 }
 
 
 def identity():
-    return {'atomic_compiler_sha256':compiler_sha256(),'unlogged_hook_sha256':source_identity(),'server_copy_hook_sha256':server_identity(),'fast_transport_hook_sha256':fast_identity(),'refined_copy_hook_sha256':refined_identity(),'scalar_copy_hook_sha256':scalar_identity(),'early_copy_hook_sha256':early_identity(),'projectset_hook_sha256':projectset_identity(),'script_transport_hook_sha256':script_identity(),'scaled_int_hook_sha256':scaled_identity(),'driver_sha256':hashlib.sha256(Path(__file__).read_text(encoding='utf-8').encode()).hexdigest(),'service_driver_sha256':hashlib.sha256((ROOT/'bench/service_run.py').read_text(encoding='utf-8').encode()).hexdigest(),'source_snapshot_sha256':hashlib.sha256((ROOT/'bench/source_snapshot.py').read_text(encoding='utf-8').encode()).hexdigest()}
+    hooks=[('unlogged_hook_sha256',source_identity),('server_copy_hook_sha256',server_identity),
+           ('fast_transport_hook_sha256',fast_identity),('refined_copy_hook_sha256',refined_identity),
+           ('scalar_copy_hook_sha256',scalar_identity),('early_copy_hook_sha256',early_identity),
+           ('projectset_hook_sha256',projectset_identity),('script_transport_hook_sha256',script_identity),
+           ('scaled_int_hook_sha256',scaled_identity),('memo_hook_sha256',memo_identity),
+           ('calendar_hook_sha256',calendar_identity),('backend_cpu_hook_sha256',cpu_identity)]
+    result={'atomic_compiler_sha256':compiler_sha256(),**{name:function() for name,function in hooks}}
+    for name,path in [('driver_sha256',Path(__file__)),('service_driver_sha256',ROOT/'bench/service_run.py'),('source_snapshot_sha256',ROOT/'bench/source_snapshot.py')]:
+        result[name]=hashlib.sha256(path.read_text(encoding='utf8').encode()).hexdigest()
+    return result
 
 
 def main():
@@ -51,14 +65,25 @@ def main():
     p.add_argument('--repeats',type=int,default=1)
     p.add_argument('--output',default='reports/native-ephemeral-stage-paired-1m.json')
     p.add_argument('--clean-verification-after-checks',action='store_true',help='Reclaim only the exact-comparison scratch schema after its validated receipt is written')
+    p.add_argument('--leader-cpu',type=int,help='Separate controlled diagnostic: pin every official/candidate batch leader equally before SQL; workers unchanged')
+    p.add_argument('--observe-leader-cpu',action='store_true',help='Record Windows leader CPU usage without changing SQL or affinity; setup included for every mode')
     args=p.parse_args()
     if args.repeats<1 or len(set(args.variants))!=len(args.variants):p.error('Positive repeats and distinct variants required')
+    if args.observe_leader_cpu and args.leader_cpu is not None:p.error('Use separate affinity and CPU-observation cohorts')
     frozen=identity();output=Path(args.output).resolve();directory=output.with_suffix('');directory.mkdir(parents=True,exist_ok=True)
     report={'kind':'fresh_local_original_service_complete_processing','official_score':False,'timestamp_utc':datetime.now(timezone.utc).isoformat(),'template':'lab_template_1m','reference':'lab_1m','comparison_variant':args.variants[0],'implementation_identity':frozen,'runs':[],'method':'Fresh FILE_COPY per variant/run, rotating order, no affinity or destination warmup. Exact six-table comparison first run per variant; fingerprints/schema/sequence/counters/six versions every run. All preflight/proof/COPY/index/FK/commit/version work inside complete processing wall. Clone/oracle checks excluded. This compares the explicitly named variants, not an unmeasured official baseline.'}
     report['implementation_sources']=source_snapshot()
     if identity()!=frozen:raise RuntimeError('Source changed while archiving cohort implementation')
     with connect('lab_template_1m',autocommit=True) as c:report['environment']=environment(c);report['source_rows']=c.execute('SELECT count(*) FROM public.raw_data').fetchone()[0]
-    env=dict(os.environ);env.pop('CHALLENGE_BACKEND_CPU_AFFINITY',None)
+    env=dict(os.environ);env.pop('CHALLENGE_BACKEND_CPU_AFFINITY',None);env.pop('CHALLENGE_RECORD_LEADER_CPU',None)
+    if args.observe_leader_cpu:
+        env['CHALLENGE_RECORD_LEADER_CPU']='1'
+        report['recorded_leader_cpu']=True
+        report['method']+=' Windows leader CPU observation is identical for every mode, changes no SQL or affinity, excludes parallel-worker CPU, and includes observer setup inside complete processing wall.'
+    if args.leader_cpu is not None:
+        env['CHALLENGE_BACKEND_CPU_AFFINITY']=str(args.leader_cpu)
+        report['diagnostic_leader_cpu']=args.leader_cpu
+        report['method']=report['method'].replace('no affinity or destination warmup','identical explicit leader CPU affinity and no destination warmup')+' Leader affinity is a separately labeled local diagnostic, not an unmodified environment or submission setting. Setup remains inside complete processing wall.'
     checked=set()
     for repeat in range(args.repeats):
         shift=repeat%len(args.variants)
@@ -74,6 +99,16 @@ def main():
             if identity()!=frozen:raise RuntimeError('Source changed; timing is not accepted')
             value=json.loads(path.read_text(encoding='utf-8'))
             assert all(value[k] for k in ['six_table_fingerprints_equivalent','counter_reconciliation','protected_schema_equivalent','sequence_options_and_ownership_equivalent','workspace_namespace_restored']) and len(value['versions'])==6
+            if args.leader_cpu is not None:
+                diagnostic=value['local_backend_diagnostics']
+                affinity=diagnostic.get('leader_affinity_diagnostic',diagnostic)
+                assert affinity['requested_cpu']==args.leader_cpu
+                assert affinity['measured_affinity']==[args.leader_cpu] and affinity['state_before_sql']=='idle'
+            if args.observe_leader_cpu:
+                diagnostic=value['local_backend_diagnostics']
+                observed=diagnostic.get('backend_cpu_diagnostics',diagnostic)
+                assert observed['backend_cpu_observer'] is True and observed['state_before_sql']=='idle'
+                assert observed['leader_total_cpu_seconds']>=0 and observed['batch_transport_wall_seconds']<=value['wall_seconds']+.1
             report['runs'].append({'repeat':repeat,'mode':variant,'variant':variant,'database':db,'wall_seconds':value['wall_seconds'],'native_measured_seconds':sum(i['seconds'] for i in value['timing_report']['items'] if i.get('include_in_total',True)),'exact_six_tables':value['exact_six_tables'],'six_table_fingerprints_equivalent':True,'counter_reconciliation':True,'versions':6,'verification_schema':value['verification_schema'],'report':str(path),'execution_architecture':value.get('execution_architecture')})
             checked.add(variant);write_report(output,report)
             if args.clean_verification_after_checks and value['exact_six_tables']:

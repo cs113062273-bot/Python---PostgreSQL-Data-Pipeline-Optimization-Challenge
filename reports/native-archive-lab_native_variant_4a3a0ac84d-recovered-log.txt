@@ -1,0 +1,3 @@
+Snapshot complete; dumping lab_native_variant_4a3a0ac84d
+Restoring private verification copy lab_archive_verify_60f67fe29c
+Verified restorable archive PASS lab_native_variant_4a3a0ac84d 131156953

@@ -1,3 +1,6 @@
+Active objective: **90% less complete processing time**, not achieved.
+See [current 90% research](docs/ACTIVE_90.md). Earlier 85% thresholds below are historical.
+
 # PostgreSQL expansion performance laboratory
 
 The organizer application is preserved in `app/` at

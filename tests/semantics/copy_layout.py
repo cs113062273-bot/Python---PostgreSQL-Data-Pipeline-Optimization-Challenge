@@ -17,7 +17,7 @@ from pipeline.upstream import PostgresAdminService
 from tests.equivalence.oracle import canonical,protected_schema_signature,sequence_signature
 
 
-def main():
+def main(*,extra_variants=(),output='reports/semantics-copy-layout.json'):
     db='lab_copy_layout_'+uuid.uuid4().hex[:8]
     create_fixture(db);seed_initial_versions(db)
     scripts={}
@@ -37,6 +37,7 @@ def main():
       ('extra_unique_index','CREATE UNIQUE INDEX user_layout_unique ON public.table5(numeric_column_1)','DROP INDEX public.user_layout_unique'),
       ('extra_check','ALTER TABLE public.table1 ADD CONSTRAINT user_layout_check CHECK(integer_column_6 IS NULL)','ALTER TABLE public.table1 DROP CONSTRAINT user_layout_check'),
     ]
+    variants+=list(extra_variants)
     results=[]
     with connect(db,autocommit=True) as c:
         for mode in ('baseline','guarded_copy'):
@@ -51,7 +52,9 @@ def main():
         scripts['guarded_copy']=scripts['guarded_copy'].replace('\\gset\n','\\gset\n\\echo LAYOUT_FAST=:pipeline_copy_safe\n',1)
         parent=ROOT/'.runtime'/'copy_layout';parent.mkdir(parents=True,exist_ok=True)
         original=protected_schema_signature(c)
-        for name,setup,restore in variants:
+        for variant in variants:
+            name,setup,restore=variant[:3]
+            expected_fast=variant[3] if len(variant)>3 else False
             reset(c);c.execute(setup)
             before=protected_schema_signature(c);sequence_before=sequence_signature(c)
             outcomes={}
@@ -64,7 +67,10 @@ def main():
                 finally:
                     for t in ORDER:(directory/(t+'.bin')).unlink(missing_ok=True)
                     directory.rmdir()
-                if mode=='guarded_copy':assert 'LAYOUT_FAST=f' in result.stdout,(name,result.stdout,result.stderr)
+                if mode=='guarded_copy':
+                    assert 'LAYOUT_FAST=' in result.stdout
+                    fast_chosen='LAYOUT_FAST=t' in result.stdout
+                    if expected_fast is not None:assert fast_chosen is expected_fast,(name,result.stdout,result.stderr)
                 assert protected_schema_signature(c)==before and sequence_signature(c)==sequence_before
                 if result.returncode:
                     m=re.search(r'ERROR:\s+([0-9A-Z]{5}):\s*(.*?)(?=\n(?:DETAIL:|HINT:|CONTEXT:|LOCATION:)|\Z)',result.stderr,re.S)
@@ -80,9 +86,9 @@ def main():
             assert outcomes['baseline']==outcomes['guarded_copy'],(name,outcomes)
             reset(c);c.execute(restore)
             assert protected_schema_signature(c)==original
-            results.append({'name':name,'sqlstate':outcomes['baseline']['sqlstate'],'exact_original_fallback':True,'passed':True})
+            results.append({'name':name,'sqlstate':outcomes['baseline']['sqlstate'],'exact_original_fallback':not fast_chosen,'fast_path_chosen':fast_chosen,'passed':True})
             print(name,': PASS',flush=True)
-    write_report('reports/semantics-copy-layout.json',{'database':db,'cases':results,'all_passed':True,'scope':'Native batch engine with intentionally altered receiving metadata; actual psql COPY gate must be false; original assignment semantics/counters/schema retained.'})
+    write_report(output,{'database':db,'cases':results,'all_passed':True,'scope':'Native batch engine with intentionally altered receiving metadata; specified rejected layouts must use the original path. A benign DEFAULT NULL may be optimized away by PostgreSQL. All original assignment semantics/counters/schema retained.'})
 
 
 if __name__=='__main__':main()

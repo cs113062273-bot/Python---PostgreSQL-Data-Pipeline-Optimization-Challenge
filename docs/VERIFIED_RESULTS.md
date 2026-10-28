@@ -1,3 +1,6 @@
+Active objective: **90% less complete processing time**, not achieved.
+See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
+
 Latest fresh 1M pair (2026-10-28): **113.174393s unchanged official versus
 18.202447s parent_hint_copy, 83.916462% less complete processing wall time**.
 This is one pair, passes all native output/integrity/version gates, and does

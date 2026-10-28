@@ -26,7 +26,9 @@ def main():
     parser.add_argument("--output",default="reports/local-service.json")
     parser.add_argument("--reference",help="Separate existing oracle; avoids all destination warmup in the measured database")
     parser.add_argument('--verification',choices=['exact','fingerprints'],default='exact')
+    parser.add_argument('--establish-reference',action='store_true',help='Unmodified baseline only: establish actual canonical outputs without warmup or a circular self-comparison')
     args=parser.parse_args()
+    if args.establish_reference and (args.mode!='baseline' or args.reference):parser.error('Reference establishment is only for an unchanged baseline without another reference')
     import os
     if os.environ.get('CHALLENGE_RECORD_LEADER_CPU')=='1':
         from bench.backend_cpu_probe import install as observe_cpu
@@ -40,7 +42,7 @@ def main():
         scopes=[r[0] for r in conn.execute("SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1")]
         if conn.execute("SELECT to_regclass('public.pgdm_table_row_counts')").fetchone()[0]:
             raise RuntimeError("Use a fresh lab clone so metadata/version history remains coherent")
-        if not args.reference:
+        if not args.reference and not args.establish_reference:
             execute(conn,"baseline",scopes)
             snapshot(conn)
             conn.execute("TRUNCATE public.table2,public.table5,public.table6,public.table1,public.table3,public.table4 RESTART IDENTITY")
@@ -61,7 +63,7 @@ def main():
     result=service.execute_cross_table_expansion(args.database,"public.raw_data",scopes,destinations(args.mode),timing_report=report)
     versions=service.register_cross_table_expansion_versions(result,"research","local-diagnostic",timing_report=report)
     wall=time.perf_counter()-started
-    exact_details=None
+    exact_details=None;recorded_reference_fingerprints=None
     print(f'Native {args.mode}: {wall:.4f}s complete processing wall; exact verification pending',flush=True)
     if args.mode in GUARDED_MODES:
         import os
@@ -77,7 +79,10 @@ def main():
         assert sequence_signature(conn)==sequences_before,'Native sequence options/ownership changed'
         assert conn.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0]==workspace_before,'Workspace namespace not restored'
         if args.mode=='guarded_copy':assert result['execution_architecture']['copy_workspace']['cleanup_success']
-        if args.reference:
+        if args.establish_reference:
+            from tests.equivalence.oracle import fingerprints
+            recorded_reference_fingerprints=fingerprints(conn);verification_schema=None
+        elif args.reference:
             with connect(args.reference,autocommit=True) as reference:
                 require_lab(reference)
                 if args.verification=='exact':
@@ -104,14 +109,15 @@ def main():
             assert count==counter
     value={"kind":"local_transport_organizer_service","official_score":False,"environment":env,"mode":args.mode,
            "execution_architecture":result.get('execution_architecture'),
-           "separate_reference":args.reference,"destination_warmup_before_measured_run":not bool(args.reference),
-           "wall_seconds":wall,"verification":args.verification,"verification_schema":verification_schema,"exact_comparison_details":exact_details,"exact_six_tables":args.verification=='exact',"six_table_fingerprints_equivalent":True,"counter_reconciliation":True,"protected_schema_equivalent":True,"sequence_options_and_ownership_equivalent":True,"workspace_namespace_restored":True,"versions":versions,"timing_report":report,
+           "separate_reference":args.reference,"destination_warmup_before_measured_run":not bool(args.reference or args.establish_reference),
+           "wall_seconds":wall,"verification":'establish_original_reference' if args.establish_reference else args.verification,"verification_schema":verification_schema,"exact_comparison_details":exact_details,"exact_six_tables":not args.establish_reference and args.verification=='exact',"six_table_fingerprints_equivalent":None if args.establish_reference else True,"counter_reconciliation":True,"protected_schema_equivalent":True,"sequence_options_and_ownership_equivalent":True,"workspace_namespace_restored":True,"versions":versions,"timing_report":report,
+           "unmodified_reference_established":args.establish_reference,"reference_output_fingerprints":recorded_reference_fingerprints,
            "local_backend_diagnostics":getattr(service._expansion_timing_local,'local_backend_diagnostics',None),
            "limitations":["local Windows psql substitutes Linux/SSH command transport","GUI cache/refresh excluded","dump filesystem/replay not exercised by this command"]}
     write_report(args.output,value)
     from pathlib import Path
     Path(args.output).with_suffix(".txt").write_text("LOCAL TRANSPORT DIAGNOSTIC; NOT AN OFFICIAL BASELINE OR SCORE\n\n"+ExpansionTimingReportDialog.build_report_text(report),encoding="utf-8")
-    validation='exact six outputs' if args.verification=='exact' else 'six-table typed fingerprints'
+    validation='actual unmodified reference outputs recorded (no self-comparison)' if args.establish_reference else 'exact six outputs' if args.verification=='exact' else 'six-table typed fingerprints'
     print(f"Local service {args.mode}: {wall:.3f}s wall; {validation}, counters and versions verified",flush=True)
 
 

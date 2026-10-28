@@ -1,0 +1,338 @@
+{
+  "kind": "native_compact_binary_export_component",
+  "database": "lab_native_compact_9b3ae1a447",
+  "runs": [
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.47549789999993664,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 2.0878655999995317,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 0.7932098999999653,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.5192318999997951,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 2.099389799999699,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 0.8109058000000005,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.5368853999998464,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.46951200000057725,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 2,
+      "export_seconds": 0.8104051000000254,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 4,
+      "export_seconds": 0.5276963999995132,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 8,
+      "export_seconds": 0.49793030000000726,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 0,
+      "export_seconds": 2.113823499999853,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.8156897999997454,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 2.4498238000005585,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 1.019177999999556,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.8667887000001429,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 2.4671785000000455,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 1.043865900000128,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.8148047999993651,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.8269087999997282,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 2,
+      "export_seconds": 1.031907499999761,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 4,
+      "export_seconds": 0.8293524999999136,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 8,
+      "export_seconds": 0.8530133999993268,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 0,
+      "export_seconds": 2.47942890000013,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.3387639999991734,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 0.6850414000000455,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 0.37749729999995907,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.31077259999983653,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 0.6864378000000215,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 0.3461184999996476,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.32045079999988957,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.3190809999996418,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    }
+  ],
+  "driver_sha256": "03b1cbed23894a4ff0bc4737dda40cc57bf3fd1add646c652f4911db69aee5c7",
+  "scope": "COPY SELECT to private binary file only, shared warmed native compact cache and already populated parent tables. Replay each file into native typed temp rows and bidirectional EXCEPT ALL outside timers. No final identity/COPY ingest/index/FK/commit/versions or full-service percentage claimed.",
+  "build": {
+    "kind": "isolated_native_probe_build",
+    "source": "native\\challenge_probe.c",
+    "source_sha256": "88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5",
+    "driver_sha256": "b44eba77d5e57a833479c53c25834b718a8b8c99531fab25280d02591f3a258a",
+    "compiler_version": "0.14.1",
+    "compiler_archive": {
+      "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+      "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+      "size": "82229343"
+    },
+    "command": [
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+      "cc",
+      "-target",
+      "x86_64-windows-gnu",
+      "-std=c11",
+      "-O2",
+      "-g",
+      "-fno-strict-aliasing",
+      "-fwrapv",
+      "-shared",
+      "-DWIN32",
+      "-DPG_C_PRINTF_ATTRIBUTE=printf",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+      "-DCHALLENGE_PROBE_SOURCE_SHA=\"88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5\"",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_probe.c",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+      "-o",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\88922bebb3d7fa4d-b44eba77d5e57a83\\challenge_probe_88922bebb3d7fa4d.dll"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "application_integration": false,
+    "library": ".runtime\\native_build\\88922bebb3d7fa4d-b44eba77d5e57a83\\challenge_probe_88922bebb3d7fa4d.dll",
+    "library_sha256": "f684f81a8815b027f781bd8bd117ff37aaacefd6d9c0b6bb7655b58d9038e4e6",
+    "source_archive": "reports\\native-source\\88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5.c",
+    "retained_build_receipt": "reports\\native-c-builds\\88922bebb3d7fa4d-e2b5a727.json"
+  }
+}

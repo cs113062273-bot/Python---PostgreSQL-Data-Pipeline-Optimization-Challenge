@@ -5,6 +5,7 @@ from pathlib import Path
 import platform
 import subprocess
 import sys
+import uuid
 
 import psycopg
 from psycopg.conninfo import make_conninfo
@@ -30,9 +31,16 @@ def require_lab(conn):
 def write_report(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_suffix(path.suffix + ".tmp")
-    temp.write_text(json.dumps(value, indent=2, ensure_ascii=False, default=str) + "\n", encoding="utf-8")
-    temp.replace(path)
+    temp = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
+    try:
+        with temp.open('x', encoding='utf-8', newline='\n') as writer:
+            writer.write(json.dumps(value, indent=2, ensure_ascii=False, default=str) + "\n")
+            writer.flush()
+            os.fsync(writer.fileno())
+        temp.replace(path)
+    except BaseException:
+        temp.unlink(missing_ok=True)
+        raise
 
 
 def environment(conn):

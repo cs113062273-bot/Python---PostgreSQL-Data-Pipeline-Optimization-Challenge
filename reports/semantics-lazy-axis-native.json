@@ -1,0 +1,5198 @@
+{
+  "kind": "actual_psql_native_copy_differential",
+  "baseline_transport": "oneshot",
+  "transport": "server",
+  "database": "lab_native_copy_fuzz_dc4e14ba",
+  "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+  "seed": 718,
+  "cases": [
+    {
+      "index": 0,
+      "case": {
+        "name": "unchanged",
+        "edits": []
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "da2ff08a6934c6e21fd099728abe51e630d0fd85f16be3fedecb45465f06884a",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0023523999989265576,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 1,
+      "case": {
+        "name": "values-shape",
+        "shape": null
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9951558b47fe406fd248968ced2aaf4414abdb3ac7f000149c668ccefb1a7836",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015382000128738582,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 2,
+      "case": {
+        "name": "values-shape",
+        "shape": []
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9cc2dfb96c0d5b8a723b3edd18d5820705e5051336d037e304ccde4f122e851e",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001894700006232597,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 3,
+      "case": {
+        "name": "values-shape",
+        "shape": "text"
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "31ac45139801d3dec980f60866fe4b13b36fb8f78bd1098ac9eea5e0d39a1fbb",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018377000087639317,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 4,
+      "case": {
+        "name": "values-shape",
+        "shape": 42
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "dd2ae4973cbc0c48a6176b5bdfb778d99bcd55dcb8d74c2711f5cfc652ddc37c",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0013536999904317781,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 5,
+      "case": {
+        "name": "values-shape",
+        "shape": true
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "d100cdb3b69166d7fb2b6d68fdd2b464d1ca07550f2f48541a1a937b763a05b6",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017579999985173345,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 6,
+      "case": {
+        "name": "values-shape",
+        "shape": {}
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "dc32a490d3bad8da1f24b45b68ee8e75b5d29e678478e69d1a2d231af7dfd5e6",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016940000059548765,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 7,
+      "case": {
+        "name": "values-shape",
+        "shape": [
+          1,
+          2
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "c2439e608876c7bf806ed9e6e65e00d4cc22db784fb2a6fe547aff4904ef123f",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001530499997898005,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 8,
+      "case": {
+        "name": "missing-values",
+        "missing_values": true
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "188f6610000c5dd70cf272a59fdfd849330e08aa76522b42c5be4c204d1c10c6",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015773000050103292,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 9,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_13",
+            []
+          ]
+        ],
+        "remove": "text_column_1"
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "88dd04167b7153271b502162294ea3eeb9af3837bf83f0c13ac83f70d88bbd4e",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001370800004224293,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 10,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_5",
+            "x"
+          ],
+          [
+            "text_column_2",
+            "-32769"
+          ],
+          [
+            "numeric_column_9",
+            "1e400"
+          ],
+          [
+            "numeric_column_23",
+            2
+          ],
+          [
+            "numeric_column_22",
+            "1.2"
+          ]
+        ],
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "861dab87f41b63b2af3248f613cbc5c25460868a6b6f79c05069d305c3fb38f0",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018508999928599223,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 11,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_5",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "id_column_1",
+            {}
+          ],
+          [
+            "numeric_column_13",
+            null
+          ],
+          [
+            "text_column_2",
+            "?"
+          ],
+          [
+            "integer_column_13",
+            "Infinity"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "928e84d526e151e1c3a02ab80a0e1cdb16b2efd1f97a149de901c9d962a0eebd",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001407400006428361,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 12,
+      "case": {
+        "name": "sparse-hole",
+        "edits": [
+          [
+            "integer_column_15",
+            "14"
+          ],
+          [
+            "text_column_17",
+            "Z"
+          ],
+          [
+            "numeric_column_29",
+            "1"
+          ],
+          [
+            "numeric_column_30",
+            "0"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ced9e86976952ff565835fff700ea7033b0daf2bf43409da1cc7852f23ddd603",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014424999972106889,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14215,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 13,
+      "case": {
+        "name": "declared-bound",
+        "edits": [
+          [
+            "integer_column_2",
+            null
+          ],
+          [
+            "integer_column_3",
+            null
+          ],
+          [
+            "integer_column_4",
+            null
+          ],
+          [
+            "integer_column_5",
+            null
+          ],
+          [
+            "integer_column_6",
+            null
+          ],
+          [
+            "integer_column_7",
+            null
+          ],
+          [
+            "integer_column_8",
+            null
+          ],
+          [
+            "integer_column_9",
+            null
+          ],
+          [
+            "integer_column_10",
+            null
+          ],
+          [
+            "integer_column_11",
+            null
+          ],
+          [
+            "integer_column_12",
+            null
+          ],
+          [
+            "integer_column_13",
+            null
+          ],
+          [
+            "integer_column_14",
+            null
+          ],
+          [
+            "integer_column_15",
+            null
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "7f729bbe81ffb47fdc16aaa154c9cd68314b0b49f37f511461bf725809be403d",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001662199996644631,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13934,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 14,
+      "case": {
+        "name": "declared-bound",
+        "edits": [
+          [
+            "integer_column_2",
+            "-1"
+          ],
+          [
+            "integer_column_3",
+            "-1"
+          ],
+          [
+            "integer_column_4",
+            "-1"
+          ],
+          [
+            "integer_column_5",
+            "-1"
+          ],
+          [
+            "integer_column_6",
+            "-1"
+          ],
+          [
+            "integer_column_7",
+            "-1"
+          ],
+          [
+            "integer_column_8",
+            "-1"
+          ],
+          [
+            "integer_column_9",
+            "-1"
+          ],
+          [
+            "integer_column_10",
+            "-1"
+          ],
+          [
+            "integer_column_11",
+            "-1"
+          ],
+          [
+            "integer_column_12",
+            "-1"
+          ],
+          [
+            "integer_column_13",
+            "-1"
+          ],
+          [
+            "integer_column_14",
+            "-1"
+          ],
+          [
+            "integer_column_15",
+            "-1"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "8a854572581ff9799dc78cfe0933f21692b08807cb3f9b744c6dc8c90e29511e",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014892000035615638,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13936,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 15,
+      "case": {
+        "name": "declared-bound",
+        "edits": [
+          [
+            "integer_column_2",
+            "9999"
+          ],
+          [
+            "integer_column_3",
+            "9999"
+          ],
+          [
+            "integer_column_4",
+            "9999"
+          ],
+          [
+            "integer_column_5",
+            "9999"
+          ],
+          [
+            "integer_column_6",
+            "9999"
+          ],
+          [
+            "integer_column_7",
+            "9999"
+          ],
+          [
+            "integer_column_8",
+            "9999"
+          ],
+          [
+            "integer_column_9",
+            "9999"
+          ],
+          [
+            "integer_column_10",
+            "9999"
+          ],
+          [
+            "integer_column_11",
+            "9999"
+          ],
+          [
+            "integer_column_12",
+            "9999"
+          ],
+          [
+            "integer_column_13",
+            "9999"
+          ],
+          [
+            "integer_column_14",
+            "9999"
+          ],
+          [
+            "integer_column_15",
+            "9999"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "d37e2cf9576fca7cd74da9aca1ed3c101849ac220128ef18e023f27f153cf9ef",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015396000089822337,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13936,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 16,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_15",
+            ""
+          ],
+          [
+            "numeric_column_29",
+            "bad"
+          ],
+          [
+            "text_column_17",
+            "X"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "0954fff1698fa6e39ecc3ba0001de89ec0aa456e75099de99d4207e460dc8aad",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001450499999918975,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 17,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_15",
+            "bad"
+          ],
+          [
+            "numeric_column_29",
+            "-1"
+          ],
+          [
+            "text_column_17",
+            "?"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "12897c7a3e4a80054fc7a0a82f025cf5fdc4edde125f5312d78aee933d590ac3",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015286999987438321,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 18,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_2",
+            "40000"
+          ],
+          [
+            "numeric_column_3",
+            "bad"
+          ],
+          [
+            "text_column_4",
+            "X"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "d37d908f28febf2c6f2c22a9a41516062679c15df9af77e04d05a9de911b7400",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001876900001661852,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 19,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "integer_column_2",
+            "1"
+          ],
+          [
+            "numeric_column_3",
+            "1e400"
+          ],
+          [
+            "numeric_column_4",
+            "bad"
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "bfcbf0c62a7a0b3e0037a1ecc75a59df288f206d282b6f994ccceeb27f86495a",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0019093000009888783,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 20,
+      "case": {
+        "name": "multi-error-trap",
+        "edits": [
+          [
+            "text_column_2",
+            [
+              "X"
+            ]
+          ],
+          [
+            "numeric_column_7",
+            []
+          ],
+          [
+            "integer_column_1",
+            true
+          ],
+          [
+            "numeric_column_19",
+            null
+          ]
+        ]
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "6557cb121c41b39c79ca1dc5dac88a2c11cd6fa5fc31a66ec10172c85a32decb",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015262999950209633,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 21,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            1.5
+          ],
+          [
+            "numeric_column_24",
+            "nope"
+          ],
+          [
+            "numeric_column_20",
+            "?"
+          ],
+          [
+            "numeric_column_21",
+            "x"
+          ]
+        ],
+        "remove": "numeric_column_5",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ad7452a009c7ccad65673a3ca27df20e62937338c0428b407f0b0506caee045b",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001336100001935847,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 22,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_29",
+            "Z"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "2505a777c5f6d26017503e1d8060100bdcf5871d7bc7127e99aef3176f8917eb",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015278000064427033,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 23,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_16",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "bce21a741bcf09c308b8f127f59858068d9cbf5e8e6a25a20b80ad4d72321175",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0019410000095376745,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 24,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_21",
+            null
+          ],
+          [
+            "text_column_14",
+            null
+          ],
+          [
+            "numeric_column_16",
+            [
+              "X"
+            ]
+          ],
+          [
+            "integer_column_15",
+            "Infinity"
+          ],
+          [
+            "text_column_16",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "95b5960ff14d3378ba11b73d35c0f7d65f61ecb5cc86d7c036c3297780a73a0a",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014421000087168068,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 25,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_6",
+            null
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "3624f13ad4d5388672dabbf4ae0d0adaf49e978d410d3b449c49f53f1978b9e7",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015048999921418726,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 26,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_24",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5cdf87f06a8a92e5abfcad3306750084bd1538983fa8a2e0797b5d17dc9c7df1",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014724999928148463,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 27,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "datetime_column_1",
+            " 2 "
+          ],
+          [
+            "integer_column_15",
+            "32768"
+          ],
+          [
+            "numeric_column_27",
+            "999999999999999999999999999999999999999999999"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22007",
+        "guarded_copy": "22007"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "72e7bcbdf321ac12f7a736443d0acefdb22b3c1781a072ddfaac6bd9aecdc722",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016978000057861209,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 28,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_16",
+            "?"
+          ]
+        ],
+        "remove": "numeric_column_13",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5d62971a3e62326d89373164d2aa63085eaf3c37baefa1959cd63362db317db2",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001389600001857616,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14141,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 29,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_23",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ebd6133250da35c2b6fdaebfcbf50cf21d0df5f075e36373319ff2ceb5b25b1b",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015068999928189442,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 30,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_3",
+            "1e400"
+          ],
+          [
+            "numeric_column_4",
+            []
+          ],
+          [
+            "datetime_column_1",
+            []
+          ],
+          [
+            "integer_column_6",
+            "1e400"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22007",
+        "guarded_copy": "22007"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5a0b501f0ac85c4998e73caef3dcf40c4ac3fcdf653f177e8ff062a7cd60a735",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014085000002523884,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 31,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_24",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "4a6c734d2d31a2994a78e220713119b9c6d2e30068b704545654bc987cc249de",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001464399989345111,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 32,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_7",
+            null
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "3e6889981278bc507c508cd7088984e76ef2b9738e0c76641a8a0c9e9643892d",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001326500001596287,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14141,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 33,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_30",
+            "999999999999999999999999999999999999999999999"
+          ],
+          [
+            "text_column_6",
+            "NaN"
+          ],
+          [
+            "numeric_column_10",
+            [
+              "X"
+            ]
+          ],
+          [
+            "numeric_column_2",
+            null
+          ],
+          [
+            "text_column_8",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "efed81c7c4e7e6d766408dbf51b9205e813235e7cf20b0fd11c1fc0d34369ac3",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015290000010281801,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 34,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_6",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9f392b564958f17fa7661b23463c2fa2507d42cc7636c009bf656249e4ffe30e",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0013481000059982762,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 35,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_29",
+            "Z"
+          ]
+        ],
+        "remove": "numeric_column_26",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "571f60b7f3de9689426e1fa7c287c8f2697cdb4a09381cfef8b1d2e2e842ecb6",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016171000024769455,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 36,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_24",
+            " "
+          ],
+          [
+            "text_column_9",
+            "-1"
+          ],
+          [
+            "numeric_column_7",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "7964c8c55c6814f44b8449a9f3b0896d16ec50e48f3081f132ff2beef9934829",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0012878000125056133,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 37,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            "?"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "74755fc1b9e9b843aa1af1cb6eb473f21982286740145d16d4c8d3ebf650fde3",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016156000056071207,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 38,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "datetime_column_1",
+            1.5
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22007",
+        "guarded_copy": "22007"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "743ae6f4de2ffb695c153bbf1a9cacf9f44ed4b15eb0f3a35f8825a663fa2de3",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014399999927263707,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 39,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_12",
+            null
+          ],
+          [
+            "integer_column_2",
+            ""
+          ],
+          [
+            "numeric_column_18",
+            "nope"
+          ],
+          [
+            "numeric_column_17",
+            "Infinity"
+          ],
+          [
+            "numeric_column_8",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "aa71ff5684001a9442bdc5a9c0a5ab49db85890c515883d3afdd474b8c2ba2bf",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0013424999924609438,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 40,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_15",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "cb3bd06f75ba906ae194ca617b098c15226e07633e7688827323b5838b790ba6",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0013831999967806041,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 41,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_1",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "de2de3beebb220a7658ac3073901cf88e82c158a2b4b60f40a1552fca440d860",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015226999967126176,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 42,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_8",
+            "1.2"
+          ],
+          [
+            "id_column_1",
+            []
+          ],
+          [
+            "text_column_6",
+            true
+          ],
+          [
+            "integer_column_2",
+            "?"
+          ]
+        ],
+        "remove": "id_column_1",
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "af1526daec9cf75e82882e87935365a5af8b96c81661c780758b497bea6a6283",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001324700002442114,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 43,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_3",
+            "1e400"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "e2dfa71a5def5956e58e5195a56494e5bc6cc4f800a11c5a8a80bd7764ae2088",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0013544000103138387,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 44,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_11",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "b1ed53aca256fcba849c5fb21dbfd94a7cee0daa923a2543dcde53f66e9634bc",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016980000073090196,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 45,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_23",
+            "1e400"
+          ],
+          [
+            "numeric_column_17",
+            "999999999999999999999999999999999999999999999"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "0a8e99ed3e07c33f2a06625a3800b4c08e73a7dd2397fd4f28d630162061d589",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001640000002225861,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 46,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_4",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "b234338fbb4952808997d2b0047b95aaf8a215deb59a4b960c9b3bec538ea7d9",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0013310999929672107,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 47,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_15",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9869136aac25fcf2544e1378ea501ec866aea883895f74cd8a5b9234ac6c6f31",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018001999997068197,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 48,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_5",
+            null
+          ],
+          [
+            "text_column_10",
+            {}
+          ],
+          [
+            "numeric_column_30",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ed0dd177a3d11e4ea2cf6d8f6e2d9f7e5266be6bf2dd1a36d69cde596bd5fd64",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016866999940248206,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 49,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_15",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": "numeric_column_23",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "30c6b8903b19e6eb35f689e5bc77822387a582c71a18f1c8875d725484d5d7d8",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015663999947719276,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 50,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_3",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9078e428fb19dbfedfc42b54563b020d4c23bb77dc1c013dfa4393a75a882876",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0020946000004187226,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 51,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_12",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "integer_column_8",
+            "nope"
+          ],
+          [
+            "text_column_1",
+            []
+          ],
+          [
+            "text_column_3",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "6ee29f9093569a077e379177583ba479e4e88a334e60d2563b4a76dbbf7b8143",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014383000088855624,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 52,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_4",
+            "-1"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "87139539cea42abdc843d297adc4b6f620b8e0e864050c876e6b5a447fcc8dcb",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001792900002328679,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 53,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "75c35bbec70702bc723556dbb47043c2713f363b01d9c78ee0d8bdd632a53db4",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017725999932736158,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 54,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_1",
+            "999999999999999999999999999999999999999999999"
+          ],
+          [
+            "numeric_column_17",
+            {}
+          ],
+          [
+            "integer_column_1",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "05d15506c027ec1fb0a2387516a68ae91a8f69767109efb4a4c6804e4564e1b2",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001748599999700673,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 55,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_26",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "8deddf46d06adbdae015dc80ec9d4d9162498396ba9c4466fd756f54f06b7897",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0028777999978046864,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 56,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_7",
+            "1.2"
+          ]
+        ],
+        "remove": "integer_column_3",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "e20f9c9f93fa1edd6c1a620021cc4538e603d5d81ad361a40f99edc7d632a457",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017724000063026324,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 57,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_8",
+            2
+          ],
+          [
+            "text_column_15",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "524e0be35ed5f53c4aa93b3579011afe6f76674dd342ac1c67107b245d813172",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018850000051315874,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 58,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_14",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "81415a3c71ae7fb7dfe104340b00b73cbbdb5d0be751bb675608c2432be3b969",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001654799998505041,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 59,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_3",
+            {}
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "93d6b8ac73242c148b0ce7f6cdedd17f38a3cd772ad8f154559628ff476e1784",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015418000111822039,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14158,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 60,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            "-32769"
+          ],
+          [
+            "integer_column_13",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9874b6cf6bd9f1caf20e3561f2f4aea2a71643b666d699e39f5086805dcaa906",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018602000054670498,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 61,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_1",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ff48faffa6cd6c3a84d6f4f150253621bf476515315b6a756e8527467111e2db",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018358999950578436,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 62,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_29",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5077945517d90473355d34b326ff387ae4a5b1ead8aa99af5fa8e281a5379528",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016162000101758167,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 63,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_21",
+            true
+          ],
+          [
+            "numeric_column_23",
+            "Z"
+          ],
+          [
+            "numeric_column_4",
+            {}
+          ],
+          [
+            "numeric_column_1",
+            " "
+          ],
+          [
+            "numeric_column_19",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": "numeric_column_19",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "053565b7e0f964e7669b73ef233106e1d20bdb7175a15d12951e267af3876400",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015791999903740361,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 64,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_7",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "216d878015b0332761189b95b063c6e191118f07f8e1b0bbf5496493e8ba9eec",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001494800002546981,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 65,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_4",
+            "Z"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "7713c553fb994d93a8c91d6a4f0d449205bf251f6dfe9f4fa8ecddd2502294de",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017349000117974356,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 66,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            "nope"
+          ],
+          [
+            "integer_column_7",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "text_column_11",
+            " 2 "
+          ],
+          [
+            "integer_column_1",
+            "x"
+          ],
+          [
+            "integer_column_1",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "daa00bb196362329554650e9ccc64001106fb6657f42653054d73176e1558b04",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001673599996138364,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 67,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_5",
+            2
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "8923db1c430ecd429104082453c57e055781519b95066197f456361744e21bfd",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001401300003635697,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 68,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_12",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "c4f86fa745940f3dd5ae40106bab7b15e894b96fdbfda26f6dbe56fb0290f5a0",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016170000017154962,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 69,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_6",
+            {}
+          ],
+          [
+            "text_column_6",
+            "x"
+          ],
+          [
+            "integer_column_9",
+            1.5
+          ],
+          [
+            "numeric_column_17",
+            [
+              "X"
+            ]
+          ],
+          [
+            "text_column_11",
+            "Z"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "663c70897240bc151a39c673a509baaf310e88b620a8f6442e143cf7c536f80d",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017605999892111868,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 70,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            {}
+          ]
+        ],
+        "remove": "integer_column_13",
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "12f603f2909ae81e96e7560f8e353e9be6ab68139652b780eeaa9b8b38b89773",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016799000004539266,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 71,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_11",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "1c72242a0f70b67450f0a5a9eea18e0141a1e46c35c4ead24971a684985054dd",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015433000080520287,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 72,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_26",
+            true
+          ],
+          [
+            "text_column_3",
+            ""
+          ],
+          [
+            "integer_column_7",
+            "1.2"
+          ],
+          [
+            "integer_column_9",
+            "x"
+          ],
+          [
+            "numeric_column_13",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "f7f31bba480237d65db0de21a91e658c5921ee2291f11488ddab050ffa32de12",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015106000064406544,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 73,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_16",
+            "-1"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ce5dbd0e1e343e3410d4270e7e464bdcad8e3216dbb1786e8a138415d2300748",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017497999942861497,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 74,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_7",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "c0b3299913ac48106afac81a7f11fb4614965e0e443a986a4ae7502bcc1c9278",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001592399989021942,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 75,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_13",
+            "1e400"
+          ],
+          [
+            "numeric_column_9",
+            " "
+          ],
+          [
+            "numeric_column_3",
+            "?"
+          ],
+          [
+            "text_column_4",
+            "1.2"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "d799fd6467cbe7f359b3aca14096c127669483e5db8a3140ee8ea311ca6d58b5",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015992999979062006,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 76,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            "-1"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "3e74d266252a0531eb75fe04501582b25566684b78ae24b87434256bc783d63f",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018745999987004325,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 77,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_4",
+            2
+          ]
+        ],
+        "remove": "numeric_column_12",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5300fa7c5dfee2fe170c7d9fcb9597ec2071afbdf426a61639f623e8f04348df",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0019211000035284087,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14133,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 78,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_23",
+            "-32769"
+          ],
+          [
+            "integer_column_6",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "ffbe30ba251c983d28d8cfeb7ff780e157415b90948b87e099553ad3db40fc75",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016187000001082197,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 79,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_11",
+            true
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "0351a6671fffe1f0ebb8b063036a5c9223fa05bcf3ea6b9cf218015a4d68a443",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015547000075457618,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 80,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_2",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "4ddcaff0d6fab04e3ff79c74e5826b74f2c073c2af0ca726022945d0c60d8024",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001571799992234446,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 81,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_23",
+            ""
+          ],
+          [
+            "text_column_5",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "e68df947c79d69656daa934a8b1e1fa3bc8f1889b0ac7a1c9079414b0174367c",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001393300000927411,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 82,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_16",
+            1.5
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "fddbd3e32e7026a26fd2be89f63d673ceef4076bf11d3914098d99d76c905ec7",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001542199999676086,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 83,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_8",
+            {
+              "a": 1
+            }
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "30bf33f4851c34fcb41c2a741a03d4f60f43e43b5971c8faa64b43c1a4a1fad9",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016601999959675595,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 84,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_12",
+            "-1"
+          ],
+          [
+            "numeric_column_12",
+            []
+          ]
+        ],
+        "remove": "text_column_9",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "11b450444787aeaaedd13ab6e5c5964fc124807fc738cd5e0f64afda0ee69f7f",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014530999906128272,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 85,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_28",
+            "-32769"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "307ce73354499bfd4ee41312fc4f021d18bb87b3355453397f0687287717f73e",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015341999969678,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 86,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_4",
+            {}
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "3e22c2398b032f4d07295a54761ee8e60c1d55dd9055a3a18e7a66c9687a5a73",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001446199996280484,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 87,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_11",
+            "-1"
+          ],
+          [
+            "numeric_column_27",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "7501d4232f46f0104a0a1df0cfb36a8d752138cd6208803a24a59d3768c6a305",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001857800001744181,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 88,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_5",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "f6cdfbfd116b26556c13258fa3328a5c0ace4018c4b85b5949df4915d0410e03",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016183999978238717,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 89,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "01fdaa27338c03c734571e5c29219b9d45415ad4d8db6d8f1c9d898caf08e073",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015657999902032316,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 90,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_12",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "numeric_column_29",
+            [
+              "X"
+            ]
+          ],
+          [
+            "integer_column_15",
+            "-0.1"
+          ],
+          [
+            "text_column_6",
+            "x"
+          ],
+          [
+            "numeric_column_16",
+            "?"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "a87f15e3a9d0334af04d7b7edb58e01f400113ad87223909cb5eeb8609dd7f96",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016957000043476,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 91,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_22",
+            {}
+          ]
+        ],
+        "remove": "id_column_1",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "a7a266afe15d2ab96f4ea32d4d8866d47a9b2de363e06e1647023ae1183598d0",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016285000019706786,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 92,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_4",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "e067f7d4a53efc70becfd438b990fee259992163fefb68de8a0d2292d852c494",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018311000021640211,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 93,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_27",
+            "32768"
+          ],
+          [
+            "numeric_column_22",
+            " 2 "
+          ],
+          [
+            "integer_column_7",
+            "1.2"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "85306b5b0a59539f15af81eb0f7407de80a888d6b2b57e3f872b9f7ab510cfac",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016519999917363748,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 94,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_3",
+            "1.2"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "a8e1425af6509bb9fd56522bb6163b29c4a95dc23b0ecaecf182a0bcedb03180",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001654499996220693,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 95,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_10",
+            "Infinity"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "f95d4bd57530217bc5eab60ccac299cd71b8a0723a2434b4cd5fcf5417596e12",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015516999992541969,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 96,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_10",
+            null
+          ],
+          [
+            "numeric_column_28",
+            "-32769"
+          ],
+          [
+            "text_column_8",
+            "Infinity"
+          ],
+          [
+            "integer_column_13",
+            2
+          ],
+          [
+            "integer_column_1",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "88e892ce4a986795faf504329e6f69a11b1b9d7159a63bf6a6c8015e344231ea",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017039999947883189,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 97,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_8",
+            {}
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "55a1d569dee39156a926a34ab0221c2c01ca7121cfb7008b8a87d3f7332374bb",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017637000128161162,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14137,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 98,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            null
+          ]
+        ],
+        "remove": "text_column_17",
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "1dd7dfbf5cce2218119da19c09f69ea5b658c421b9edf0bfd3401da35f818230",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001477300000260584,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 99,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_10",
+            " "
+          ],
+          [
+            "text_column_10",
+            "nope"
+          ],
+          [
+            "numeric_column_21",
+            2
+          ],
+          [
+            "text_column_11",
+            1.5
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "de370aed5a5680ad027c9d392627a53ff88d78539f3e47fb30c557de7dd455b4",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016639000095892698,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 100,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_10",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "45c922bdc20a931e95b00a340440ba37b5b97ac947fbfda3c8f761e1ab472c15",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018311000021640211,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 101,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_6",
+            "NaN"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "6f664fb276b4c10f7e7d6e4cfcbcc2344df1d6b4ac69ef150774e23b54ecad25",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001664000010350719,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 102,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_14",
+            "32768"
+          ],
+          [
+            "numeric_column_11",
+            "NaN"
+          ],
+          [
+            "text_column_13",
+            1.5
+          ],
+          [
+            "numeric_column_19",
+            "32768"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "0A000",
+        "guarded_copy": "0A000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "fc122efa0731813e5f652127286d3cd14a35604c1a8335ba19b002065005d65f",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001691400000709109,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 103,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_17",
+            "nope"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "43885faffe151769fd255b1da4180daa901da8bf8af1bf97c475b2eb47bffb8a",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016882999916560948,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 104,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_21",
+            "-32769"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "7cc3ad94dfa8680b9e11ea6cb1d21104994242c34403cbf468afc99836e48fba",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001675999999861233,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 105,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "integer_column_14",
+            "32768"
+          ],
+          [
+            "id_column_1",
+            "-32769"
+          ],
+          [
+            "integer_column_6",
+            "Infinity"
+          ]
+        ],
+        "remove": "text_column_2",
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "a862199a6c779ef8d502fd2b6d2ec92659f6627fe0b8ed125488d71530f0ba29",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014310999977169558,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 106,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_10",
+            "999999999999999999999999999999999999999999999"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "a8bc13c7f92286c9cd32944b68f33b408fe50b98848d19612501cfddd7d0b8f2",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015501000016229227,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 107,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_2",
+            "1e400"
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "9f96074b98a8121d166b466458536d3f4e353f6cad33bd8103695c43d2a1b322",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0014720000035595149,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 13820,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 108,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_3",
+            2
+          ],
+          [
+            "numeric_column_19",
+            " 2 "
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "e6e04e499e531115fdcebfb277556179b693724ef2e9624d563ae0ef97be2a3c",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001950100006069988,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 109,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_22",
+            [
+              "X"
+            ]
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5d1b4b16843036102b60a8f930aa21ed47afc7021c1b6587d49f4828df66c847",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001902799995150417,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 110,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_5",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "b2cb48919ae058c679bdd76c955fa34f299120438c4d7040f88be666b0ed7b01",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015352000045822933,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 111,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_19",
+            2
+          ],
+          [
+            "numeric_column_10",
+            " "
+          ],
+          [
+            "text_column_1",
+            1.5
+          ],
+          [
+            "text_column_8",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "2ad1102b3de9b886629f96993188eb968ca66a22d64ea76c9e665805bbddecb2",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.00151269999332726,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 112,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            "Infinity"
+          ]
+        ],
+        "remove": "numeric_column_25",
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "f798f59d455264f82e9d18352cfbddb2028ad2c0e84c73f1ec447df636d5601c",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0019103000086033717,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 113,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "integer_column_9",
+            2
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "256b5b852e6f8016bb81b97319f1d78e63bbce34e59e3de97a319dea352a0e79",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018654000014066696,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 114,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "text_column_13",
+            "Infinity"
+          ],
+          [
+            "numeric_column_24",
+            true
+          ],
+          [
+            "text_column_17",
+            true
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "2e1f98ce803ea629e6216ff7ae17f1a8bc527ae8c82ddfe66bb22d997370d7fc",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.001974400001927279,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 115,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_14",
+            ""
+          ]
+        ],
+        "remove": null,
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "5e0ec10f86c682c44411d00feb9e614cd6c2bea6252f709eab611782578e9908",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0016408000083174556,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 116,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_6",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "f6e1804b233cd2542898eb142b64f188f3e1cbe93b93f9dae34ce546a080341e",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0018521000019973144,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 117,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_14",
+            "32768"
+          ],
+          [
+            "integer_column_5",
+            "999999999999999999999999999999999999999999999"
+          ],
+          [
+            "text_column_10",
+            "x"
+          ],
+          [
+            "text_column_13",
+            "-0.1"
+          ]
+        ],
+        "remove": null,
+        "settings": 0
+      },
+      "sqlstates": {
+        "baseline": "22003",
+        "guarded_copy": "22003"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "716e3fa3f42f19e4ba355aab148027470b4ec60e507f960b692c2ef10422619c",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.00155050000466872,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 118,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "text_column_8",
+            "x"
+          ]
+        ],
+        "remove": null,
+        "settings": 1
+      },
+      "sqlstates": {
+        "baseline": "00000",
+        "guarded_copy": "00000"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": true,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 6,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "8d119e60ba8c087dca2f826d71411c2895f376656e590abd6ff41d901c337fd1",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0015490000077988952,
+          "temporary_hint_retained_written_files": 6,
+          "scratch_binary_bytes": 14178,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 119,
+      "case": {
+        "name": "single",
+        "edits": [
+          [
+            "numeric_column_2",
+            "?"
+          ]
+        ],
+        "remove": "integer_column_10",
+        "settings": 2
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "46e83edf0ca378a8248e5361db54a4792915861a34a347ff73c401347efa5e9f",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017324000073131174,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    },
+    {
+      "index": 120,
+      "case": {
+        "name": "multi",
+        "edits": [
+          [
+            "numeric_column_11",
+            "-32769"
+          ],
+          [
+            "numeric_column_22",
+            2
+          ],
+          [
+            "numeric_column_23",
+            "Z"
+          ],
+          [
+            "numeric_column_28",
+            {
+              "a": 1
+            }
+          ],
+          [
+            "integer_column_11",
+            []
+          ]
+        ],
+        "remove": null,
+        "settings": 3
+      },
+      "sqlstates": {
+        "baseline": "22P02",
+        "guarded_copy": "22P02"
+      },
+      "equivalent": true,
+      "transport_diagnostics": {
+        "guarded_copy": {
+          "transport": "private_server_file_copy_probe",
+          "server_files_used": false,
+          "server_file_privileges_available": true,
+          "privilege_fallback_to_client": false,
+          "actual_binary_files": 0,
+          "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+          "actual_batch_sql_sha256": "123ae5f4e8e58c5a3d341fa2f60a41568f9c719cb6a63b8d05df65bff12f647f",
+          "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+          "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+          "temporary_hint_requested": true,
+          "temporary_hint_setup_seconds": 0.0017497000080766156,
+          "temporary_hint_retained_written_files": 0,
+          "scratch_binary_bytes": 0,
+          "extra_data_commits": 0,
+          "single_native_data_program": true
+        }
+      }
+    }
+  ],
+  "mismatches": [],
+  "policy": "Same acceptance, all six canonical outputs and native counters; same first SQLSTATE/primary message; exact protected schema/sequence options and workspace restoration after every success/error. Deliberately mutated fixtures, never ranking data.",
+  "transport_hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "replica",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "59a559aa1c575f18141fd1f73931a7bd22e62121",
+    "git_status": "M reports/verification-scratch-cleanup.json\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/lazy_axis_component.py\n?? bench/lazy_axis_text_probe.py\n?? bench/text_memo_probe.py\n?? reports/lazy-axis-components-1m-log.txt\n?? reports/lazy-axis-components-1m.json\n?? reports/native-slim-inline-official-1m-pair-log.txt\n?? reports/native-slim-inline-official-1m-pair.json\n?? reports/native-slim-inline-official-1m-pair/\n?? reports/semantics-lazy-axis-native-log.txt\n?? reports/shadow-publication-probe-log.txt\n?? reports/sql/3420ed77d7b03be36483a2fea63c71da63a99bb17de03c3b6d1faab028bb024d.sql\n?? reports/sql/961c752135779428b1dee90e187d9d1066c288bdd3ea9596a23cd89b525bdb1d.sql\n?? reports/text-memo-projection-100k-log.txt\n?? reports/text-memo-projection-100k.json\n?? tests/semantics/lazy_axis_text.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "all_passed": true,
+  "slim_copy_hook_sha256": "0d4363f212442056924fad315a9170c2bf37ea4b0abc660fee850d16f6411daa"
+}

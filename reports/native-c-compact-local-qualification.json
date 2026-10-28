@@ -1,0 +1,43 @@
+{
+  "kind": "compact_native_local_research_evidence_summary",
+  "candidate_hook_sha256": "44ea8a2b0284d59c2d8a5b2041d39b816b052f3120e8d1e2cf484ab6c797e248",
+  "actual_1m_pair": "reports/native-c-compact-official-1m-pair.json",
+  "complete_processing": {
+    "official_wall_seconds": 106.6399908000003,
+    "candidate_wall_seconds": 13.570364500000323,
+    "reduction_percent": 87.27460083389253,
+    "threshold_90_seconds": 10.663999080000032,
+    "additional_seconds_required": 2.9063654200002915,
+    "single_pair_only": true,
+    "exact_six_outputs_and_checks_passed": true
+  },
+  "checks": {
+    "receiving_layouts": "reports/semantics-native-compact-layouts-11-v2.json",
+    "native_faults_and_exact_retry": "reports/recovery-native-compact-atomic.json",
+    "populated_dump_restore": "reports/recovery-native-compact-dump.json",
+    "private_server_crash_and_retry": "reports/recovery-native-compact-server-crash.json",
+    "metadata_and_full_fallbacks": "reports/semantics-native-compact-guards.json",
+    "non_superuser_package_ownership": "reports/native-c-trusted-owner-test.json",
+    "independent_full_except_all": "reports/native-c-compact-1m-independent-audit-v2.json"
+  },
+  "current_source_snapshot": "reports/native-compact-final-source-snapshot.json",
+  "functional_tests_passed": 52,
+  "upstream_files_unchanged": 32,
+  "prior_sql_semantics": {
+    "native_cases": 121,
+    "boundaries": 82,
+    "axis_text_cases": 112,
+    "limit": "Retained C transformation checks predate only protocol stage-name/provenance correction. They are not relabelled as reruns against the current hook."
+  },
+  "performance_repeated": false,
+  "target_90_achieved": false,
+  "official_score": false,
+  "official_eligibility_proven": false,
+  "limitations": [
+    "Local Windows psql, no Linux/SSH/GUI parity",
+    "Trusted C internal architecture needs official deployment/eligibility confirmation",
+    "Crash covers pre-commit WAL rollback/full retry, not post-commit version saga or power loss",
+    "Chunk checkpoint/resume and 300M resource bound remain pending",
+    "Non-superuser trusted package tested; complete service benchmark used isolated native_probe lab role"
+  ]
+}

@@ -8,6 +8,10 @@ pipeline/** text eol=lf
 bench/** text eol=lf
 tests/** text eol=lf
 scripts/*.py text eol=lf
+native/** text eol=lf
 reports/sql/** text eol=lf
+# Content-addressed source archives must retain their exact receipt bytes.
+reports/source/** -text
+reports/native-source/** -text
 app/** -text
 vendor/** -text

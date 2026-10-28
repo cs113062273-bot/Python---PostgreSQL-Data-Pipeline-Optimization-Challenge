@@ -1,0 +1,510 @@
+{
+  "kind": "native_compact_binary_export_component",
+  "database": "lab_native_compact_9b3ae1a447",
+  "runs": [
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.4784892999996373,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 2.111134700000548,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 0.7900628999996115,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.543632200000502,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 2.0918713000000935,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 0.7970608000005086,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.530892099999619,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.46967860000040673,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 2,
+      "export_seconds": 0.8005541000002268,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 4,
+      "export_seconds": 0.5261692000003677,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 8,
+      "export_seconds": 0.46761439999954746,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table1",
+      "repeat": 2,
+      "workers": 0,
+      "export_seconds": 2.1129319000001487,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.7995537999995577,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 2.6816915999997946,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 1.0440323000002536,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.8124699999998484,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 2.699832299999798,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 1.0435944999999265,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.8155796000000919,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.8312254000002213,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 2,
+      "export_seconds": 1.0372723999998925,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 4,
+      "export_seconds": 0.8245427000001655,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 8,
+      "export_seconds": 0.8194663000003857,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table2",
+      "repeat": 2,
+      "workers": 0,
+      "export_seconds": 2.7180451000003814,
+      "rows": 2321522,
+      "binary_bytes": 91182915,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.3168666999999914,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 0.6459176999996998,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 0.36946420000003855,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.309061500000098,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 0.6487418000006073,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 0.35118080000029295,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.31164320000061707,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.33032379999986006,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 2,
+      "workers": 2,
+      "export_seconds": 0.3577041000007739,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 2,
+      "workers": 4,
+      "export_seconds": 0.30657830000018294,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 2,
+      "workers": 8,
+      "export_seconds": 0.3288198000000193,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table5",
+      "repeat": 2,
+      "workers": 0,
+      "export_seconds": 0.6709585999997216,
+      "rows": 1000000,
+      "binary_bytes": 28000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 0,
+      "workers": 8,
+      "export_seconds": 0.3167162999998254,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 0,
+      "workers": 0,
+      "export_seconds": 0.7175207999998747,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 0,
+      "workers": 2,
+      "export_seconds": 0.36587299999973766,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 0,
+      "workers": 4,
+      "export_seconds": 0.2985269000000699,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 1,
+      "workers": 0,
+      "export_seconds": 0.6966328999997131,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 1,
+      "workers": 2,
+      "export_seconds": 0.34351000000060594,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 1,
+      "workers": 4,
+      "export_seconds": 0.30525779999970837,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 1,
+      "workers": 8,
+      "export_seconds": 0.3026049000000057,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 2,
+      "workers": 2,
+      "export_seconds": 0.35047730000042066,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 2,
+      "workers": 4,
+      "export_seconds": 0.2932200000004741,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 2,
+      "workers": 8,
+      "export_seconds": 0.29665209999984654,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    },
+    {
+      "table": "table6",
+      "repeat": 2,
+      "workers": 0,
+      "export_seconds": 0.6864377000001696,
+      "rows": 1000000,
+      "binary_bytes": 20000021,
+      "exact_native_typed_rows": true
+    }
+  ],
+  "driver_sha256": "486f88d3f03a3ee8d1c8a01480fba105264e93b2dfcd3789164fd1a1ee49f0fc",
+  "scope": "COPY SELECT to private binary file only, shared warmed native compact cache and already populated parent tables. Replay each file into native typed temp rows and bidirectional EXCEPT ALL outside timers. No final identity/COPY ingest/index/FK/commit/versions or full-service percentage claimed.",
+  "build": {
+    "kind": "isolated_native_probe_build",
+    "source": "native\\challenge_probe.c",
+    "source_sha256": "88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5",
+    "driver_sha256": "b44eba77d5e57a833479c53c25834b718a8b8c99531fab25280d02591f3a258a",
+    "compiler_version": "0.14.1",
+    "compiler_archive": {
+      "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+      "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+      "size": "82229343"
+    },
+    "command": [
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+      "cc",
+      "-target",
+      "x86_64-windows-gnu",
+      "-std=c11",
+      "-O2",
+      "-g",
+      "-fno-strict-aliasing",
+      "-fwrapv",
+      "-shared",
+      "-DWIN32",
+      "-DPG_C_PRINTF_ATTRIBUTE=printf",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+      "-DCHALLENGE_PROBE_SOURCE_SHA=\"88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5\"",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_probe.c",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+      "-o",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\88922bebb3d7fa4d-b44eba77d5e57a83\\challenge_probe_88922bebb3d7fa4d.dll"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "application_integration": false,
+    "library": ".runtime\\native_build\\88922bebb3d7fa4d-b44eba77d5e57a83\\challenge_probe_88922bebb3d7fa4d.dll",
+    "library_sha256": "f684f81a8815b027f781bd8bd117ff37aaacefd6d9c0b6bb7655b58d9038e4e6",
+    "source_archive": "reports\\native-source\\88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5.c",
+    "retained_build_receipt": "reports\\native-c-builds\\88922bebb3d7fa4d-e2b5a727.json"
+  },
+  "summary": {
+    "table1": {
+      "0": 2.111134700000548,
+      "2": 0.7970608000005086,
+      "4": 0.530892099999619,
+      "8": 0.46967860000040673
+    },
+    "table2": {
+      "0": 2.699832299999798,
+      "2": 1.0435944999999265,
+      "4": 0.8155796000000919,
+      "8": 0.8194663000003857
+    },
+    "table5": {
+      "0": 0.6487418000006073,
+      "2": 0.3577041000007739,
+      "4": 0.309061500000098,
+      "8": 0.3288198000000193
+    },
+    "table6": {
+      "0": 0.6966328999997131,
+      "2": 0.35047730000042066,
+      "4": 0.2985269000000699,
+      "8": 0.3026049000000057
+    }
+  },
+  "all_passed": true,
+  "all_private_work_rolled_back": true
+}

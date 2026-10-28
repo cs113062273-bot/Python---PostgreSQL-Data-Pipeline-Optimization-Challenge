@@ -25,9 +25,12 @@ def main():
     p.add_argument('--pg-ctl',required=True)
     p.add_argument('--data-dir',required=True)
     p.add_argument('--port',type=int,default=55432)
+    p.add_argument('--startup-log',help='Optional project-private recovery log')
     p.add_argument('--fresh-service-retry',action='store_true',help='Model a restarted processing worker with fresh connection state after server recovery')
     args=p.parse_args()
     directory=Path(args.data_dir).resolve();runtime=(ROOT/'.runtime').resolve()
+    startup_log=Path(args.startup_log).resolve() if args.startup_log else runtime/'postgres.log'
+    if not startup_log.is_relative_to(runtime):p.error('Recovery log must stay in the private runtime')
     if runtime not in directory.parents or (directory/'PG_VERSION').read_text().strip()!='17':p.error('Only this private PostgreSQL 17 data directory may be stopped')
     with connect('postgres',autocommit=True) as c:
         assert c.info.host in ('localhost','127.0.0.1','::1')
@@ -79,7 +82,7 @@ def main():
     print('Actual COPY data/counters uncommitted, six FKs absent; immediate private-server stop',flush=True)
     subprocess.run([args.pg_ctl,'-D',str(directory),'-m','immediate','-w','stop'],check=True)
     restart=time.monotonic()
-    subprocess.run([args.pg_ctl,'-D',str(directory),'-l',str(runtime/'postgres.log'),'-o',f'-h 127.0.0.1 -p {args.port}','-W','start'],check=True)
+    subprocess.run([args.pg_ctl,'-D',str(directory),'-l',str(startup_log),'-o',f'-h 127.0.0.1 -p {args.port}','-W','start'],check=True)
     last_status=restart
     while True:
         try:

@@ -1,6 +1,14 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
+New best single local 1M pair (2026-10-29): **106.639991s original /
+13.570365s compact C, 87.274601% less complete service wall**. Candidate
+passes six exact typed outputs, counters, protected catalog/sequence/source
+and six version records. One fresh AB pair; eligibility for the trusted C
+implementation, repeated stability and Linux/SSH are unproven. The actual
+paired 90% threshold is 10.663999s (another 2.906365s required).
+See native-c-compact-official-1m-pair.json. Historical results follow.
+
 Latest fresh 1M pair (2026-10-28): **113.174393s unchanged official versus
 18.202447s parent_hint_copy, 83.916462% less complete processing wall time**.
 This is one pair, passes all native output/integrity/version gates, and does

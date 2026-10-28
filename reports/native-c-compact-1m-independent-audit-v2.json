@@ -1,0 +1,79 @@
+{
+  "kind": "independent_live_native_compact_pair_audit",
+  "cohort": "reports\\native-c-compact-official-1m-pair.json",
+  "observed_at_utc": "2026-10-28T17:11:43.214586+00:00",
+  "passed": true,
+  "auditor_sha256": "ec4d2ab48b7a97ae74ccfbda33192a2a2516cc1d80ed6d6690859f685c1499af",
+  "limits": "Independent verification after processing timers, not a new timing measurement, repeatability result or official eligibility determination.",
+  "live_checks": [
+    {
+      "database": "lab_native_official_b75fcb252b",
+      "source_digest": "297df424b791fc996976d4b98b9c0dbd43eca8b6dc633fda041fb88b65cb7a8b",
+      "counters_relationships_versions_durability": true,
+      "versions": 6,
+      "transient_native_objects_absent": true
+    },
+    {
+      "database": "lab_native_compact_9b3ae1a447",
+      "source_digest": "297df424b791fc996976d4b98b9c0dbd43eca8b6dc633fda041fb88b65cb7a8b",
+      "counters_relationships_versions_durability": true,
+      "versions": 6,
+      "transient_native_objects_absent": true
+    }
+  ],
+  "exact_comparison": {
+    "table3": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 233,
+      "transfer_sha256": "2f9ce94d05036533fbd53ffea286af2785c57fa0b954f44003a112cadbd6bff3"
+    },
+    "table4": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 966,
+      "transfer_sha256": "8f6766fe87fc9301e6c4c4a0f045729e2e7f1ace7fdecbffad69b0b6e3f7a779"
+    },
+    "table1": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 147999283,
+      "transfer_sha256": "8c8269a6f72b1c26ec193b823d39a6f4f815c036d253509b8c18634a7685291f"
+    },
+    "table5": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 44000021,
+      "transfer_sha256": "ba97b228643e14d42aa6f18264b8aa7a518e3e81f26de83c8a714868758c7be7"
+    },
+    "table6": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 20000021,
+      "transfer_sha256": "1363ce7ad9605eabfdcf941c043a357bb3557da43d39bffd1cadcde677ae6973"
+    },
+    "table2": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 119041179,
+      "transfer_sha256": "701883598d8efd58b16b48343aca8be8c8ab84b1c7f727dd8417b9c7f71d978b"
+    }
+  },
+  "recorded_reduction_percent": 87.27460083389253,
+  "arithmetic_verified": true,
+  "six_bidirectional_except_all": true,
+  "same_protected_catalog_sequence_options": true,
+  "catalog_comparison_excludes_only_verified_containing_database_names": true
+}

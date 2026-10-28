@@ -1,0 +1,63 @@
+{
+  "kind": "trusted_native_metadata_negative_and_original_fallback",
+  "database": "lab_native_guards_b91ecf5f",
+  "passed": true,
+  "candidate_hook_sha256": "44ea8a2b0284d59c2d8a5b2041d39b816b052f3120e8d1e2cf484ab6c797e248",
+  "metadata_mutations": [
+    {
+      "mutation": "volatility",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "parallel",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "security",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "configuration",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "missing_member",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "non_member",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "wrong_source",
+      "guard_rejected": true
+    },
+    {
+      "mutation": "extra_member",
+      "guard_rejected": true
+    }
+  ],
+  "full_service_fallbacks": [
+    {
+      "case": "unavailable_catalog_injected",
+      "complete_original_outputs": true,
+      "safe_domain": false,
+      "unowned_objects_preserved": true
+    },
+    {
+      "case": "preexisting_extension",
+      "complete_original_outputs": true,
+      "safe_domain": false,
+      "unowned_objects_preserved": true
+    },
+    {
+      "case": "preexisting_work_namespace",
+      "complete_original_outputs": true,
+      "safe_domain": false,
+      "unowned_objects_preserved": true
+    }
+  ],
+  "application_function_validator_unchanged": true,
+  "official_eligibility_unproven": true,
+  "limits": "Unavailable catalog is injected in captured implementation condition; no installed software or server catalogs are removed. Metadata mutants are isolated ordinary DDL rolled back per case. No version registration or timing score claimed here."
+}

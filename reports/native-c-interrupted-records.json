@@ -1,0 +1,22 @@
+{
+  "kind": "observed_stopped_private_services_and_invalid_recent_records",
+  "cause_confirmed": false,
+  "invalid_records": [
+    {
+      "original": "reports\\native-c-probe-build.json",
+      "preserved_invalid_bytes": "reports\\native-c-probe-build.invalid-zero-bytes.bin",
+      "bytes": 12493,
+      "sha256": "5258e85b9c1f2315f4496478a00737fcb583a7d0ff4b58dae46d7d7f09f5124b",
+      "valid_evidence": false
+    },
+    {
+      "original": "reports\\native-c-builds\\2d75a9516f2cdae1-0e9c1b86.json",
+      "preserved_invalid_bytes": "reports\\native-c-builds\\2d75a9516f2cdae1-0e9c1b86.invalid-zero-bytes.bin",
+      "bytes": 12404,
+      "sha256": "5af9c6a24a0b6ee1f9985cdfb9b8538710eb42c28c6fc2d1b549a0f9e5e70541",
+      "valid_evidence": false
+    }
+  ],
+  "completed_slim_pair_record_intact": true,
+  "no_performance_claim_from_invalid_records": true
+}

@@ -1,0 +1,221 @@
+{
+  "kind": "native_maintenance_rollback_component",
+  "database": "lab_native_compact_9b3ae1a447",
+  "timestamp_utc": "2026-10-28T17:00:09.616872+00:00",
+  "driver_sha256": "abc51c17b8bb5f33f9c18019364324fe0d100dd83848da16928dec6e1b19f76e",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "128m_workers2",
+      "seconds": {
+        "table1": 0.5019622999998319,
+        "table2": 1.2504377999994176,
+        "table5": 0.5211817999997947,
+        "table6": 0.56039520000013,
+        "all_foreign_keys": 2.321791700000176
+      },
+      "total_component_seconds": 5.1557687999993504,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 0,
+      "mode": "128m_workers0",
+      "seconds": {
+        "table1": 0.5277384000000893,
+        "table2": 1.4203574000002845,
+        "table5": 0.54508050000004,
+        "table6": 0.5577400000001944,
+        "all_foreign_keys": 2.2731737000003704
+      },
+      "total_component_seconds": 5.324090000000979,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 0,
+      "mode": "512m_workers0",
+      "seconds": {
+        "table1": 0.5275295999999798,
+        "table2": 1.4078740000004473,
+        "table5": 0.5540129000000888,
+        "table6": 0.5439712999996118,
+        "all_foreign_keys": 2.2833911000006992
+      },
+      "total_component_seconds": 5.316778900000827,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 0,
+      "mode": "512m_workers2",
+      "seconds": {
+        "table1": 0.5215057999994315,
+        "table2": 1.2281063000000358,
+        "table5": 0.5289360000006127,
+        "table6": 0.6062025999999605,
+        "all_foreign_keys": 2.3110467999995308
+      },
+      "total_component_seconds": 5.195797499999571,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 1,
+      "mode": "128m_workers0",
+      "seconds": {
+        "table1": 0.5598503999999593,
+        "table2": 1.463525899999695,
+        "table5": 0.5134577999997418,
+        "table6": 0.5741367000000537,
+        "all_foreign_keys": 2.377733499999522
+      },
+      "total_component_seconds": 5.488704299998972,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 1,
+      "mode": "512m_workers0",
+      "seconds": {
+        "table1": 0.5341631999999663,
+        "table2": 1.3969034000001557,
+        "table5": 0.49898659999962547,
+        "table6": 0.592126599999574,
+        "all_foreign_keys": 2.253201700000318
+      },
+      "total_component_seconds": 5.275381499999639,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 1,
+      "mode": "512m_workers2",
+      "seconds": {
+        "table1": 0.5357576000005793,
+        "table2": 1.3280369000003702,
+        "table5": 0.4733638999996401,
+        "table6": 0.5892167000001791,
+        "all_foreign_keys": 2.345029600000089
+      },
+      "total_component_seconds": 5.271404700000858,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 1,
+      "mode": "128m_workers2",
+      "seconds": {
+        "table1": 0.6124742000001788,
+        "table2": 1.234471200000371,
+        "table5": 0.5360416999992594,
+        "table6": 0.606044699999984,
+        "all_foreign_keys": 2.2055741000003763
+      },
+      "total_component_seconds": 5.19460590000017,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 2,
+      "mode": "512m_workers0",
+      "seconds": {
+        "table1": 0.5191818000002968,
+        "table2": 1.4194768000006661,
+        "table5": 0.5169378999999026,
+        "table6": 0.5397092000002885,
+        "all_foreign_keys": 2.1392712000006213
+      },
+      "total_component_seconds": 5.134576900001775,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 2,
+      "mode": "512m_workers2",
+      "seconds": {
+        "table1": 0.5114622999999483,
+        "table2": 1.2156324999996286,
+        "table5": 0.5040076000004774,
+        "table6": 0.5627350999993723,
+        "all_foreign_keys": 2.3478790999997727
+      },
+      "total_component_seconds": 5.141716599999199,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 2,
+      "mode": "128m_workers2",
+      "seconds": {
+        "table1": 0.5218444000001909,
+        "table2": 1.2433302000008553,
+        "table5": 0.6053093999998964,
+        "table6": 0.6439695999997639,
+        "all_foreign_keys": 2.19174060000023
+      },
+      "total_component_seconds": 5.206194200000937,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    },
+    {
+      "repeat": 2,
+      "mode": "128m_workers0",
+      "seconds": {
+        "table1": 0.5302185000000463,
+        "table2": 1.4349043000001984,
+        "table5": 0.5038213999996515,
+        "table6": 0.5476336000001538,
+        "all_foreign_keys": 2.2646365999999034
+      },
+      "total_component_seconds": 5.2812143999999535,
+      "catalog_sequence_options_restored": true,
+      "all_private_ddl_rolled_back": true
+    }
+  ],
+  "whole_pipeline_score": false,
+  "scope": "Real original four-table index rebuild and six complete FK validations on already populated retained output, warmed repeated rotating order. Every trial rolls back. No row DML, final ingest/commit/version cost or complete-processing improvement claimed.",
+  "summary": {
+    "128m_workers2": {
+      "median_component_seconds": 5.19460590000017,
+      "median_by_stage": {
+        "table1": 0.5218444000001909,
+        "table2": 1.2433302000008553,
+        "table5": 0.5360416999992594,
+        "table6": 0.606044699999984,
+        "all_foreign_keys": 2.2055741000003763
+      }
+    },
+    "128m_workers0": {
+      "median_component_seconds": 5.324090000000979,
+      "median_by_stage": {
+        "table1": 0.5302185000000463,
+        "table2": 1.4349043000001984,
+        "table5": 0.5134577999997418,
+        "table6": 0.5577400000001944,
+        "all_foreign_keys": 2.2731737000003704
+      }
+    },
+    "512m_workers0": {
+      "median_component_seconds": 5.275381499999639,
+      "median_by_stage": {
+        "table1": 0.5275295999999798,
+        "table2": 1.4078740000004473,
+        "table5": 0.5169378999999026,
+        "table6": 0.5439712999996118,
+        "all_foreign_keys": 2.253201700000318
+      }
+    },
+    "512m_workers2": {
+      "median_component_seconds": 5.195797499999571,
+      "median_by_stage": {
+        "table1": 0.5215057999994315,
+        "table2": 1.2281063000000358,
+        "table5": 0.5040076000004774,
+        "table6": 0.5892167000001791,
+        "all_foreign_keys": 2.345029600000089
+      }
+    }
+  },
+  "all_passed": true
+}

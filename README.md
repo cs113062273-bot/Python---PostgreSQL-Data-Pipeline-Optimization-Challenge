@@ -14,10 +14,13 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest fresh pair: **83.92% less time** (113.174s unchanged official versus
-18.202s parent statistics/scratch hints), with all six output/integrity/version
-gates passed. It does not improve the best single inline pair (84.81%) or
-achieve 85%. See [current research](docs/ACTIVE_85.md).
+Latest best single fresh 1M pair: **87.27% less time** (106.640s unchanged
+official versus 13.570s compact C), with all six exact outputs, source,
+counter/catalog/sequence and version checks passed. This is one local AB pair;
+repeatability and official eligibility for the trusted C implementation remain
+unproven. It does not achieve 90%. Application defaults remain unchanged.
+See [current research](docs/ACTIVE_90.md) and the
+[full pair receipt](reports/native-c-compact-official-1m-pair.json).
 
 Historical complete 1M comparison, three verified pairs: **272.560s official
 versus 41.900s calendar_copy, 84.63% less complete processing time**.

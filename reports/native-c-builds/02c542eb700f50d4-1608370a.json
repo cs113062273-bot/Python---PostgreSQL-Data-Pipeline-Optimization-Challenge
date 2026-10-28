@@ -1,0 +1,41 @@
+{
+  "kind": "isolated_native_probe_build",
+  "source": "native\\challenge_probe.c",
+  "source_sha256": "02c542eb700f50d40e32c352ed5ad70e53e3f5d4edfaee1b515072c49d6ecb85",
+  "driver_sha256": "b44eba77d5e57a833479c53c25834b718a8b8c99531fab25280d02591f3a258a",
+  "compiler_version": "0.14.1",
+  "compiler_archive": {
+    "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+    "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+    "size": "82229343"
+  },
+  "command": [
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+    "cc",
+    "-target",
+    "x86_64-windows-gnu",
+    "-std=c11",
+    "-O2",
+    "-g",
+    "-fno-strict-aliasing",
+    "-fwrapv",
+    "-shared",
+    "-DWIN32",
+    "-DPG_C_PRINTF_ATTRIBUTE=printf",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+    "-DCHALLENGE_PROBE_SOURCE_SHA=\"02c542eb700f50d40e32c352ed5ad70e53e3f5d4edfaee1b515072c49d6ecb85\"",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_probe.c",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+    "-o",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\02c542eb700f50d4-b44eba77d5e57a83\\challenge_probe_02c542eb700f50d4.dll"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "",
+  "application_integration": false,
+  "library": ".runtime\\native_build\\02c542eb700f50d4-b44eba77d5e57a83\\challenge_probe_02c542eb700f50d4.dll",
+  "library_sha256": "03726672d6a0c38be08a4b31e6a52876de321864092c7088d65173c214539689",
+  "source_archive": "reports\\native-source\\02c542eb700f50d40e32c352ed5ad70e53e3f5d4edfaee1b515072c49d6ecb85.c"
+}

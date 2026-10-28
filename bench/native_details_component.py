@@ -16,18 +16,19 @@ from tests.equivalence.oracle import protected_schema_signature,sequence_signatu
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--database',required=True);p.add_argument('--repeats',type=int,default=3);p.add_argument('--output',required=True);p.add_argument('--build-report',default='reports/native-details-ingest-build.json');args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--database',required=True);p.add_argument('--repeats',type=int,default=3);p.add_argument('--output',required=True);p.add_argument('--build-report',default='reports/native-details-ingest-build.json');p.add_argument('--work-mem-mb',type=int,choices=[128,256,512],default=128);p.add_argument('--include-indexes',action='store_true');args=p.parse_args()
     output=(ROOT/args.output).resolve();assert output.is_relative_to(ROOT/'reports') and not output.exists()
     assert shutil.disk_usage(ROOT).free>1536*1024**2
     report={'kind':'native_three_details_typed_vs_binary_component','database':args.database,'runs':[],
+            'includes_actual_native_index_builds':args.include_indexes,
             'driver_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-            'scope':'Table5 then table6 then table2 transformations and actual native identity/CHECK COPY insertion; shared warmed compact cache and committed original parents/dimensions. All nonidentity values/multiplicities compared by full EXCEPT ALL outside timers. Private temporary destinations, no final index/FK rebuild, durable commit, counters or versions; not a full-service percentage.'}
+            'scope':'Table5 then table6 then table2 transformations and actual native identity/CHECK COPY insertion; shared warmed compact cache and committed original parents/dimensions. All nonidentity values/multiplicities compared by full EXCEPT ALL outside timers. Private temporary destinations; optional native PK/UNIQUE/partial-index rebuilds are controlled by includes_actual_native_index_builds. No public FK validation, durable commit, counters or versions; not a full-service percentage.'}
     parent=ROOT/'.runtime/native_details_component';parent.mkdir(exist_ok=True)
     tables=('table5','table6','table2')
     with tempfile.TemporaryDirectory(prefix='trial_',dir=parent) as directory,lab.connect(args.database,autocommit=True) as c:
         require_lab(c);before=protected_schema_signature(c);sequences=sequence_signature(c)
         with c.transaction(force_rollback=True):
-            c.execute("SET LOCAL work_mem='128MB'; SET LOCAL statement_timeout='180s'")
+            c.execute("SET LOCAL work_mem='"+str(args.work_mem_mb)+"MB'; SET LOCAL statement_timeout='180s'")
             normalize,axes,normbuild=lab.install_compact(c);loader,build=details.install(c,args.build_report)
             report.update({'normalizer_build':normbuild,'loader_build':build})
             scopes=[r[0] for r in c.execute('SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1')]
@@ -44,12 +45,15 @@ def main():
             for repeat in range(args.repeats):
                 for mode in (('binary_files','typed_shared') if repeat%2==0 else ('typed_shared','binary_files')):
                     with c.transaction(force_rollback=True):
+                        restores=[]
                         for table in tables:
                             target='details_'+table
                             c.execute('CREATE TEMP TABLE '+target+' (LIKE public.'+table+' INCLUDING ALL) ON COMMIT DROP')
-                            for name, in c.execute('SELECT conname FROM pg_constraint WHERE conrelid=%s::regclass AND contype IN (\'p\',\'u\')',('pg_temp.'+target,)).fetchall():
+                            for name,definition in c.execute('SELECT conname,pg_get_constraintdef(oid) FROM pg_constraint WHERE conrelid=%s::regclass AND contype IN (\'p\',\'u\')',('pg_temp.'+target,)).fetchall():
+                                restores.append(sql.SQL('ALTER TABLE {} ADD CONSTRAINT {} '+definition).format(sql.Identifier('pg_temp',target),sql.Identifier(name)))
                                 c.execute(sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(sql.Identifier('pg_temp',target),sql.Identifier(name)))
-                            for name, in c.execute("SELECT x.relname FROM pg_index i JOIN pg_class x ON x.oid=i.indexrelid WHERE i.indrelid=%s::regclass AND pg_get_expr(i.indpred,i.indrelid)='(id_column_3 IS NULL)'",('pg_temp.'+target,)).fetchall():c.execute(sql.SQL('DROP INDEX {}').format(sql.Identifier('pg_temp',name)))
+                            for name,definition in c.execute("SELECT x.relname,pg_get_indexdef(x.oid) FROM pg_index i JOIN pg_class x ON x.oid=i.indexrelid WHERE i.indrelid=%s::regclass AND pg_get_expr(i.indpred,i.indrelid)='(id_column_3 IS NULL)'",('pg_temp.'+target,)).fetchall():
+                                restores.append(definition);c.execute(sql.SQL('DROP INDEX {}').format(sql.Identifier('pg_temp',name)))
                             seq=c.execute('SELECT pg_get_serial_sequence(%s,\'id_column_1\')',('pg_temp.'+target,)).fetchone()[0]
                             c.execute('ALTER SEQUENCE '+seq+' CACHE 1000')
                         c.execute(settings_sql())
@@ -66,12 +70,18 @@ def main():
                         else:
                             actual=c.execute('SELECT '+loader+"(%s::regclass,'public.table1','pg_temp.details_table5','pg_temp.details_table6','pg_temp.details_table2','public.table4')",(relation,)).fetchone()[0]
                             assert len(actual)==3;counts=dict(zip(tables,actual))
-                        elapsed=time.perf_counter()-start;assert counts==expected
+                        ingest_seconds=time.perf_counter()-start;assert counts==expected
+                        index_start=time.perf_counter()
+                        if args.include_indexes:
+                            c.execute("SET LOCAL maintenance_work_mem='128MB'")
+                            for restore in restores:c.execute(restore)
+                        index_seconds=time.perf_counter()-index_start if args.include_indexes else 0
+                        elapsed=ingest_seconds+index_seconds
                         for table in tables:
                             attrs=[r[0] for r in c.execute('SELECT attname FROM pg_attribute WHERE attrelid=%s::regclass AND attnum>0 AND NOT attisdropped AND attname<>\'id_column_1\' ORDER BY attnum',('public.'+table,)).fetchall()]
                             keys=','.join(attrs)
                             assert not c.execute('SELECT EXISTS((SELECT '+keys+' FROM public.'+table+' EXCEPT ALL SELECT '+keys+' FROM pg_temp.details_'+table+') UNION ALL (SELECT '+keys+' FROM pg_temp.details_'+table+' EXCEPT ALL SELECT '+keys+' FROM public.'+table+'))').fetchone()[0]
-                        report['runs'].append({'repeat':repeat,'mode':mode,'seconds':elapsed,'rows':counts,'binary_bytes':binary_bytes,'all_three_native_outputs_exact':True,'native_identity_not_supplied':True});write_report(output,report)
+                        report['runs'].append({'repeat':repeat,'mode':mode,'seconds':elapsed,'ingest_seconds':ingest_seconds,'index_seconds':index_seconds,'rows':counts,'binary_bytes':binary_bytes,'all_three_native_outputs_exact':True,'native_identity_not_supplied':True});write_report(output,report)
                         print(repeat,mode,round(elapsed,6),'exact rows',counts,flush=True)
         assert protected_schema_signature(c)==before and sequence_signature(c)==sequences
     report['summary']={mode:statistics.median(r['seconds'] for r in report['runs'] if r['mode']==mode) for mode in ('binary_files','typed_shared')}

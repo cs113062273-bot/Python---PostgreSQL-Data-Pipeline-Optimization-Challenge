@@ -1,0 +1,28 @@
+{
+  "kind": "private_native_full_fk_validation_package",
+  "extension": "challenge_fk_679610093b6b44f4",
+  "version": "0.1",
+  "source": "native\\challenge_fk_stream.c",
+  "source_sha256": "679610093b6b44f4c28156fc8fdb4a86287e5fb3120ff3da7d39e8a717fe6367",
+  "build_receipt": "reports\\native-c-builds\\679610093b6b44f4-59e05346.json",
+  "files": [
+    {
+      "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_679610093b6b44f4.dll",
+      "sha256": "9a9ec0366686175a576a513c31b5ce83c64be3b9984d702988893309421774c5",
+      "bytes": 180736
+    },
+    {
+      "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fk_679610093b6b44f4.control",
+      "sha256": "b5a5ac94609ec729185343e3a2e012344ed21c7374b2fcba362b4a369c82525a",
+      "bytes": 208
+    },
+    {
+      "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fk_679610093b6b44f4--0.1.sql",
+      "sha256": "dcd242f28339c649c850b498d773d35a891556b64e41ea5c985e003823fd0287",
+      "bytes": 495
+    }
+  ],
+  "database_objects_created": false,
+  "application_integration": false,
+  "official_eligibility_unproven": true
+}

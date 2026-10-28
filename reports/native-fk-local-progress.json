@@ -1,0 +1,58 @@
+{
+  "kind": "native_fk_local_research_progress",
+  "best_complete_pair": "reports/native-fk-official-1m-pair.json",
+  "best_complete_processing": {
+    "official_wall_seconds": 103.56322809999995,
+    "candidate_wall_seconds": 10.592218000000003,
+    "reduction_percent": 89.77222109205381,
+    "threshold_90_seconds": 10.356322809999995,
+    "additional_seconds_required": 0.23589519000000791,
+    "single_pair_only": true,
+    "exact_six_outputs_and_checks_passed": true
+  },
+  "best_scope": "Stable-lock-before-snapshot service only; its standalone helper has been superseded by the current-snapshot implementation. Single pair, not official ranking or repeatability proof.",
+  "current_complete_pair": "reports/native-fk-current-ample-disk-official-1m-pair.json",
+  "current_complete_processing": {
+    "official_wall_seconds": 111.69132189999982,
+    "candidate_wall_seconds": 12.350627400000121,
+    "reduction_percent": 88.94217814786187,
+    "threshold_90_seconds": 11.169132189999983,
+    "additional_seconds_required": 1.1814952100001381,
+    "single_pair_only": true,
+    "exact_six_outputs_and_checks_passed": true
+  },
+  "current_hook_sha256": "49aec2d8c129a4cc87e06623bcdd75fffd02376f0d48b7322212b00537066927",
+  "current_checks": {
+    "native_121": "reports/semantics-native-fk-current-native.json",
+    "boundaries_82": "reports/semantics-native-fk-current-boundaries-82.json",
+    "layouts_11": "reports/semantics-native-fk-current-layouts-11-v2.json",
+    "axes_112": "reports/semantics-native-fk-current-text-112.json",
+    "validator_44": "reports/native-fk-current-validator-semantics.json",
+    "owner_guards_12": "reports/native-fk-current-owner-permissions.json",
+    "stale_snapshot_concurrency": "reports/native-fk-current-snapshot-concurrency.json",
+    "atomic_faults_17": "reports/recovery-native-fk-current-atomic.json",
+    "precommit_after_FK_completion_crash": "reports/recovery-native-fk-current-server-crash.json",
+    "post_success_crash": "reports/recovery-native-fk-current-postcommit-durable.json",
+    "populated_dump_restore": "reports/recovery-native-fk-current-dump.json",
+    "independent_1m_full_except_all_after_crashes": "reports/native-fk-current-1m-independent-audit.json",
+    "replica_setting_restored": "reports/native-fk-current-wal-replica-restored.json"
+  },
+  "current_required_local_checks_passed": true,
+  "over_90_achieved": false,
+  "official_score": false,
+  "official_eligibility_proven": false,
+  "source_generator_and_recipe_compiler_unchanged": true,
+  "offline_tests_passed": 52,
+  "low_disk_primary_cause_proven": false,
+  "next_hotspots": [
+    "compact projection",
+    "table1 transformation and binary COPY",
+    "typed details and final index rebuilds"
+  ],
+  "limitations": [
+    "Windows local only; no Linux/SSH qualification",
+    "Native SDK/package deployment and minimal WAL settings need official environment qualification",
+    "No robust repeated over-90 result",
+    "True chunk resume and post-data/pre-version saga remain incomplete"
+  ]
+}

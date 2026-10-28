@@ -65,15 +65,41 @@ def verify_data(c,archive,pg_restore,tables):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--cohort',required=True);p.add_argument('--database',required=True);p.add_argument('--apply',action='store_true');args=p.parse_args()
+    p.add_argument('--cohort',required=True);p.add_argument('--database',required=True);p.add_argument('--apply',action='store_true');p.add_argument('--archive-official',action='store_true',help='Archive only an explicitly named superseded native control, with all rows and metadata verified');args=p.parse_args()
     path=(ROOT/args.cohort).resolve();assert path.is_relative_to(ROOT/'reports')
-    cohort=json.loads(path.read_text(encoding='utf8'));assert cohort['kind']=='fresh_local_original_service_complete_processing' and cohort['summary']
+    cohort=json.loads(path.read_text(encoding='utf8'));assert cohort['summary']
+    native=cohort['kind']=='fresh_native_compact_complete_processing_pair'
+    assert native or cohort['kind']=='fresh_local_original_service_complete_processing'
     run=next(row for row in cohort['runs'] if row['database']==args.database)
-    assert run['mode'] not in ('official','baseline','combined_shape_copy'),'Keep all official controls and the current worker live'
-    assert re.fullmatch('lab_native_(variant|fresh)_[0-9a-f]{10}',args.database)
+    if args.archive_official:
+        assert run['mode']=='official'
+        if not native:
+            legacy_controls={
+                'native-official-recheck-after-recovery-1m.json':{'lab_native_variant_55ed80f430'},
+                'native-refined-copy-official-1m-repeated.json':{'lab_native_variant_9813b98fdf','lab_native_variant_10534e476c','lab_native_variant_45af04425c'},
+            }
+            assert args.database in legacy_controls.get(path.name,set())
+    else:assert run['mode'] not in ('official','baseline','combined_shape_copy'),'Official controls require the separate explicit archive option'
+    if native:
+        # Only the two superseded C cohorts can use this path. Keep the
+        # qualified shared-details worker and every official control live.
+        implementation=cohort.get('candidate_implementation')
+        if implementation is None:
+            assert path.name=='native-c-compact-official-1m-pair.json' and args.database==('lab_native_official_b75fcb252b' if args.archive_official else 'lab_native_compact_9b3ae1a447')
+            implementation='compact'
+        assert implementation in ('compact','minimal','fk_stream')
+        if implementation=='fk_stream':assert path.name=='native-fk-stream-official-1m-pair.json'
+        assert args.database==cohort['official_database' if args.archive_official else 'candidate_database']
+        assert run['mode']==('official' if args.archive_official else 'native_compact')
+        current=json.loads((ROOT/'reports/native-fk-official-1m-pair.json').read_text())
+        assert current['summary']['exact_six_outputs_and_checks_passed']
+        assert current['summary']['reduction_percent']>cohort['summary']['reduction_percent']
+        assert re.fullmatch('lab_native_'+('official' if args.archive_official else 'compact')+'_[0-9a-f]{10}',args.database)
+    else:assert re.fullmatch('lab_native_(variant|fresh)_[0-9a-f]{10}',args.database)
     child_path=Path(run['report']);assert child_path.resolve().is_relative_to(ROOT/'reports')
     child=json.loads(child_path.read_text(encoding='utf8'))
-    assert child.get('six_table_fingerprints_equivalent',child.get('exact_six_tables')) is True
+    if args.archive_official and native:assert child['unmodified_reference_established'] is True and child['destination_warmup_before_measured_run'] is False
+    else:assert child.get('six_table_fingerprints_equivalent',child.get('exact_six_tables')) is True
     assert len(child['versions'])==6 and all(child[k] is True for k in ('counter_reconciliation','protected_schema_equivalent','sequence_options_and_ownership_equivalent','workspace_namespace_restored'))
     if not args.apply:print('Would create/check full archive and retire',args.database);return
     assert shutil.disk_usage(ROOT).free>=512*1024**2
@@ -85,7 +111,8 @@ def main():
     try:
         with connect('postgres',autocommit=True) as admin,connect('postgres_data_manager',autocommit=True) as control,connect(db,autocommit=True) as original:
             require_lab(original)
-            assert admin.info.host in ('127.0.0.1','localhost','::1') and Path(admin.execute('SHOW data_directory').fetchone()[0]).resolve()==(ROOT/'.runtime/pgdata').resolve()
+            expected_directory=ROOT/('.runtime/native_pgdata' if native else '.runtime/pgdata')
+            assert admin.info.host in ('127.0.0.1','localhost','::1') and Path(admin.execute('SHOW data_directory').fetchone()[0]).resolve()==expected_directory.resolve()
             assert not admin.execute("SELECT pid FROM pg_stat_activity WHERE backend_type='client backend' AND state<>'idle' AND pid<>ALL(%s)",([admin.info.backend_pid,control.info.backend_pid,original.info.backend_pid],)).fetchall(),'No overlapping jobs'
             versions=history(control,db);assert len([v for v, in versions if v['version_code']!='0000'])==6
             original.execute("SET TimeZone='UTC'; SET DateStyle='ISO, MDY'; SET IntervalStyle='postgres'; SET extra_float_digits=3; SET bytea_output='hex'")

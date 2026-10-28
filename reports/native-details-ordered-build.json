@@ -1,0 +1,42 @@
+{
+  "kind": "isolated_native_probe_build",
+  "source": "native\\challenge_details_ordered.c",
+  "source_sha256": "161ff30993e733291b5760e2647a5101b10acab145b17c7cf8f808e470a86c16",
+  "driver_sha256": "684a237332bc279599f0f1f4a77aea3577e1fa88be2ddf9c5b9dd1fa2e7dad28",
+  "compiler_version": "0.14.1",
+  "compiler_archive": {
+    "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+    "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+    "size": "82229343"
+  },
+  "command": [
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+    "cc",
+    "-target",
+    "x86_64-windows-gnu",
+    "-std=c11",
+    "-O2",
+    "-g",
+    "-fno-strict-aliasing",
+    "-fwrapv",
+    "-shared",
+    "-DWIN32",
+    "-DPG_C_PRINTF_ATTRIBUTE=printf",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+    "-DCHALLENGE_PROBE_SOURCE_SHA=\"161ff30993e733291b5760e2647a5101b10acab145b17c7cf8f808e470a86c16\"",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_details_ordered.c",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+    "-o",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\161ff30993e73329-684a237332bc2795\\challenge_probe_161ff30993e73329.dll"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "",
+  "application_integration": false,
+  "library": ".runtime\\native_build\\161ff30993e73329-684a237332bc2795\\challenge_probe_161ff30993e73329.dll",
+  "library_sha256": "ba91d192cbe4dea23cb21eb347bcf82b6836f76bf8ae0ebaced0618ed34a8ce7",
+  "source_archive": "reports\\native-source\\161ff30993e733291b5760e2647a5101b10acab145b17c7cf8f808e470a86c16.c",
+  "retained_build_receipt": "reports\\native-c-builds\\161ff30993e73329-fc6311ba.json"
+}

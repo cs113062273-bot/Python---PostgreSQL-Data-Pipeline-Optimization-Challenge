@@ -1,5 +1,6 @@
 """Stage a separately guarded SECURITY INVOKER typed-COPY trusted package."""
 import hashlib
+import argparse
 import json
 import os
 from pathlib import Path
@@ -10,8 +11,14 @@ from bench.common import write_report
 
 
 def main():
-    build=json.loads((ROOT/'reports/native-details-ingest-build.json').read_text());assert build['returncode']==0
-    sha=build['source_sha256'];assert hashlib.sha256((ROOT/'native/challenge_details_ingest.c').read_bytes()).hexdigest()==sha
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--build-report',default='reports/native-details-ingest-build.json')
+    parser.add_argument('--output',default='reports/native-details-trusted-package.json')
+    args=parser.parse_args()
+    receipt=(ROOT/args.build_report).resolve();assert receipt.is_relative_to(ROOT/'reports')
+    build=json.loads(receipt.read_text());assert build['returncode']==0
+    source=(ROOT/build['source']).resolve();assert source.is_relative_to(ROOT/'native') and source.suffix=='.c'
+    sha=build['source_sha256'];assert hashlib.sha256(source.read_bytes()).hexdigest()==sha
     library=(ROOT/build['library']).resolve();assert hashlib.sha256(library.read_bytes()).hexdigest()==build['library_sha256']
     vendor=json.loads((ROOT/'vendor/postgresql-17.11/SOURCE.json').read_text())
     for item in vendor['files']:assert hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest()==item['sha256']
@@ -31,7 +38,8 @@ CREATE FUNCTION @extschema@.details_identity() RETURNS pg_catalog.text
         else:
             with path.open('xb') as writer:writer.write(data);writer.flush();os.fsync(writer.fileno())
         records.append({'path':str(path.relative_to(ROOT)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'bytes':len(data)})
-    write_report('reports/native-details-trusted-package.json',{'kind':'private_native_details_software_package','extension':extension,'version':'0.1','source_sha256':sha,'build_receipt':build['retained_build_receipt'],'files':records,'vendor_sources':vendor,'database_objects_created':False,'application_integration':False,'official_eligibility_unproven':True})
+    output=(ROOT/args.output).resolve();assert output.is_relative_to(ROOT/'reports')
+    write_report(output,{'kind':'private_native_details_software_package','extension':extension,'version':'0.1','source':str(source.relative_to(ROOT)),'source_sha256':sha,'build_receipt':build['retained_build_receipt'],'files':records,'vendor_sources':vendor,'database_objects_created':False,'application_integration':False,'official_eligibility_unproven':True})
     print('Private typed-COPY package staged:',extension,flush=True)
 
 

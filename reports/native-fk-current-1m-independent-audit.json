@@ -1,0 +1,94 @@
+{
+  "kind": "independent_live_native_compact_pair_audit",
+  "cohort": "reports\\native-fk-current-official-1m-pair.json",
+  "observed_at_utc": "2026-10-28T20:15:22.421183+00:00",
+  "passed": true,
+  "auditor_sha256": "fd948250d5991958bff2432116dc0e979792e78d35b20b2e6d68652ee7159f6f",
+  "limits": "Independent verification after processing timers, not a new timing measurement, repeatability result or official eligibility determination.",
+  "live_checks": [
+    {
+      "database": "lab_native_official_85756f1f1a",
+      "source_digest": "297df424b791fc996976d4b98b9c0dbd43eca8b6dc633fda041fb88b65cb7a8b",
+      "counters_relationships_versions_durability": true,
+      "versions": 6,
+      "transient_native_objects_absent": true
+    },
+    {
+      "database": "lab_native_compact_91ada9e446",
+      "source_digest": "297df424b791fc996976d4b98b9c0dbd43eca8b6dc633fda041fb88b65cb7a8b",
+      "counters_relationships_versions_durability": true,
+      "versions": 6,
+      "transient_native_objects_absent": true
+    }
+  ],
+  "exact_comparison": {
+    "table3": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 233,
+      "transfer_sha256": "2f9ce94d05036533fbd53ffea286af2785c57fa0b954f44003a112cadbd6bff3"
+    },
+    "table4": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 966,
+      "transfer_sha256": "8f6766fe87fc9301e6c4c4a0f045729e2e7f1ace7fdecbffad69b0b6e3f7a779"
+    },
+    "table1": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 147999283,
+      "transfer_sha256": "e187476a1b7a862a93653805207ea89fff025ee7a670fe7d1d48a8ab73a02622"
+    },
+    "table5": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 44000021,
+      "transfer_sha256": "4faf520bda6db03856c77553b3a4bb982260a0ea13e6f676ec6886b26a310439"
+    },
+    "table6": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 20000021,
+      "transfer_sha256": "af328dbdb85b0e3e4596a8687d33d0b9229262b2488308962a9e99fa3da67a41"
+    },
+    "table2": {
+      "bidirectional_except_all": true,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "except_all",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 119041179,
+      "transfer_sha256": "9405ced5eaa44b6755a1024fc3c87e1d580a69a86da53a63b7c809144978bda8"
+    }
+  },
+  "recorded_reduction_percent": 88.99889271140847,
+  "arithmetic_verified": true,
+  "six_bidirectional_except_all": true,
+  "same_protected_catalog_sequence_options": true,
+  "catalog_comparison_excludes_only_verified_containing_database_names": true,
+  "same_recorded_pair_server_configuration": {
+    "fsync": "on",
+    "full_page_writes": "on",
+    "jit": "on",
+    "maintenance_work_mem": "65536",
+    "max_parallel_workers": "8",
+    "max_parallel_workers_per_gather": "2",
+    "max_wal_size": "1024",
+    "server_version": "17.11",
+    "shared_buffers": "16384",
+    "synchronous_commit": "on",
+    "TimeZone": "Asia/Taipei",
+    "wal_level": "minimal",
+    "work_mem": "4096"
+  }
+}

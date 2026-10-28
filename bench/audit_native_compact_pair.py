@@ -22,6 +22,12 @@ def main():
         from bench import native_minimal_probe as candidate
     elif cohort.get('candidate_implementation')=='details':
         from bench import native_details_probe as candidate
+    elif cohort.get('candidate_implementation')=='fk':
+        from bench import native_fk_probe as candidate
+    elif cohort.get('candidate_implementation')=='fk_stream':
+        from bench import native_fk_stream_probe as candidate
+    elif cohort.get('candidate_implementation')=='fk_current':
+        from bench import native_fk_current_probe as candidate
     report={'kind':'independent_live_native_compact_pair_audit','cohort':str(path.relative_to(ROOT)),
             'observed_at_utc':datetime.now(timezone.utc).isoformat(),'passed':False,
             'auditor_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -50,7 +56,10 @@ def main():
             assert c.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()==(None,)
             from bench.native_compact_probe import package
             assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s',(package()['extension'],)).fetchone()
-            if cohort.get('candidate_implementation')=='details':assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s',(candidate.package()['extension'],)).fetchone()
+            if cohort.get('candidate_implementation') in ('details','fk','fk_stream','fk_current'):
+                from bench.native_details_probe import package as details_package
+                assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s',(details_package()['extension'],)).fetchone()
+            if cohort.get('candidate_implementation') in ('fk','fk_stream','fk_current'):assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s',(candidate.package()['extension'],)).fetchone()
             assert_relationships(c)
             for table in ORDER:
                 assert c.execute('SELECT count(*) FROM public.'+table).fetchone()[0]==c.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(table,)).fetchone()[0]

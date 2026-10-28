@@ -48,8 +48,11 @@ def main(*,extra_variants=(),output='reports/semantics-copy-layout.json'):
             result=service.execute_cross_table_expansion(db,'public.raw_data',['group001'],destinations(mode),timing_report=timing)
             if mode=='guarded_copy':assert result['execution_architecture']['safe_domain'] is True
             reset(c)
-        assert scripts['guarded_copy'].count('\\gset\n')==1
-        scripts['guarded_copy']=scripts['guarded_copy'].replace('\\gset\n','\\gset\n\\echo LAYOUT_FAST=:pipeline_copy_safe\n',1)
+        # Observe the actual layout-domain choice, independently of other
+        # legitimate protocol receipts that may also use psql \gset.
+        selection=r'(?m)(^SELECT safe AS pipeline_copy_safe[^\n]*\n)\\gset\n'
+        assert len(re.findall(selection,scripts['guarded_copy']))==1
+        scripts['guarded_copy']=re.sub(selection,lambda m:m[0]+'\\echo LAYOUT_FAST=:pipeline_copy_safe\n',scripts['guarded_copy'],count=1)
         parent=ROOT/'.runtime'/'copy_layout';parent.mkdir(parents=True,exist_ok=True)
         original=protected_schema_signature(c)
         for variant in variants:

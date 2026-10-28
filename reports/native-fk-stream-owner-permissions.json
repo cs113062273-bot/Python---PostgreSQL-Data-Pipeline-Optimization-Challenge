@@ -1,0 +1,67 @@
+{
+  "kind": "native_full_fk_validation_owner_permissions_and_guards",
+  "passed": true,
+  "database": "lab_fk_owner_5c023c6a",
+  "owner": "fk_owner_929f2b47",
+  "reader": "fk_reader_c7787b02",
+  "source_sha256": "679610093b6b44f4c28156fc8fdb4a86287e5fb3120ff3da7d39e8a717fe6367",
+  "checks": [
+    {
+      "case": "SELECT_reader_cannot_complete_any_catalog_flags"
+    },
+    {
+      "case": "ordinary_owner_completes_all_actual_relationships",
+      "actual_checked_keys": [
+        64,
+        64,
+        158,
+        64,
+        64,
+        64
+      ]
+    },
+    {
+      "case": "untrusted_C_code_modification_rejected",
+      "sqlstate": "42501"
+    },
+    {
+      "case": "untrusted_C_code_modification_rejected",
+      "sqlstate": "42501"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "volatility"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "parallel"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "security"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "strict"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "configuration"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "membership"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "renamed"
+    },
+    {
+      "case": "altered_metadata_rejected_before_C",
+      "mutation": "identity_volatility"
+    }
+  ],
+  "normal_RI_triggers_retained": true,
+  "original_recipe_validator_unchanged": true,
+  "official_eligibility_unproven": true
+}

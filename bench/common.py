@@ -5,6 +5,7 @@ from pathlib import Path
 import platform
 import subprocess
 import sys
+import time
 import uuid
 
 import psycopg
@@ -37,7 +38,18 @@ def write_report(path, value):
             writer.write(json.dumps(value, indent=2, ensure_ascii=False, default=str) + "\n")
             writer.flush()
             os.fsync(writer.fileno())
-        temp.replace(path)
+        deadline=time.monotonic()+2
+        while True:
+            try:
+                temp.replace(path)
+                break
+            except PermissionError as error:
+                # Windows indexers/readers can briefly hold an otherwise
+                # writable destination without FILE_SHARE_DELETE. Keep the
+                # fsynced temporary file and atomic replace; fail normally
+                # if the sharing/access conflict persists.
+                if os.name!='nt' or getattr(error,'winerror',None) not in (5,32,33) or time.monotonic()>=deadline:raise
+                time.sleep(.02)
     except BaseException:
         temp.unlink(missing_ok=True)
         raise

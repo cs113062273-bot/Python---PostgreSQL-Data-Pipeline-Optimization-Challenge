@@ -1,0 +1,210 @@
+{
+  "kind": "full_fk_native_validator_semantics",
+  "database": "lab_fk_validation_5947f5d9",
+  "source_sha256": "679610093b6b44f4c28156fc8fdb4a86287e5fb3120ff3da7d39e8a717fe6367",
+  "driver_sha256": "2ce5554c0a61e3a38f0bba6025f3fb770dc2802e9471350336108239a4a72e16",
+  "checks": [
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table1",
+      "column": "id_column_3"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table1",
+      "column": "id_column_4"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table2",
+      "column": "id_column_2"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table5",
+      "column": "id_column_2"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table6",
+      "column": "id_column_2"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table6",
+      "column": "id_column_3"
+    },
+    {
+      "case": "interior_missing_actual_parent_rejected_no_flags_completed"
+    },
+    {
+      "case": "wide_range_fallback_preserves_invalid_FK_for_native_validation"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "raw_data"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "table1"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "table3"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "table4"
+    },
+    {
+      "case": "MATCH_SIMPLE_NULL_references"
+    },
+    {
+      "case": "empty_actual_parent_and_child_sets"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "raw_data"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "table1"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "table3"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "table4"
+    },
+    {
+      "case": "completion_subtransaction_rollback_restores_all_six_flags"
+    },
+    {
+      "case": "read_only_transaction_rejects_completion"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "raw_id*103-6000"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "6000-raw_id*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "raw_id*7-32768"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "9007199254740992+raw_id*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "-9007199254740992+raw_id*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "(-9223372036854775807-1)+raw_id*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "raw_data",
+      "expression": "9223372036854775807-raw_id*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "id_column_1*103-6000"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "6000-id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "id_column_1*7-32768"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "9007199254740992+id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "-9007199254740992+id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "(-9223372036854775807-1)+id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table1",
+      "expression": "9223372036854775807-id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "id_column_1*103-6000"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "6000-id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "id_column_1*7-32768"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "9007199254740992+id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "-9007199254740992+id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "(-9223372036854775807-1)+id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table3",
+      "expression": "9223372036854775807-id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table4",
+      "expression": "id_column_1*103-6000"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table4",
+      "expression": "6000-id_column_1*103"
+    },
+    {
+      "case": "actual_key_bitmap_geometry",
+      "parent": "table4",
+      "expression": "id_column_1*7-32768"
+    }
+  ],
+  "passed": true,
+  "all_mutations_rolled_back": true
+}

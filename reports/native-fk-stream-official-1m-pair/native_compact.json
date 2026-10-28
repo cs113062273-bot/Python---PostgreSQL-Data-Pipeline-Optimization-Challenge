@@ -1,0 +1,1393 @@
+{
+  "kind": "local_transport_organizer_service",
+  "official_score": false,
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "settings": {
+      "fsync": "on",
+      "full_page_writes": "on",
+      "jit": "on",
+      "maintenance_work_mem": "65536",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_wal_size": "1024",
+      "server_version": "17.11",
+      "shared_buffers": "16384",
+      "synchronous_commit": "on",
+      "TimeZone": "Asia/Taipei",
+      "wal_level": "minimal",
+      "work_mem": "4096"
+    },
+    "jit_available": false,
+    "git_commit": "51ad4c68d40a9f05aafd3ac8879464e2951ca1cc",
+    "git_status": "M bench/archive_stream_verified.py\n M bench/audit_native_compact_pair.py\n M bench/common.py\n M bench/native_compact_pair.py\n M bench/native_details_component.py\n M reports/disposable-clone-cleanup.json\n M scripts/install_details_package.py\n M tests/recovery/native_copy_crash.py\n M tests/semantics/copy_layout.py\n?? \"Codex \\342\\200\\224 PostgreSQL Challenge \\345\\206\\240\\350\\273\\215\\345\\257\\246\\344\\275\\234 Prompt.md\"\n?? bench/native_fk_probe.py\n?? bench/native_fk_scan_component.py\n?? bench/native_fk_stream_probe.py\n?? native/challenge_details_ordered.c\n?? native/challenge_fk_bitmap.c\n?? native/challenge_fk_bitmap_joint.c\n?? native/challenge_fk_scan.c\n?? native/challenge_fk_stream.c\n?? native/challenge_fk_validate.c\n?? reports/native-archives/lab_native_compact_7406da3d92-stream-verified.json\n?? reports/native-archives/lab_native_compact_9b3ae1a447-stream-verified.json\n?? reports/native-archives/lab_native_variant_535b14e8a9-stream-verified.json\n?? reports/native-c-builds/11cd852dd78637a3-0aa14770.json\n?? reports/native-c-builds/161ff30993e73329-fc6311ba.json\n?? reports/native-c-builds/2a76b4585f5a9d8d-5d343691.json\n?? reports/native-c-builds/43e2c93ac6184cb4-609d8d3b.json\n?? reports/native-c-builds/67326b4ccace7b69-831cacf7.json\n?? reports/native-c-builds/679610093b6b44f4-59e05346.json\n?? reports/native-c-builds/de249c06a3478a8f-26ca5e01.json\n?? reports/native-c-builds/f83bdcdcaf97ab0e-8594d7f3.json\n?? reports/native-details-ordered-build-log.txt\n?? reports/native-details-ordered-build.json\n?? reports/native-details-ordered-index-components-1m-log.txt\n?? reports/native-details-ordered-index-components-1m.json\n?? reports/native-details-ordered-semantics-log.txt\n?? reports/native-details-ordered-semantics.json\n?? reports/native-fk-1m-independent-audit-log.txt\n?? reports/native-fk-1m-independent-audit.json\n?? reports/native-fk-bitmap-build.json\n?? reports/native-fk-bitmap-components-1m-log.txt\n?? reports/native-fk-bitmap-components-1m.json\n?? reports/native-fk-bitmap-joint-build.json\n?? reports/native-fk-bitmap-joint-components-1m-log.txt\n?? reports/native-fk-bitmap-joint-components-1m.json\n?? reports/native-fk-official-100k-pair-log.txt\n?? reports/native-fk-official-100k-pair.json\n?? reports/native-fk-official-100k-pair/\n?? reports/native-fk-official-1m-pair-log.txt\n?? reports/native-fk-official-1m-pair.json\n?? reports/native-fk-official-1m-pair/\n?? reports/native-fk-owner-permissions-log.txt\n?? reports/native-fk-owner-permissions.json\n?? reports/native-fk-scan-build.json\n?? reports/native-fk-scan-components-1m-log.txt\n?? reports/native-fk-scan-components-1m.json\n?? reports/native-fk-space-archive-log.txt\n?? reports/native-fk-space-compact-archive-log.txt\n?? reports/native-fk-space-compact-archive-retry-log.txt\n?? reports/native-fk-space-minimal-archive-log.txt\n?? reports/native-fk-sql-bulk-clone-cleanup-log.txt\n?? reports/native-fk-sql-clone-cleanup-log.txt\n?? reports/native-fk-stream-build.json\n?? reports/native-fk-stream-components-1m-log.txt\n?? reports/native-fk-stream-components-1m.json\n?? reports/native-fk-stream-official-1m-pair-log.txt\n?? reports/native-fk-stream-official-1m-pair.json\n?? reports/native-fk-stream-official-1m-pair/\n?? reports/native-fk-stream-owner-permissions-log.txt\n?? reports/native-fk-stream-owner-permissions.json\n?? reports/native-fk-stream-trusted-package.json\n?? reports/native-fk-stream-validator-semantics-geometry-log.txt\n?? reports/native-fk-stream-validator-semantics-geometry.json\n?? reports/native-fk-stream-validator-semantics-log.txt\n?? reports/native-fk-stream-validator-semantics.json\n?? reports/native-fk-trusted-package.json\n?? reports/native-fk-validate-build-v2.json\n?? reports/native-fk-validate-build.json\n?? reports/native-fk-validate-components-1m-log.txt\n?? reports/native-fk-validate-components-1m-retry-log.txt\n?? reports/native-fk-validate-components-1m-v2-log.txt\n?? reports/native-fk-validate-components-1m-v2.json\n?? reports/native-fk-validator-semantics-log.txt\n?? reports/native-fk-validator-semantics-retry-log.txt\n?? reports/native-fk-validator-semantics.json\n?? reports/native-fk-wal-minimal-log.txt\n?? reports/native-fk-wal-minimal.json\n?? reports/native-fk-wal-minimal.pgctl.txt\n?? reports/native-source/11cd852dd78637a3634f5c53102e004853b1bc0171c1b59134df1620ab33d583.c\n?? reports/native-source/161ff30993e733291b5760e2647a5101b10acab145b17c7cf8f808e470a86c16.c\n?? reports/native-source/2a76b4585f5a9d8dd9d14f4d5387d9f0a9f4ff620df6c39d7ed0f22cc9956404.c\n?? reports/native-source/43e2c93ac6184cb48c32c227520b44c3c6075d19ed3f44b6014761e71fb6361b.c\n?? reports/native-source/67326b4ccace7b69ffd8c305a0452c7fc169e94fa200e9705a87fb7e207b4c58.c\n?? reports/native-source/679610093b6b44f4c28156fc8fdb4a86287e5fb3120ff3da7d39e8a717fe6367.c\n?? reports/native-source/de249c06a3478a8f44abe176442a290532e2dadbeac82971e30500ceb43685f1.c\n?? reports/native-source/f83bdcdcaf97ab0e24da8d458c07d3ea66f15cefaed85b637ee2f2977d8223b0.c\n?? reports/recovery-native-fk-stream-atomic-log.txt\n?? reports/recovery-native-fk-stream-atomic.json\n?? reports/semantics-native-fk-boundaries-82.json\n?? reports/semantics-native-fk-boundaries-log.txt\n?? reports/semantics-native-fk-layouts-11-v2.json\n?? reports/semantics-native-fk-layouts-log.txt\n?? reports/semantics-native-fk-layouts-retry-log.txt\n?? reports/semantics-native-fk-native-log.txt\n?? reports/semantics-native-fk-native.json\n?? reports/semantics-native-fk-stream-axes-log.txt\n?? reports/semantics-native-fk-stream-boundaries-82.json\n?? reports/semantics-native-fk-stream-boundaries-log.txt\n?? reports/semantics-native-fk-stream-boundaries-retry-log.txt\n?? reports/semantics-native-fk-stream-layouts-11-v2.json\n?? reports/semantics-native-fk-stream-layouts-log.txt\n?? reports/semantics-native-fk-stream-native-log.txt\n?? reports/semantics-native-fk-stream-native.json\n?? reports/semantics-native-fk-stream-text-112.json\n?? reports/shadow-publication-probe-log.txt\n?? reports/source/0e3558b10a4a1f171a83487655d6bc5f8ee8c397a730b6640e83d7c66b6c68ba.py\n?? reports/source/1231c8389fa9e2db4caf203e9657bfb3e60fb0261237d7a87c796268f36b7f81.py\n?? reports/source/193af074d1a3264bb55f756e06b09a4ccc8a27afdb450e50511b1ba0c77e5735.py\n?? reports/source/20127fe49301395ffb9b0de0eff8f93f7ed954a85fb31b1a710c3f537ce9a1a9.py\n?? reports/source/2c4305c8e4f97fdfb5336865034c3969de4c2545aa33a47b8057f42fc16ae38c.py\n?? reports/source/2ce5554c0a61e3a38f0bba6025f3fb770dc2802e9471350336108239a4a72e16.py\n?? reports/source/3a49be7772140b19cfc2c52b8a42df83172e9d2b9a3c09ca8ba5c379444f8aaf.py\n?? reports/source/42ffea0c89ee9d60b8468fa832d8589a6170d49616391925490213c62a86e842.py\n?? reports/source/4a0427bc0199c3c09d8f75e1a11c50f1d3db8d86a6eee24fe507c594f06db5d8.py\n?? reports/source/4b7bc7394adc40d3fbb4424822f7e425bc388c35801c31f8f17d17e431258577.py\n?? reports/source/634f8a37cdbc5b2c9691f9f079f53cef6aa32916061e7b91badb74d6791ebfc0.py\n?? reports/source/640cae3de51915f867e84c9c4143afd5fd06c8132805e349a39d502f1ad0a149.py\n?? reports/source/66bdef73f4859b1e7aa8d6bc721103d4bd0593d49f95dd178676ef438342c796.py\n?? reports/source/787e9c7ba77f00d599ab8d4fb5279fa06fe8d9f367e9a601358825b43725f20e.py\n?? reports/source/8e112afd86e11c1bd6a909d7102549a9dd2e86f0509ef6ced1b72ab1ccb5ea84.py\n?? reports/source/8ea0336e6ce034241ee8916fcb44792d06b225766ae8a50c3fb4c2c7945bb8d5.py\n?? reports/source/8f9fe9ae028fff7deba40b3a4f377d3f32727bc47eaf0ed2ee420cdba173577c.py\n?? reports/source/950922a2c3c27f76b60f99f0d152d21a6f4222e8abd3a0dbf843e6073a1a6cc5.py\n?? reports/source/aa5668c1ef0ecca9de8f667a689db6edf6c07f6bdf3254ce9fb7b683feba847c.py\n?? reports/source/beba6bab766b03bcff2802da5ed3892b73447191dcc2395f735372e5ecce703b.py\n?? reports/source/d38fbf16798238ad1b87c0d7798773f419155f902d98ca7659714741eb88febd.py\n?? reports/source/ded0ab237f74d75ecb68e4af7f1db7b065e052c2991c9f04c9a544e01f29f3df.py\n?? reports/source/e66f5493b71c30e58b6dab487c6cc871f62b254dc540ecaf7c971fb41fd7e676.py\n?? reports/source/e7b4d04e460fdc3c89308749b2eae30ef3981ce5aa3bf9d6845077d66abc8bdd.py\n?? reports/source/fb25b63449cced872eb14ea4c51dbc3ebc57293c3a05baa53858a2091daf4608.py\n?? reports/sql/084683c2ddbfecea6fea5f03f3a606bec02a0c415547b067c91400b916c0f081.sql\n?? reports/sql/0fa77f62a092902a036294915aa0896426d256bd5a35777217263078380a2a09.sql\n?? reports/sql/1bed9d80aaceefd5a01c3925b8bb6a77df1b330868654ce4d2e6694d147a63cf.sql\n?? reports/sql/1ef2c0a42d89c29c4eebfce295797f868d854d4a1f8230e522907720488fb5e1.sql\n?? reports/sql/22210565ddbe9835679bf9505d59a79aa7fdc8407eff91931517953761846175.sql\n?? reports/sql/44337b5634eabee592c84ae9c8214665f5b203cefa07836fae2f99c1280e6f1f.sql\n?? reports/sql/45ec73ab9698868cc77ab6c31ee2574b26fdea9bd654272e96f3abf500d6b636.sql\n?? reports/sql/52110e03f28a61f5c0a7d0170a0164dfb2836dd9921cabf4eeba642d289206ef.sql\n?? reports/sql/56d7213824fff57cc7a892737a90cd7ad2ecbed429ffa8a68bdb32267aed4faf.sql\n?? reports/sql/62e9882994cf333103c7c28df31ba0bd161b8d2b8b008f8dae42ee93b0a4518e.sql\n?? reports/sql/633f8b5bffe411391c50eda9001176a8ece37f6e5a7f19d43226683831f7f803.sql\n?? reports/sql/64b94b1c7d719fdbafac9f695b5872e7c5f2f822bfbdf6320c23c015c50424ca.sql\n?? reports/sql/790b71486f9c0ca2d4b4319f5e68a6013f5da6d558030c0f4298c629e6ad507c.sql\n?? reports/sql/7e73908241641a722de8b000362def40ced9f734f64b236d83b52512a0187922.sql\n?? reports/sql/809fcc794075d9794a3ac7d45396205ff0650a2addae6f0e5982029b0691dc4a.sql\n?? reports/sql/81092851786f4e116736b237ccc22ba7f0e7fd63a80e10892974dbf65f0ffda9.sql\n?? reports/sql/860bfb3728e6e2df84c83262992c3dbdbb75a4f9f74b16b9fcbf78d112fd34c6.sql\n?? reports/sql/86bc80fd5fb9e8e9c94153bd147b1c59039caf5517f1c351fa2adb1548a56b45.sql\n?? reports/sql/8cead3788df0199aa3d66f33f9ecb77df31cab959a3be3dea65368378eb9fb10.sql\n?? reports/sql/93af8ab43c3d7cb1df7e9e63df930ba3a46cce3e8cffcc4b7d9b2ab06548b464.sql\n?? reports/sql/9e52e8ea5a45fa257b3b3a0ba0e52368807dbe9dd54b5eb83066d36b53308248.sql\n?? reports/sql/9eb1e8a2b21001e78686ed4ebc0b72b7b064db0191089cee67aba3ae1a712cf1.sql\n?? reports/sql/bcb9bb13100dbbb0f518b7a70897245d3345e608c3db06fbb694d404fc685b7d.sql\n?? reports/sql/c227f5176b7ff49959611315b0ac5385f47b2cb1eb125c6cdaf3b7d04a3755ea.sql\n?? reports/sql/c6e7d4e4410f33abf109ca940c056afb0d734a7aebeaaba3e21d74138f629cda.sql\n?? reports/sql/cc281ca6b2af4c53effe84d243bba6cd12f6a87889b833e13cbbb1afebdb95d8.sql\n?? reports/sql/dab1487b10b738fc58a9c3c5e73a9c9c0c2b3316e090b00ae788a27e3f100c9e.sql\n?? reports/sql/ea08f81c7063dbff3686eea24c91419b22f78b8d3124567a04b203e49ae5c704.sql\n?? reports/sql/eb0bea2c2a9944a54e450493659baa270cf3e2be0a6d9b8e54b346134f32a426.sql\n?? reports/sql/f3a65c1f8ed11c7e43e630047b74cfea7aa4c2a664172d2e462d2efa5f4cc4cf.sql\n?? reports/sql/f7f418b90cc2c24decc82f03e4080c40a5a2500d74872db58270d821959e4838.sql\n?? scripts/install_fk_package.py\n?? tests/recovery/native_fk_atomic.py\n?? tests/recovery/native_fk_crash.py\n?? tests/recovery/native_fk_durable.py\n?? tests/recovery/native_fk_stream.py\n?? tests/semantics/native_fk_copy.py\n?? tests/semantics/native_fk_owner.py\n?? tests/semantics/native_fk_stream.py\n?? tests/semantics/native_fk_validate.py",
+    "generator_sha256": "6b807c8c3ec23c3c6555bed1342f81abe99bacf77a04ba7096dbaa1c66e33c6c"
+  },
+  "mode": "guarded_copy",
+  "execution_architecture": {
+    "mode": "guarded_copy",
+    "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+    "batch_sql_sha256": "0e9faa2e59fa3efe67c4db4331e56818800872d10bfb40baffbbf6fb797bf864",
+    "copy_workspace": {
+      "cleanup_success": true,
+      "cleanup_errors": [],
+      "setup_seconds": 0.0009439999998903659,
+      "cleanup_seconds": 0.007411300000057963
+    },
+    "safe_domain": true
+  },
+  "separate_reference": "lab_native_official_ec60f2b1bc",
+  "destination_warmup_before_measured_run": false,
+  "wall_seconds": 12.46363210000004,
+  "verification": "exact",
+  "verification_schema": null,
+  "exact_comparison_details": {
+    "table3": {
+      "bidirectional_except_all": false,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "tagged_count",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 233,
+      "transfer_sha256": "2f9ce94d05036533fbd53ffea286af2785c57fa0b954f44003a112cadbd6bff3"
+    },
+    "table4": {
+      "bidirectional_except_all": false,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "tagged_count",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 966,
+      "transfer_sha256": "8f6766fe87fc9301e6c4c4a0f045729e2e7f1ace7fdecbffad69b0b6e3f7a779"
+    },
+    "table1": {
+      "bidirectional_except_all": false,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "tagged_count",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 147999283,
+      "transfer_sha256": "3d52ffa557c4b1a3884ddcb356f39c3710dbfc0973a497e04927b0b314af4824"
+    },
+    "table5": {
+      "bidirectional_except_all": false,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "tagged_count",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 44000021,
+      "transfer_sha256": "4a20b7373b46a30af8255ca3b86baca032749005eea129545c7ce5a73f0cd160"
+    },
+    "table6": {
+      "bidirectional_except_all": false,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "tagged_count",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 20000021,
+      "transfer_sha256": "8e8d88919668bbbefa07cc71cb39e4b582c9dd351aec62c7143d570a1af5051a"
+    },
+    "table2": {
+      "bidirectional_except_all": false,
+      "exact_all_values_and_multiplicities": true,
+      "comparison": "tagged_count",
+      "representation": "native typed logical rows; C text collation; dimension presence preserved",
+      "transferred_binary_bytes": 119041179,
+      "transfer_sha256": "d79becfc690d167a6e97e33cb9f9bd631db5244e0882b4ca88c9866df16f071c"
+    }
+  },
+  "exact_six_tables": true,
+  "six_table_fingerprints_equivalent": true,
+  "counter_reconciliation": true,
+  "protected_schema_equivalent": true,
+  "sequence_options_and_ownership_equivalent": true,
+  "workspace_namespace_restored": true,
+  "versions": [
+    {
+      "table_name": "public.table3",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table4",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table1",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table5",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table6",
+      "version_code": "0001",
+      "dependency_count": 1
+    },
+    {
+      "table_name": "public.table2",
+      "version_code": "0001",
+      "dependency_count": 1
+    }
+  ],
+  "timing_report": {
+    "report_version": 1,
+    "started_at": "2026-10-29T03:52:27+08:00",
+    "completed_at": "2026-10-28T19:52:39.922912+00:00",
+    "database_name": "lab_native_compact_7602e51f86",
+    "source_table_name": "public.raw_data",
+    "raw_schemas": [
+      "group001"
+    ],
+    "destination_names": [
+      "public.table3",
+      "public.table4",
+      "public.table1",
+      "public.table5",
+      "public.table6",
+      "public.table2"
+    ],
+    "source_rows": 1000000,
+    "total_rows_inserted": 5321553,
+    "destination_rows": [
+      {
+        "table_name": "public.table3",
+        "rows": 4
+      },
+      {
+        "table_name": "public.table4",
+        "rows": 27
+      },
+      {
+        "table_name": "public.table1",
+        "rows": 1000000
+      },
+      {
+        "table_name": "public.table5",
+        "rows": 1000000
+      },
+      {
+        "table_name": "public.table6",
+        "rows": 1000000
+      },
+      {
+        "table_name": "public.table2",
+        "rows": 2321522
+      }
+    ],
+    "items": [
+      {
+        "stage": "prepare",
+        "name": "Normalize, parse, and validate expansion recipes - local Python CPU",
+        "seconds": 0.015625,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify source table existence - LOCAL diagnostic command",
+        "seconds": 0.21126200000003337,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify source table existence - local Python CPU",
+        "seconds": 0.015625,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read and validate source column metadata - LOCAL diagnostic command",
+        "seconds": 0.004171900000073947,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read and validate source column metadata - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Load Raw version references for the selected scope - LOCAL diagnostic command",
+        "seconds": 0.08243810000021767,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Load Raw version references for the selected scope - LOCAL diagnostic command",
+        "seconds": 0.00281049999989591,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Load Raw version references for the selected scope - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate SQL function safety - LOCAL diagnostic command",
+        "seconds": 0.004112300000087998,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate SQL function safety - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Ensure data-database metadata and row counters - LOCAL diagnostic command",
+        "seconds": 0.014448900000161302,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Ensure data-database metadata and row counters - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table3 - LOCAL diagnostic command",
+        "seconds": 0.0010772000000542903,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table3 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table3 - LOCAL diagnostic command",
+        "seconds": 0.0011962999999468593,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table3 - LOCAL diagnostic command",
+        "seconds": 0.004322400000091875,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table3 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table3 - LOCAL diagnostic command",
+        "seconds": 0.008287899999913861,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table3 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table4 - LOCAL diagnostic command",
+        "seconds": 0.0009747999999945023,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table4 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table4 - LOCAL diagnostic command",
+        "seconds": 0.0006228999998256768,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table4 - LOCAL diagnostic command",
+        "seconds": 0.0018939999999929569,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table4 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table4 - LOCAL diagnostic command",
+        "seconds": 0.0017500999999811029,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table4 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table1 - LOCAL diagnostic command",
+        "seconds": 0.0009064000000762462,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table1 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table1 - LOCAL diagnostic command",
+        "seconds": 0.0005857999999534513,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table1 - LOCAL diagnostic command",
+        "seconds": 0.002424200000177734,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table1 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table1 - LOCAL diagnostic command",
+        "seconds": 0.0017101999999340478,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table1 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table5 - LOCAL diagnostic command",
+        "seconds": 0.0008334000001468667,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table5 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table5 - LOCAL diagnostic command",
+        "seconds": 0.0005857999999534513,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table5 - LOCAL diagnostic command",
+        "seconds": 0.0030885000001035223,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table5 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table5 - LOCAL diagnostic command",
+        "seconds": 0.0017328000001270993,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table5 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table6 - LOCAL diagnostic command",
+        "seconds": 0.0008402000000842236,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table6 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table6 - LOCAL diagnostic command",
+        "seconds": 0.0005791000000954227,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table6 - LOCAL diagnostic command",
+        "seconds": 0.0025481000000127096,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table6 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table6 - LOCAL diagnostic command",
+        "seconds": 0.0019305999999232881,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table6 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table2 - LOCAL diagnostic command",
+        "seconds": 0.0009394000001066161,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Verify destination public.table2 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table2 - LOCAL diagnostic command",
+        "seconds": 0.0006489999998393614,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table2 - LOCAL diagnostic command",
+        "seconds": 0.0027701000001343346,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Read row counter for public.table2 - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table2 - LOCAL diagnostic command",
+        "seconds": 0.0017150999999557826,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "preflight",
+        "name": "Validate managed dependencies for public.table2 - local Python CPU",
+        "seconds": 0.015625,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "prepare",
+        "name": "Build protected transactional SQL batch - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "prepare",
+        "name": "Build and validate bulk FK strategy",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "prepare",
+        "name": "Build protected bulk index strategy",
+        "seconds": 0.015625,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "prepare",
+        "name": "Build guarded TEXT normalization strategy",
+        "seconds": 0.046875,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Hint only disposable binary COPY files",
+        "seconds": 0.0022475000000667933,
+        "measurement": "local_filesystem_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Expansion database batch envelope - LOCAL diagnostic command",
+        "seconds": 11.919689299999845,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": false
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Create private psql COPY workspace",
+        "seconds": 0.0009439999998903659,
+        "measurement": "local_filesystem_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Remove private psql COPY files",
+        "seconds": 0.007411300000057963,
+        "measurement": "local_filesystem_wall",
+        "rows": null,
+        "destination": null,
+        "details": "All six fixed basenames removed; empty directory removed",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Acquire stable source and target locks",
+        "seconds": 0.000846,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Initialize database transaction",
+        "seconds": 0.000166,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Acquire destination table locks",
+        "seconds": 0.000136,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Scan source and build dependency manifest",
+        "seconds": 0.382213,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Prepare transactional bulk FK load",
+        "seconds": 0.035273,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Build TEXT input and prove safe cast domain",
+        "seconds": 2.072976,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Insert into public.table3 (statement 1)",
+        "seconds": 0.0028,
+        "measurement": "postgresql_backend_wall",
+        "rows": 4,
+        "destination": "public.table3",
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Insert into public.table4 (statement 1)",
+        "seconds": 0.000237,
+        "measurement": "postgresql_backend_wall",
+        "rows": 27,
+        "destination": "public.table4",
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Insert into public.table1 (statement 1)",
+        "seconds": 0.00022,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1000000,
+        "destination": "public.table1",
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Insert into public.table5 (statement 1)",
+        "seconds": 0.000164,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1000000,
+        "destination": "public.table5",
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Insert into public.table6 (statement 1)",
+        "seconds": 0.000187,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1000000,
+        "destination": "public.table6",
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Insert into public.table2 (statement 1)",
+        "seconds": 0.000201,
+        "measurement": "postgresql_backend_wall",
+        "rows": 2321522,
+        "destination": "public.table2",
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Prepare table1 key bulk build",
+        "seconds": 0.01388,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Rebuild and validate table1 keys",
+        "seconds": 0.686207,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Prepare table2 key bulk build",
+        "seconds": 0.003042,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Rebuild and validate table2 keys",
+        "seconds": 1.075364,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Prepare table5 key bulk build",
+        "seconds": 0.010023,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Rebuild and validate table5 keys",
+        "seconds": 0.473373,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Prepare table6 key bulk build",
+        "seconds": 0.003149,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Rebuild and validate table6 keys",
+        "seconds": 0.536731,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Transform and COPY table1 with native row receipt",
+        "seconds": 1.667321,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Transform and COPY table2 with native row receipt",
+        "seconds": 0.000219,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Transform and COPY table3 with native row receipt",
+        "seconds": 0.233516,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Transform and COPY table4 with native row receipt",
+        "seconds": 0.236758,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Transform and COPY table5 with native row receipt",
+        "seconds": 3.196702,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Transform and COPY table6 with native row receipt",
+        "seconds": 0.00022,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Analyze fresh table3 dimension",
+        "seconds": 0.003307,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Analyze fresh table4 dimension",
+        "seconds": 0.000684,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Restore and validate all bulk foreign keys",
+        "seconds": 0.817582,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "bulk_load",
+        "name": "Remove transaction-owned shared workspace",
+        "seconds": 0.001812,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Commit expansion transaction",
+        "seconds": 0.260527,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the server session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "execute",
+        "name": "Parse database manifest and timing telemetry - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "prepare",
+        "name": "Attach compiler provenance",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Ensure control metadata for version registration - LOCAL diagnostic command",
+        "seconds": 0.004808200000070428,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Ensure control metadata for version registration - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Build atomic version registration SQL - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Version database batch envelope - LOCAL diagnostic command",
+        "seconds": 0.04265550000013718,
+        "measurement": "local_psql_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": false
+      },
+      {
+        "stage": "version",
+        "name": "Acquire version lock for table1",
+        "seconds": 0.000705,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": "table1",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Acquire version lock for table2",
+        "seconds": 0.000191,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": "table2",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Acquire version lock for table3",
+        "seconds": 0.000172,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": "table3",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Acquire version lock for table4",
+        "seconds": 0.00018,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": "table4",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Acquire version lock for table5",
+        "seconds": 0.000213,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": "table5",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Acquire version lock for table6",
+        "seconds": 0.000165,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": "table6",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Register version and dependency for public.table3",
+        "seconds": 0.010538,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": "public.table3",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Register version and dependency for public.table4",
+        "seconds": 0.001019,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": "public.table4",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Register version and dependency for public.table1",
+        "seconds": 0.00238,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": "public.table1",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Register version and dependency for public.table5",
+        "seconds": 0.000973,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": "public.table5",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Register version and dependency for public.table6",
+        "seconds": 0.001433,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": "public.table6",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Register version and dependency for public.table2",
+        "seconds": 0.001278,
+        "measurement": "postgresql_backend_wall",
+        "rows": 1,
+        "destination": "public.table2",
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Commit atomic version batch",
+        "seconds": 0.000294,
+        "measurement": "postgresql_backend_wall",
+        "rows": null,
+        "destination": null,
+        "details": "Measured with PostgreSQL clock_timestamp() in the control database session; SSH transport is excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Parse version registration results and timing telemetry - local Python CPU",
+        "seconds": 0.0,
+        "measurement": "local_python_cpu",
+        "rows": null,
+        "destination": null,
+        "details": "Per-thread CPU time; blocking, SSH transit, and remote database wait are excluded.",
+        "include_in_total": true
+      },
+      {
+        "stage": "version",
+        "name": "Close reused native metadata sessions",
+        "seconds": 0.006175299999995332,
+        "measurement": "local_process_wall",
+        "rows": null,
+        "destination": null,
+        "details": null,
+        "include_in_total": true
+      }
+    ],
+    "session_settings": {
+      "work_mem": "64MB only inside proven safe domain; original value on fallback"
+    }
+  },
+  "unmodified_reference_established": false,
+  "reference_output_fingerprints": null,
+  "local_backend_diagnostics": {
+    "transport": "private_server_file_copy_probe",
+    "server_files_used": true,
+    "server_file_privileges_available": true,
+    "privilege_fallback_to_client": false,
+    "actual_binary_files": 3,
+    "hook_sha256": "0cbbced736680f674b479b6dc48471ef1720867d08ef633fa702eab3784116da",
+    "actual_batch_sql_sha256": "0e9faa2e59fa3efe67c4db4331e56818800872d10bfb40baffbbf6fb797bf864",
+    "scope": "Private local same-OS-user workspace; native command tags/default identities and original validation. No privilege grant. Not SSH qualification.",
+    "temporary_hint_hook_sha256": "a40a50563dd197cdd003891aeeb3042a24e0d63d7bd5ede6d1f9603426f60841",
+    "temporary_hint_requested": true,
+    "temporary_hint_setup_seconds": 0.0022475000000667933,
+    "temporary_hint_retained_written_files": 3,
+    "scratch_binary_bytes": 68000466,
+    "extra_data_commits": 0,
+    "single_native_data_program": true,
+    "shared_fk_checked": "1000000,1000000,2321522,1000000,1000000,1000000",
+    "metadata_reuse_hook_sha256": "d483cf4df54bfe971c4db96c850fee4ddf697c8087bbf09819d8a2d96101af9a",
+    "metadata_statements_reexecuted": 32,
+    "metadata_sessions_opened": 2,
+    "metadata_sessions_closed": true,
+    "metadata_session_close_errors": [],
+    "results_cached": false,
+    "metadata_stdin_hook_sha256": "decf73ea1b040a8135cc1b1d167a51040c9cad123ce72026907ce4f89333ddf5",
+    "metadata_stdin_programs_reexecuted": 8,
+    "data_strategy": "refined",
+    "metadata_combined_hook_sha256": "09e9af9e004ce5bcae413c4250f77c7ec7eaf27e0041c910b58f7d93cf63db0d",
+    "metadata_combined_native_phases": 32,
+    "metadata_queries_reexecuted_no_result_cache": true
+  },
+  "limitations": [
+    "local Windows psql substitutes Linux/SSH command transport",
+    "GUI cache/refresh excluded",
+    "dump filesystem/replay not exercised by this command"
+  ],
+  "native_fk_stream_hook_sha256": "358dfc6efb26aba3e22f8b74caa85995c135b1c3b0b636857eb39cc9e6492c8f",
+  "trusted_fk_package": {
+    "kind": "private_native_full_fk_validation_package",
+    "extension": "challenge_fk_679610093b6b44f4",
+    "version": "0.1",
+    "source": "native\\challenge_fk_stream.c",
+    "source_sha256": "679610093b6b44f4c28156fc8fdb4a86287e5fb3120ff3da7d39e8a717fe6367",
+    "build_receipt": "reports\\native-c-builds\\679610093b6b44f4-59e05346.json",
+    "files": [
+      {
+        "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_679610093b6b44f4.dll",
+        "sha256": "9a9ec0366686175a576a513c31b5ce83c64be3b9984d702988893309421774c5",
+        "bytes": 180736
+      },
+      {
+        "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fk_679610093b6b44f4.control",
+        "sha256": "b5a5ac94609ec729185343e3a2e012344ed21c7374b2fcba362b4a369c82525a",
+        "bytes": 208
+      },
+      {
+        "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fk_679610093b6b44f4--0.1.sql",
+        "sha256": "dcd242f28339c649c850b498d773d35a891556b64e41ea5c985e003823fd0287",
+        "bytes": 495
+      }
+    ],
+    "database_objects_created": false,
+    "application_integration": false,
+    "official_eligibility_unproven": true
+  },
+  "official_eligibility_unproven": true
+}

@@ -28,6 +28,7 @@ def main():
     p.add_argument('--startup-log',help='Optional project-private recovery log')
     p.add_argument('--wal-level',choices=['minimal','replica'],help='Preserve the explicit research WAL setting across restart')
     p.add_argument('--fresh-service-retry',action='store_true',help='Model a restarted processing worker with fresh connection state after server recovery')
+    p.add_argument('--pause-after-fk-validation',action='store_true',help='Crash after all six FKs have completed validation, before data commit')
     args=p.parse_args()
     directory=Path(args.data_dir).resolve();runtime=(ROOT/'.runtime').resolve()
     startup_log=Path(args.startup_log).resolve() if args.startup_log else runtime/'postgres.log'
@@ -46,9 +47,11 @@ def main():
         pause=False
         def run_remote_command(self,command,stdin_text=None,**kwargs):
             if self.pause and isinstance(stdin_text,str) and 'BEGIN ISOLATION LEVEL REPEATABLE READ;' in stdin_text and 'pgdm_cross_table_hash_manifest' in stdin_text:
-                marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES\n      (8000,'bulk_load'"
+                marker='UPDATE pg_temp.pgdm_expansion_timings SET finished_at=clock_timestamp() WHERE sequence_number=8000;' if args.pause_after_fk_validation else "INSERT INTO pg_temp.pgdm_expansion_timings VALUES\n      (8000,'bulk_load'"
                 assert stdin_text.count(marker)==1
-                stdin_text="SET application_name='"+tag+"';\n"+stdin_text.replace(marker,'SELECT pg_sleep(600);\n'+marker,1)
+                pause="DO $crash_fk_proof$ BEGIN IF (SELECT count(*) FROM pg_constraint WHERE connamespace='public'::regnamespace AND contype='f' AND convalidated)<>6 THEN RAISE EXCEPTION 'Six validated FK crash boundary was not reached'; END IF; END $crash_fk_proof$;\nSELECT pg_sleep(600);"
+                replacement=marker+'\n'+pause if args.pause_after_fk_validation else 'SELECT pg_sleep(600);\n'+marker
+                stdin_text="SET application_name='"+tag+"';\n"+stdin_text.replace(marker,replacement,1)
             return super().run_remote_command(command,stdin_text=stdin_text,**kwargs)
     class Service(BulkFKMixin,BulkIndexMixin,GuardedNormalizationMixin,PausedLocal):
         bulk_foreign_keys=guarded_normalization=True
@@ -81,7 +84,7 @@ def main():
             if not thread.is_alive():raise RuntimeError(outcome)
             time.sleep(0.05)
         else:raise RuntimeError('Native COPY crash boundary was not reached')
-    print('Actual COPY data/counters uncommitted, six FKs absent; immediate private-server stop',flush=True)
+    print('Actual COPY data/counters uncommitted, '+('six FKs validated' if args.pause_after_fk_validation else 'six FKs absent')+'; immediate private-server stop',flush=True)
     subprocess.run([args.pg_ctl,'-D',str(directory),'-m','immediate','-w','stop'],check=True)
     restart=time.monotonic()
     options=f'-h 127.0.0.1 -p {args.port}'
@@ -125,7 +128,7 @@ def main():
         assert_exact(c);assert_relationships(c)
         assert sequence_signature(c)==before_sequences and source_sha(c)==before_source
         for table in ORDER:assert c.execute('SELECT count(*) FROM public.'+table).fetchone()[0]==c.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(table,)).fetchone()[0]
-    write_report('reports/recovery-native-copy-server-crash.json',{'kind':'actual_private_server_immediate_stop_during_native_copy','database':db,'passed':True,'restart_seconds':time.monotonic()-restart,'rollback_schema_sequence_source_counters':True,'copy_files_removed_after_crash':True,'native_retry_exact_six_tables':True,'versions':versions,'execution_architecture':result['execution_architecture'],'local_backend_diagnostics':getattr(service._expansion_timing_local,'local_backend_diagnostics',None),'fresh_service_retry':args.fresh_service_retry,'scope':'Actual native COPY/pre-commit server crash/WAL recovery/full service retry; startup spans the whole retained research cluster, not a scored recovery duration or post-commit control saga.'})
+    write_report('reports/recovery-native-copy-server-crash.json',{'kind':'actual_private_server_immediate_stop_during_native_copy','database':db,'passed':True,'restart_seconds':time.monotonic()-restart,'rollback_schema_sequence_source_counters':True,'copy_files_removed_after_crash':True,'native_retry_exact_six_tables':True,'versions':versions,'execution_architecture':result['execution_architecture'],'local_backend_diagnostics':getattr(service._expansion_timing_local,'local_backend_diagnostics',None),'fresh_service_retry':args.fresh_service_retry,'crash_after_fk_validation':args.pause_after_fk_validation,'six_validated_fks_proven_in_data_transaction':args.pause_after_fk_validation,'scope':'Actual native COPY/pre-commit server crash/WAL recovery/full service retry; startup spans the whole retained research cluster, not a scored recovery duration or post-commit control saga.'})
     print('Actual native COPY server crash and complete native retry: PASS',flush=True)
 
 

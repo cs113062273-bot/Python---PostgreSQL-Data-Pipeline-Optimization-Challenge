@@ -1,0 +1,90 @@
+{
+  "kind": "full_fk_native_validator_semantics",
+  "database": "lab_fk_validation_ae3d14c5",
+  "source_sha256": "679610093b6b44f4c28156fc8fdb4a86287e5fb3120ff3da7d39e8a717fe6367",
+  "driver_sha256": "b5b17dc50ec7ddfed215be870dc4f92bb128e977b33c735103ac6d9fddfa7465",
+  "checks": [
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table1",
+      "column": "id_column_3"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table1",
+      "column": "id_column_4"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table2",
+      "column": "id_column_2"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table5",
+      "column": "id_column_2"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table6",
+      "column": "id_column_2"
+    },
+    {
+      "case": "later_native_RI_rejects_orphan",
+      "table": "table6",
+      "column": "id_column_3"
+    },
+    {
+      "case": "interior_missing_actual_parent_rejected_no_flags_completed"
+    },
+    {
+      "case": "wide_range_fallback_preserves_invalid_FK_for_native_validation"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "raw_data"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "table1"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "table3"
+    },
+    {
+      "case": "RLS_fallback_no_catalog_completion",
+      "table": "table4"
+    },
+    {
+      "case": "MATCH_SIMPLE_NULL_references"
+    },
+    {
+      "case": "empty_actual_parent_and_child_sets"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "raw_data"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "table1"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "table3"
+    },
+    {
+      "case": "native_update_delete_CASCADE_exact",
+      "parent": "table4"
+    },
+    {
+      "case": "completion_subtransaction_rollback_restores_all_six_flags"
+    },
+    {
+      "case": "read_only_transaction_rejects_completion"
+    }
+  ],
+  "passed": true,
+  "all_mutations_rolled_back": true
+}

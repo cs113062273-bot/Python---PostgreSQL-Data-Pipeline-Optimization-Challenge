@@ -67,9 +67,11 @@ def main():
     p.add_argument('--clean-verification-after-checks',action='store_true',help='Reclaim only the exact-comparison scratch schema after its validated receipt is written')
     p.add_argument('--leader-cpu',type=int,help='Separate controlled diagnostic: pin every official/candidate batch leader equally before SQL; workers unchanged')
     p.add_argument('--observe-leader-cpu',action='store_true',help='Record Windows leader CPU usage without changing SQL or affinity; setup included for every mode')
+    p.add_argument('--rotation-offset',type=int,default=0,help='Continue an explicitly documented paired order in a separate cohort')
     args=p.parse_args()
     if args.repeats<1 or len(set(args.variants))!=len(args.variants):p.error('Positive repeats and distinct variants required')
     if args.observe_leader_cpu and args.leader_cpu is not None:p.error('Use separate affinity and CPU-observation cohorts')
+    if args.rotation_offset<0:p.error('Nonnegative rotation offset required')
     frozen=identity();output=Path(args.output).resolve();directory=output.with_suffix('');directory.mkdir(parents=True,exist_ok=True)
     report={'kind':'fresh_local_original_service_complete_processing','official_score':False,'timestamp_utc':datetime.now(timezone.utc).isoformat(),'template':'lab_template_1m','reference':'lab_1m','comparison_variant':args.variants[0],'implementation_identity':frozen,'runs':[],'method':'Fresh FILE_COPY per variant/run, rotating order, no affinity or destination warmup. Exact six-table comparison first run per variant; fingerprints/schema/sequence/counters/six versions every run. All preflight/proof/COPY/index/FK/commit/version work inside complete processing wall. Clone/oracle checks excluded. This compares the explicitly named variants, not an unmeasured official baseline.'}
     report['implementation_sources']=source_snapshot()
@@ -85,8 +87,9 @@ def main():
         report['diagnostic_leader_cpu']=args.leader_cpu
         report['method']=report['method'].replace('no affinity or destination warmup','identical explicit leader CPU affinity and no destination warmup')+' Leader affinity is a separately labeled local diagnostic, not an unmodified environment or submission setting. Setup remains inside complete processing wall.'
     checked=set()
+    report['rotation_offset']=args.rotation_offset
     for repeat in range(args.repeats):
-        shift=repeat%len(args.variants)
+        shift=(repeat+args.rotation_offset)%len(args.variants)
         for variant in args.variants[shift:]+args.variants[:shift]:
             if identity()!=frozen:raise RuntimeError('Research source changed during cohort')
             if shutil.disk_usage(ROOT).free<5*1024**3:raise RuntimeError('Retain outputs; insufficient free space for another fresh clone/oracle')

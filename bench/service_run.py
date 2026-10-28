@@ -78,7 +78,6 @@ def main():
         assert conn.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0]==workspace_before,'Workspace namespace not restored'
         if args.mode=='guarded_copy':assert result['execution_architecture']['copy_workspace']['cleanup_success']
         if args.reference:
-            from bench.fresh import exact_to_reference,expected_fingerprints
             with connect(args.reference,autocommit=True) as reference:
                 require_lab(reference)
                 if args.verification=='exact':
@@ -91,7 +90,9 @@ def main():
                     verification_schema=None
                 else:
                     from tests.equivalence.oracle import fingerprints
-                    assert fingerprints(conn)==expected_fingerprints(reference)
+                    # Compare against the retained original relational rows;
+                    # verification must not depend on a retired JSON cache.
+                    assert fingerprints(conn)==fingerprints(reference)
                     verification_schema=None
         else:
             assert_exact(conn)

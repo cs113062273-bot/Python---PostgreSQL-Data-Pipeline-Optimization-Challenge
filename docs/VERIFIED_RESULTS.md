@@ -1,6 +1,13 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
+Latest single 1M pair: **105.120996s original / 11.423356s shared typed
+details, 89.133136% reduction**. Same durable minimal-WAL settings, exact six
+outputs, native counters/constraints/identities/versions, independent live
+EXCEPT ALL audit and pre/post-commit crash/dump checks pass. One local AB pair,
+not repeated or official eligibility qualification. Still 0.911256s short of
+the actual paired 90% threshold. See native-details-official-1m-pair.json.
+
 Latest single local 1M pair: **103.818006s original / 11.689431s compact C
 with durable minimal-WAL empty-table reset, 88.740459% reduction**. Identical
 server settings, exact six outputs, source, native integrity/counters/versions

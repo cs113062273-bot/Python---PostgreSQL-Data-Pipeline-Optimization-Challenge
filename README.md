@@ -14,15 +14,15 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest best single fresh 1M pair: **88.74% less time** (103.818s unchanged
-official versus 11.689s compact C with durable minimal-WAL empty-table reset).
+Latest best single fresh 1M pair: **89.13% less time** (105.121s unchanged
+official versus 11.423s shared native typed COPY with durable minimal-WAL reset).
 Both runs use identical server settings. All six exact outputs, source,
 counter/catalog/sequence and version checks pass, plus independent live audit
 and pre/post-commit crash checks. This is one local AB pair; repeatability,
 Linux/SSH and official eligibility remain unproven. It does not achieve 90%.
 Application defaults remain unchanged; replica-mode best remains 87.27%.
 See [current research](docs/ACTIVE_90.md) and the
-[full pair receipt](reports/native-minimal-official-1m-pair.json).
+[full pair receipt](reports/native-details-official-1m-pair.json).
 
 Historical complete 1M comparison, three verified pairs: **272.560s official
 versus 41.900s calendar_copy, 84.63% less complete processing time**.

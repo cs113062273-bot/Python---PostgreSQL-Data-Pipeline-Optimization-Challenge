@@ -1,0 +1,49 @@
+{
+  "kind": "private_native_details_software_package",
+  "extension": "challenge_details_e1c7268a45c4ea0f",
+  "version": "0.1",
+  "source_sha256": "e1c7268a45c4ea0f054bc630dfb000d8446ac8c66cf2ae52b214e265957e19dc",
+  "build_receipt": "reports\\native-c-builds\\e1c7268a45c4ea0f-7ed7695b.json",
+  "files": [
+    {
+      "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_e1c7268a45c4ea0f.dll",
+      "sha256": "9ee254a6b55445aa1ef9a09f0dca3a155e1cad7b70a76eee3e5729625f020f7c",
+      "bytes": 198656
+    },
+    {
+      "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_details_e1c7268a45c4ea0f.control",
+      "sha256": "42e5064e9899f67b421699d9b6c266774a21c7cc284e6fa482afd987202b9670",
+      "bytes": 203
+    },
+    {
+      "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_details_e1c7268a45c4ea0f--0.1.sql",
+      "sha256": "279a498d5e4fd7a4f14612a57886d75f4eb40067994c83a5949d211d790dd21e",
+      "bytes": 489
+    }
+  ],
+  "vendor_sources": {
+    "upstream": "PostgreSQL",
+    "tag": "REL_17_11",
+    "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+    "files": [
+      {
+        "path": "vendor\\postgresql-17.11\\copyfrom.c",
+        "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+        "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+      },
+      {
+        "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+        "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+        "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+      },
+      {
+        "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+        "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+        "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+      }
+    ]
+  },
+  "database_objects_created": false,
+  "application_integration": false,
+  "official_eligibility_unproven": true
+}

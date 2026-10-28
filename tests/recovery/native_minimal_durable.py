@@ -43,7 +43,7 @@ def state(db):
                 'sequence_values':sequence_state(c),'sequence_wal_reservations':sequence_logs,'counters':c.execute('SELECT to_jsonb(c) FROM public.pgdm_table_row_counts c ORDER BY schema_name,table_name').fetchall()}
 
 
-def main():
+def main(*,expected_files=None):
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',default='reports/recovery-native-minimal-postcommit-durable.json');args=p.parse_args()
     output=(ROOT/args.output).resolve();assert output.is_relative_to(ROOT/'reports') and not output.exists()
     os.environ.update({'PGHOST':'127.0.0.1','PGPORT':'55433','PGUSER':'native_probe','CHALLENGE_DSN':'host=127.0.0.1 port=55433 user=native_probe','CHALLENGE_PSQL':str(ROOT/'.runtime/postgresql/pgsql/bin/psql.exe')})
@@ -62,6 +62,8 @@ def main():
     service=Service()
     timing=PostgresAdminService.create_cross_table_expansion_timing_report(db,'public.raw_data',['group001'],[d['table_name'] for d in destinations()])
     result=service.execute_cross_table_expansion(db,'public.raw_data',['group001'],destinations('guarded_copy'),timing_report=timing)
+    diagnostics=getattr(service._expansion_timing_local,'local_backend_diagnostics',None)
+    if expected_files is not None:assert diagnostics['actual_binary_files']==expected_files
     versions=service.register_cross_table_expansion_versions(result,'research','native-minimal-postcommit-crash',timing_report=timing)
     assert len(versions)==6 and result['execution_architecture']['safe_domain'] is True
     from bench.fast_transport_probe import close_sessions
@@ -72,7 +74,7 @@ def main():
         assert not c.execute("SELECT pid FROM pg_stat_activity WHERE backend_type='client backend' AND pid<>pg_backend_pid()").fetchall()
     report={'kind':'native_minimal_acknowledged_commit_immediate_crash','database':db,'passed':False,'candidate_hook_sha256':frozen,
             'driver_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'before':before,
-            'six_versions_before':before_versions,'execution_architecture':result['execution_architecture'],
+            'six_versions_before':before_versions,'execution_architecture':result['execution_architecture'],'actual_backend_diagnostics':diagnostics,
             'scope':'64 actual rows; both data and all version commits acknowledged before actual immediate stop. Same isolated PostgreSQL cluster, not a power cut, post-data/pre-version saga or recovery performance score.'}
     write_report(output,report)
     directory=ROOT/'.runtime/native_pgdata';executable=ROOT/'.runtime/postgresql/pgsql/bin/pg_ctl.exe'

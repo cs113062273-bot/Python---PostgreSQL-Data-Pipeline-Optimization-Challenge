@@ -1,6 +1,15 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
+Latest single 1M pair: **105.120996s original / 11.423356s shared native
+details, 89.133136% less complete service wall**. Exactly three binary files
+confirm the new engine ran. Six exact outputs and native gates, independent
+full EXCEPT ALL/source/catalog/counters/version audit, 17 native fault/retry
+cases, pre/post-commit server crashes and dump/restore pass. Ordinary owner
+permissions/code protection also pass. One local minimal-WAL AB pair; 90%,
+repeatability, Linux/SSH and official eligibility remain unproven. Paired 90%
+threshold is 10.512100s, another 0.911256s required. Older results follow.
+
 Latest single local 1M pair: **103.818006s original / 11.689431s candidate,
 88.740459% less complete service wall**. Both use the same durable minimal-WAL
 configuration; the candidate resets only proven empty destination storage in

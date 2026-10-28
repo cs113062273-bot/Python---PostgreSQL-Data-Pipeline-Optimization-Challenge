@@ -1,0 +1,48 @@
+{
+  "kind": "native_shared_details_local_evidence_summary",
+  "candidate_hook_sha256": "9989d0bc1e5c850a7778d74ff333b8f59f96a92356ec7ec80d98295c576e6527",
+  "actual_1m_pair": "reports/native-details-official-1m-pair.json",
+  "complete_processing": {
+    "official_wall_seconds": 105.12099620000117,
+    "candidate_wall_seconds": 11.423355700000684,
+    "reduction_percent": 89.13313599286404,
+    "threshold_90_seconds": 10.512099620000118,
+    "additional_seconds_required": 0.911256080000566,
+    "single_pair_only": true,
+    "exact_six_outputs_and_checks_passed": true
+  },
+  "checks": {
+    "prototype_316": "reports/native-details-ingest-semantics.json",
+    "native_copy_121": "reports/semantics-native-details-native.json",
+    "boundaries_82": "reports/semantics-native-details-boundaries-82.json",
+    "layouts_11": "reports/semantics-native-details-layouts-11-v2.json",
+    "axes_112": "reports/semantics-native-details-text-112.json",
+    "ordinary_owner_and_reader_permissions": "reports/native-details-owner-permissions.json",
+    "metadata_negatives_8": "reports/native-details-metadata-guards.json",
+    "native_faults_retry_17": "reports/recovery-native-details-atomic.json",
+    "precommit_server_crash": "reports/recovery-native-details-server-crash.json",
+    "acknowledged_postcommit_server_crash": "reports/recovery-native-details-postcommit-durable.json",
+    "populated_dump_restore": "reports/recovery-native-details-dump.json",
+    "independent_six_full_except_all": "reports/native-details-1m-independent-audit.json",
+    "replica_configuration_restored": "reports/native-details-wal-replica-restored.json"
+  },
+  "all_required_local_checks_passed": true,
+  "actual_binary_files_in_full_candidate": 3,
+  "ordinary_database_owner_checked": true,
+  "source_and_generator_files_unchanged": 32,
+  "offline_tests_passed": 52,
+  "source_snapshot": "reports/native-details-final-source-snapshot.json",
+  "performance_repeated": false,
+  "target_over_90_achieved": false,
+  "official_score": false,
+  "official_eligibility_proven": false,
+  "numeric_memo_or_compile_cache_in_this_full_run": false,
+  "limitations": [
+    "One local AB pair on Windows, no Linux/SSH/GUI parity",
+    "Same durable minimal-WAL server setting needed for this paired result",
+    "Internal trusted C implementation eligibility/deployment on official environment unproven",
+    "No power-cut/PITR/replication or post-data/pre-version saga qualification",
+    "Parent hash max 128MB/96 entries; larger domains select prior file path",
+    "True chunk resume and 300M resource bound pending"
+  ]
+}

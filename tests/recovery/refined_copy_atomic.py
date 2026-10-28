@@ -20,7 +20,7 @@ from tests.equivalence.oracle import snapshot,assert_exact,protected_schema_sign
 from tests.recovery.native_copy_atomic import source_sha
 
 
-def main():
+def main(*,cases_override=None,marker_override=None):
     db='lab_refined_atomic_'+uuid.uuid4().hex[:8];create_fixture(db);seed_initial_versions(db)
     identity=refined.source_identity();refined.install();transport.install()
     native=server.ORIGINAL_RUN
@@ -28,7 +28,9 @@ def main():
         service=server.SERVICE.get()
         if service is not None and getattr(service,'fault',None) and isinstance(text,str) and MARKER in text:
             point,kind=service.fault
-            if point.startswith('copy_to_') or point.startswith('copy_from_'):
+            if marker_override is not None and point in ('before_details','after_details','after_details_receipts'):
+                marker=marker_override(point,text)
+            elif point.startswith('copy_to_') or point.startswith('copy_from_'):
                 direction='TO' if point.startswith('copy_to_') else 'FROM';table=point.split('_',2)[2]
                 lines=[line for line in text.splitlines() if line.startswith('COPY ') and re.search(r"\b"+direction+r" '[^']*/"+table+r"\.bin' \(FORMAT BINARY\);$",line)]
                 assert len(lines)==1,(point,lines);marker=lines[0]
@@ -38,7 +40,10 @@ def main():
             elif point=='before_commit':marker="INSERT INTO pg_temp.pgdm_expansion_timings VALUES (9000, 'execute'"
             else:raise AssertionError(point)
             assert text.count(marker)==1
-            if kind=='missing_file':
+            if kind=='bad_frame':
+                assert point=='before_details'
+                replacement="UPDATE pgdm_pipeline_work.pipeline_normalized_input SET pipeline_axes=decode('01','hex');\n"+marker
+            elif kind=='missing_file':
                 assert point=='copy_from_table1';replacement=marker.replace('/table1.bin', '/missing.bin')
             elif kind=='bad_binary':
                 assert point=='copy_to_table1'
@@ -73,6 +78,7 @@ def main():
         schema=protected_schema_signature(c);sequences=sequence_signature(c);source=source_sha(c)
         points=['after_projection','copy_to_table1','copy_from_table1','copy_from_table2','before_fk_restore','after_fk_restore','before_commit']
         cases=[(point,kind) for point in points for kind in ('server_exception','backend_termination')]+[('copy_from_table1','missing_file'),('copy_to_table1','bad_binary')]
+        if cases_override is not None:cases=list(cases_override)
         for point,kind in cases:
             assert refined.source_identity()==identity
             service=Service();service.fault=(point,kind);service.tag='refined_fault_'+uuid.uuid4().hex;service.applied=False
@@ -99,6 +105,7 @@ def main():
             if kind=='server_exception':assert 'refined_injected_'+point in outcome['error'],outcome
             if kind=='missing_file':assert 'missing.bin' in outcome['error'],outcome
             if kind=='bad_binary':assert 'signature' in outcome['error'],outcome
+            if kind=='bad_frame':assert 'frame length is invalid' in outcome['error'],outcome
             assert outcome['cleanup'] and outcome['cleanup']['cleanup_success'],outcome
             assert outcome['metadata_sessions_remaining']==0,outcome
             assert source_sha(c)==source and protected_schema_signature(c)==schema and sequence_signature(c)==sequences

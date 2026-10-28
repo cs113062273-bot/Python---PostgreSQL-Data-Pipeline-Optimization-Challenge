@@ -1,0 +1,147 @@
+{
+  "kind": "pure_sql_compiler_cache_component",
+  "passed": true,
+  "driver_sha256": "5f9b9c59be4ea985c329f0de7b907c9c78992d8538e06aa5e9bf91a42b3b787c",
+  "cases": [
+    {
+      "scopes": [
+        "group001"
+      ],
+      "all_six_statements_byte_identical": true,
+      "sql_sha256": [
+        "3875bdd9c720796776fe5a4bea18a6aaa6ff585acae8933ecc0f614a595fa701",
+        "47ef269597008ac3d7e203d05dbcb8453164d99e32e3ae95cc10770599912114",
+        "03f62fcf5bda2a826a94734b38da6e0bbb737282086aa735dcd9bb66694de054",
+        "c3caa7c39046b408f2a5b278f2ca33487c11a561d6588bcf83bef4467a6d3ae5",
+        "0f784e09dc004f759974e646372c9b64e71274d656d0318307609d03cb028ca0",
+        "1ea296c0dd58164e67c42c6368c57af7fd688f6b3ca9d2fb92e9918be63d3b5f"
+      ]
+    },
+    {
+      "scopes": [
+        "group001",
+        "group002"
+      ],
+      "all_six_statements_byte_identical": true,
+      "sql_sha256": [
+        "3875bdd9c720796776fe5a4bea18a6aaa6ff585acae8933ecc0f614a595fa701",
+        "47ef269597008ac3d7e203d05dbcb8453164d99e32e3ae95cc10770599912114",
+        "03f62fcf5bda2a826a94734b38da6e0bbb737282086aa735dcd9bb66694de054",
+        "c3caa7c39046b408f2a5b278f2ca33487c11a561d6588bcf83bef4467a6d3ae5",
+        "0f784e09dc004f759974e646372c9b64e71274d656d0318307609d03cb028ca0",
+        "1ea296c0dd58164e67c42c6368c57af7fd688f6b3ca9d2fb92e9918be63d3b5f"
+      ]
+    },
+    {
+      "scopes": [
+        "組別 o'brien $work_namespace$\nnext"
+      ],
+      "all_six_statements_byte_identical": true,
+      "sql_sha256": [
+        "3875bdd9c720796776fe5a4bea18a6aaa6ff585acae8933ecc0f614a595fa701",
+        "47ef269597008ac3d7e203d05dbcb8453164d99e32e3ae95cc10770599912114",
+        "03f62fcf5bda2a826a94734b38da6e0bbb737282086aa735dcd9bb66694de054",
+        "c3caa7c39046b408f2a5b278f2ca33487c11a561d6588bcf83bef4467a6d3ae5",
+        "0f784e09dc004f759974e646372c9b64e71274d656d0318307609d03cb028ca0",
+        "1ea296c0dd58164e67c42c6368c57af7fd688f6b3ca9d2fb92e9918be63d3b5f"
+      ]
+    },
+    {
+      "scopes": [
+        "x); SELECT 1; --"
+      ],
+      "all_six_statements_byte_identical": true,
+      "sql_sha256": [
+        "3875bdd9c720796776fe5a4bea18a6aaa6ff585acae8933ecc0f614a595fa701",
+        "47ef269597008ac3d7e203d05dbcb8453164d99e32e3ae95cc10770599912114",
+        "03f62fcf5bda2a826a94734b38da6e0bbb737282086aa735dcd9bb66694de054",
+        "c3caa7c39046b408f2a5b278f2ca33487c11a561d6588bcf83bef4467a6d3ae5",
+        "0f784e09dc004f759974e646372c9b64e71274d656d0318307609d03cb028ca0",
+        "1ea296c0dd58164e67c42c6368c57af7fd688f6b3ca9d2fb92e9918be63d3b5f"
+      ]
+    },
+    {
+      "scopes": [
+        "a",
+        "a",
+        "b"
+      ],
+      "all_six_statements_byte_identical": true,
+      "sql_sha256": [
+        "3875bdd9c720796776fe5a4bea18a6aaa6ff585acae8933ecc0f614a595fa701",
+        "47ef269597008ac3d7e203d05dbcb8453164d99e32e3ae95cc10770599912114",
+        "03f62fcf5bda2a826a94734b38da6e0bbb737282086aa735dcd9bb66694de054",
+        "c3caa7c39046b408f2a5b278f2ca33487c11a561d6588bcf83bef4467a6d3ae5",
+        "0f784e09dc004f759974e646372c9b64e71274d656d0318307609d03cb028ca0",
+        "1ea296c0dd58164e67c42c6368c57af7fd688f6b3ca9d2fb92e9918be63d3b5f"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "original",
+      "seconds": 0.07353119999970659,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 0,
+      "mode": "cached",
+      "seconds": 0.013161699998818222,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 1,
+      "mode": "cached",
+      "seconds": 0.012469200000850833,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 1,
+      "mode": "original",
+      "seconds": 0.07250650000059977,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 2,
+      "mode": "original",
+      "seconds": 0.07226450000052864,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 2,
+      "mode": "cached",
+      "seconds": 0.012392800001180149,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 3,
+      "mode": "cached",
+      "seconds": 0.012419399999998859,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 3,
+      "mode": "original",
+      "seconds": 0.0715474999997241,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 4,
+      "mode": "original",
+      "seconds": 0.0718620000006922,
+      "cold_cache_at_operation_start": true
+    },
+    {
+      "repeat": 4,
+      "mode": "cached",
+      "seconds": 0.012370500000542961,
+      "cold_cache_at_operation_start": true
+    }
+  ],
+  "summary": {
+    "original": 0.07226450000052864,
+    "cached": 0.012419399999998859
+  },
+  "scope": "Canonical compiler construction only. Byte-identical six SQL statements for arbitrary quoted/Unicode/dollar-tag scopes. No source/catalog/function/rowcount/version validation result is cached. No database execution or full-service speedup claim."
+}

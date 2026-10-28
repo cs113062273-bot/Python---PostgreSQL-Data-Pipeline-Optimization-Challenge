@@ -20,7 +20,67 @@ Historical experiment details remain in ACTIVE_85.md.
 
 ## Current work
 
-**New best single 1M pair: 88.740459% less complete service wall**, unchanged
+**Latest best single 1M pair: 89.133136% less complete service wall**, unchanged
+official **105.120996s** versus shared typed-details candidate **11.423356s**.
+The paired 90% threshold is **10.512100s**, leaving **0.911256s** to save.
+Both use identical durable minimal-WAL server settings; all original processing
+validation, native identities/counters, full keys/FKs, commit and six versions
+are included. Three actual binary files prove table5/6/2 used the native typed
+loader, rather than silently taking its binary-file fallback. One local AB pair,
+not repeated stability, Linux/SSH or official eligibility qualification.
+See native-details-official-1m-pair.json and native-details-1m-independent-audit.
+
+The internal SECURITY INVOKER C loader builds one bounded hash of actual table1
+native IDs, then runs the locally renamed, otherwise unchanged PostgreSQL 17.11
+COPY engine for table5, table6 and table2 in that order. Native defaults,
+CHECK/NOT NULL, index/trigger and WAL machinery remain. Counts returned by that
+engine feed the original managed counter receipts; all counters reconcile before
+commit. Parent storage is bounded by work_mem/96 entries; the 128MB/ASCII-code
+domain and unavailable/conflicting module choose the prior qualified file path.
+Code and package metadata are separately pinned; the original user-recipe
+function validator is unchanged. The trusted loader is explicitly VOLATILE,
+PARALLEL UNSAFE and SECURITY INVOKER, rather than mislabelled immutable.
+
+Qualification passes 316 mutated six-recipe/first-error cases, 121 actual native
+COPY cases, 82 boundaries, 11 receiving layouts/defaults and 112 axis cases.
+An ordinary NOSUPERUSER database owner installs/uses/removes the trusted package,
+cannot replace its code or create arbitrary C functions; a read-only role is
+denied target INSERT access. Eight metadata mutants are rejected before C runs.
+Seventeen actual server/backend/file/frame faults pass complete rollback and
+exact retry with six versions; the bad-frame error occurs after native table5/6
+writes, proving those writes also roll back. Actual pre/post-commit immediate
+server stops, WAL recovery, three-file native retry and populated dump/restore
+pass. Independent later six-table bidirectional EXCEPT ALL, real source hash,
+catalog/sequence options/counters/version/batch SQL SHA and equal recorded
+configuration checks pass. The isolated service is restored to replica afterward.
+No power-cut, PITR, post-data/pre-version saga or 300M resource claim is made.
+
+Three rotating component pairs give 3.111341s file path versus 2.439175s shared
+typed details, every nonidentity value/multiplicity exact. The separate per-call
+numeric/X/Y/Z memo prototype passes 316 cases and gives a separate file/typed
+pair component of 3.134497s / 2.311731s; it is not in the 89.133136% whole run,
+and cross-component subtraction is not claimed as a full-service improvement.
+No precomputed answers are used: native values are computed on first encounter
+inside one call; no data or pointers persist across operations. Its C source
+8067c447... and build are retained independently from the deployed e1c7268a...
+loader. Bounded pure SQL-template parse reuse also emits byte-identical six
+statements for arbitrary quoted/Unicode/dollar-tag scopes; cold-operation
+compiler medians are 0.072265s original / 0.012419s cached. It caches no database
+validation results and is likewise not included in the whole-run percentage.
+
+Twelve rotating source-projection worker trials compare every raw_id/all twelve
+cache values/proof exactly and roll back all private setup. Medians are 4.283192s
+with no workers, 1.916258s with two, 1.515833s with four and 1.300675s with eight;
+keep the existing eight. Twelve unchanged full-manifest trials give original
+0.487914s / forced two 0.482610s / four 0.415310s / eight 0.466358s, every full
+dependency JSON equal; no whole-service gain or planner change is adopted.
+
+Earlier guarded-copy candidates d8e89103de, e5c4908114 and 40a9391f78 now have
+stream/metadata-restore verified archives. Original controls and current best
+outputs remain retained. See individual archive receipts for their limits;
+full populated restore is not claimed by that streaming archive method.
+
+**Prior best single 1M pair: 88.740459% less complete service wall**, unchanged
 official **103.818006s** versus minimal-WAL compact candidate **11.689431s**.
 The actual paired 90% threshold is **10.381801s**, leaving **1.307630s**.
 Both runs use the same explicit `wal_level=minimal` configuration with fsync,

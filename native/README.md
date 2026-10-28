@@ -72,3 +72,16 @@ dump/restore. It still falls short of 90%. The separate typed-axis COPY loader
 is only a superuser-restricted component experiment and is not in that pair;
 see docs/NATIVE_AXIS_RESEARCH.md. The research cluster is restored to replica
 after the bounded minimal-WAL experiment.
+
+The shared table5/6/2 typed loader now has a complete local 1M pair:
+105.120996s original / 11.423356s candidate, **89.133136% less wall time**.
+Both use identical durable minimal-WAL settings. Its source e1c7268a... retains
+native identities, CHECK/index/trigger/WAL machinery and returns actual COPY
+counts to the managed receipts. Only three binary files are used. Ordinary
+owner/reader permission tests, metadata negatives, full six-output equivalence,
+17 faults/exact retry/six versions, pre/post-commit server crashes, dump/restore
+and independent live EXCEPT ALL audit pass. It remains below 90%, is a single
+local pair and does not prove official eligibility or Linux/SSH operation.
+The memo source 8067c447... and pure SQL compile cache are separate prototypes;
+neither is included in that full-service result. See docs/ACTIVE_90.md and
+reports/native-details-local-qualification.json for evidence and limits.

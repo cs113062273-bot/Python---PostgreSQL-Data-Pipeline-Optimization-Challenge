@@ -26,13 +26,16 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--rows',type=int,choices=[100000,1000000],default=100000)
     p.add_argument('--output',required=True)
-    p.add_argument('--candidate',choices=['compact','minimal'],default='compact')
+    p.add_argument('--candidate',choices=['compact','minimal','details'],default='compact')
     args=p.parse_args()
     candidate_module='bench.native_compact_probe'
     if args.candidate=='minimal':
         global candidate
         from bench import native_minimal_probe as candidate
         candidate_module='bench.native_minimal_probe'
+    elif args.candidate=='details':
+        from bench import native_details_probe as candidate
+        candidate_module='bench.native_details_probe'
     output=(ROOT/args.output).resolve()
     assert output.is_relative_to(ROOT/'reports') and not output.exists()
     directory=output.with_suffix('');directory.mkdir(exist_ok=False)
@@ -93,7 +96,10 @@ def main():
             assert child['unmodified_reference_established'] is True and child['exact_six_tables'] is False
         else:
             assert child['exact_six_tables'] is True and child['execution_architecture']['safe_domain'] is True
-            assert child['native_minimal_hook_sha256' if args.candidate=='minimal' else 'native_compact_hook_sha256']==frozen['hook_sha256']
+            key={'compact':'native_compact_hook_sha256','minimal':'native_minimal_hook_sha256','details':'native_details_hook_sha256'}[args.candidate]
+            assert child[key]==frozen['hook_sha256']
+            if args.candidate=='details':
+                assert child['local_backend_diagnostics']['actual_binary_files']==3,'Shared details must actually run, not silently benchmark its fallback'
             assert len(child['exact_comparison_details'])==6
         assert child['destination_warmup_before_measured_run'] is False
         with lab.connect(name,autocommit=True) as c:
@@ -101,6 +107,7 @@ def main():
             assert c.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0] is None
             from bench.native_compact_probe import package
             assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(package()['extension'],)).fetchall()
+            if args.candidate=='details':assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(candidate.package()['extension'],)).fetchall()
         row={'mode':mode,'database':name,'report':str(path.relative_to(ROOT)),
              'wall_seconds':child['wall_seconds'],
              'native_measured_seconds':sum(i['seconds'] for i in child['timing_report']['items'] if i.get('include_in_total',True)),

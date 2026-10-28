@@ -1,6 +1,23 @@
 # Active target: at least 85% less complete processing time
 
-The target is not achieved. Latest complete-service 1M comparison comprises
+The target is not achieved. The later inline/trim full-service pair measures
+108.272576s unchanged official versus 16.445128s inline_copy: **84.811364%**
+less complete processing time, but only one pair. At its actual control,
+85% requires 16.240886s, another 0.204241s less. Both runs pass all six exact
+outputs, counters, six versions and protected catalog/sequence checks.
+
+The next date-shape/combined-metadata worker regressed in its fresh pair:
+103.209938s official versus 23.683014s candidate, **77.053553%** reduction.
+All exact-output/integrity gates still passed; this slower result is retained
+and is not promoted. Candidate leader CPU increased from 14.140625s in the
+inline pair to 20.812500s, while the two official leaders used 92.437500s and
+92.453125s. This does not prove a scheduling/clock cause; many data SQL stages
+became slower, and controlled diagnosis remains necessary. A separate
+identical-CPU-2 comparison for both official/candidate is being prepared;
+64-row actual-affinity/exact-output/six-version smoke tests pass for both.
+Any fixed-core result must remain labeled with that condition.
+
+The preceding complete-service 1M comparison comprises
 three fully verified pairs with identical processing engine/SQL, in AB/BA/AB
 order, retaining the first pair plus two continuation pairs:
 
@@ -200,3 +217,41 @@ manifests under reports/native-archives record whether a live copy was retired.
   semantic +82 targeted boundary cases, zero differences, plus 16 actual
   faults and exact retry with counters/six versions. This remains an isolated
   candidate until full processing is measured; no new percentage is claimed.
+- That inline/trim candidate subsequently completed the 84.81% single pair
+  above. No larger earlier official denominator is reused for it.
+- Timestamp ASCII shape fast path: 116,410 native shape comparisons, zero
+  differences; complete 1M TEXT/proof fingerprints match. Three rotating
+  projection medians 3.980944s current versus 3.718889s candidate, every run
+  faster. Other timestamp layouts use the original regex; all original
+  calendar checks remain. Native 121+82 semantic/boundary cases and 16 actual
+  failures/exact retry pass. Explicit C collation prevents locale equality
+  from broadening acceptance. Only immutable translate is added to validation.
+- Combined native metadata framing reexecutes every original SQL command;
+  -c retains one native request and stdin retains original statement commits.
+  Setup, original output and rollback/DISCARD use one phase with quiet framing.
+  Nineteen native format/error/transaction/Unicode/fallback isolation cases
+  pass. Thirty-two-query replay medians: separate phases 0.094258s, combined
+  0.065956s. Complete 64-row service, 32 reexecuted commands including 8 stdin,
+  two closed sessions, six versions and exact outputs pass; 16 actual native
+  faults and retry pass. No results, validations or version operations skipped.
+  The full 1M pair still regressed to 77.05%, retained above.
+- Bounded binary64 quantization was mathematically scoped and compared over
+  1,034,012 native vectors with zero integer differences, but component medians
+  0.784066s numeric versus 0.779896s binary64 overlap strongly. Rejected; the
+  selected worker retains NUMERIC, never approximate financial-style output.
+- Six versus eight workers over the same full extraction/proof/transform
+  kernels: medians 13.924562s versus 13.230836s. Six rejected; keep eight.
+- Superseded native pilots have restorable full or template-backed archives,
+  with explicit manifests under reports/native-archives. The latter include
+  actual full input reconstruction, all native values/ACL/sequences and all
+  restored FKs, with control history unchanged. A separate full custom-dump
+  stream verifier compares every rendered COPY row and actually restores the
+  schema/ACL/sequences without a populated duplicate; it explicitly does not
+  claim a populated restore. Escaped Unicode/control-byte and wrong-data
+  rejection controls pass. Failed restore attempts are retained separately.
+- Thirty-eight early 100k SQL-only baseline/QF clones were retired with exact
+  raw-byte equality to the retained 100k template, matching catalog/sequence
+  metadata, no extra objects, and zero native versions/counters/clients. Two
+  SQL controls, all winning variants, canonical references/templates and all
+  native official controls remain. No generator, source data or user file was
+  changed. This creates space for a complete six-database comparison.

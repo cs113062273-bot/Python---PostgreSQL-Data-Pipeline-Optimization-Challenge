@@ -217,6 +217,664 @@
         }
       ],
       "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-28T11:37:36.318430+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_0903cc3fd0",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-combined-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_14e28e1842",
+          "mode": "baseline",
+          "receipt": "reports/fresh-nomemo-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_19e26b1d12",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_1b8ffda1dd",
+          "mode": "baseline",
+          "receipt": "reports/fresh-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_1e5ea2c298",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_251c7e0647",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-nomemo-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282662579,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_275f2c2e3e",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_29957337c1",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-v2-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_29a7302466",
+          "mode": "baseline",
+          "receipt": "reports/fresh-nomemo-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_33abfa26d1",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-normalize-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_35403c8fe5",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-combined-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_36bc4e9c3d",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-sparse-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_4493a73e1e",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-nomemo-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_46322950da",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-sparse-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_4a293d4937",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-prefix-v2-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_4bb9a7407b",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-normalize-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_57b6a611b1",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-ctas-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_581a984725",
+          "mode": "baseline",
+          "receipt": "reports/fresh-nomemo-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_64801eac83",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-prefix-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_662b486387",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-prefix-v2-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_6f5b0e82f5",
+          "mode": "baseline",
+          "receipt": "reports/fresh-parallel-ctas-100k-harness-failure.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_725fd14cc4",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_74ab94f675",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_75531b0152",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-index-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_79db320157",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_7a92b5a0d8",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_831573f49e",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-prefix-v2-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_8792114cda",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_8e9c4dcebe",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282501647,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_9334a1fad2",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
+    },
+    {
+      "timestamp_utc": "2026-10-28T11:39:03.817913+00:00",
+      "events": [
+        {
+          "database": "lab_fresh_97462e5219",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-nomemo-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_ac07a90f59",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_ace9d26e43",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_bec3186701",
+          "mode": "baseline",
+          "receipt": "reports/fresh-bulk-index-100k-pilot.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_c7b88055e6",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-bulk-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_d84cbcd9dd",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_d8d3b0233d",
+          "mode": "qf_lazy",
+          "receipt": "reports/fresh-guarded-prefix-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        },
+        {
+          "database": "lab_fresh_dc636543ad",
+          "mode": "baseline",
+          "receipt": "reports/fresh-guarded-prefix-final-100k.json",
+          "template": "lab_generated_100k",
+          "legacy_marker_alternative": {
+            "retained_template_exact_native_raw_copy": {
+              "sha256": "d05ba0f8d53ea9fec84a6e33310cb824f307c3bebc6826e6e1e6909a3da7a779",
+              "binary_bytes": 172883696
+            },
+            "same_protected_catalog_native_sequence_options": true,
+            "exactly_seven_public_tables_no_extra_user_objects": true,
+            "source_rows": 100000
+          },
+          "bytes": 282654387,
+          "removed": true
+        }
+      ],
+      "scope": "Only explicitly receipted SQL-only disposable clones, no native versions/counters; raw templates, canonical oracle, native successful outputs and metrics retained."
     }
   ]
 }

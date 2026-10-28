@@ -1,0 +1,6 @@
+{
+  "decision": "REJECT",
+  "test_log": "reports/native-archive-binary-pipe-64-log.txt",
+  "reason": "Native psql STDIN/STDOUT binary transfer on Windows truncated at an embedded control byte; source failed writing and target reported unexpected EOF. No archive helper uses this transport.",
+  "active_archive_reconstruction": "Bounded psycopg binary transfer plus full native row/catalog/sequence/FK verification; later storage cleanup also uses full self-contained dump data-stream and native schema/sequence verification, explicitly distinct from a full populated restore."
+}

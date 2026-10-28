@@ -33,7 +33,7 @@ def main():
     receipt=(ROOT/args.cohort).resolve();assert receipt.is_relative_to(ROOT/'reports')
     cohort=json.loads(receipt.read_text(encoding='utf8'));assert cohort['kind']=='fresh_local_original_service_complete_processing' and cohort['summary']
     row=next(r for r in cohort['runs'] if r['database']==args.database)
-    eligible={'lab_native_variant_47bfb797fe':'server_copy','lab_native_variant_7913643ace':'refined_copy','lab_native_variant_bb5fad3206':'memo_copy'}
+    eligible={'lab_native_variant_47bfb797fe':'server_copy','lab_native_variant_7913643ace':'refined_copy','lab_native_variant_bb5fad3206':'memo_copy','lab_native_variant_4a7318e196':'guarded_copy'}
     assert row['mode']==eligible[args.database]
     child_path=Path(row['report']);child=json.loads(child_path.read_text(encoding='utf8'))
     assert all(child[k] is True for k in ('exact_six_tables','six_table_fingerprints_equivalent','counter_reconciliation','protected_schema_equivalent','sequence_options_and_ownership_equivalent','workspace_namespace_restored')) and len(child['versions'])==6

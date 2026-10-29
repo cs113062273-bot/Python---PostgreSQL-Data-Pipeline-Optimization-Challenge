@@ -1,0 +1,50 @@
+{
+  "kind": "private_native_main_package",
+  "extension": "challenge_main_1937f69acf50da6d",
+  "version": "0.1",
+  "source": "native\\challenge_main_typed.c",
+  "source_sha256": "1937f69acf50da6dd90bb951a7076942eaf393e010d38678d4a457bdbe61bdc6",
+  "build_receipt": "reports\\native-c-builds\\1937f69acf50da6d-bd0505ea.json",
+  "files": [
+    {
+      "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_1937f69acf50da6d.dll",
+      "sha256": "dec379068cd574b4c835981421b9f5a3c9d58175c1c446c4e593b89a4e09351f",
+      "bytes": 197120
+    },
+    {
+      "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_main_1937f69acf50da6d.control",
+      "sha256": "f8d665a1e30dc3fd6fd671b193bd5504338fbdea0981d12ec88dc64bcf65bbcb",
+      "bytes": 196
+    },
+    {
+      "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_main_1937f69acf50da6d--0.1.sql",
+      "sha256": "9cfa277199391352623b1b10737fd774a4799ad3b0cb7efb4cf76201f4f98c9b",
+      "bytes": 399
+    }
+  ],
+  "vendor_sources": {
+    "upstream": "PostgreSQL",
+    "tag": "REL_17_11",
+    "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+    "files": [
+      {
+        "path": "vendor\\postgresql-17.11\\copyfrom.c",
+        "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+        "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+      },
+      {
+        "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+        "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+        "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+      },
+      {
+        "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+        "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+        "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+      }
+    ]
+  },
+  "database_objects_created": false,
+  "application_integration": false,
+  "official_eligibility_unproven": true
+}

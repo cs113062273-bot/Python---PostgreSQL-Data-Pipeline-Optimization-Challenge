@@ -1,0 +1,230 @@
+{
+  "kind": "typed_main_and_details_atomic_faults",
+  "database": "lab_refined_atomic_db351efd",
+  "compiler_sha256": "ce4f60cd7aae88e708301ccbcbe8b97dbafebded5cf8ea4cf34bd0f21028fbfd",
+  "tests": [
+    {
+      "boundary": "after_projection",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "2a58d3ac44f41a75d23e9a9563874e9741651e35b7f4dd35180ebacf6ccfb723",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "after_projection",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "5ddd34e38bcabdf04e12c0859ef6c3df52ee3f4f14efe18d203dfd7d2a8f5f6b",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        25188,
+        "1793221583.867779"
+      ]
+    },
+    {
+      "boundary": "before_main",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "45c8d54da27fa399d6169759cbbc568609192451138f16937ad8e887b61723f0",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "before_main",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "0d9382890aaf626f40c1169587899239c637ed7ca3ee6e546f1534046a372b74",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        9560,
+        "1793221585.558120"
+      ]
+    },
+    {
+      "boundary": "after_main",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "5a7795e35ab44ccfd177ea0df9bfc615e764350420b604ab1f1ebc4589169600",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "after_main",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "6807a357660f808a3796dd08b70e8dc84d051da11778545fd96b2cfd4a29258c",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        12260,
+        "1793221587.845279"
+      ]
+    },
+    {
+      "boundary": "after_main_receipt",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "4a08b277c66f476945a3426d3bbfcd515cedc693384a5b76c5d755586ba24311",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "after_main_receipt",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "060ecd3a0fdcebd359daeeb3c57e795fe95a48975fd84a036b15b3e166301c70",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        20736,
+        "1793221589.834007"
+      ]
+    },
+    {
+      "boundary": "before_details",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "be38db659ba355e9a2a177985fa17d8197db9537c443df6aa8a66ad75dbe3011",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "before_details",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "809bd42d1c2a2f95c4ff9540684c689f31bd104a273f9d1d2667e157c777e1d0",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        12144,
+        "1793221592.170592"
+      ]
+    },
+    {
+      "boundary": "after_details",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "c534b30ad150c366f92aafb30cc27abc7fa91c6b389332e55aa4e88ec5ee9d09",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "after_details",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "1f97f9b4ba1261c189c9b38e8dc4d03bead18b36fbb0e071457a489d108b959d",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        16544,
+        "1793221594.169007"
+      ]
+    },
+    {
+      "boundary": "after_details_receipts",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "8ac4839d92d52af6f02d8339f91512f2557c7483e32ce5ec5873734c848c9259",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "after_details_receipts",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "a1d3fdfabb4a091e87634b98d273b5ec48640fa00999ff6a9c07d7c1f599d224",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        15228,
+        "1793221596.245647"
+      ]
+    },
+    {
+      "boundary": "before_fk_restore",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "ff912dece747e9661a9e939ec063056c99786a347a125f89af340831fdc3d050",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "before_fk_restore",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "2826a2521270b38b62af6790c6a5d0b5bec575f97fbd3f507814672bb2216d58",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        14300,
+        "1793221598.193675"
+      ]
+    },
+    {
+      "boundary": "after_fk_restore",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "160065852b763dc2128536b63b00d703841d7aecda67d2d6faf7dd35705d6e38",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "after_fk_restore",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "f042117d6b7b4d293de6b7c0a75b0b2416273253de704ad9cfb4d44de31d2232",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        22084,
+        "1793221600.607398"
+      ]
+    },
+    {
+      "boundary": "before_commit",
+      "failure": "server_exception",
+      "passed": true,
+      "actual_injected_batch_sha256": "d6943aaf69b68f0def0337059d1c05c86db06a3f4b05d9c547a55996cd58582c",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    },
+    {
+      "boundary": "before_commit",
+      "failure": "backend_termination",
+      "passed": true,
+      "actual_injected_batch_sha256": "5c3449b851f18dd9e1228fb5bb2ed93d90aec280d03f5abe5e5bdb1cb763946a",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": [
+        15704,
+        "1793221603.044243"
+      ]
+    },
+    {
+      "boundary": "before_details",
+      "failure": "bad_frame",
+      "passed": true,
+      "actual_injected_batch_sha256": "7a1206508a39ffdd1b792fc23d0746a339eb76ecf4384636e22dcf8c1d3957bf",
+      "source_schema_sequence_counters_rolled_back": true,
+      "files_and_metadata_sessions_cleaned": true,
+      "victim_identity": null
+    }
+  ],
+  "all_passed": false,
+  "scope": "64 generated rows, forced pre-commit failures and same-fixture retry. All final/source/counter/version data remain logged; only disposable normalized cache is unlogged. This is not a crash/recovery performance score.",
+  "candidate_hook_sha256": "759fcddf4be215cfd6ca5168001198de3745cf289d68bd8833c5b27ec6a78ad3",
+  "official_eligibility_unproven": true
+}

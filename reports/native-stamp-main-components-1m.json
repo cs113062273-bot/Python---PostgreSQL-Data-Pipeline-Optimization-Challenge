@@ -1,0 +1,271 @@
+{
+  "kind": "normalization_plus_table1_three_mode_component",
+  "database": "lab_native_compact_ef32e60be5",
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "original_binary",
+      "normalization_seconds": 1.1758373000002393,
+      "ingest_seconds": 1.1050508999996964,
+      "index_seconds": 0.44231180000042514,
+      "seconds": 2.723200000000361,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 0,
+      "mode": "stamp_binary",
+      "normalization_seconds": 1.288038400000005,
+      "ingest_seconds": 1.152456999999231,
+      "index_seconds": 0.4832928999994692,
+      "seconds": 2.923788299998705,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 0,
+      "mode": "stamp_direct",
+      "normalization_seconds": 1.3922901999994792,
+      "ingest_seconds": 0.577826400000049,
+      "index_seconds": 0.4094584999993458,
+      "seconds": 2.379575099998874,
+      "rows": 1000000,
+      "binary_bytes": 0,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 1,
+      "mode": "stamp_binary",
+      "normalization_seconds": 1.3699364999993122,
+      "ingest_seconds": 1.0022060999999667,
+      "index_seconds": 0.41613609999967593,
+      "seconds": 2.788278699998955,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 1,
+      "mode": "stamp_direct",
+      "normalization_seconds": 1.4055312000000413,
+      "ingest_seconds": 0.523366100000203,
+      "index_seconds": 0.40093589999924006,
+      "seconds": 2.3298331999994843,
+      "rows": 1000000,
+      "binary_bytes": 0,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 1,
+      "mode": "original_binary",
+      "normalization_seconds": 1.1151200000003882,
+      "ingest_seconds": 1.173371099999713,
+      "index_seconds": 0.4115519000006316,
+      "seconds": 2.7000430000007327,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 2,
+      "mode": "stamp_direct",
+      "normalization_seconds": 1.303331099999923,
+      "ingest_seconds": 0.5425324999996519,
+      "index_seconds": 0.4553556999999273,
+      "seconds": 2.3012192999995023,
+      "rows": 1000000,
+      "binary_bytes": 0,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 2,
+      "mode": "original_binary",
+      "normalization_seconds": 1.0300618000001123,
+      "ingest_seconds": 1.1732490000003963,
+      "index_seconds": 0.39604209999924933,
+      "seconds": 2.599352899999758,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    },
+    {
+      "repeat": 2,
+      "mode": "stamp_binary",
+      "normalization_seconds": 1.2984034999999494,
+      "ingest_seconds": 1.0563429000003453,
+      "index_seconds": 0.4134272000001147,
+      "seconds": 2.7681736000004094,
+      "rows": 1000000,
+      "binary_bytes": 67999283,
+      "all_native_nonidentity_values_and_multiplicities_exact": true,
+      "native_identity_not_supplied": true
+    }
+  ],
+  "driver_sha256": "2da9d317fa43cada969fb1d49cbcbd21d5eec428037165bd361dbe867ad2eb90",
+  "scope": "Real per-trial UNLOGGED normalization CTAS, proof checks, native identity table1 transform/ingest and temp PK/UNIQUE rebuild. All nonidentity native values/multiplicities compared outside timers. No final FK, durable commit, counters or versions. Not a complete-service percentage.",
+  "normalizer13": {
+    "kind": "isolated_native_probe_build",
+    "source": "native\\challenge_typed_stamp.c",
+    "source_sha256": "3fe9f1df71e2092da80da0e30479464c201e40a42ff4f93c28566ad8acd00a1e",
+    "driver_sha256": "684a237332bc279599f0f1f4a77aea3577e1fa88be2ddf9c5b9dd1fa2e7dad28",
+    "compiler_version": "0.14.1",
+    "compiler_archive": {
+      "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+      "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+      "size": "82229343"
+    },
+    "command": [
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+      "cc",
+      "-target",
+      "x86_64-windows-gnu",
+      "-std=c11",
+      "-O2",
+      "-g",
+      "-fno-strict-aliasing",
+      "-fwrapv",
+      "-shared",
+      "-DWIN32",
+      "-DPG_C_PRINTF_ATTRIBUTE=printf",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+      "-DCHALLENGE_PROBE_SOURCE_SHA=\"3fe9f1df71e2092da80da0e30479464c201e40a42ff4f93c28566ad8acd00a1e\"",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_typed_stamp.c",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+      "-o",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\3fe9f1df71e2092d-684a237332bc2795\\challenge_probe_3fe9f1df71e2092d.dll"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "application_integration": false,
+    "library": ".runtime\\native_build\\3fe9f1df71e2092d-684a237332bc2795\\challenge_probe_3fe9f1df71e2092d.dll",
+    "library_sha256": "991119bad4813f7f9a3d304516d6cadc5b95ab221b93ae567173e9d8f2c8c5af",
+    "source_archive": "reports\\native-source\\3fe9f1df71e2092da80da0e30479464c201e40a42ff4f93c28566ad8acd00a1e.c",
+    "retained_build_receipt": "reports\\native-c-builds\\3fe9f1df71e2092d-254c6dfa.json"
+  },
+  "normalizer12": {
+    "kind": "isolated_native_probe_build",
+    "source": "native\\challenge_probe.c",
+    "source_sha256": "88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5",
+    "driver_sha256": "b44eba77d5e57a833479c53c25834b718a8b8c99531fab25280d02591f3a258a",
+    "compiler_version": "0.14.1",
+    "compiler_archive": {
+      "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+      "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+      "size": "82229343"
+    },
+    "command": [
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+      "cc",
+      "-target",
+      "x86_64-windows-gnu",
+      "-std=c11",
+      "-O2",
+      "-g",
+      "-fno-strict-aliasing",
+      "-fwrapv",
+      "-shared",
+      "-DWIN32",
+      "-DPG_C_PRINTF_ATTRIBUTE=printf",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+      "-DCHALLENGE_PROBE_SOURCE_SHA=\"88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5\"",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_probe.c",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+      "-o",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\88922bebb3d7fa4d-b44eba77d5e57a83\\challenge_probe_88922bebb3d7fa4d.dll"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "application_integration": false,
+    "library": ".runtime\\native_build\\88922bebb3d7fa4d-b44eba77d5e57a83\\challenge_probe_88922bebb3d7fa4d.dll",
+    "library_sha256": "f684f81a8815b027f781bd8bd117ff37aaacefd6d9c0b6bb7655b58d9038e4e6",
+    "source_archive": "reports\\native-source\\88922bebb3d7fa4d4a4909e883f091304ce4d1d38c5633f7f25e4b1a480d22c5.c",
+    "retained_build_receipt": "reports\\native-c-builds\\88922bebb3d7fa4d-e2b5a727.json"
+  },
+  "typed_loader": {
+    "kind": "isolated_native_probe_build",
+    "source": "native\\challenge_main_typed.c",
+    "source_sha256": "1937f69acf50da6dd90bb951a7076942eaf393e010d38678d4a457bdbe61bdc6",
+    "driver_sha256": "684a237332bc279599f0f1f4a77aea3577e1fa88be2ddf9c5b9dd1fa2e7dad28",
+    "compiler_version": "0.14.1",
+    "compiler_archive": {
+      "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+      "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+      "size": "82229343"
+    },
+    "command": [
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+      "cc",
+      "-target",
+      "x86_64-windows-gnu",
+      "-std=c11",
+      "-O2",
+      "-g",
+      "-fno-strict-aliasing",
+      "-fwrapv",
+      "-shared",
+      "-DWIN32",
+      "-DPG_C_PRINTF_ATTRIBUTE=printf",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+      "-DCHALLENGE_PROBE_SOURCE_SHA=\"1937f69acf50da6dd90bb951a7076942eaf393e010d38678d4a457bdbe61bdc6\"",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+      "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_main_typed.c",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+      "-o",
+      "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\1937f69acf50da6d-684a237332bc2795\\challenge_probe_1937f69acf50da6d.dll"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "application_integration": false,
+    "library": ".runtime\\native_build\\1937f69acf50da6d-684a237332bc2795\\challenge_probe_1937f69acf50da6d.dll",
+    "library_sha256": "dec379068cd574b4c835981421b9f5a3c9d58175c1c446c4e593b89a4e09351f",
+    "source_archive": "reports\\native-source\\1937f69acf50da6dd90bb951a7076942eaf393e010d38678d4a457bdbe61bdc6.c",
+    "retained_build_receipt": "reports\\native-c-builds\\1937f69acf50da6d-bd0505ea.json",
+    "vendor_sources": {
+      "upstream": "PostgreSQL",
+      "tag": "REL_17_11",
+      "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+      "files": [
+        {
+          "path": "vendor\\postgresql-17.11\\copyfrom.c",
+          "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+          "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+        },
+        {
+          "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+          "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+          "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+        },
+        {
+          "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+          "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+          "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "original_binary": 2.7000430000007327,
+    "stamp_binary": 2.788278699998955,
+    "stamp_direct": 2.3298331999994843
+  },
+  "passed": true,
+  "all_private_work_rolled_back": true
+}

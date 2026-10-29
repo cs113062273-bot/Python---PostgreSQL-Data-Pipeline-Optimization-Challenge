@@ -1,0 +1,28 @@
+{
+  "kind": "non_superuser_native_main_permissions_and_exact_outputs",
+  "passed": true,
+  "database": "lab_details_owner_5a03d836",
+  "owner": "details_owner_81b3fd8b",
+  "reader": "details_reader_703e8a50",
+  "source_sha256": "1937f69acf50da6dd90bb951a7076942eaf393e010d38678d4a457bdbe61bdc6",
+  "six_canonical_outputs_exact": true,
+  "native_counts": 64,
+  "rejected": [
+    {
+      "case": "reader_without_target_insert",
+      "sqlstate": "42501"
+    },
+    {
+      "case": "cannot_modify_or_add_untrusted_code",
+      "sqlstate": "42501"
+    },
+    {
+      "case": "cannot_modify_or_add_untrusted_code",
+      "sqlstate": "42501"
+    }
+  ],
+  "code_superuser_owned_security_invoker": true,
+  "extension_and_namespace_removed_before_commit": true,
+  "application_user_recipe_validator_unchanged": true,
+  "official_eligibility_unproven": true
+}

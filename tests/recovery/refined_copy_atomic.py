@@ -28,7 +28,7 @@ def main(*,cases_override=None,marker_override=None):
         service=server.SERVICE.get()
         if service is not None and getattr(service,'fault',None) and isinstance(text,str) and MARKER in text:
             point,kind=service.fault
-            if marker_override is not None and point in ('before_details','after_details','after_details_receipts'):
+            if marker_override is not None and point in ('before_details','after_details','after_details_receipts','before_main','after_main','after_main_receipt'):
                 marker=marker_override(point,text)
             elif point.startswith('copy_to_') or point.startswith('copy_from_'):
                 direction='TO' if point.startswith('copy_to_') else 'FROM';table=point.split('_',2)[2]
@@ -44,11 +44,15 @@ def main(*,cases_override=None,marker_override=None):
                 assert point=='before_details'
                 replacement="UPDATE pgdm_pipeline_work.pipeline_normalized_input SET pipeline_axes=decode('01','hex');\n"+marker
             elif kind=='missing_file':
-                assert point=='copy_from_table1';replacement=marker.replace('/table1.bin', '/missing.bin')
+                assert point.startswith('copy_from_');table=point.split('_',2)[2]
+                replacement=marker.replace('/'+table+'.bin', '/missing.bin')
             elif kind=='bad_binary':
-                assert point=='copy_to_table1'
+                assert point.startswith('copy_to_')
                 target=re.search(r"TO ('[^']*') \(FORMAT BINARY\);$",marker)[1]
                 replacement=marker+"\nCOPY (SELECT 'bad signature'::text) TO "+target+' (FORMAT TEXT);'
+            elif kind=='identity_exhaustion':
+                assert point=='before_main'
+                replacement='ALTER SEQUENCE public.table1_id_column_1_seq RESTART WITH 1 MAXVALUE 2 CACHE 1;\n'+marker
             else:
                 fault='SELECT pg_sleep(30);' if kind=='backend_termination' else "DO $$ BEGIN RAISE EXCEPTION 'refined_injected_"+point+"'; END $$;"
                 replacement=(fault+'\n'+marker) if point.startswith('before_') else (marker+'\n'+fault)
@@ -106,6 +110,7 @@ def main(*,cases_override=None,marker_override=None):
             if kind=='missing_file':assert 'missing.bin' in outcome['error'],outcome
             if kind=='bad_binary':assert 'signature' in outcome['error'],outcome
             if kind=='bad_frame':assert 'frame length is invalid' in outcome['error'],outcome
+            if kind=='identity_exhaustion':assert 'maximum value' in outcome['error'],outcome
             assert outcome['cleanup'] and outcome['cleanup']['cleanup_success'],outcome
             assert outcome['metadata_sessions_remaining']==0,outcome
             assert source_sha(c)==source and protected_schema_signature(c)==schema and sequence_signature(c)==sequences
@@ -114,12 +119,12 @@ def main(*,cases_override=None,marker_override=None):
             assert c.execute("SELECT sum(row_count) FROM public.pgdm_table_row_counts WHERE schema_name='public'").fetchone()[0]==0
             report['tests'].append({'boundary':point,'failure':kind,'passed':True,'actual_injected_batch_sha256':service.injected_sha256,'source_schema_sequence_counters_rolled_back':True,'files_and_metadata_sessions_cleaned':True,'victim_identity':victim})
             write_report('reports/recovery-refined-copy-atomic.json',report);print(point,kind,'PASS',flush=True)
-        result,versions=run(Service(),register=True)
+        retry_service=Service();result,versions=run(retry_service,register=True)
         assert_exact(c);assert len(versions)==6
         assert source_sha(c)==source and protected_schema_signature(c)==schema and sequence_signature(c)==sequences
         assert all(c.execute('SELECT count(*) FROM public.'+table).fetchone()[0]==c.execute("SELECT row_count FROM public.pgdm_table_row_counts WHERE schema_name='public' AND table_name=%s",(table,)).fetchone()[0] for table in ORDER)
         assert c.execute("SELECT bool_and(relpersistence='p') FROM pg_class WHERE oid=ANY(%s::regclass[])",(['public.raw_data','public.pgdm_table_row_counts']+['public.'+t for t in ORDER],)).fetchone()[0]
-        report.update({'all_passed':len(report['tests'])==len(cases),'final_native_retry_exact_outputs':True,'retry_counters':True,'retry_six_versions':len(versions),'original_source_sha256':source,'retry_execution_architecture':result['execution_architecture']})
+        report.update({'all_passed':len(report['tests'])==len(cases),'final_native_retry_exact_outputs':True,'retry_counters':True,'retry_six_versions':len(versions),'original_source_sha256':source,'retry_execution_architecture':result['execution_architecture'],'retry_local_backend_diagnostics':getattr(retry_service._expansion_timing_local,'local_backend_diagnostics',None)})
         write_report('reports/recovery-refined-copy-atomic.json',report)
         print('Refined native atomic:',len(cases),'faults and exact retry/six versions PASS',flush=True)
 

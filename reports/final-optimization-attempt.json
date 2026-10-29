@@ -1,0 +1,50 @@
+{
+  "kind": "last_authorized_optimization_attempt_result",
+  "user_requested_no_more_attempts": true,
+  "target_over_90_achieved": false,
+  "last_complete_pair": "reports/native-main-compact-last-official-1m-pair.json",
+  "last_complete_processing": {
+    "official_wall_seconds": 118.81490649999978,
+    "candidate_wall_seconds": 13.314377099999547,
+    "reduction_percent": 88.79401794588833,
+    "threshold_90_seconds": 11.881490649999979,
+    "additional_seconds_required": 1.4328864499995682,
+    "single_pair_only": true,
+    "exact_six_outputs_and_checks_passed": true
+  },
+  "best_complete_pair": "reports/native-main-official-1m-pair.json",
+  "best_complete_processing": {
+    "official_wall_seconds": 112.26433949999955,
+    "candidate_wall_seconds": 11.46100000000024,
+    "reduction_percent": 89.7910591635376,
+    "threshold_90_seconds": 11.226433949999956,
+    "additional_seconds_required": 0.23456605000028397,
+    "single_pair_only": true,
+    "exact_six_outputs_and_checks_passed": true
+  },
+  "checks": {
+    "normalizer_525": "reports/native-compact-stamp-semantics.json",
+    "typed_main_382": "reports/native-main-compact-semantics.json",
+    "service_121": "reports/semantics-native-main-compact-native.json",
+    "boundaries_82": "reports/semantics-native-main-compact-boundaries-82.json",
+    "layouts_11": "reports/semantics-native-main-compact-layouts-11-v2.json",
+    "axes_112": "reports/semantics-native-main-compact-text-112.json",
+    "atomic_faults_24": "reports/recovery-native-main-compact-atomic.json",
+    "owner_permissions": "reports/native-main-compact-owner-permissions.json",
+    "numeric_memo_owner": "reports/native-memo-owner-permissions.json",
+    "metadata_guards_13": "reports/native-main-compact-metadata-guards.json",
+    "wal_restored": "reports/native-main-compact-last-wal-restored.json"
+  },
+  "checks_verified": true,
+  "source_identity": "e5af246ade5f40450a3a9dda0dee5dff2dd654b514610af212d67ff4d0dc21df",
+  "offline_tests_passed": 52,
+  "official_score": false,
+  "official_eligibility_proven": false,
+  "limitations": [
+    "Local Windows single paired measurements, not an official score or robust repeated proof",
+    "Native package and Linux/SSH deployment unqualified",
+    "This final branch has 24 rollback fault tests; its own pre/postcommit server-crash and dump-restore qualification is incomplete",
+    "True chunk resume and cross-database version saga remain incomplete"
+  ],
+  "next_action": "Stop further optimization attempts as requested; 90 percent has not been achieved."
+}

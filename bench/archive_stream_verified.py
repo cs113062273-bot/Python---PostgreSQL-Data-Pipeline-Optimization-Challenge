@@ -85,10 +85,15 @@ def main():
         # qualified shared-details worker and every official control live.
         implementation=cohort.get('candidate_implementation')
         if implementation is None:
-            assert path.name=='native-c-compact-official-1m-pair.json' and args.database==('lab_native_official_b75fcb252b' if args.archive_official else 'lab_native_compact_9b3ae1a447')
+            if path.name=='native-c-compact-official-100k-pair.json':
+                assert cohort['rows']==100000
+                assert args.database==cohort['official_database' if args.archive_official else 'candidate_database']
+            else:assert path.name=='native-c-compact-official-1m-pair.json' and args.database==('lab_native_official_b75fcb252b' if args.archive_official else 'lab_native_compact_9b3ae1a447')
             implementation='compact'
-        assert implementation in ('compact','minimal','fk_stream')
+        assert implementation in ('compact','minimal','fk_stream','fk_current','details')
+        if implementation=='details':assert path.name=='native-details-official-1m-pair.json'
         if implementation=='fk_stream':assert path.name=='native-fk-stream-official-1m-pair.json'
+        if implementation=='fk_current':assert path.name in ('native-fk-current-official-1m-pair.json','native-fk-current-ample-disk-official-1m-pair.json')
         assert args.database==cohort['official_database' if args.archive_official else 'candidate_database']
         assert run['mode']==('official' if args.archive_official else 'native_compact')
         current=json.loads((ROOT/'reports/native-fk-official-1m-pair.json').read_text())

@@ -6,6 +6,12 @@ __pycache__/
 *.pyc
 *.log
 .env
+dist/
+# Generated experiment receipts, SQL/source snapshots and logs stay local.
+# Existing tracked evidence remains versioned; new selected receipts use git add -f.
+/reports/
+# Local task brief, not part of the runnable project.
+/Codex — PostgreSQL Challenge 冠軍實作 Prompt.md
 reports/plans/*.txt
 
 # Byte-preserved compressed copies of large negative prototype traces are tracked.

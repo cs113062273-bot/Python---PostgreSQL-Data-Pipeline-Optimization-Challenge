@@ -1,6 +1,7 @@
 param(
     [ValidateSet(64,100000,1000000)][int]$Rows=100000,
     [ValidateRange(1,20)][int]$Repeats=3,
+    [ValidateSet('turbo','shared')][string]$Candidate='turbo',
     [string]$PythonExe='python',
     [switch]$MinimalWal
 )
@@ -13,6 +14,12 @@ function Invoke-TestCommand {
     if ($LASTEXITCODE -ne 0) { throw "Command failed: $Executable $CommandArguments" }
 }
 Get-Command git -ErrorAction Stop | Out-Null
+if (-not (Test-Path 'PORTABLE_MANIFEST.json')) {
+    throw 'Extract dist/pipeline-test-windows-turbo.zip into a fresh folder, then run this script there. A Git clone alone does not include the unpacked PostgreSQL runtime.'
+}
+if (Test-Path '.runtime/native_pgdata') {
+    throw 'This folder already contains test data. Extract the ZIP into a fresh folder for a clean run; existing data is preserved.'
+}
 if (-not (Test-Path '.venv/Scripts/python.exe')) {
     Invoke-TestCommand -Executable $PythonExe -CommandArguments @('-m','venv','.venv')
 }
@@ -27,10 +34,7 @@ if (-not (Test-Path '.git')) {
 }
 Invoke-TestCommand -Executable $taskPython -CommandArguments @('scripts/verify_upstream.py')
 $taskStamp=Get-Date -Format 'yyyyMMdd-HHmmss'
-$taskOutput="reports/portable-$Rows-$taskStamp.json"
-if (Test-Path '.runtime/native_pgdata/PG_VERSION') {
-    throw 'This folder already contains a test database. Extract the ZIP into a fresh folder for a clean run; existing data is preserved.'
-}
+$taskOutput="reports/portable-$Candidate-$Rows-$taskStamp.json"
 Invoke-TestCommand -Executable $taskPython -CommandArguments @('scripts/start_portable_lab.py')
 $taskUseMinimal=$MinimalWal.IsPresent
 try {
@@ -38,11 +42,11 @@ try {
         Invoke-TestCommand -Executable $taskPython -CommandArguments @('-m','scripts.native_wal_mode','--mode','minimal','--output',"reports/portable-wal-minimal-$taskStamp.json")
     }
     Invoke-TestCommand -Executable $taskPython -CommandArguments @('scripts/bootstrap_native_control.py')
-    Invoke-TestCommand -Executable $taskPython -CommandArguments @('-m','bench.portable_pair','--rows',"$Rows",'--repeats',"$Repeats",'--output',$taskOutput)
+    Invoke-TestCommand -Executable $taskPython -CommandArguments @('-u','-m','bench.portable_pair','--candidate',$Candidate,'--rows',"$Rows",'--repeats',"$Repeats",'--output',$taskOutput)
 } finally {
     if ($taskUseMinimal) {
         Invoke-TestCommand -Executable $taskPython -CommandArguments @('-m','scripts.native_wal_mode','--mode','replica','--output',"reports/portable-wal-restored-$taskStamp.json")
     }
 }
 Write-Host "Completed. Result: $taskOutput"
-Write-Host 'Compare the official and shared times from this PC; this is a local benchmark, not a Kaggle score.'
+Write-Host "Compare the official and $Candidate times from this PC; this is a local benchmark, not a Kaggle score."

@@ -12,12 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--output', default='dist/pipeline-test-windows-transfer.zip')
+    p.add_argument('--output', default='dist/pipeline-test-windows-turbo.zip')
     args = p.parse_args()
     output = (ROOT / args.output).resolve()
     assert output.is_relative_to(ROOT / 'dist') and not output.exists()
     files = {}
-    for directory in ('app', 'pipeline', 'bench', 'tests', 'native', 'vendor', 'scripts'):
+    for directory in ('app', 'pipeline', 'bench', 'tests', 'native', 'vendor', 'scripts', 'docs'):
         for path in (ROOT / directory).rglob('*'):
             if path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.log', '.tmp'):
                 files[path.relative_to(ROOT).as_posix()] = path
@@ -46,6 +46,15 @@ def main():
     for path in (postgres / 'bin').glob('*.dll'):
         if not path.name.lower().startswith('wx'):
             files[path.relative_to(ROOT).as_posix()] = path
+    # A blank initdb loads the Snowball dictionary, PL/pgSQL and encoding
+    # converters from $libdir. They are not bin DLL dependencies and a copy
+    # of a previously initialized cluster can conceal their absence.
+    for pattern in ('dict_snowball.dll', 'plpgsql.dll', '*_and_*.dll'):
+        for path in (postgres / 'lib').glob(pattern):
+            files[path.relative_to(ROOT).as_posix()] = path
+    for name in ('dict_snowball.dll', 'plpgsql.dll'):
+        if not (postgres / 'lib' / name).is_file():
+            raise RuntimeError('Missing PostgreSQL initialization library: ' + name)
     for path in (postgres / 'share').rglob('*'):
         if path.is_file():
             files[path.relative_to(ROOT).as_posix()] = path

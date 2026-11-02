@@ -1,0 +1,88 @@
+{
+  "database": "lab_copy_layout_62f828fc",
+  "cases": [
+    {
+      "name": "timestamp_receiving_type",
+      "sqlstate": "00000",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "integer_receiving_width",
+      "sqlstate": "22003",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "numeric_typmod",
+      "sqlstate": "22003",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "varchar_typmod",
+      "sqlstate": "22001",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "extra_unique_index",
+      "sqlstate": "23505",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "extra_check",
+      "sqlstate": "00000",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "omitted_default_table1_integer_column_4",
+      "sqlstate": "00000",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "omitted_default_table2_integer_column_3",
+      "sqlstate": "00000",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "omitted_default_table3_numeric_column_1",
+      "sqlstate": "00000",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "omitted_default_table5_numeric_column_2",
+      "sqlstate": "00000",
+      "exact_original_fallback": true,
+      "fast_path_chosen": false,
+      "passed": true
+    },
+    {
+      "name": "omitted_default_table1_text_column_1",
+      "sqlstate": "00000",
+      "exact_original_fallback": false,
+      "fast_path_chosen": true,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "scope": "Native batch engine with intentionally altered receiving metadata; specified rejected layouts must use the original path. A benign DEFAULT NULL may be optimized away by PostgreSQL. All original assignment semantics/counters/schema retained.",
+  "slim_copy_hook_sha256": "2eeb44ef87a46a34e5393ce6b54b80f07bfa842b2aaa4ce1bac5756f3eb5e5ff",
+  "added_receiving_default_cases": 5,
+  "native_shared_fk_validation": true,
+  "official_eligibility_unproven": true
+}

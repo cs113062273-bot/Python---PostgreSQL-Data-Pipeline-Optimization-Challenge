@@ -1,5 +1,17 @@
 # Active target: at least 90% less complete processing time
 
+2026-11-02: Turbo is the default candidate in the portable Windows test runner.
+The four local 96% pairs have an abnormally slow original and do not establish
+90%. Re-test unchanged original and Turbo together on the new PC; see
+[portable instructions](../PORTABLE_TEST.md) and [current status](STATUS.md).
+
+2026-10-30: optimization resumed. The retained best single pair is now
+112.2643395s official / 11.4610000s native main (**89.791059% less time**);
+the later compact-main attempt is 88.794018%. Neither achieves 90%.
+See [shared main research](SHARED_MAIN_RESEARCH.md) for the new adapter,
+qualification and same-cohort candidate comparison. The older results below
+are historical, separate cohorts.
+
 The user raised the objective to 90%. This target is not achieved. The metric
 is complete processing against the unchanged official in its actual paired
 cohort; no slower control from another experiment may be substituted.

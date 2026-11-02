@@ -1,0 +1,9 @@
+{
+  "archive": "dist\\pipeline-test-windows-turbo.zip",
+  "bytes": 34895229,
+  "sha256": "f832034395dbb845f1ba41597d7d0fbd1c4556f4de71775f23fd73591a5ad5f0",
+  "files": 1830,
+  "uncompressed_bytes": 92531175,
+  "all_zip_entries_hash_verified": true,
+  "databases_included": false
+}

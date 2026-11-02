@@ -1,4 +1,4 @@
-"""Generate fresh data and compare original versus shared main on another PC."""
+"""Generate fresh data and compare original versus turbo/shared on another PC."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -12,7 +12,7 @@ import sys
 import uuid
 
 from psycopg import sql
-from bench import native_c_lab as lab, native_main_shared_probe as candidate
+from bench import native_c_lab as lab
 from bench.common import ROOT, write_report, environment
 from pipeline.checkpoints import source_digest
 from pipeline.recipes import ORDER
@@ -22,10 +22,18 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--rows', type=int, choices=[64, 100000, 1000000], default=100000)
     p.add_argument('--repeats', type=int, default=3)
+    p.add_argument('--candidate', choices=['turbo', 'shared'], default='turbo')
     p.add_argument('--output', required=True)
     args = p.parse_args()
     if args.repeats < 1:
         p.error('repeats must be positive')
+    if args.candidate == 'turbo':
+        from bench import native_turbo_probe as candidate
+        candidate_module = 'bench.native_turbo_probe'
+    else:
+        from bench import native_main_shared_probe as candidate
+        candidate_module = 'bench.native_main_shared_probe'
+    candidate_mode = args.candidate
     output = (ROOT / args.output).resolve()
     assert output.is_relative_to(ROOT / 'reports') and not output.exists()
     directory = output.with_suffix('')
@@ -38,7 +46,8 @@ def main():
     for key in ('CHALLENGE_BACKEND_CPU_AFFINITY', 'CHALLENGE_RECORD_LEADER_CPU'):
         env.pop(key, None)
     frozen = candidate.source_identity()
-    report = {'kind': 'portable_fresh_original_shared_pairs', 'official_score': False,
+    report = {'kind': 'portable_fresh_original_candidate_pairs', 'official_score': False,
+              'candidate_implementation': candidate_mode, 'official_eligibility_unproven': True,
               'timestamp_utc': datetime.now(timezone.utc).isoformat(), 'rows': args.rows,
               'candidate_hook_sha256': frozen, 'runs': [], 'pairs': [],
               'driver_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -62,7 +71,7 @@ def main():
         with lab.connect('postgres', autocommit=True) as admin:
             assert not admin.execute("SELECT pid FROM pg_stat_activity WHERE backend_type='client backend' AND state<>'idle' AND pid<>pg_backend_pid()").fetchall(), 'Close other benchmark jobs'
         path = directory / (label + '.json')
-        command = [sys.executable, '-u', '-m', 'bench.service_run' if mode == 'official' else 'bench.native_main_shared_probe',
+        command = [sys.executable, '-u', '-m', 'bench.service_run' if mode == 'official' else candidate_module,
                    '--database', database, '--mode', 'baseline' if mode == 'official' else 'guarded_copy', '--output', str(path)]
         command += ['--establish-reference'] if mode == 'official' else ['--reference', reference]
         print('Starting', label, database, flush=True)
@@ -88,6 +97,12 @@ def main():
         with lab.connect(database, autocommit=True) as c:
             assert source_digest(c, scopes) == digest
             assert c.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone() == (None,)
+            if mode != 'official':
+                assert int(diag['typed_main_affected']) == c.execute('SELECT count(*) FROM public.table1').fetchone()[0]
+                for kind in ('main', 'stamp', 'memo'):
+                    assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s', (candidate.package(kind)['extension'],)).fetchall()
+                if candidate_mode == 'turbo':
+                    assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s', (candidate.package('fk')['extension'],)).fetchall()
         row = {'mode': mode, 'database': database, 'report': str(path.relative_to(ROOT)),
                'wall_seconds': child['wall_seconds'],
                'native_measured_seconds': sum(i['seconds'] for i in child['timing_report']['items'] if i.get('include_in_total', True)),
@@ -97,34 +112,29 @@ def main():
         print(label, round(row['wall_seconds'], 6), 'seconds; all gates PASS', flush=True)
         return row
 
-    # This separate untimed service run creates the oracle required when B
-    # precedes A. It never warms either measured destination database.
+    # Retain the first measured original as the exact-output oracle for BA
+    # rounds. All measured destinations are still fresh FILE_COPY clones.
     oracle = None
-    if args.repeats > 1:
-        oracle = 'lab_portable_oracle_' + uuid.uuid4().hex[:10]
-        with lab.connect('postgres', autocommit=True) as admin:
-            admin.execute(sql.SQL('CREATE DATABASE {} TEMPLATE {} STRATEGY FILE_COPY').format(sql.Identifier(oracle), sql.Identifier(template)))
-        oracle_row = run('official', oracle, 'oracle-unranked', None)
-        report['oracle_run'] = report['runs'].pop()
-        write_report(output, report)
     for repeat in range(args.repeats):
-        names = {mode: 'lab_portable_' + mode + '_' + uuid.uuid4().hex[:10] for mode in ('official', 'shared')}
+        names = {mode: 'lab_portable_' + mode + '_' + uuid.uuid4().hex[:10] for mode in ('official', candidate_mode)}
         with lab.connect('postgres', autocommit=True) as admin:
             for name in names.values():
                 admin.execute(sql.SQL('CREATE DATABASE {} TEMPLATE {} STRATEGY FILE_COPY').format(sql.Identifier(name), sql.Identifier(template)))
-        order = ('official', 'shared') if repeat % 2 == 0 else ('shared', 'official')
+        order = ('official', candidate_mode) if repeat % 2 == 0 else (candidate_mode, 'official')
         pair = {}
         for mode in order:
             reference = names['official'] if 'official' in pair else oracle
             pair[mode] = run(mode, names[mode], str(repeat + 1) + '-' + mode, reference)
-        old, new = pair['official'], pair['shared']
+            if mode == 'official' and oracle is None:
+                oracle = names['official']
+        old, new = pair['official'], pair[candidate_mode]
         report['pairs'].append({'repeat': repeat + 1, 'order': list(order),
             'official_wall_seconds': old['wall_seconds'], 'candidate_wall_seconds': new['wall_seconds'],
             'wall_reduction_percent': 100 * (1 - new['wall_seconds'] / old['wall_seconds']),
             'native_accounted_reduction_percent': 100 * (1 - new['native_measured_seconds'] / old['native_measured_seconds'])})
         write_report(output, report)
-    medians = {mode: statistics.median(r['wall_seconds'] for r in report['runs'] if r['mode'] == mode) for mode in ('official', 'shared')}
-    report['summary'] = {'median_wall_seconds': medians, 'median_wall_reduction_percent': 100 * (1 - medians['shared'] / medians['official']),
+    medians = {mode: statistics.median(r['wall_seconds'] for r in report['runs'] if r['mode'] == mode) for mode in ('official', candidate_mode)}
+    report['summary'] = {'median_wall_seconds': medians, 'median_wall_reduction_percent': 100 * (1 - medians[candidate_mode] / medians['official']),
                          'every_pair_at_least_90_percent': all(p['wall_reduction_percent'] >= 90 for p in report['pairs']),
                          'official_score': False, 'performance_reproduced_on_this_pc_only': True}
     report['all_passed'] = True

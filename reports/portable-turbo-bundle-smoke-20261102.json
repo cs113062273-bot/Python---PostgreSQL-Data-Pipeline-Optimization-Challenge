@@ -1,0 +1,58 @@
+{
+  "kind": "fresh_extracted_turbo_portable_bundle_functional_test",
+  "bundle_bytes": 34895229,
+  "destination": ".runtime\\turbo_transfer_verify_03da4353c8",
+  "all_passed": true,
+  "scope": "Fresh extraction, bundled Windows runtime and pinned native packages, new cluster, unchanged generator, 64 rows, actual full services and exact six-table comparison. Existing Python 3.11 dependency environment reused. PowerShell parsed; a fresh pip install and another physical PC were not tested. Functional smoke only, not performance evidence.",
+  "turbo_candidate_hook_sha256": "2eeb44ef87a46a34e5393ce6b54b80f07bfa842b2aaa4ce1bac5756f3eb5e5ff",
+  "turbo_summary": {
+    "median_wall_seconds": {
+      "official": 2.6924378499679733,
+      "turbo": 1.6686450999986846
+    },
+    "median_wall_reduction_percent": 38.024749577096706,
+    "every_pair_at_least_90_percent": false,
+    "official_score": false,
+    "performance_reproduced_on_this_pc_only": true
+  },
+  "turbo_pairs": [
+    {
+      "repeat": 1,
+      "order": [
+        "official",
+        "turbo"
+      ],
+      "official_wall_seconds": 2.355915099964477,
+      "candidate_wall_seconds": 1.7634625000064261,
+      "wall_reduction_percent": 25.14745119495113,
+      "native_accounted_reduction_percent": 29.535175024119088
+    },
+    {
+      "repeat": 2,
+      "order": [
+        "turbo",
+        "official"
+      ],
+      "official_wall_seconds": 3.0289605999714695,
+      "candidate_wall_seconds": 1.573827699990943,
+      "wall_reduction_percent": 48.04066781173161,
+      "native_accounted_reduction_percent": 50.3404175841161
+    }
+  ],
+  "turbo_run_count": 4,
+  "shared_all_passed": true,
+  "wal_mode": "minimal",
+  "replica_restored": true,
+  "smoke_server_stopped": true,
+  "original_database_directories_touched": false,
+  "tested_bundle_sha256": "efe21ddbbbd6629071bc47a99a2484536d2efa3a6d203c8bb3cd3ffd4642a3f4",
+  "bundle_sha256": "f832034395dbb845f1ba41597d7d0fbd1c4556f4de71775f23fd73591a5ad5f0",
+  "delivered_archive": "dist/pipeline-test-windows-turbo.zip",
+  "delivered_code_and_runtime_identical_to_tested_bundle": true,
+  "post_smoke_archive_changes": [
+    ".gitignore",
+    "PORTABLE_TEST.md",
+    "docs/STATUS.md",
+    "PORTABLE_MANIFEST.json"
+  ]
+}

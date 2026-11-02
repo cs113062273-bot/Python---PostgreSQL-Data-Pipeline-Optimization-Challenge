@@ -26,7 +26,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--rows',type=int,choices=[100000,1000000],default=100000)
     p.add_argument('--output',required=True)
-    p.add_argument('--candidate',choices=['compact','minimal','details','fk','fk_stream','fk_current','main','main_compact'],default='compact')
+    p.add_argument('--candidate',choices=['compact','minimal','details','fk','fk_stream','fk_current','main','main_compact','turbo'],default='compact')
     args=p.parse_args()
     candidate_module='bench.native_compact_probe'
     if args.candidate=='minimal':
@@ -51,6 +51,9 @@ def main():
     elif args.candidate=='main_compact':
         from bench import native_main_compact_probe as candidate
         candidate_module='bench.native_main_compact_probe'
+    elif args.candidate=='turbo':
+        from bench import native_turbo_probe as candidate
+        candidate_module='bench.native_turbo_probe'
     output=(ROOT/args.output).resolve()
     assert output.is_relative_to(ROOT/'reports') and not output.exists()
     directory=output.with_suffix('');directory.mkdir(exist_ok=False)
@@ -113,9 +116,9 @@ def main():
             assert child['unmodified_reference_established'] is True and child['exact_six_tables'] is False
         else:
             assert child['exact_six_tables'] is True and child['execution_architecture']['safe_domain'] is True
-            key={'compact':'native_compact_hook_sha256','minimal':'native_minimal_hook_sha256','details':'native_details_hook_sha256','fk':'native_fk_hook_sha256','fk_stream':'native_fk_stream_hook_sha256','fk_current':'native_fk_current_hook_sha256','main':'native_main_hook_sha256','main_compact':'native_main_hook_sha256'}[args.candidate]
+            key={'compact':'native_compact_hook_sha256','minimal':'native_minimal_hook_sha256','details':'native_details_hook_sha256','fk':'native_fk_hook_sha256','fk_stream':'native_fk_stream_hook_sha256','fk_current':'native_fk_current_hook_sha256','main':'native_main_hook_sha256','main_compact':'native_main_hook_sha256','turbo':'native_main_hook_sha256'}[args.candidate]
             assert child[key]==frozen['hook_sha256']
-            if args.candidate in ('main','main_compact'):
+            if args.candidate in ('main','main_compact','turbo'):
                 assert child['local_backend_diagnostics']['actual_binary_files']==2
                 assert child['local_backend_diagnostics']['typed_main_affected'] not in (None,'fallback')
                 assert child['local_backend_diagnostics']['shared_fk_checked'] not in (None,'fallback')
@@ -131,6 +134,10 @@ def main():
             assert c.execute("SELECT to_regnamespace('pgdm_pipeline_work')").fetchone()[0] is None
             from bench.native_compact_probe import package
             assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(package()['extension'],)).fetchall()
+            if args.candidate=='turbo':
+                for kind in ('main','stamp','memo','fk'):
+                    assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(candidate.package(kind)['extension'],)).fetchall()
+                if mode!='official':assert int(child['local_backend_diagnostics']['typed_main_affected'])==c.execute('SELECT count(*) FROM public.table1').fetchone()[0]
             if args.candidate in ('details','fk','fk_stream','fk_current','main','main_compact'):
                 from bench.native_details_probe import package as details_package
                 assert not c.execute('SELECT extname FROM pg_extension WHERE extname=%s',(details_package()['extension'],)).fetchall()

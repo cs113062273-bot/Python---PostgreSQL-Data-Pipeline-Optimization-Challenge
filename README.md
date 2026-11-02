@@ -1,6 +1,20 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](docs/ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
+**Run Turbo on another Windows PC:** download
+[the portable ZIP](https://github.com/cs113062273-bot/Python---PostgreSQL-Data-Pipeline-Optimization-Challenge/raw/refs/heads/main/dist/pipeline-test-windows-turbo.zip),
+extract into a fresh folder and follow [the Chinese setup guide](PORTABLE_TEST.md).
+It contains the Windows PostgreSQL runtime and pinned C extensions, without
+historical databases, compiler caches or a Python environment. The 2026-11-02
+96% cohort has an anomalously slow original and does **not** establish 90%.
+
+2026-10-30: the retained best single official/native-main pair is **89.791059%
+less wall time** (112.2643395s / 11.4610000s). New shared-main research passes
+352 native semantic/layout/fault/fallback cases. Three fresh 1M candidate
+comparisons favor shared, with medians 24.422s prior / 15.482s shared, but large
+timing drift prevents a stable effect-size claim. This cohort did not time
+the official original or establish 90%. [Results and limits](docs/SHARED_MAIN_RESEARCH.md).
+
 # PostgreSQL expansion performance laboratory
 
 The organizer application is preserved in `app/` at
@@ -14,7 +28,7 @@ local diagnostics; no official score, winning placement or submission is claimed
 See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
 [competition evidence](docs/COMPETITION_BRIEF.md).
 
-Latest best single fresh 1M pair: **89.13% less time** (105.121s unchanged
+Previously independently audited single fresh 1M pair: **89.13% less time** (105.121s unchanged
 official versus 11.423s shared native typed COPY with durable minimal-WAL reset).
 Both runs use identical server settings. All six exact outputs, source,
 counter/catalog/sequence and version checks pass, plus independent live audit

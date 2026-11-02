@@ -1,0 +1,42 @@
+{
+  "kind": "isolated_native_probe_build",
+  "source": "native\\challenge_turbo_stamp.c",
+  "source_sha256": "20d8070c7459abf33183574b3603d9e9d7bd873621f980e4699d6f9bccddc2bf",
+  "driver_sha256": "684a237332bc279599f0f1f4a77aea3577e1fa88be2ddf9c5b9dd1fa2e7dad28",
+  "compiler_version": "0.14.1",
+  "compiler_archive": {
+    "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip",
+    "shasum": "554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c",
+    "size": "82229343"
+  },
+  "command": [
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\toolchains\\mirror\\zig-x86_64-windows-0.14.1\\zig.exe",
+    "cc",
+    "-target",
+    "x86_64-windows-gnu",
+    "-std=c11",
+    "-O2",
+    "-g",
+    "-fno-strict-aliasing",
+    "-fwrapv",
+    "-shared",
+    "-DWIN32",
+    "-DPG_C_PRINTF_ATTRIBUTE=printf",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server\\port\\win32",
+    "-DCHALLENGE_PROBE_SOURCE_SHA=\"20d8070c7459abf33183574b3603d9e9d7bd873621f980e4699d6f9bccddc2bf\"",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server",
+    "-IC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_turbo_stamp.c",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\lib\\postgres.lib",
+    "-o",
+    "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\native_build\\20d8070c7459abf3-684a237332bc2795\\challenge_probe_20d8070c7459abf3.dll"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "C:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\native\\challenge_turbo_stamp.c:361:53: warning: passing 'const char *' to parameter of type 'char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]\n  361 |     if (!DirectInputFunctionCallSafe(timestamptz_in,text_value,InvalidOid,-1,(Node*)&errors,&parsed)) return false;\n      |                                                     ^~~~~~~~~~\nC:\\Users\\c9408\\Desktop\\Python & PostgreSQL Data Pipeline Optimization Challenge\\.runtime\\postgresql\\pgsql\\include\\server/fmgr.h:707:64: note: passing argument to parameter 'str' here\n  707 | extern bool DirectInputFunctionCallSafe(PGFunction func, char *str,\n      |                                                                ^\n1 warning generated.\n",
+  "application_integration": false,
+  "library": ".runtime\\native_build\\20d8070c7459abf3-684a237332bc2795\\challenge_probe_20d8070c7459abf3.dll",
+  "library_sha256": "b4d222dc7194126aa36ac3a68d4c8b84fb7896c79eb36dac3eaabcf7d531a734",
+  "source_archive": "reports\\native-source\\20d8070c7459abf33183574b3603d9e9d7bd873621f980e4699d6f9bccddc2bf.c",
+  "retained_build_receipt": "reports\\native-c-builds\\20d8070c7459abf3-097f2ea4.json"
+}

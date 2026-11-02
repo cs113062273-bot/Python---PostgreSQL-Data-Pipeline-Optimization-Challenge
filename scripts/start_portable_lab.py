@@ -21,8 +21,11 @@ def main():
     if data.exists():
         raise RuntimeError('Fresh extraction required; existing data directory is preserved')
     flags = subprocess.CREATE_NO_WINDOW
-    subprocess.run([str(binary / 'initdb.exe'), '-D', str(data), '-U', 'native_probe', '-A', 'trust',
-                    '-E', 'UTF8', '--locale=C', '--no-instructions'], check=True, creationflags=flags)
+    initialized = subprocess.run([str(binary / 'initdb.exe'), '-D', str(data), '-U', 'native_probe', '-A', 'trust',
+                    '-E', 'UTF8', '--locale=C', '--no-instructions'], capture_output=True, text=True,
+                    encoding='utf8', errors='replace', creationflags=flags)
+    if initialized.returncode:
+        raise RuntimeError('PostgreSQL initdb failed:\n' + initialized.stdout + initialized.stderr)
     # A fresh cluster has no recovery sync backlog; allow one minute for slow
     # machines without requiring another existing cluster's locale/config.
     subprocess.run([str(binary / 'pg_ctl.exe'), 'start', '-D', str(data), '-l',

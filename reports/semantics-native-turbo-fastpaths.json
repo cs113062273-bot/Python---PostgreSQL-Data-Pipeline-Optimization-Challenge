@@ -1,0 +1,126 @@
+{
+  "kind": "turbo_fast_path_differential",
+  "candidate_hook_sha256": "2eeb44ef87a46a34e5393ce6b54b80f07bfa842b2aaa4ce1bac5756f3eb5e5ff",
+  "database": "lab_turbo_fast_690d22de",
+  "all_passed": true,
+  "checks": [
+    {
+      "case": "normalizer_old_versus_turbo",
+      "payloads": 279,
+      "proven_safe": 238,
+      "unsafe": 41,
+      "differences": 0
+    },
+    {
+      "case": "identity",
+      "scenarios": [
+        {
+          "case": "contiguous_from_native_start",
+          "ids": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "case": "continues_after_prior_values",
+          "ids": [
+            41,
+            42,
+            43,
+            44,
+            45
+          ]
+        },
+        {
+          "case": "cache_one_keeps_per_row_nextval",
+          "ids": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "case": "increment_two_keeps_per_row_nextval",
+          "ids": [
+            1,
+            3,
+            5,
+            7,
+            9
+          ]
+        },
+        {
+          "case": "range_short_keeps_native_exhaustion_error",
+          "native_error": "nextval: reached maximum value of sequence \"table1_id_column_1_seq\" (3)"
+        },
+        {
+          "case": "zero_rows_consume_nothing"
+        }
+      ]
+    },
+    {
+      "case": "fk_validator",
+      "scenarios": [
+        {
+          "case": "existing_raw_key_accepted",
+          "native_violation": null
+        },
+        {
+          "case": "missing_raw_key_rejected",
+          "native_violation": "insert or update on table \"table1\" violates foreign key constraint \"turbo_a\""
+        },
+        {
+          "case": "negative_raw_key_rejected",
+          "native_violation": "insert or update on table \"table1\" violates foreign key constraint \"turbo_a\""
+        },
+        {
+          "case": "row_deleted_in_this_transaction_rejected",
+          "native_violation": "insert or update on table \"table1\" violates foreign key constraint \"turbo_a\""
+        },
+        {
+          "case": "table1_key_collected_for_children",
+          "native_violation": null
+        },
+        {
+          "case": "child_of_absent_table1_key_rejected",
+          "native_violation": "insert or update on table \"table6\" violates foreign key constraint \"turbo_e\""
+        }
+      ]
+    },
+    {
+      "case": "fk_validator",
+      "scenarios": [
+        {
+          "case": "existing_raw_key_accepted",
+          "native_violation": null
+        },
+        {
+          "case": "missing_raw_key_rejected",
+          "native_violation": "insert or update on table \"table1\" violates foreign key constraint \"turbo_a\""
+        },
+        {
+          "case": "negative_raw_key_rejected",
+          "native_violation": "insert or update on table \"table1\" violates foreign key constraint \"turbo_a\""
+        },
+        {
+          "case": "row_deleted_in_this_transaction_rejected",
+          "native_violation": "insert or update on table \"table1\" violates foreign key constraint \"turbo_a\""
+        },
+        {
+          "case": "table1_key_collected_for_children",
+          "native_violation": null
+        },
+        {
+          "case": "child_of_absent_table1_key_rejected",
+          "native_violation": "insert or update on table \"table6\" violates foreign key constraint \"turbo_e\""
+        }
+      ]
+    }
+  ],
+  "scope": "Crafted payloads against the pinned original normalizer, actual loader identities and validator FK outcomes. Finite cases, not a universal proof."
+}

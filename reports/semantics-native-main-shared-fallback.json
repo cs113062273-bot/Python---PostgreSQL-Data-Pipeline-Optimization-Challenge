@@ -1,0 +1,21 @@
+{
+  "kind": "shared_main_independent_proof_without_details_package",
+  "database": "lab_shared_fallback_4cc77a41",
+  "candidate_hook_sha256": "772733959070ed5faa53abedb89429ce19ef5db2ab84fe4e0fabf5adfdf5fe5d",
+  "all_passed": true,
+  "cases": [
+    {
+      "case": "independent_main_proof_accepts",
+      "typed_main_affected": "64",
+      "binary_files": 5,
+      "exact_outputs_source_schema_counters_passed": true
+    },
+    {
+      "case": "independent_main_proof_rejects",
+      "typed_main_affected": "fallback",
+      "binary_files": 6,
+      "exact_outputs_source_schema_counters_passed": true
+    }
+  ],
+  "scope": "Actual native service batches with availability-condition fault injection. No software/catalog changes, timing or crash/version qualification claim."
+}

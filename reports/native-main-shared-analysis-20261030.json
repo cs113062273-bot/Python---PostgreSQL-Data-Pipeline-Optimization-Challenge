@@ -1,0 +1,107 @@
+{
+  "kind": "audited_shared_main_candidate_comparison",
+  "candidate_hook_sha256": "772733959070ed5faa53abedb89429ce19ef5db2ab84fe4e0fabf5adfdf5fe5d",
+  "all_receipt_checks_passed": true,
+  "qualification": [
+    {
+      "report": "reports\\semantics-native-main-shared-native.json",
+      "sha256": "b0d98a23098c913fc0d8cbcbbe6d41de9769fe478d4adfeefbd9211604041117",
+      "passed_cases": 121
+    },
+    {
+      "report": "reports\\semantics-native-main-shared-boundaries-82.json",
+      "sha256": "ae08590bb0e690967c1ed1052fa8a847169a1c90b97f29591410a6502b5ae0b8",
+      "passed_cases": 82
+    },
+    {
+      "report": "reports\\semantics-native-main-shared-text-112.json",
+      "sha256": "f9a4e3f34330517f14d9cd04a398299ca4608c9663faf419d422914a3b4eec12",
+      "passed_cases": 112
+    },
+    {
+      "report": "reports\\semantics-native-main-shared-layouts-11-v2.json",
+      "sha256": "dcff4a4b7daee19d5b7b4e5278aa65f07c294f6a804b4c9cc680117c7c5a803d",
+      "passed_cases": 11
+    },
+    {
+      "report": "reports\\recovery-native-main-shared-atomic.json",
+      "sha256": "22772bf4f7471f7ccdb99ceb2bda05c7a6500e80da5a6618f5d5d6069e321782",
+      "passed_cases": 24
+    },
+    {
+      "report": "reports\\semantics-native-main-shared-fallback.json",
+      "sha256": "66c0e0afafbf090897962a4febb4648803f200f4634a947994a351849d2e7f76",
+      "passed_cases": 2
+    }
+  ],
+  "cohort_receipt": {
+    "report": "reports\\native-main-shared-fresh-1m-20261030.json",
+    "sha256": "9dbd2fa50285c55f354cc1043d4f3533092e48020f6d5445eb4f475707c50fe8"
+  },
+  "rounds": [
+    {
+      "repeat": 1,
+      "order": [
+        "prior",
+        "shared"
+      ],
+      "prior_seconds": 15.943458299996564,
+      "shared_seconds": 14.427151900003082,
+      "saved_seconds": 1.516306399993482,
+      "reduction_percent": 9.51052382401758
+    },
+    {
+      "repeat": 2,
+      "order": [
+        "shared",
+        "prior"
+      ],
+      "prior_seconds": 33.15042020000692,
+      "shared_seconds": 24.254004699992947,
+      "saved_seconds": 8.896415500013973,
+      "reduction_percent": 26.836508998495635
+    },
+    {
+      "repeat": 3,
+      "order": [
+        "prior",
+        "shared"
+      ],
+      "prior_seconds": 24.421841300005326,
+      "shared_seconds": 15.482001800002763,
+      "saved_seconds": 8.939839500002563,
+      "reduction_percent": 36.605919226903715
+    }
+  ],
+  "summary": {
+    "median_wall_seconds": {
+      "prior": 24.421841300005326,
+      "shared": 15.482001800002763
+    },
+    "saved_seconds": 8.939839500002563,
+    "reduction_vs_same_cohort_prior_candidate_percent": 36.605919226903715,
+    "official_90_percent_target_evaluated": false
+  },
+  "all_three_rounds_faster": true,
+  "ranges_seconds": {
+    "prior": [
+      15.943458299996564,
+      33.15042020000692
+    ],
+    "shared": [
+      14.427151900003082,
+      24.254004699992947
+    ]
+  },
+  "paired_reduction_median_percent": 26.836508998495635,
+  "wal_restored": {
+    "report": "reports\\native-main-shared-wal-restored-20261030.json",
+    "sha256": "216c31c4664449e08230d721387ca399cba67ed6c69d9eed8098bc09e91f1aba"
+  },
+  "official_90_percent_target_proven": false,
+  "limitations": [
+    "Large timing drift: prior 15.94-33.15s, shared 14.43-24.25s. Descriptive single-cohort gains, not a guaranteed effect size or robust repeatability.",
+    "Official baseline not rerun in this cohort; historical 89.791059% best remains separate.",
+    "No new server-crash/dump-restore, Linux/SSH, 300M or official eligibility qualification; defaults unchanged."
+  ]
+}

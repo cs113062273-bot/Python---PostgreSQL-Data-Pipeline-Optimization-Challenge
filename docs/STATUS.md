@@ -1,7 +1,39 @@
 Active objective: **90% less complete processing time**, not achieved.
 See [current 90% research](ACTIVE_90.md). Earlier 85% thresholds below are historical.
 
-Latest single 1M pair: **105.120996s original / 11.423356s shared native
+2026-11-02 transfer: the portable runner defaults to Turbo, supports alternating
+AB/BA pairs and reuses the first measured original as its output oracle to avoid
+an extra database. Blank-cluster testing exposed missing PostgreSQL system
+libraries in the old packager; Snowball, PL/pgSQL and encoding converters are
+now included, and initdb failures include captured diagnostics. The new ZIP
+contains source and the Windows runtime, without historical databases or a
+Python environment. See [the transfer guide](../PORTABLE_TEST.md). No new 1M
+performance result is claimed by this packaging change.
+The fresh-extraction 64-row Turbo AB/BA and shared functional checks pass,
+along with 52 compiler/report tests and 32 upstream file hashes. Existing
+Python dependencies were reused; fresh pip installation and a different
+physical PC were not tested. [Functional receipt](../reports/portable-turbo-bundle-smoke-20261102.json).
+
+2026-11-02: the turbo adapter (hook `2eeb44ef87a4`) passes fast-path, service,
+boundary, layout, axis, fallback, atomic, server-crash, post-commit durability
+and dump-restore checks. Four fresh 1M pairs were exact on all six tables with
+median 355.681s original / 13.778s turbo, 95.76-96.82% less wall time. **Do not
+quote that as the result**: the unchanged baseline ran about 3x slower than its
+historical 112-119s under identical settings, and the cause is unproven (CPU
+performance sampled near 70% during single-thread work, negligible disk load).
+Against the historical 112.264s baseline, unpaired, turbo gives 87.73% at its
+median and 89.87% at its best, so 90% remains unproven until a pair runs under
+normal conditions. Development runs reached 7.30-7.93s without a baseline. See
+[the cohort receipt](../reports/native-turbo-official-1m-cohort-20261102.json).
+
+2026-10-30: the retained best single official/native-main pair is 89.791059%
+less wall time. The new shared-main adapter passes 352 native cases and three
+fresh 1M candidate comparisons (24.422s prior / 15.482s shared medians).
+Large timing drift prevents a robust effect-size claim; no official baseline
+was timed in this cohort, and 90% remains unproven. See
+[shared-main research](SHARED_MAIN_RESEARCH.md). Software defaults are unchanged.
+
+Previously independently audited single 1M pair: **105.120996s original / 11.423356s shared native
 details, 89.133136% less complete service wall**. Exactly three binary files
 confirm the new engine ran. Six exact outputs and native gates, independent
 full EXCEPT ALL/source/catalog/counters/version audit, 17 native fault/retry

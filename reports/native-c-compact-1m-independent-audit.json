@@ -1,8 +1,0 @@
-{
-  "kind": "independent_live_native_compact_pair_audit",
-  "cohort": "reports\\native-c-compact-official-1m-pair.json",
-  "observed_at_utc": "2026-10-28T17:09:47.104767+00:00",
-  "passed": false,
-  "auditor_sha256": "79cfa469cf223cfb30ba0cfca928b633bfd74d04dc5702fb61e3dbca00b59766",
-  "limits": "Independent verification after processing timers, not a new timing measurement, repeatability result or official eligibility determination."
-}

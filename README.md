@@ -1,242 +1,85 @@
-Active objective: **90% less complete processing time**, not achieved.
-See [current 90% research](docs/ACTIVE_90.md). Earlier 85% thresholds below are historical.
+# Reproducible PostgreSQL pipeline
 
-**Run Turbo on another Windows PC:** download
-[the portable ZIP](https://github.com/cs113062273-bot/Python---PostgreSQL-Data-Pipeline-Optimization-Challenge/raw/refs/heads/main/dist/pipeline-test-windows-turbo.zip),
-extract into a fresh folder and follow [the Chinese setup guide](PORTABLE_TEST.md).
-It contains the Windows PostgreSQL runtime and pinned C extensions, without
-historical databases, compiler caches or a Python environment. The 2026-11-02
-96% cohort has an anomalously slow original and does **not** establish 90%.
+This repository contains the latest verified **temp-stage** implementation:
+one-pass JSON normalization, fused native COPY, bulk key construction, full
+foreign-key validation, durable commit, native counters and six version records.
 
-2026-10-30: the retained best single official/native-main pair is **89.791059%
-less wall time** (112.2643395s / 11.4610000s). New shared-main research passes
-352 native semantic/layout/fault/fallback cases. Three fresh 1M candidate
-comparisons favor shared, with medians 24.422s prior / 15.482s shared, but large
-timing drift prevents a stable effect-size claim. This cohort did not time
-the official original or establish 90%. [Results and limits](docs/SHARED_MAIN_RESEARCH.md).
+The source tree contains only runtime dependencies, selected regression tests,
+build/reproduction scripts, pinned source manifests and required licenses.
+Generated databases, measurements, research notes and compiler caches stay local.
+The `bench/*_probe.py` helpers are dependencies of the selected implementation;
+their historical names do not select extra experiments in the reproduction runner.
 
-# PostgreSQL expansion performance laboratory
+## Reproduce
 
-The organizer application is preserved in `app/` at
-`5dfde9d967425982229b92d6ffe98efcd74612e9`. Its generator and fixed seed are
-unchanged. Run `python scripts/verify_upstream.py` to verify all 32 files.
-
-This project contains measured SQL candidates, a six-table equivalence oracle,
-strict malformed-input differential fuzzing, and an experimental durable chunk
-runner with a recoverable control-database version saga. Research results are
-local diagnostics; no official score, winning placement or submission is claimed.
-See [current status](docs/STATUS.md), [experiments](docs/EXPERIMENTS.md), [recovery](docs/RECOVERY.md) and
-[competition evidence](docs/COMPETITION_BRIEF.md).
-
-Previously independently audited single fresh 1M pair: **89.13% less time** (105.121s unchanged
-official versus 11.423s shared native typed COPY with durable minimal-WAL reset).
-Both runs use identical server settings. All six exact outputs, source,
-counter/catalog/sequence and version checks pass, plus independent live audit
-and pre/post-commit crash checks. This is one local AB pair; repeatability,
-Linux/SSH and official eligibility remain unproven. It does not achieve 90%.
-Application defaults remain unchanged; replica-mode best remains 87.27%.
-See [current research](docs/ACTIVE_90.md) and the
-[full pair receipt](reports/native-details-official-1m-pair.json).
-
-Historical complete 1M comparison, three verified pairs: **272.560s official
-versus 41.900s calendar_copy, 84.63% less complete processing time**.
-The first complete pair and two continuation pairs retain AB/BA/AB order;
-post-timer verification and CPU-observer startup repairs are documented.
-All six outputs/counters/versions/catalog/sequence checks pass; exact comparisons
-run on the first run per mode in each cohort. The **85% target remains
-unachieved**. Earlier 103.941s/16.969s (83.67%) results are retained separately;
-absolute times changed substantially between experiments. See
-[active research](docs/ACTIVE_85.md).
-The earlier post-recovery 77.78% recheck and historical 81.88% cohort are retained
-separately; the independent eight-database audit below predates this new cohort.
-The original six and two new benchmark databases have since passed 48 full
-logical-table comparisons against a newly executed official original. Source,
-counters, actual versions and durability/index metadata were also rechecked:
-[reproduction commands and verification limits](docs/VERIFIED_RESULTS.md).
-
-Historical 80% research: fresh 1M **complete local-service three-run medians** are
-110.524s official versus 20.030s guarded_copy (**81.88% less time**). Every
-paired run exceeds 80%, with actual preflight/counters/six versions, COPY I/O
-and cleanup, rebuilding and full validation included. Real private-server
-crash/retry, dump/restore and the concurrent-writer fallback also passed.
-Source and caveats: [current status](docs/STATUS.md). COPY currently supports
-only the local transport, the 300M shared stage is not yet bounded, and broader
-submission qualification continues. These succeed the older release below.
-
-The prior 95% request was superseded by the current **85%** objective. Earlier
-negative experiments remain in [95% research history](docs/ACTIVE_95.md).
-Unpaired pilots do not replace repeated comparisons or change the default.
-
-## Install and launch
-
-Python 3.10+ and PostgreSQL 17 are the tested API target. Actual tests used Python
-3.11.9 / PostgreSQL 17.11 on Windows 11, i7-12700H, 16 GiB RAM and an NVMe SSD.
-The EDB Windows binary has no JIT implementation. Linux/SSH is still required
-for the official full workflow.
+Requirements: **Windows x64, Python 3.11 x64, Git and internet access**.
+Download the ZIP and its SHA-256 file from this repository's latest Release.
+Verify the ZIP with `Get-FileHash -Algorithm SHA256`, then extract into a new folder.
+Do not reuse a previous benchmark directory.
 
 ```powershell
-python -m venv .venv
-.venv/Scripts/python.exe -m pip install -r requirements-lock.txt
-.venv/Scripts/python.exe scripts/verify_upstream.py
-.venv/Scripts/python.exe launch.py --mode baseline
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\reproduce.ps1 -Rows 64 -Repeats 1
 ```
 
-`baseline` remains the default. `--mode bulk_fks` is the validated atomic bulk
-candidate: keep original recipes and all PK/UNIQUE/CHECK constraints, defer six
-proven FK relationships within the data transaction, then rebuild and fully
-validate before COMMIT. Its fresh 100k median is 34.30% below the official
-original and 12.54% below the exact QueryFoundry control (same cohort).
+This creates a fresh Python environment, installs pinned dependencies, downloads
+and verifies the official PostgreSQL 17.11 archive, checks the four included native
+DLLs and all 32 unchanged organizer files, runs unit tests, and measures the
+unchanged original against temp-stage on fresh identical inputs. Every candidate
+run checks exact six-table outputs, constraints, counters, source preservation,
+sequence options, cleanup and six version records. Correctness verification runs
+outside the processing timer. The isolated loopback server uses port 55433 and
+stops when the runner finishes. Existing data directories are never overwritten.
 
-`--mode guarded_prefix` is the fastest validated local candidate. In a fresh
-100k three-run cohort it reduces SQL-stage time from the official 10.300s median
-to 4.983s (51.62%), including proof/staging, rebuilding and full FK validation.
-The exact QueryFoundry control is 8.700s in that cohort. This is a local SQL
-diagnostic, not the official whole-workflow metric. See STATUS.md for scope.
-
-It extracts recipe inputs as TEXT once, proves conservative numeric/calendar
-safety plus empty destinations, and retains exact original fallback. In the
-proven domain, table2 uses the original freshly computed maximum as a sound
-position bound. All original casts, CHECK/NOT NULL protections and final
-relationships remain. Added data functions use the unchanged immutable guard.
-Native versions include compiler/batch SHA provenance; complete batch SQL is
-archived under reports/sql. guarded_normalize is the preceding research mode.
-
-Earlier unguarded bulk_payload / bulk_array / bulk_full / normalization modes
-were rejected after malformed-input counterexamples. They remain only in the
-laboratory CLI; their faster numbers are not eligible claims. The GUI exposes
-baseline, bulk_fks and the two guarded modes; baseline remains the default.
-
-The original preflight, managed counters, versions, UI and dump code remain in
-use. `qf_lazy` calls the pinned public source directly and retains known malformed
-input differences, so it is a control rather than the safe default. The separate
-chunk recovery protocol is not combined with atomic bulk mode or enabled in the
-GUI. jsonb_to_record remains a disposable-laboratory experiment.
-
-For a project-local disposable PostgreSQL server (no system service or global
-settings), run `scripts/bootstrap-local.ps1`. It downloads the EDB binary from
-the provider linked by PostgreSQL and extracts only server/client components.
-The local research cluster uses loopback-only trust authentication and the
-dedicated `challenge` role; it contains no production credentials or data.
-
-## Reproduce local SQL diagnostics
-
-Set the connection through libpq environment or `CHALLENGE_DSN`; credentials
-are never included in reports. `CHALLENGE_PSQL` selects a client executable.
-For the project-local server:
+Use another fresh extraction for the full comparison:
 
 ```powershell
-$env:PGHOST='127.0.0.1'
-$env:PGPORT='55432'
-$env:PGUSER='challenge'
-$env:CHALLENGE_PSQL=(Resolve-Path .runtime/postgresql/pgsql/bin/psql.exe).Path
-.venv/Scripts/python.exe app/generate_database.py --rows 100000 --host 127.0.0.1 --postgres-port 55432 --user challenge --psql $env:CHALLENGE_PSQL
-.venv/Scripts/python.exe -m bench.prepare --database lab_template_100k
-.venv/Scripts/python.exe -m bench.prepare --database lab_reference_100k
-.venv/Scripts/python.exe -m bench.reference --database lab_reference_100k
-.venv/Scripts/python.exe -m bench.fresh --template lab_template_100k --reference lab_reference_100k --repeats 3 --modes baseline qf_lazy guarded_prefix --output reports/reproduced-100k.json
-.venv/Scripts/python.exe -m bench.profile --database lab_reference_100k --modes baseline qf_lazy hash_array64
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\reproduce.ps1 -Rows 1000000 -Repeats 3
 ```
 
-The generator refuses an existing target. To build another scale, preserve the
-existing generated database under another name or use a separate disposable
-cluster. Do not point replacement generation or diagnostics at a production DB.
-`bench.prepare` clones to a new database and refuses replacement. Every ranked
-diagnostic run uses a new clone, with no destination warmup or TRUNCATE first:
-TRUNCATE preserves column statistics and can make repeated runs incomparable.
-`bench.run` remains a historical same-database diagnostic harness, not the
-preferred controlled comparison. Destructive
-diagnostics require both a `lab_` name and a disposable marker. Benchmark SQL
-timings exclude oracle/reference work and are not MEASURED PROCESSING TOTAL.
-Exact SQL snapshots, stage times, settings, typed fingerprints and resource
-limitations are recorded under `reports/`.
+Allow **at least 50 GiB free** for three 1M pairs and retained input/output databases.
+Results are written under ignored `reports/`; inspect `all_passed`,
+`summary.median_wall_seconds` and each paired reduction. Measure on an otherwise
+idle machine. A 64-row run verifies functionality, not a performance percentage.
+The first PostgreSQL download is approximately 326 MiB and is cached locally.
+`-PostgreSQLArchive <path>` reuses the exact official ZIP after SHA-256 validation.
 
-## Functional and recovery tests
+The private lab uses `wal_level=minimal`, no replication, and keeps `fsync`,
+`full_page_writes` and `synchronous_commit` enabled. This startup configuration
+applies only to the newly created lab cluster.
+
+## Build the native code
+
+A source clone contains no compiled binaries. Use a fresh clone with the full
+PostgreSQL **17.11** Windows SDK and Zig **0.14.1**:
 
 ```powershell
-.venv/Scripts/python.exe -m pytest tests/test_recipes.py -q
-$env:PYTHONPATH='app'
-.venv/Scripts/python.exe -m unittest discover -s app/tests -v
-Remove-Item Env:PYTHONPATH
-.venv/Scripts/python.exe -m tests.semantics.fuzz --count 1500 --seed 3011 --modes path_table1 array_values path_array
-.venv/Scripts/python.exe -m tests.recovery.run
-.venv/Scripts/python.exe -m tests.recovery.tamper
-.venv/Scripts/python.exe -m tests.recovery.bulk_atomic --mode guarded_prefix
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup.ps1 -BuildNative -Compiler C:\tools\zig\zig.exe -Sdk C:\tools\postgresql\pgsql
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\reproduce.ps1 -SkipSetup -Rows 64 -Repeats 1
 ```
 
-Fuzz/recovery create fresh `lab_*` databases, deliberately mutate only those
-fixtures, and preserve them for investigation. They are not official workloads.
-Recovery tests seed initial clone lineage from an already-generated
-`kaggle_challenge` control store. Reports name each fixture and job UUID.
+`native/packages.json` pins the exact seven C/header files, batch size, extension
+SQL and PostgreSQL vendor sources. A source build records its actual DLL hashes
+in ignored local package receipts; compiler/debug paths can change binary hashes.
+The Release DLLs are separately verified against their published hashes.
+The Release ZIP's `PORTABLE_MANIFEST.json` records the authoritative source commit
+and every shipped file hash. A synthetic Git marker created in an extracted ZIP
+is not the submission commit.
 
-For a full local organizer-service integration, create a fresh clone and run
-`python -m bench.service_run --database lab_full_100k --mode bulk_fks --reference lab_reference_100k`. This executes real
-preflight, managed counters and all six version/dependency registrations. It
-substitutes local psql for SSH and labels its report accordingly.
+## Scope and provenance
 
-For checkpoint measurement, create another fresh clone and run
-`python -m bench.checkpoints --database lab_chunks_100k --chunk-rows 25000 --reference lab_reference_100k`.
-The job UUID is saved before work; repeat the same command with `--job UUID`
-and identical arguments to resume. Full source rehashing and version finalization
-costs are included. Partial public outputs and the persistent fence require the
-state contract in [RECOVERY.md](docs/RECOVERY.md).
+Fresh-extraction validation on 2026-11-04, with 1M unchanged generated rows,
+measured **104.598869s original / 6.296233s temp-stage**, a **93.9806% reduction**.
+This was one matched local pair; exact output and all integrity/version checks
+passed. This run establishes neither 95% nor 98%. Timings depend on environment
+and scheduling; earlier measurements are not a guarantee for another machine.
+This is a Windows local reproduction, **not an official competition score or
+completed Windows-GUI/Linux-SSH submission qualification**. Linux extension
+builds and the official SSH workflow have not been qualified by this release.
+The original manager source remains under `app/`.
 
-`scripts/benchmark-linux.ps1` invokes the unchanged generator through SSH and
-launches the real GUI for the official-path baseline. Enter the Linux/SSH
-connection and six recipes in the GUI and export its report. This missing
-infrastructure gate cannot be replaced by the local SQL numbers.
-
-Use `scripts/clean-room.ps1 -Ref COMMIT -PythonExe PATH_TO_PYTHON` for a fresh
-source archive, locked dependency install and offline regression checks.
-
-## Attribution
-
-Organizer code: Igor Moreira / `igorsiecz/kaggle_postgre_challenge`, Apache-2.0.
-Public extraction controls and the version-result capture pattern were informed
-by `Agnuxo1/QueryFoundry`, submitted commit
-`32c283f32fe35e9b5bd0e538bd6631f305863fb3`, Apache-2.0. Its local results are
-calibration targets, not an official ranking. See [research notes](docs/RESEARCH_NOTES.md).
-
-
-The current fresh harness rotates modes by Latin-square order and uses
-PostgreSQL FILE_COPY clones. `--clone-strategy WAL_LOG --order alternating`
-reproduces the older clone/order method. Optional `--cpu-affinity 2` pins only
-the measured local backend, identically for every mode; it is a lab control,
-not part of the submitted architecture. No global OS/durability settings change.
-Run `python -m tests.semantics.domain` for sufficient-domain boundaries and
-`python -m tests.recovery.bulk_guards` for metadata fallback/refusal cases.
-
-
-The fresh 1M SQL pilot is 104.529s official / 45.551s guarded_prefix (56.42%
-less time). A separate full local original-service pair is 103.046s / 48.355s
-wall (53.07% less time), including real preflight, counters and six versions.
-Both 1M comparisons are single-run pilots. Read STATUS.md and reports/README.md
-for authoritative cohorts and limits; do not mix SQL-only and full-service times.
-
-For native guarded recovery and detailed unranked scale profiles:
-
-```powershell
-.venv/Scripts/python.exe -m tests.recovery.bulk_atomic --mode guarded_prefix
-.venv/Scripts/python.exe -m tests.recovery.bulk_concurrency
-.venv/Scripts/python.exe -m bench.release_profile --template lab_template_1m
-```
-
-For the 80% successor, prepare a 1M template/reference using the same pattern
-above after untouched generation with `--rows 1000000` on a fresh cluster (or
-preserve the existing generated DB first). With those lab databases available:
-
-```powershell
-.venv/Scripts/python.exe -m bench.native_fresh --template lab_template_1m --reference lab_1m --modes baseline guarded_copy --repeats 3 --output reports/native-reproduced-1m.json
-.venv/Scripts/python.exe -m bench.native_resources --template lab_template_1m --reference lab_1m --mode guarded_copy --output reports/native-resources-reproduced-1m.json
-.venv/Scripts/python.exe -m tests.recovery.bulk_concurrency --mode guarded_copy --output reports/native-concurrency-reproduced.json
-```
-
-Run timing and resource probes separately with no competing test jobs. Resource
-sampling and its explicit stage-size observation are unranked diagnostics.
-The server-crash test intentionally stops only the verified project-private
-cluster and must run without another active job. See tests/recovery and the
-gate-by-gate [audit](docs/RELEASE_80_AUDIT.md) before interpreting results.
-
-The actual crash test stops only the verified private project cluster; run it
-without other database work. The dump test preserves the prior database under
-a new lab_ name and restores the original name with its control identity.
-Their complete commands and results are in RECOVERY.md / reports.
+Organizer: `igorsiecz/kaggle_postgre_challenge`, commit
+`5dfde9d967425982229b92d6ffe98efcd74612e9`, Apache-2.0; see `upstream.json` and
+`app/LICENSE`. QueryFoundry recipe dependency: `Agnuxo1/QueryFoundry`, commit
+`32c283f32fe35e9b5bd0e538bd6631f305863fb3`; see `vendor/QueryFoundry-LICENSE`.
+Vendored PostgreSQL 17.11 sources retain `vendor/postgresql-17.11/COPYRIGHT`.
+The root project license is `LICENSE`.

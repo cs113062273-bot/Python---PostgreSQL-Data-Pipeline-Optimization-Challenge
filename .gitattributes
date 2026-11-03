@@ -1,17 +1,8 @@
-# Preserve the exact imported Windows export bytes and pinned vendor source.
-# This also keeps archive/clean-room hashes stable under core.autocrlf=true.
-/.gitattributes text eol=lf
-*.json text eol=lf
-*.md text eol=lf
+* text=auto
+*.py text eol=lf
 *.ps1 text eol=lf
-pipeline/** text eol=lf
-bench/** text eol=lf
-tests/** text eol=lf
-scripts/*.py text eol=lf
-native/** text eol=lf
-reports/sql/** text eol=lf
-# Content-addressed source archives must retain their exact receipt bytes.
-reports/source/** -text
-reports/native-source/** -text
+*.md text eol=lf
+*.json text eol=lf
 app/** -text
+native/** -text whitespace=cr-at-eol
 vendor/** -text

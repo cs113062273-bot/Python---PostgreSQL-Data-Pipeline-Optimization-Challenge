@@ -1,6 +1,0 @@
-{
-  "kind": "fresh_phased_transport_native_service_start",
-  "database": "lab_phased_fresh_ec97e5383a",
-  "template": "lab_template_1m",
-  "destination_warmup": false
-}

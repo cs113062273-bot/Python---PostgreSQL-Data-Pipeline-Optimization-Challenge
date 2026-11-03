@@ -1,7 +1,0 @@
-{
-  "checked_archives": [
-    ".runtime/postgresql.zip",
-    ".runtime/toolchains/zig-0.14.1-mirror.zip"
-  ],
-  "repaired_only_verified_runtime_sdk_members": []
-}

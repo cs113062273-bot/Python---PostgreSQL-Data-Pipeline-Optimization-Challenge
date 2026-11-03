@@ -1,0 +1,235 @@
+{
+  "postgresql_version": "17.11",
+  "packages": {
+    "main": {
+      "receipt": "reports/native-fused-trusted-package.json",
+      "metadata": {
+        "source_files": [
+          {
+            "path": "native/challenge_fused_main.c",
+            "sha256": "cda8373a184f51ac7c87cf9d9a44fa29d6358a536f1b0923ae9b05de16c06f6f"
+          },
+          {
+            "path": "native/challenge_fused_details.c",
+            "sha256": "7c89af29093972a44b9051d535f7d6d2ada2020804fc6443853d6b4f86a971fd"
+          },
+          {
+            "path": "native/challenge_fused.h",
+            "sha256": "ea41c08e33b4b09f20a5eecdb3743facef31df31affd3180f18a7e11b7c088f3"
+          },
+          {
+            "path": "native/challenge_fused_copyfrom.c",
+            "sha256": "5bdf5403fccb94b9863473ea547fba2329f5d01605c6551fa671aaa61b6164d5"
+          }
+        ],
+        "source_sha256": "6fd43792815d020343ae4f43bbc2fce8f5b1c056f2af16be991daf2e8bc27946",
+        "configuration": {
+          "batch_rows": 1000,
+          "batch_bytes": 256000,
+          "optimization": "O2"
+        },
+        "files": [
+          {
+            "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_fused_6fd43792815d0203.dll",
+            "sha256": "1dd4b83e8096d6b44426b0fb8f436c4938ddc00d5fc16df2b2b0869236a0adc0",
+            "bytes": 217600
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fused_6fd43792815d0203.control",
+            "sha256": "6eca319fc1fbb04f33c64ef16077a4e8cdaee8ec369e5a5f6bd6aeb328f0c229",
+            "bytes": 194
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fused_6fd43792815d0203--0.1.sql",
+            "sha256": "b8dc5cff7814c7c8101d4aa2686d26ed5d4b7da79e941ab455329fd3a4115e39",
+            "bytes": 481
+          }
+        ],
+        "vendor_sources": {
+          "upstream": "PostgreSQL",
+          "tag": "REL_17_11",
+          "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+          "files": [
+            {
+              "path": "vendor\\postgresql-17.11\\copyfrom.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+              "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+              "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+              "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+            }
+          ]
+        },
+        "extension": "challenge_fused_6fd43792815d0203",
+        "version": "0.1"
+      },
+      "extension_sources": [
+        "native/extensions/challenge_fused_6fd43792815d0203.control",
+        "native/extensions/challenge_fused_6fd43792815d0203--0.1.sql"
+      ]
+    },
+    "stamp": {
+      "receipt": "reports/native-stream-stamp-trusted-package.json",
+      "metadata": {
+        "source": "native\\challenge_stream_stamp.c",
+        "source_sha256": "831a871ec46c82dc4715e6cd61ecdf67992c2d96b2b0a0fc5c44da6921823c64",
+        "files": [
+          {
+            "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_831a871ec46c82dc.dll",
+            "sha256": "e05bfc1f313fdbe7d43e634940aed5f140fc6e73737563ecbd67bec96d14e1ff",
+            "bytes": 190976
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_stream_stamp_831a871ec46c82dc.control",
+            "sha256": "0a1b411a8261631d420e2183b382b696afb098a0e97d857dd9ea97cedfc9a7a8",
+            "bytes": 214
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_stream_stamp_831a871ec46c82dc--0.1.sql",
+            "sha256": "8ac8a55d0dfe34aed6141e2a1aad86218382b73dbe824c14bf3a0e261bac396c",
+            "bytes": 634
+          }
+        ],
+        "vendor_sources": {
+          "upstream": "PostgreSQL",
+          "tag": "REL_17_11",
+          "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+          "files": [
+            {
+              "path": "vendor\\postgresql-17.11\\copyfrom.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+              "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+              "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+              "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+            }
+          ]
+        },
+        "extension": "challenge_stream_stamp_831a871ec46c82dc",
+        "version": "0.1"
+      },
+      "extension_sources": [
+        "native/extensions/challenge_stream_stamp_831a871ec46c82dc.control",
+        "native/extensions/challenge_stream_stamp_831a871ec46c82dc--0.1.sql"
+      ]
+    },
+    "details": {
+      "receipt": "reports/native-turbo-details-trusted-package.json",
+      "metadata": {
+        "source": "native\\challenge_turbo_details.c",
+        "source_sha256": "ab9a6fd57346e092a8292d218279c50493a75cba22f2bcaf35cdc7e51b8a85eb",
+        "files": [
+          {
+            "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_ab9a6fd57346e092.dll",
+            "sha256": "fdaaffcb210d9892bc72970c803824816715994dcf304f1793b1fa520c2c207d",
+            "bytes": 200704
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_details_ab9a6fd57346e092.control",
+            "sha256": "e490d9102b370a0bf052b19dac77ac23b723498370b2ac7641e86acce1300dc9",
+            "bytes": 205
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_details_ab9a6fd57346e092--0.1.sql",
+            "sha256": "279a498d5e4fd7a4f14612a57886d75f4eb40067994c83a5949d211d790dd21e",
+            "bytes": 489
+          }
+        ],
+        "vendor_sources": {
+          "upstream": "PostgreSQL",
+          "tag": "REL_17_11",
+          "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+          "files": [
+            {
+              "path": "vendor\\postgresql-17.11\\copyfrom.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+              "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+              "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+              "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+            }
+          ]
+        },
+        "extension": "challenge_details_ab9a6fd57346e092",
+        "version": "0.1"
+      },
+      "extension_sources": [
+        "native/extensions/challenge_details_ab9a6fd57346e092.control",
+        "native/extensions/challenge_details_ab9a6fd57346e092--0.1.sql"
+      ]
+    },
+    "fk": {
+      "receipt": "reports/native-turbo-fk-trusted-package.json",
+      "metadata": {
+        "source": "native\\challenge_turbo_fk.c",
+        "source_sha256": "facb90ab8981bf8e149e7bce72b60c5a56f33722e1d349c4ae7caa475f422dd8",
+        "files": [
+          {
+            "path": ".runtime\\postgresql\\pgsql\\lib\\challenge_probe_facb90ab8981bf8e.dll",
+            "sha256": "85aa97e21056cb84578025d33c9f08c86725799ddcd04888f0a836e9ebe72070",
+            "bytes": 183296
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fk_facb90ab8981bf8e.control",
+            "sha256": "650e99ef54b9980ce57466f74947593bd398a6f63041db53a89da3e8c86cd995",
+            "bytes": 200
+          },
+          {
+            "path": ".runtime\\postgresql\\pgsql\\share\\extension\\challenge_fk_facb90ab8981bf8e--0.1.sql",
+            "sha256": "dcd242f28339c649c850b498d773d35a891556b64e41ea5c985e003823fd0287",
+            "bytes": 495
+          }
+        ],
+        "vendor_sources": {
+          "upstream": "PostgreSQL",
+          "tag": "REL_17_11",
+          "purpose": "Isolated native typed-COPY research; no server binary or official application replacement",
+          "files": [
+            {
+              "path": "vendor\\postgresql-17.11\\copyfrom.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfrom.c",
+              "sha256": "c78adfdcc4acfc678a798837b7b7f17663f27d485f6f3eb03b7b8c0ce618c10a"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\copyfromparse.c",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/src/backend/commands/copyfromparse.c",
+              "sha256": "45c3836e2c709306c7763163a5dbf513d21d45e9f1210eda15086c27e1bb0c9f"
+            },
+            {
+              "path": "vendor\\postgresql-17.11\\COPYRIGHT",
+              "url": "https://raw.githubusercontent.com/postgres/postgres/REL_17_11/COPYRIGHT",
+              "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd"
+            }
+          ]
+        },
+        "extension": "challenge_fk_facb90ab8981bf8e",
+        "version": "0.1"
+      },
+      "extension_sources": [
+        "native/extensions/challenge_fk_facb90ab8981bf8e.control",
+        "native/extensions/challenge_fk_facb90ab8981bf8e--0.1.sql"
+      ]
+    }
+  }
+}

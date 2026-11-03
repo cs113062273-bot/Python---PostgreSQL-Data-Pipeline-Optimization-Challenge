@@ -1,3 +1,0 @@
-Raw bytes match locked template; dumping all other state lab_native_variant_bb5fad3206
-Reconstructing complete raw input lab_template_archive_6f8a9080da
-Verified deduplicated archive PASS lab_native_variant_bb5fad3206

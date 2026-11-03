@@ -49,9 +49,11 @@ def main_proof(program):
 
 
 def install():
+    # Bind the selected same-ABI details package before main_proof builds its
+    # catalog guard; clean installations have no historical package receipts.
+    details.package = lambda: package('memo')
     original_main = base.addon_sql
     proof = main_proof(original_main())
-    details.package = lambda: package('memo')
     original_details = details.addon_sql
 
     def shared_details():

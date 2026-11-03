@@ -20,7 +20,8 @@ from tests.equivalence.oracle import snapshot,assert_exact,protected_schema_sign
 from tests.recovery.native_copy_atomic import source_sha
 
 
-def main(*,cases_override=None,marker_override=None):
+def main(*,cases_override=None,marker_override=None,stage_relation='pgdm_pipeline_work.pipeline_normalized_input'):
+    assert stage_relation in ('pgdm_pipeline_work.pipeline_normalized_input','pg_temp.pipeline_native_temp_input_v1')
     db='lab_refined_atomic_'+uuid.uuid4().hex[:8];create_fixture(db);seed_initial_versions(db)
     identity=refined.source_identity();refined.install();transport.install()
     native=server.ORIGINAL_RUN
@@ -42,7 +43,7 @@ def main(*,cases_override=None,marker_override=None):
             assert text.count(marker)==1
             if kind=='bad_frame':
                 assert point=='before_details'
-                replacement="UPDATE pgdm_pipeline_work.pipeline_normalized_input SET pipeline_axes=decode('01','hex');\n"+marker
+                replacement="UPDATE "+stage_relation+" SET pipeline_axes=decode('01','hex');\n"+marker
             elif kind=='missing_file':
                 assert point.startswith('copy_from_');table=point.split('_',2)[2]
                 replacement=marker.replace('/'+table+'.bin', '/missing.bin')

@@ -1,0 +1,6 @@
+comment = 'Guarded native turbo fk research, SECURITY INVOKER'
+default_version = '0.1'
+module_pathname = '$libdir/challenge_probe_facb90ab8981bf8e'
+relocatable = false
+superuser = true
+trusted = true

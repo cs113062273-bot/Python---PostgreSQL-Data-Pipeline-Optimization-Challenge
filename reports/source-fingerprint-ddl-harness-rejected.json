@@ -1,5 +1,0 @@
-{
-  "kind": "incomplete_fixture_attempt_not_a_product_result",
-  "accepted": false,
-  "reason": "An intentional raw_id bigint-to-integer DDL variant changed an automatically prepared legacy SELECT result type (0A000 cached plan must not change result type). The functional DDL comparison was rerun with prepared statements disabled equally for old and new functions and all 53 cases then passed. No timing or success claim comes from the aborted attempt."
-}

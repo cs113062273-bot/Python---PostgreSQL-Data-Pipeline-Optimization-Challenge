@@ -1,7 +1,8 @@
-"""Generate fresh data and compare original versus turbo/shared on another PC."""
+"""Compare unchanged original and a native candidate on fresh input copies."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
+import importlib
 import json
 import os
 from pathlib import Path
@@ -22,17 +23,18 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--rows', type=int, choices=[64, 100000, 1000000], default=100000)
     p.add_argument('--repeats', type=int, default=3)
-    p.add_argument('--candidate', choices=['turbo', 'shared'], default='turbo')
+    p.add_argument('--candidate', choices=['temp-stage'], default='temp-stage')
+    p.add_argument('--template', help='Retained disposable untouched input template; row count and empty outputs are checked')
+    p.add_argument('--leader-cpu', type=int, help='Separate diagnostic: identical explicit leader affinity in both modes')
     p.add_argument('--output', required=True)
     args = p.parse_args()
     if args.repeats < 1:
         p.error('repeats must be positive')
-    if args.candidate == 'turbo':
-        from bench import native_turbo_probe as candidate
-        candidate_module = 'bench.native_turbo_probe'
-    else:
-        from bench import native_main_shared_probe as candidate
-        candidate_module = 'bench.native_main_shared_probe'
+    if args.leader_cpu is not None and not 0 <= args.leader_cpu < os.cpu_count():
+        p.error('leader-cpu is outside the available logical processors')
+    candidate_module = {'turbo': 'bench.native_turbo_probe', 'shared': 'bench.native_main_shared_probe',
+                        'stream': 'bench.native_stream_probe', 'temp-stage': 'bench.native_temp_stage_probe'}[args.candidate]
+    candidate = importlib.import_module(candidate_module)
     candidate_mode = args.candidate
     output = (ROOT / args.output).resolve()
     assert output.is_relative_to(ROOT / 'reports') and not output.exists()
@@ -45,21 +47,40 @@ def main():
            'CHALLENGE_PSQL': str(ROOT / '.runtime/postgresql/pgsql/bin/psql.exe')}
     for key in ('CHALLENGE_BACKEND_CPU_AFFINITY', 'CHALLENGE_RECORD_LEADER_CPU'):
         env.pop(key, None)
+    if args.leader_cpu is not None:
+        env['CHALLENGE_BACKEND_CPU_AFFINITY'] = str(args.leader_cpu)
     frozen = candidate.source_identity()
     report = {'kind': 'portable_fresh_original_candidate_pairs', 'official_score': False,
               'candidate_implementation': candidate_mode, 'official_eligibility_unproven': True,
               'timestamp_utc': datetime.now(timezone.utc).isoformat(), 'rows': args.rows,
+              'diagnostic_leader_cpu': args.leader_cpu,
               'candidate_hook_sha256': frozen, 'runs': [], 'pairs': [],
               'driver_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'scope': 'Windows local service wall and separately native accounted total. Fresh untouched generator input and FILE_COPY per run, alternating AB/BA order. Preflight, identities, counters, all keys/FKs, commit and six versions included. Exact six-table comparison outside timer every candidate run. No official score or Linux/SSH claim.'}
+    if args.leader_cpu is not None:
+        report['scope'] += ' Separate diagnostic with the same explicitly pinned SQL leader in original and candidate; workers unchanged, pin setup included. Not default OS scheduling.'
+    driver_archive = ROOT / 'reports/source' / (report['driver_sha256'] + '.py')
+    driver_archive.parent.mkdir(parents=True, exist_ok=True)
+    if driver_archive.exists():
+        assert driver_archive.read_bytes() == Path(__file__).read_bytes()
+    else:
+        driver_archive.write_bytes(Path(__file__).read_bytes())
+    report['driver_source_archive'] = str(driver_archive.relative_to(ROOT))
     with lab.connect('postgres', autocommit=True) as c:
         report['environment'] = environment(c)
         assert all(report['environment']['settings'][key] == 'on' for key in ('fsync', 'full_page_writes', 'synchronous_commit'))
     write_report(output, report)
-    template = 'lab_portable_template_' + uuid.uuid4().hex[:10]
-    print('Generating', args.rows, 'unchanged input rows:', template, flush=True)
-    lab.fixture(template, rows=args.rows)
+    template = args.template or 'lab_portable_template_' + uuid.uuid4().hex[:10]
+    if args.template:
+        assert template.startswith('lab_')
+        print('Validating retained untouched input:', template, flush=True)
+    else:
+        print('Generating', args.rows, 'unchanged input rows:', template, flush=True)
+        lab.fixture(template, rows=args.rows)
     with lab.connect(template, autocommit=True) as c:
+        from bench.common import require_lab
+        require_lab(c)
+        assert c.execute('SELECT count(*) FROM public.raw_data').fetchone() == (args.rows,)
         scopes = [r[0] for r in c.execute('SELECT DISTINCT raw_schema FROM public.raw_data ORDER BY 1')]
         digest = source_digest(c, scopes)
         assert all(c.execute('SELECT count(*) FROM public.' + t).fetchone() == (0,) for t in ORDER)
@@ -84,6 +105,10 @@ def main():
             assert child[field] is True, field
         assert len(child['versions']) == 6 and child['destination_warmup_before_measured_run'] is False
         assert child['environment']['settings'] == report['environment']['settings']
+        if args.leader_cpu is not None:
+            diagnostics = child['local_backend_diagnostics']
+            affinity = diagnostics.get('leader_affinity_diagnostic', diagnostics)
+            assert affinity['requested_cpu'] == args.leader_cpu and affinity['measured_affinity'] == [args.leader_cpu]
         if mode == 'official':
             assert child['unmodified_reference_established'] is True
         else:
@@ -101,7 +126,7 @@ def main():
                 assert int(diag['typed_main_affected']) == c.execute('SELECT count(*) FROM public.table1').fetchone()[0]
                 for kind in ('main', 'stamp', 'memo'):
                     assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s', (candidate.package(kind)['extension'],)).fetchall()
-                if candidate_mode == 'turbo':
+                if candidate_mode != 'shared':
                     assert not c.execute('SELECT 1 FROM pg_extension WHERE extname=%s', (candidate.package('fk')['extension'],)).fetchall()
         row = {'mode': mode, 'database': database, 'report': str(path.relative_to(ROOT)),
                'wall_seconds': child['wall_seconds'],
@@ -116,7 +141,7 @@ def main():
     # rounds. All measured destinations are still fresh FILE_COPY clones.
     oracle = None
     for repeat in range(args.repeats):
-        names = {mode: 'lab_portable_' + mode + '_' + uuid.uuid4().hex[:10] for mode in ('official', candidate_mode)}
+        names = {mode: 'lab_portable_' + mode.replace('-', '_') + '_' + uuid.uuid4().hex[:10] for mode in ('official', candidate_mode)}
         with lab.connect('postgres', autocommit=True) as admin:
             for name in names.values():
                 admin.execute(sql.SQL('CREATE DATABASE {} TEMPLATE {} STRATEGY FILE_COPY').format(sql.Identifier(name), sql.Identifier(template)))
@@ -136,6 +161,7 @@ def main():
     medians = {mode: statistics.median(r['wall_seconds'] for r in report['runs'] if r['mode'] == mode) for mode in ('official', candidate_mode)}
     report['summary'] = {'median_wall_seconds': medians, 'median_wall_reduction_percent': 100 * (1 - medians[candidate_mode] / medians['official']),
                          'every_pair_at_least_90_percent': all(p['wall_reduction_percent'] >= 90 for p in report['pairs']),
+                         'every_pair_at_least_95_percent': all(p['wall_reduction_percent'] >= 95 for p in report['pairs']),
                          'official_score': False, 'performance_reproduced_on_this_pc_only': True}
     report['all_passed'] = True
     write_report(output, report)

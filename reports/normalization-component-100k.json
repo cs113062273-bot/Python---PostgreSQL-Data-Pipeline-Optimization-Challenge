@@ -1,7 +1,0 @@
-{
-  "kind": "read_only_source_component_cost",
-  "rows": 100000,
-  "text_stage_seconds": 1.5071851999964565,
-  "domain_gate_seconds": 1.935689399993862,
-  "safe": true
-}

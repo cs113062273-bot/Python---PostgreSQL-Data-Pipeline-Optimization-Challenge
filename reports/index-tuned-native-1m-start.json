@@ -1,8 +1,0 @@
-{
-  "kind": "fresh_index_tuning_native_service_start",
-  "database": "lab_index_tuned_fc6c8e6e3d",
-  "template": "lab_template_1m",
-  "destination_warmup": false,
-  "hook_source_sha256": "2eac066b3e4d49b44a639c41684982d2966495b8fa115de05ebac6bb50b6512f",
-  "ranked": false
-}

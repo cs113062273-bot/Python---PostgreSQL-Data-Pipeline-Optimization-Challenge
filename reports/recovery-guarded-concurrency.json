@@ -1,9 +1,0 @@
-{
-  "kind": "concurrent_target_commit_during_lock_wait",
-  "database": "lab_bulk_concurrency_3a1d4bea",
-  "passed": true,
-  "proof_fell_back": true,
-  "concurrent_row_preserved": true,
-  "counter_reconciliation": true,
-  "blocked_backend_xmin": "109333"
-}

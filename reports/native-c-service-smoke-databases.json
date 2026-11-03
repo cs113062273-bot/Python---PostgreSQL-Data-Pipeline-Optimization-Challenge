@@ -1,7 +1,0 @@
-{
-  "reference": "lab_native_reference_d5921efe",
-  "candidate": "lab_native_compact_a43370d8",
-  "rows": 64,
-  "source": "unchanged official deterministic generator",
-  "clone_before_any_destination_work": true
-}

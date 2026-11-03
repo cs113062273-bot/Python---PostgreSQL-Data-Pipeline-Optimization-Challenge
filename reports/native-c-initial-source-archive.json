@@ -1,6 +1,0 @@
-{
-  "source_sha256": "2d75a9516f2cdae1acd6d8fa9cc577fc236ee3921ccf7aee5c3832bdd81c112a",
-  "source_archive": "reports\\native-source\\2d75a9516f2cdae1acd6d8fa9cc577fc236ee3921ccf7aee5c3832bdd81c112a.c",
-  "reason": "Preserve exact measured extraction/proof prototype before extending the native module",
-  "projection_report": "reports/native-c-projection-100k.json"
-}

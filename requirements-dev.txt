@@ -1,4 +1,0 @@
--r app/requirements.txt
-psycopg[binary]==3.2.13
-pytest>=8,<10
-psutil>=7,<8

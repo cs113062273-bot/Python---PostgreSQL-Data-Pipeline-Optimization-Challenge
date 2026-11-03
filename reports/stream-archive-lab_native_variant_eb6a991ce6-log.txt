@@ -1,3 +1,0 @@
-Dumping stable locked snapshot lab_native_variant_eb6a991ce6
-Verifying every rendered native COPY row lab_native_variant_eb6a991ce6
-Full archive streams and native metadata restore PASS lab_native_variant_eb6a991ce6

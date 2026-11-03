@@ -1,8 +1,0 @@
-{
-  "kind": "fresh_compact_axis_native_service_start",
-  "database": "lab_compact_axes_c3f01f5934",
-  "template": "lab_template_1m",
-  "destination_warmup": false,
-  "hook_source_sha256": "07dec593864050e1bc30fc4ef518709027eaf7168294da4bf1178dca61550355",
-  "ranked": false
-}

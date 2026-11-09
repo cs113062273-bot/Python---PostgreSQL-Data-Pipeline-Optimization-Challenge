@@ -4,11 +4,23 @@ from unittest.mock import patch
 
 from services.expansion_engine import (
     defer_foreign_keys_sql,
+    defer_indexes_sql,
+    plan_staged_insert,
     restore_foreign_keys_sql,
+    restore_indexes_sql,
     rewrite_json_paths,
+    staged_insert_sql,
 )
 
 SQL_DIR = Path(__file__).resolve().parents[1] / "SQL files"
+SOURCE_SQL = (
+    "(\n    SELECT *\n    FROM \"public\".\"raw_data\"\n"
+    "    WHERE \"raw_schema\" IN ('group001')\n)"
+)
+
+
+def staged(body):
+    return plan_staged_insert(body.replace("{{source}}", SOURCE_SQL), SOURCE_SQL, {"count"})
 
 
 def rewrite(sql):
@@ -93,6 +105,67 @@ class ForeignKeyDeferralTests(unittest.TestCase):
         sql = restore_foreign_keys_sql()
         self.assertIn("ADD CONSTRAINT %I %s", sql)
         self.assertIn("COMMENT ON CONSTRAINT", sql)
+
+
+class ParallelStageTests(unittest.TestCase):
+    def test_official_recipes_are_staged(self):
+        for path in sorted(SQL_DIR.glob("*.sql")):
+            recipe = rewrite_json_paths(path.read_text(encoding="utf-8"), {"raw"})[0]
+            plan = staged(recipe)
+            self.assertIsNotNone(plan, path.name)
+            self.assertEqual(plan["distinct"], "DISTINCT" in recipe, path.name)
+
+    def test_row_recipe_is_ordered_by_source_position_then_output(self):
+        plan = staged("INSERT INTO public.t (a, b) SELECT s.raw ->> 'x', ARRAY[1, 2] FROM {{source}} AS s")
+        self.assertEqual(plan["stage_columns"], ["pgdm_source_ctid", "pgdm_c1", "pgdm_c2"])
+        self.assertIn("s.pgdm_source_ctid, s.raw", plan["select_sql"])
+        self.assertIn("SELECT *, ctid AS pgdm_source_ctid", plan["select_sql"])
+        build, insert = staged_insert_sql(plan, "pgdm_stage_10")
+        self.assertIn("WITH NO DATA", build)
+        self.assertIn("\\gset", build)
+        self.assertTrue(build.endswith(":pgdm_stage_10_order;"))
+        self.assertTrue(insert.endswith("SELECT pgdm_c1, pgdm_c2 FROM pg_temp.pgdm_stage_10"))
+
+    def test_distinct_recipe_does_not_add_the_source_position(self):
+        plan = staged("INSERT INTO public.t (a) SELECT DISTINCT s.raw ->> 'x' FROM {{source}} s")
+        self.assertEqual(plan["stage_columns"], ["pgdm_c1"])
+        self.assertNotIn("ctid", plan["select_sql"])
+
+    def test_statements_without_a_source_order_keep_single_statement_execution(self):
+        for body in (
+            "INSERT INTO public.t (a) SELECT s.raw ->> 'x' FROM {{source}} s GROUP BY 1",
+            "INSERT INTO public.t (a) SELECT s.raw ->> 'x' FROM {{source}} s ORDER BY 1",
+            "INSERT INTO public.t (a) SELECT s.raw ->> 'x' FROM {{source}} s LIMIT 5",
+            "INSERT INTO public.t (a) SELECT s.raw ->> 'x' FROM {{source}} s UNION SELECT 'y'",
+            "INSERT INTO public.t (a) SELECT DISTINCT ON (1) s.raw ->> 'x' FROM {{source}} s",
+            "INSERT INTO public.t (a) SELECT row_number() OVER () FROM {{source}} s",
+            "INSERT INTO public.t (a) SELECT count(*) FROM {{source}} s",
+            "INSERT INTO public.t (a) SELECT to_jsonb(s) FROM {{source}} s",
+            "INSERT INTO public.t (a, b) SELECT s.* FROM {{source}} s",
+            "INSERT INTO public.t (a) SELECT * FROM {{source}} s",
+            "INSERT INTO public.t SELECT s.raw FROM {{source}} s",
+            "INSERT INTO public.t (a, b) SELECT s.raw FROM {{source}} s",
+            "INSERT INTO public.t (a) SELECT x.raw FROM {{source}} x JOIN {{source}} y USING (raw_id)",
+            "INSERT INTO public.t (a) SELECT raw FROM {{source}}",
+            "INSERT INTO public.t (a) SELECT s.c FROM {{source}} s (c)",
+        ):
+            self.assertIsNone(staged(body), body)
+
+    def test_index_deferral_keeps_indexes_it_cannot_rebuild_identically(self):
+        sql = defer_indexes_sql(["'\"public\".\"table1\"'"])
+        for condition in (
+            "method.amname = 'btree'",
+            "pg_has_role(relation.relowner, 'USAGE')",
+            "NOT index_data.indisclustered",
+            "NOT index_data.indisreplident",
+            "index_class.reltablespace = 0",
+            "pg_inherits.inhrelid = index_data.indexrelid",
+            "other.conindid = index_data.indexrelid",
+        ):
+            self.assertIn(condition, sql)
+        restore = restore_indexes_sql()
+        self.assertIn("ADD CONSTRAINT %I %s", restore)
+        self.assertIn("COMMENT ON INDEX", restore)
 
 
 class PreflightBatchTests(unittest.TestCase):

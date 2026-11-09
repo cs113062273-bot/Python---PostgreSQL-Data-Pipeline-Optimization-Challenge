@@ -10,38 +10,42 @@ the application is installed and used exactly as before (Windows GUI → SSH →
 ## What changed
 
 **Execution** — still one `REPEATABLE READ` transaction with the same locks, counters, manifest and
-the same query plans, so the six destination tables come out row-for-row identical to the original,
-identity values included.
+validations. The six destination tables come out row-for-row identical to the original, identity
+values included.
 
-1. **JSON path collapse.** `raw -> 'values' ->> 'k'` copies the whole `values` object (~1.5 KB) before
-   reading one key; the six recipes contain 91 such chains, each evaluated for every source row. Chains are rewritten to
-   `raw #>> ARRAY['values','k']`, which walks the stored document once. Only chains on json/jsonb source
-   columns with non-numeric string keys and unambiguous operator precedence are rewritten
-   ([services/expansion_engine.py](services/expansion_engine.py)).
-2. **Bulk foreign-key validation.** The original checks every inserted row with an RI trigger
-   (an index probe plus a `FOR KEY SHARE` row lock that dirties a `raw_data` page). The destinations'
-   validated foreign keys are now dropped inside the transaction and re-created with their original
-   definitions right before `COMMIT`; PostgreSQL validates each one with a single join. A violation
-   aborts the transaction, as before. Constraints the role cannot re-create keep their triggers.
-3. **One-batch preflight.** The source, function and destination checks used to start 25+ separate
-   `psql` processes over SSH. Their exact queries now run in one `psql` process (plus one for missing row
-   counters); the checks themselves run unchanged on those outputs. Timed remote commands per expansion:
-   32 → 7.
+1. **Parallel recipe evaluation.** PostgreSQL never parallelizes `INSERT … SELECT`, so the original
+   ran every recipe on one core. Each recipe's `SELECT` now runs as a parallel
+   `CREATE TEMP TABLE … AS SELECT … ORDER BY …`, and the destination is filled from it with the
+   original column list. The sort key is the order the original statement produced rows in (source
+   row position, then output columns; for `SELECT DISTINCT` the output columns, used only when
+   `EXPLAIN` of the original shows Sort + Unique), so every row gets the same identity value.
+   Recipes with aggregates, window functions, `GROUP BY`, `ORDER BY`/`LIMIT`, set operations or
+   whole-row source references run unchanged ([services/expansion_engine.py](services/expansion_engine.py)).
+2. **Bulk index build.** The destinations' btree indexes are dropped inside the transaction and rebuilt
+   from their catalog definitions before `COMMIT`, instead of being maintained row by row.
+   A duplicate fails the rebuild and aborts the transaction, as a failing insert did.
+3. **Bulk foreign-key validation.** Validated FKs are dropped and re-created from
+   `pg_get_constraintdef` before `COMMIT`; PostgreSQL validates each with one join instead of a
+   trigger query (and a `FOR KEY SHARE` lock on `raw_data`) per row.
+4. **Planner statistics.** A destination that later recipes read is `ANALYZE`d once it is filled.
+5. **JSON path collapse.** `raw -> 'values' ->> 'k'` (copies the ~1.5 KB `values` object first) becomes
+   `raw #>> ARRAY['values','k']`.
+6. **One-batch preflight.** The source, function and destination checks run unchanged on outputs
+   fetched by one `psql` process instead of 25+. Timed remote commands per expansion: 32 → 7.
 
 **Recovery**
 
-4. **Server-side job.** The SQL batch is uploaded to `~/postgres_data_manager_storage/expansion_jobs/<job>`
+7. **Server-side job.** The SQL batch is uploaded to `~/postgres_data_manager_storage/expansion_jobs/<job>`
    and started with `nohup psql`. A dropped SSH connection, a closed DB Manager or a Windows crash
    no longer aborts the transaction. The job is visible in `pg_stat_activity` as `pgdm_expand:<job>`.
-5. **Journal.** The same transaction that writes the data inserts a row into
+8. **Journal.** The same transaction that writes the data inserts a row into
    `public.pgdm_expansion_journal` (data database) containing everything version registration needs.
    Data and journal commit together or not at all.
-6. **Resume on the next Expand.** Before running, Expand waits for any job still running on that
+9. **Resume on the next Expand.** Before running, Expand waits for any job still running on that
    database and registers the versions of committed-but-unregistered jobs. If the interrupted job was
-   the same request, it is not executed again. Registration is idempotent per job id, so a crash
-   between the control-database commit and the journal update is also safe.
-7. **Cancel** terminates the job's backend; an uncommitted transaction rolls back completely,
-   including the dropped foreign keys.
+   the same request, it is not executed again. Registration is idempotent per job id.
+10. **Cancel** terminates the job's backend; the uncommitted transaction rolls back completely,
+    including the dropped indexes and foreign keys.
 
 ## Results
 
@@ -52,24 +56,25 @@ Each row is the median of three alternating runs on fresh clones of the same gen
 
 | | Original | This version | Change |
 |---|---:|---:|---:|
-| **1M rows — MEASURED PROCESSING TOTAL** | **106.2 s** | **63.2 s** | **−40.5 %** |
-| 1M rows — SQL stage | 103.2 s | 62.3 s | −39.6 % |
-| 1M rows — preflight | 2.9 s | 0.5 s | |
-| **100k rows — MEASURED PROCESSING TOTAL** | **12.64 s** | **6.97 s** | **−44.9 %** |
-| 100k rows — SQL stage | 9.33 s | 6.17 s | −33.9 % |
-| WAL written, 1M | 3086 MB | 1200 MB | −61 % |
-| Temporary files, 1M | 74.7 MB | 74.7 MB | 0 |
-| Peak backend private memory, 1M | 35 MB | 53 MB | +18 MB |
+| **1M rows — MEASURED PROCESSING TOTAL** | **107.5 s** | **23.8 s** | **−77.8 %** |
+| 1M rows — SQL stage | 104.4 s | 23.0 s | |
+| **100k rows — MEASURED PROCESSING TOTAL** | **12.46 s** | **4.38 s** | **−64.9 %** |
+| 100k rows — SQL stage | 9.64 s | 3.48 s | |
+| WAL written, 1M | 3086 MB | 730 MB | |
+| Peak temporary disk, 1M (temp tables + spill files) | 43 MB | 425 MB | |
+| Peak private memory of all PostgreSQL processes, 1M | 59 MB | 114 MB | |
 
-Per step at 1M (seconds):
+Per step at 1M (seconds; this version: evaluate + insert):
 
 | Step | Original | This version |
 |---|---:|---:|
-| table3 / table4 | 2.8 / 2.3 | 2.9 / 2.4 |
-| table1 | 33.5 | 12.5 |
-| table5 / table6 | 9.8 / 11.4 | 5.3 / 5.4 |
-| table2 | 43.0 | 31.6 |
-| Re-create and validate foreign keys | — | 1.5 |
+| table3 / table4 | 2.8 / 2.3 | 0.7 / 0.8 |
+| table1 | 33.5 | 2.0 + 1.4 |
+| table5 | 9.8 | 0.9 + 1.0 |
+| table6 | 11.4 | 0.9 + 1.1 |
+| table2 | 43.0 | 4.9 + 3.1 |
+| Rebuild indexes | — | 3.3 |
+| Re-create and validate foreign keys | — | 1.7 |
 
 Output check: [tools/output_fingerprint.sql](tools/output_fingerprint.sql) gives identical results for
 the original and this version at 100k and 1M rows (all six tables with identity values, row counters,
@@ -81,7 +86,7 @@ Failure tests (100k, each followed by a normal Expand):
 |---|---|
 | Client killed while the job runs | Job commits on the server; next Expand registers its 6 versions without reloading |
 | Crash after data commit, before version registration | Next Expand registers the 6 versions from the journal |
-| Expansion backend terminated mid-transaction | Nothing committed, all 6 FKs present, counters unchanged |
+| Expansion backend terminated mid-transaction | Nothing committed; all FKs and indexes present, counters unchanged |
 | PostgreSQL immediate shutdown mid-transaction | Same as above after restart |
 | User cancel during the job | Same as above |
 | Version registration repeated for one job | Returns the existing versions, no duplicates |
@@ -115,24 +120,28 @@ Unit tests: `python -m pytest tests`.
 
 ## Trade-offs and limits
 
+- Speed depends on CPU cores: parallel steps use online CPUs − 1 workers (capped by the server's
+  `max_parallel_workers`). Inserts, index builds and FK validation remain single-threaded.
+- Temporary disk holds one recipe's evaluated rows at a time (table2 is the largest) plus sort spill
+  files, and grows linearly with the source.
+- Identity values match because the original plans emit rows in source order and the generated
+  `raw_data` is stored in `raw_id` order. On a source stored in another order the rows and their
+  relationships are the same, but identity numbers may be assigned in a different order.
 - While an expansion runs, the source table and the destinations are locked `ACCESS EXCLUSIVE`
-  (needed to drop foreign keys). Other sessions reading `raw_data` wait until it commits.
-- The role must own the destination tables to defer their foreign keys (true for the generator's role);
-  otherwise those constraints keep per-row checking.
+  (needed to drop foreign keys). The role must own the destination tables to defer their foreign
+  keys and indexes (true for the generator's role).
 - The data phase is atomic: a PostgreSQL crash mid-transaction loses that run's work and Expand must be
   started again. Splitting it into committed chunks would break the all-or-nothing visibility of the six
   destinations, which the original guarantees.
-- Per-row work that the recipes themselves require (casting, `GREATEST`, 14 lateral positions for table2)
-  is unchanged; table2 remains the largest step.
 
 ## Changed files
 
 | File | Change |
 |---|---|
-| [services/expansion_engine.py](services/expansion_engine.py) | New: JSON path rewrite, FK defer/restore SQL |
+| [services/expansion_engine.py](services/expansion_engine.py) | New: JSON path rewrite, parallel staging, FK and index defer/restore SQL |
 | [services/postgres_service.py](services/postgres_service.py) | Batch construction, batched preflight, server-side job, journal, recovery, idempotent registration |
 | [main.py](main.py) | Runs recovery before a new Expand |
-| [tests/test_expansion_engine.py](tests/test_expansion_engine.py) | Rewrite, FK SQL and preflight batch tests |
+| [tests/test_expansion_engine.py](tests/test_expansion_engine.py) | Rewrite, staging, FK/index SQL and preflight batch tests |
 | [tests/test_expansion_timing.py](tests/test_expansion_timing.py) | Adapted to the job-based execution |
 | [tools/](tools/) | Headless runner and output fingerprint |
 

@@ -1,4 +1,4 @@
-# Faster, recoverable Expand: bulk FK validation, single-pass JSON paths and server-side jobs
+# Faster, recoverable Expand: parallel recipe evaluation, bulk index/FK builds and server-side jobs
 
 **Repository:** https://github.com/cs113062273-bot/Python---PostgreSQL-Data-Pipeline-Optimization-Challenge
 **Submission commit:** listed in the Kaggle Writeup (the final commit of `main`)
@@ -9,7 +9,7 @@ row-for-row identical to the original, identity values included.
 
 ## 1. Bottlenecks in the original pipeline
 
-Baseline at 1M rows (MEASURED PROCESSING TOTAL 106.2 s; SQL stage 103.2 s):
+Baseline at 1M rows (MEASURED PROCESSING TOTAL 107.5 s; SQL stage 104.4 s):
 
 | Step | Time |
 |---|---:|
@@ -19,94 +19,116 @@ Baseline at 1M rows (MEASURED PROCESSING TOTAL 106.2 s; SQL stage 103.2 s):
 | table2 (2.32M rows) | 43.0 s |
 | Preflight (32 remote commands) | 2.9 s |
 
-1. **Per-row foreign-key triggers.** Seven FKs on the destinations fire for every inserted row (7.3M trigger queries at 1M).
-   The worst is `table1.id_column_3 → raw_data`: each check probes `raw_data_pkey` and takes a
-   `FOR KEY SHARE` lock, which writes the tuple header of a page in the 2 GB source table — random I/O
-   plus WAL. Keeping only that one FK costs +21 s on table1 at 1M.
-2. **JSON extraction copies.** `raw -> 'values' ->> 'k'` first materialises the whole `values` object
-   (~1.5 KB, 64 keys) and then reads one key. The recipes contain 91 such chains (56 in table2 alone),
-   all evaluated for every source row.
-3. **WAL volume.** The row locks above make the expansion write far more WAL than the rows themselves
-   (3.1 GB at 1M, for a 2.6 GB database).
-4. **Preflight round trips.** 32 timed remote commands per run, 25+ of them separate `psql` processes
-   (start-up, connection, authentication) for one small catalog query each.
-5. **No recovery.** The batch is streamed through the SSH channel; if it drops, psql dies and the work is
-   rolled back. Version registration is a second transaction in another database, so a failure between
-   the two leaves committed data without versions.
+1. **Single-core execution.** `INSERT … SELECT` never uses parallel query in PostgreSQL, so every
+   recipe — 91 JSON extractions per source row, casts, `GREATEST`, 14 lateral positions for table2 —
+   runs on one core. table2 alone is ~24 CPU-seconds of expression evaluation at 1M.
+2. **Per-row foreign-key triggers.** Seven FKs fire for every inserted row (7.3M trigger queries at 1M).
+   `table1.id_column_3 → raw_data` also takes a `FOR KEY SHARE` lock per row, which dirties pages of
+   the 2 GB source table (random I/O and WAL).
+3. **Per-row index maintenance.** Nine unique btree indexes on the destinations are updated row by row;
+   for table2 this is more than half of the insert time.
+4. **JSON extraction copies.** `raw -> 'values' ->> 'k'` materialises the whole `values` object
+   (~1.5 KB, 64 keys) before reading one key.
+5. **WAL volume.** 3.1 GB of WAL at 1M, for a 2.6 GB database.
+6. **Preflight round trips.** 32 timed remote commands, 25+ of them separate `psql` processes.
+7. **No recovery.** The batch is streamed through the SSH channel; if it drops, the work is rolled back.
+   Version registration is a second transaction in another database, so a failure between the two
+   leaves committed data without versions.
 
 ## 2. Optimizations
 
-All of them keep the original single `REPEATABLE READ` transaction, locks, row counters, manifest,
-and — importantly — the same query plans, so rows are inserted in the same order and receive the
-same identity values.
+Everything still runs in the original single `REPEATABLE READ` transaction with the same locks,
+row counters, manifest and validations.
 
-**JSON path collapse (SQL generation, Python).** Before execution, every
-`col -> 'a' ->> 'b'` chain on a json/jsonb source column is rewritten to `(col #>> ARRAY['a','b'])`.
-For json/jsonb the two forms return the same value whenever no key looks like an array index; chains
-with numeric-looking keys, non-plain string literals or neighbouring operators that bind tighter
-(`::`, `AT TIME ZONE`, `COLLATE`, arithmetic) are left untouched. A small position-aware lexer does
-the rewrite, so comments and literals are never modified. The recipe stored in version history is the
-original text.
+**Parallel recipe evaluation.** Each recipe's `SELECT` is evaluated by
+`CREATE TEMP TABLE … AS SELECT … ORDER BY …`, which PostgreSQL does run with parallel workers;
+the destination is then filled from that table with the original `INSERT` column list (counters
+are updated from its row count as before). The sort key reproduces the order in which the original
+statement produced its rows, so identity values go to the same rows:
 
-**Bulk FK validation (PostgreSQL).** Inside the transaction, after the destination locks, the validated
-FKs of the destination tables are read from `pg_constraint`, dropped, and re-created with
-`pg_get_constraintdef` (and their comments) right before `COMMIT`. `ALTER TABLE … ADD CONSTRAINT`
-validates each FK with one join instead of one trigger query per row. A violation raises and the whole
-transaction rolls back, exactly like a failing row insert in the original. Only constraints the role can
-re-create (owner, `REFERENCES` privilege, not inherited) are deferred.
+- row recipes: source row position (`ctid`, exposed through the existing scoped source subquery),
+  then the output columns (orders the 14 table2 positions within a source row);
+- `SELECT DISTINCT`: the output columns, but only when `EXPLAIN` of the original statement inside
+  the transaction shows Sort + Unique in select-list order (at 100k the planner hashes instead, and
+  the statement then runs unchanged).
 
-**One-batch preflight (Python).** The preflight still calls the same checks in the same order, but
-their exact `psql -c` commands are answered from a per-thread cache filled by one `psql` process
-(output format switched per query with `\pset`, results split by `\echo` markers). Missing row counters
-are initialized in one more process with the original reconcile SQL. Any error drops the cache and the
-checks run individually. Timed remote commands: 32 → 7.
+Statements whose order cannot be described this way — aggregates, window functions, `GROUP BY`,
+`ORDER BY`/`LIMIT`, set operations, whole-row or `*` references to the source, a source used twice —
+keep the original single-statement execution. Workers per query = online CPUs − 1, capped by the
+server's `max_parallel_workers`; no memory setting is changed.
 
-**Rejected after measurement:** dropping and rebuilding secondary unique indexes (no gain),
-`ANALYZE` after each destination and a larger `work_mem` (they change join plans — and therefore the
-order in which identity values are assigned — without a reliable speedup), and evaluating the table2
-lateral lookups lazily (−30 % on table2, but a different plan and different identity values).
+**Bulk foreign-key validation.** After the destination locks, the validated FKs of the destinations
+are dropped and re-created from `pg_get_constraintdef` right before `COMMIT`; each is validated with
+one join instead of one trigger query per row. A violation aborts the transaction, as before.
+
+**Bulk index build.** The destinations' btree indexes (PK, UNIQUE, partial unique) are dropped after
+the FKs and rebuilt from `pg_get_constraintdef` / `pg_get_indexdef` (with comments) before the FKs are
+restored. A duplicate makes the rebuild fail and aborts the transaction, like a failing row insert.
+Indexes still needed by a non-deferred FK, partition, clustered, replica-identity and
+non-default-tablespace indexes are left alone; only tables the role owns are touched.
+
+**Planner statistics.** A destination read by a later recipe is `ANALYZE`d after it is filled, so
+those recipes plan their joins on real row counts (without it the planner hashed the 1M-row source
+instead of table1 and spilled 256 batches).
+
+**JSON path collapse.** `col -> 'a' ->> 'b'` on json/jsonb source columns becomes
+`(col #>> ARRAY['a','b'])`; chains with numeric-looking keys or tighter-binding neighbours are left
+alone. The recipe stored in version history is the original text.
+
+**One-batch preflight.** The same checks run in the same order on outputs fetched by one `psql`
+process (plus one for missing counters). Timed remote commands: 32 → 7.
+
+**Tried and dropped:** larger `work_mem` / `maintenance_work_mem` (no gain), a larger identity
+sequence cache (−0.3 s on table2, not worth changing sequence options), skipping the sort
+(−0.6 s on table2 but identity values would no longer match).
 
 ## 3. Results
 
-Same machine, PostgreSQL 17.11 defaults, organizer generator, median of three alternating runs on
-fresh clones. The report's own measurement model is used (SQL clocked in PostgreSQL, remote commands
-clocked on the server).
+Same machine (16 cores), PostgreSQL 17.11 defaults, organizer generator, median of three alternating
+runs on fresh clones, the report's own measurement model (SQL clocked in PostgreSQL, remote
+commands clocked on the server).
 
 | | Original | This version | Change |
 |---|---:|---:|---:|
-| **1M rows — MEASURED PROCESSING TOTAL** | **106.2 s** | **63.2 s** | **−40.5 %** |
-| 1M rows — SQL stage | 103.2 s | 62.3 s | −39.6 % |
-| 1M rows — preflight | 2.9 s | 0.5 s | |
-| **100k rows — MEASURED PROCESSING TOTAL** | **12.64 s** | **6.97 s** | **−44.9 %** |
-| 100k rows — SQL stage | 9.33 s | 6.17 s | −33.9 % |
+| **1M rows — MEASURED PROCESSING TOTAL** | **107.5 s** | **23.8 s** | **−77.8 %** |
+| 1M rows — SQL stage | 104.4 s | 23.0 s | |
+| **100k rows — MEASURED PROCESSING TOTAL** | **12.46 s** | **4.38 s** | **−64.9 %** |
+| 100k rows — SQL stage | 9.64 s | 3.48 s | |
 
-Per step at 1M: table1 33.5 → 12.5 s, table5 9.8 → 5.3 s, table6 11.4 → 5.4 s, table2 43.0 → 31.6 s,
-table3/table4 unchanged (2.8/2.3 s), plus 1.5 s for re-creating and validating the foreign keys.
-table1 gains most because its FK to `raw_data` was the expensive one. The preflight times here include
-Windows process start-up; on Linux each saved `psql` start is smaller but the count goes from 32 to 7.
+Per step at 1M (seconds, evaluate + insert):
+
+| Step | Original | This version |
+|---|---:|---:|
+| table3 / table4 | 2.8 / 2.3 | 0.7 / 0.8 |
+| table1 | 33.5 | 2.0 + 1.4 |
+| table5 | 9.8 | 0.9 + 1.0 |
+| table6 | 11.4 | 0.9 + 1.1 |
+| table2 | 43.0 | 4.9 + 3.1 |
+| Rebuild indexes | — | 3.3 |
+| Re-create and validate foreign keys | — | 1.7 |
 
 Correctness: an output fingerprint (all six tables ordered by identity, row counters, constraint
-definitions and validation state, indexes, sequence positions) is identical for the original and this
-version at 100k and 1M rows. 21 unit tests cover the rewrite rules, the batch structure and the
-preflight batching.
+definitions and validation state, index definitions, sequence positions) is identical for the original
+and this version at 100k and 1M rows. Unit tests cover the JSON rewrite, the staging rules and their
+fallbacks, the FK/index deferral SQL, the batch structure and the preflight batching.
 
 ## 4. Resource usage
 
 | 1M rows | Original | This version |
 |---|---:|---:|
-| WAL written | 3086 MB | 1200 MB (−61 %) |
-| Temporary files (`pg_stat_database.temp_bytes`) | 74.7 MB | 74.7 MB |
-| Peak private memory of a PostgreSQL backend | 35 MB | 53 MB |
+| WAL written | 3086 MB | 730 MB |
+| Peak temporary disk (temp tables + spill files) | 43 MB | 425 MB |
+| Peak private memory, all PostgreSQL processes | 59 MB | 114 MB |
 | Database size after the run | 2618.5 MB | 2618.6 MB |
 
-At 100k: WAL 300 → 120 MB, no temporary files in either version, peak backend private memory
-16 → 13 MB. The temporary files at 1M come from a multi-batch hash join that both versions plan
-identically. No memory setting is changed, so every sort and hash stays within the server's
-`work_mem` / `maintenance_work_mem`.
+At 100k: WAL 300 → 74 MB, peak temporary disk 0 → 39 MB, peak
+memory 36 → 62 MB.
 
-No staging tables, no temporary tables beyond the original's timing/manifest tables, no settings
-changes. Extra persistent storage is one journal row per expansion (the request and manifest, a few
-KB). The uploaded batch file on the server (tens of KB) is deleted when the job finishes.
+Temporary disk is the evaluated rows of one recipe at a time (each stage table is dropped right after
+its insert; the largest is table2) plus the workers' sort spill files; it grows linearly with the
+source. Memory grows with the number of parallel workers (each bounded by the unchanged `work_mem`),
+not with the data size. No staging in permanent tables, no settings changed outside the transaction.
+Extra persistent storage is one journal row per expansion (a few KB).
 
 ## 5. Failure recovery
 
@@ -116,36 +138,38 @@ KB). The uploaded batch file on the server (tens of KB) is deleted when the job 
   identifiable in `pg_stat_activity` (`application_name = pgdm_expand:<job>`).
 - **Journal in the same transaction.** The data transaction also inserts
   `public.pgdm_expansion_journal(job_id, request_fingerprint, expansion)` holding everything version
-  registration needs. Data and journal are committed atomically.
-- **Resume.** Every Expand first runs a recovery check (merged into the existing metadata round trip):
-  running jobs on that database are awaited; committed jobs without versions are registered from the
-  journal. If the interrupted job was the same request, the GUI reports it as recovered instead of loading
-  the data twice.
-- **Idempotent registration.** The job id is stored in each version's dependency payload and checked under
-  the existing advisory locks, so registering a job twice returns the existing versions.
-- **Atomic data phase.** Any failure before `COMMIT` (backend killed, PostgreSQL crash, cancel) rolls back
-  everything, including the dropped FKs; no intermediate artifacts remain.
+  registration needs. Data and journal commit atomically.
+- **Resume.** Every Expand first runs a recovery check: running jobs on that database are awaited;
+  committed jobs without versions are registered from the journal. If the interrupted job was the same
+  request, the GUI reports it as recovered instead of loading the data twice.
+- **Idempotent registration.** The job id is stored in each version's dependency payload and checked
+  under the existing advisory locks, so registering a job twice returns the existing versions.
+- **Atomic data phase.** Any failure before `COMMIT` (backend killed, PostgreSQL crash, cancel) rolls
+  back everything, including the dropped indexes and FKs and the stage tables.
 
-Tested at 100k (each case followed by a normal Expand): client killed mid-job, crash between data commit
-and versioning, backend terminated mid-transaction, PostgreSQL immediate shutdown mid-transaction,
-cancel during the job, double registration.
+Tested at 100k (each case followed by a normal Expand): client killed mid-job, crash between data
+commit and versioning, backend terminated mid-transaction, PostgreSQL immediate shutdown
+mid-transaction, cancel during the job, double registration.
 
 ## 6. Limitations and trade-offs
 
-- Dropping FKs needs `ACCESS EXCLUSIVE` on the destinations and the referenced source, so readers of
-  `raw_data` wait while an expansion runs.
-- Deferral needs ownership of the destination tables (the generator's role has it); otherwise those FKs
-  keep per-row checks.
+- The speedup depends on CPU cores: on a 4-core server each parallel step gets 3 workers plus the
+  leader instead of 7 + 1. Inserting, index builds and FK validation stay single-threaded.
+- Identity values match the original because the original plans emit rows in source order and the
+  generated `raw_data` is stored in `raw_id` order (so the raw_id-ordered merge joins of table5 and
+  table2 produce the same order). On a source whose physical order differs from `raw_id`, the
+  relational content is the same but identity numbers can be assigned in a different order.
+- Dropping FKs and indexes needs `ACCESS EXCLUSIVE` on the destinations and the referenced source,
+  so readers of `raw_data` wait while an expansion runs. Deferral requires owning the tables
+  (the generator's role does); otherwise those constraints keep per-row checking.
 - The data phase stays all-or-nothing: a PostgreSQL crash mid-transaction loses that run. Committed
   chunks would allow partial progress but would expose half-expanded destinations.
-- Expression work required by the recipes themselves (casts, `GREATEST`, 14 lateral positions) is
-  unchanged; table2 is now about half of the total.
-- Measured on a Windows lab with PostgreSQL and bash on the same machine, not on the organizers' Linux
-  server.
+- Measured on a Windows lab with PostgreSQL and bash on the same machine, not on the organizers'
+  Linux server.
 
 ## 7. Reproduction
 
-Standard challenge setup (Linux PostgreSQL + SSH, generator, six SQL files in the official order), then
-`pip install -r requirements.txt` and `python main.py` from the repository root. `tools/run_expansion.py`
-runs the same service calls without the GUI against any checkout (this one or the original), and
-`tools/output_fingerprint.sql` compares outputs.
+Standard challenge setup (Linux PostgreSQL + SSH, generator, six SQL files in the official order),
+then `pip install -r requirements.txt` and `python main.py` from the repository root.
+`tools/run_expansion.py` runs the same service calls without the GUI against any checkout (this one
+or the original), and `tools/output_fingerprint.sql` compares outputs.

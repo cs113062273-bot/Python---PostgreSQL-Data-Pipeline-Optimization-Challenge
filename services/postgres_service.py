@@ -13220,6 +13220,21 @@ WHERE database_name = {sql_literal(database_name)}
 
         raise RuntimeError("The destination column list was not terminated.")
 
+    @staticmethod
+    def _cross_table_source_relation_sql(
+        source_schema_name: str,
+        source_table_name: str,
+        raw_schemas,
+    ) -> str:
+        scope_sql = ", ".join(sql_literal(value) for value in raw_schemas)
+        return (
+            "(\n"
+            f"    SELECT *\n"
+            f"    FROM {sql_ident(source_schema_name)}.{sql_ident(source_table_name)}\n"
+            f"    WHERE {sql_ident('raw_schema')} IN ({scope_sql})\n"
+            ")"
+        )
+
     @classmethod
     def _prepare_cross_table_expansion_statement(
         cls,
@@ -13455,13 +13470,10 @@ WHERE database_name = {sql_literal(database_name)}
                 + ", ".join(external_functions)
                 + "."
             )
-        scope_sql = ", ".join(sql_literal(value) for value in raw_schemas)
-        source_relation_sql = (
-            "(\n"
-            f"    SELECT *\n"
-            f"    FROM {sql_ident(source_schema_name)}.{sql_ident(source_table_name)}\n"
-            f"    WHERE {sql_ident('raw_schema')} IN ({scope_sql})\n"
-            ")"
+        source_relation_sql = cls._cross_table_source_relation_sql(
+            source_schema_name,
+            source_table_name,
+            raw_schemas,
         )
         guarded_statement = statement.replace(placeholder, source_relation_sql)
         return {
@@ -13641,12 +13653,12 @@ WHERE database_name = {sql_literal(database_name)}
     ):
         command = self._cross_table_expansion_functions_command(database_name, destinations)
         if command is None:
-            return
+            return set()
         output = self.run_remote_command(
             command,
             cancel_event=cancel_event,
         ).strip()
-        self._check_cross_table_expansion_functions(output)
+        return self._check_cross_table_expansion_functions(output)
 
     def _cross_table_expansion_functions_command(self, database_name: str, destinations):
         function_references = []
@@ -13764,6 +13776,16 @@ FROM requested;
                 "data outside the protected source:\n- "
                 + "\n- ".join(problems)
             )
+        # Aggregate and window functions: such statements keep single-statement
+        # execution because their output order is not the source order.
+        return {
+            str(item.get("function_name") or "").strip().lower()
+            for item in function_metadata or []
+            if any(
+                str(candidate.get("function_kind") or "") in {"a", "w"}
+                for candidate in item.get("candidates") or []
+            )
+        }
 
     @staticmethod
     def _build_expansion_manifest_sql(
@@ -14036,7 +14058,9 @@ SELECT json_build_object(
         psql_command = (
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} "
-            "-X -qAt -v ON_ERROR_STOP=1 -f batch.sql > out.txt 2> err.txt; "
+            "-X -qAt -v ON_ERROR_STOP=1 "
+            "-v pgdm_cpus=\"$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)\" "
+            "-f batch.sql > out.txt 2> err.txt; "
             "echo $? > exit_code.tmp && mv exit_code.tmp exit_code"
         )
         # The job starts only if the upload arrived complete.
@@ -14140,9 +14164,10 @@ SELECT json_build_object(
             + f"""
 SELECT json_build_object(
     'running', COALESCE((
-        SELECT json_agg(substr(application_name, {len(prefix) + 1}))
+        SELECT json_agg(DISTINCT substr(application_name, {len(prefix) + 1}))
         FROM pg_stat_activity
         WHERE datname = current_database()
+          AND backend_type = 'client backend'
           AND application_name LIKE {sql_literal(prefix + '%')}
     ), '[]'::json),
     'pending', (
@@ -14364,11 +14389,11 @@ WHERE finalized_at IS NULL;
             "preflight",
             "Validate SQL function safety",
         ):
-            self._validate_cross_table_expansion_functions(
+            order_changing_functions = self._validate_cross_table_expansion_functions(
                 database_name,
                 prepared["destinations"],
                 cancel_event=cancel_event,
-            )
+            ) or set()
         with self.expansion_timing_scope(
             timing_report,
             "preflight",
@@ -14451,7 +14476,12 @@ WHERE finalized_at IS NULL;
                 (destination["schema_name"], destination["pure_table_name"])
                 for destination in prepared["destinations"]
             }
-            for destination in prepared["destinations"]:
+            source_relation_sql = self._cross_table_source_relation_sql(
+                source_schema_name,
+                source_table_name,
+                prepared["raw_schemas"],
+            )
+            for destination_position, destination in enumerate(prepared["destinations"]):
                 for statement_index, statement in enumerate(
                     destination["statements"],
                     start=1,
@@ -14459,13 +14489,18 @@ WHERE finalized_at IS NULL;
                     optimized_statement, _rewrites = (
                         expansion_engine.rewrite_json_paths(statement, json_columns)
                     )
-                    execution_statements.append(
-                        self._build_managed_dml_sql(
-                            optimized_statement,
+                    stage_plan = expansion_engine.plan_staged_insert(
+                        optimized_statement,
+                        source_relation_sql,
+                        order_changing_functions,
+                    )
+                    def managed_insert(sql_text, sequence):
+                        return self._build_managed_dml_sql(
+                            sql_text,
                             destination["schema_name"],
                             destination["pure_table_name"],
                             "add",
-                            timing_sequence=timing_sequence,
+                            timing_sequence=sequence,
                             timing_stage="execute",
                             timing_name=(
                                 f"Insert into {destination['table_name']} "
@@ -14473,6 +14508,78 @@ WHERE finalized_at IS NULL;
                             ),
                             timing_destination=destination["table_name"],
                             timing_statement_index=statement_index,
+                        )
+
+                    if stage_plan is None:
+                        execution_statements.append(
+                            managed_insert(optimized_statement, timing_sequence)
+                        )
+                        timing_sequence += 1
+                        continue
+                    stage_name = f"pgdm_stage_{timing_sequence}"
+                    build_stage_sql, staged_insert = expansion_engine.staged_insert_sql(
+                        stage_plan,
+                        stage_name,
+                    )
+                    staged_steps = [
+                        self._timed_expansion_sql(
+                            timing_sequence + 1,
+                            (
+                                f"Evaluate recipe for {destination['table_name']} "
+                                f"(statement {statement_index}, parallel)"
+                            ),
+                            build_stage_sql,
+                        ),
+                        managed_insert(staged_insert, timing_sequence + 2),
+                        f"DROP TABLE pg_temp.{stage_name};",
+                    ]
+                    if stage_plan["distinct"]:
+                        staged_variable = f"{stage_name}_staged"
+                        execution_statements.extend(
+                            [
+                                self._timed_expansion_sql(
+                                    timing_sequence,
+                                    (
+                                        f"Plan DISTINCT order for {destination['table_name']} "
+                                        f"(statement {statement_index})"
+                                    ),
+                                    expansion_engine.distinct_order_check_sql(
+                                        optimized_statement,
+                                        staged_variable,
+                                    ),
+                                ),
+                                f"\\if :{staged_variable}",
+                                *staged_steps,
+                                "\\else",
+                                managed_insert(optimized_statement, timing_sequence + 2),
+                                "\\endif",
+                            ]
+                        )
+                    else:
+                        execution_statements.extend(staged_steps)
+                    timing_sequence += 3
+                # Fresh statistics let later recipes that read this table plan
+                # their joins on real row counts instead of an empty table.
+                destination_key = (
+                    destination["schema_name"].lower(),
+                    destination["pure_table_name"].lower(),
+                )
+                read_later = any(
+                    destination_key
+                    in {
+                        (str(schema).lower(), str(table).lower())
+                        for schema, table in later.get("read_relations") or []
+                    }
+                    for later in prepared["destinations"][destination_position + 1:]
+                )
+                if read_later:
+                    execution_statements.append(
+                        self._timed_expansion_sql(
+                            timing_sequence,
+                            f"Refresh planner statistics for {destination['table_name']}",
+                            "ANALYZE "
+                            f"{sql_ident(destination['schema_name'])}."
+                            f"{sql_ident(destination['pure_table_name'])};",
                         )
                     )
                     timing_sequence += 1
@@ -14554,7 +14661,8 @@ FROM pg_temp.pgdm_expansion_timings;
                     self._timed_expansion_sql(
                         1,
                         "Initialize database transaction",
-                        "SET LOCAL client_min_messages = warning;",
+                        "SET LOCAL client_min_messages = warning;\n"
+                        + expansion_engine.parallel_settings_sql(),
                     ),
                     self._timed_expansion_sql(
                         2,
@@ -14571,7 +14679,17 @@ FROM pg_temp.pgdm_expansion_timings;
                         "Defer destination foreign keys to one bulk validation",
                         expansion_engine.defer_foreign_keys_sql(destination_literals),
                     ),
+                    self._timed_expansion_sql(
+                        5,
+                        "Defer destination indexes to one bulk build",
+                        expansion_engine.defer_indexes_sql(destination_literals),
+                    ),
                     *execution_statements,
+                    self._timed_expansion_sql(
+                        7900,
+                        "Rebuild deferred indexes",
+                        expansion_engine.restore_indexes_sql(),
+                    ),
                     self._timed_expansion_sql(
                         8000,
                         "Re-create and validate deferred foreign keys",

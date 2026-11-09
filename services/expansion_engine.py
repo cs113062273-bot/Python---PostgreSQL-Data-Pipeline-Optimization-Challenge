@@ -256,3 +256,384 @@ BEGIN
     END LOOP;
 END
 $pgdm_restore_fk$;""".strip()
+
+
+# ---------------------------------------------------------------------------
+# Parallel staging
+#
+# PostgreSQL never parallelizes the SELECT part of INSERT ... SELECT, but it
+# does parallelize CREATE TABLE AS. A recipe is therefore evaluated by a
+# parallel CREATE TEMP TABLE ... AS ... ORDER BY, and the destination is then
+# filled from that table in its physical order. The sort key reproduces the
+# order in which the original single statement produced its rows (source scan
+# order, or the sorted output of SELECT DISTINCT), so identity values are
+# assigned to the same rows. Statements whose order cannot be described that
+# way keep the original single-statement execution.
+
+STAGE_BLOCKING_WORDS = {
+    "union", "intersect", "except", "order", "limit", "offset", "fetch", "for",
+    "group", "having", "window", "over", "into", "tablesample",
+}
+ALIAS_STOP_WORDS = {
+    "where", "join", "inner", "left", "right", "full", "cross", "natural", "on",
+    "using", "group", "order", "limit", "offset", "having", "window", "union",
+    "intersect", "except", "fetch", "for", "lateral", "outer",
+}
+SOURCE_CTID_COLUMN = "pgdm_source_ctid"
+
+
+def _with_depth(tokens):
+    depth, result = 0, []
+    for token in tokens:
+        if token[0] == "symbol" and token[1] in ")]":
+            depth -= 1
+        result.append((token, depth))
+        if token[0] == "symbol" and token[1] in "([":
+            depth += 1
+    return result
+
+
+def _top_level_items(tokens, start, stop, level=0):
+    """Number of comma separated items in tokens[start:stop] at nesting `level`."""
+    if start >= stop:
+        return 0
+    return 1 + sum(
+        1 for token, depth in tokens[start:stop]
+        if depth == level and token[0] == "symbol" and token[1] == ","
+    )
+
+
+def plan_staged_insert(statement, source_sql, blocked_functions=()):
+    """Describe how `INSERT INTO t (cols) SELECT ...` can run through a parallel stage.
+
+    `source_sql` is the exact source relation text substituted for {{source}}.
+    Returns None when the statement has to keep the original execution.
+    """
+    if not source_sql or statement.count(source_sql) != 1:
+        return None
+    if not source_sql.lstrip().startswith("(") or "SELECT *" not in source_sql:
+        return None
+    tokens = _with_depth(lex(statement))
+    words = [(index, token[1].lower()) for index, (token, _depth) in enumerate(tokens)
+             if token[0] == "word"]
+    blocked_functions = {str(name).lower() for name in blocked_functions}
+    for index, word in words:
+        if word.startswith("pgdm_") or word == "over":
+            return None
+        if word in blocked_functions and index + 1 < len(tokens) \
+                and tokens[index + 1][0][1] == "(":
+            return None
+    for index, (token, _depth) in enumerate(tokens):
+        if token[0] == "op" and token[1] == "*" and index and tokens[index - 1][0][1] == ".":
+            return None
+        if token[0] == "ident" and _name(token).lower().startswith("pgdm_"):
+            return None
+
+    select_index = next((index for index, word in words
+                         if word == "select" and tokens[index][1] == 0), None)
+    if select_index is None or select_index < 2:
+        return None
+    closing = tokens[select_index - 1]
+    if closing[0][1] != ")" or closing[1] != 0:
+        return None
+    opening_index = max(index for index in range(select_index - 1)
+                        if tokens[index][0][1] == "(" and tokens[index][1] == 0)
+    column_count = _top_level_items(tokens, opening_index + 1, select_index - 1, level=1)
+
+    list_start = select_index + 1
+    distinct = False
+    if list_start < len(tokens) and tokens[list_start][0][0] == "word":
+        modifier = tokens[list_start][0][1].lower()
+        if modifier == "distinct":
+            if list_start + 1 < len(tokens) and tokens[list_start + 1][0][1].lower() == "on":
+                return None
+            distinct = True
+            list_start += 1
+        elif modifier == "all":
+            list_start += 1
+    top_words = [word for index, word in words if index > select_index and tokens[index][1] == 0]
+    if STAGE_BLOCKING_WORDS.intersection(top_words) or "from" not in top_words:
+        return None
+    from_index = next(index for index, word in words
+                      if index > select_index and word == "from" and tokens[index][1] == 0)
+    for index in range(list_start, from_index):
+        token, depth = tokens[index]
+        if token[0] == "op" and token[1] == "*" and depth == 0:
+            if index == list_start or tokens[index - 1][0][1] == ",":
+                return None
+    if column_count == 0 or _top_level_items(tokens, list_start, from_index) != column_count:
+        return None
+
+    source_start = statement.index(source_sql)
+    source_end = source_start + len(source_sql)
+    after = [index for index, (token, _depth) in enumerate(tokens) if token[2] >= source_end]
+    if not after:
+        return None
+    alias_index = after[0]
+    if tokens[alias_index][0][0] == "word" and tokens[alias_index][0][1].lower() == "as":
+        alias_index += 1
+    if alias_index >= len(tokens):
+        return None
+    alias_token = tokens[alias_index][0]
+    alias = _name(alias_token)
+    if alias is None or (alias_token[0] == "word" and alias in ALIAS_STOP_WORDS):
+        return None
+    if alias_index + 1 < len(tokens) and tokens[alias_index + 1][0][1] == "(":
+        return None  # a column alias list renames the source columns
+    for index, (token, _depth) in enumerate(tokens):
+        if index == alias_index or (token[2] < source_end and token[3] > source_start):
+            continue
+        if _name(token) != alias or (index and tokens[index - 1][0][1] == "."):
+            continue
+        following = tokens[index + 1][0] if index + 1 < len(tokens) else None
+        if following is None or following[1] != ".":
+            return None  # whole-row reference to the source
+
+    select_start = tokens[select_index][0][2]
+    list_start_offset = tokens[list_start][0][2]
+    names = [f"pgdm_c{position}" for position in range(1, column_count + 1)]
+    if distinct:
+        select_sql = statement[select_start:]
+        stage_columns = names
+    else:
+        stage_source = source_sql.replace(
+            "SELECT *", f"SELECT *, ctid AS {SOURCE_CTID_COLUMN}", 1
+        )
+        select_sql = (
+            statement[select_start:list_start_offset]
+            + f"{statement[alias_token[2]:alias_token[3]]}.{SOURCE_CTID_COLUMN}, "
+            + statement[list_start_offset:source_start]
+            + stage_source
+            + statement[source_end:]
+        )
+        stage_columns = [SOURCE_CTID_COLUMN] + names
+    return {
+        "insert_prefix": statement[:select_start].rstrip(),
+        "select_sql": select_sql.rstrip().rstrip(";").rstrip(),
+        "stage_columns": stage_columns,
+        "output_columns": names,
+        "distinct": distinct,
+    }
+
+
+def staged_insert_sql(plan, stage_name):
+    """Return (build_stage_sql, insert_from_stage_sql) for a plan_staged_insert() result.
+
+    The stage query is first created WITH NO DATA (planned, not run) so the sort
+    key can leave out column types that have no btree ordering.
+    """
+    columns = ", ".join(plan["stage_columns"])
+    query = f"SELECT * FROM (\n{plan['select_sql']}\n) AS pgdm_stage_query ({columns})"
+    variable = f"{stage_name}_order"
+    build = (
+        f"CREATE TEMP TABLE {stage_name} ON COMMIT DROP AS {query} WITH NO DATA;\n"
+        "SELECT COALESCE(' ORDER BY ' || string_agg(quote_ident(attribute.attname), ', '"
+        " ORDER BY attribute.attnum) FILTER (WHERE pg_temp.pgdm_is_sortable(attribute.atttypid)),"
+        f" '') AS {variable}\n"
+        "FROM pg_attribute AS attribute\n"
+        f"WHERE attribute.attrelid = 'pg_temp.{stage_name}'::regclass\n"
+        "  AND attribute.attnum > 0 AND NOT attribute.attisdropped\n"
+        "\\gset\n"
+        f"DROP TABLE pg_temp.{stage_name};\n"
+        f"CREATE TEMP TABLE {stage_name} ON COMMIT DROP AS {query}\n:{variable};"
+    )
+    insert = (
+        f"{plan['insert_prefix']}\n"
+        f"SELECT {', '.join(plan['output_columns'])} FROM pg_temp.{stage_name}"
+    )
+    return build, insert
+
+
+def distinct_order_check_sql(statement, variable):
+    """Set psql variable `variable` to whether the original statement's DISTINCT is sorted.
+
+    The original SELECT DISTINCT emits rows in sort-key order only when the
+    planner implements it with Sort + Unique on the select list; a hashed
+    DISTINCT emits them in hash-table order. Only the sorted case is staged.
+    """
+    tag = "$pgdm_statement$"
+    suffix = 0
+    while tag in statement:
+        suffix += 1
+        tag = f"$pgdm_statement_{suffix}$"
+    return (
+        f"SELECT pg_temp.pgdm_distinct_is_sorted({tag}{statement}{tag}) AS {variable}\n"
+        "\\gset"
+    )
+
+
+def parallel_settings_sql():
+    """Transaction-local settings for the expansion.
+
+    `:pgdm_cpus` is set by the job launcher to the number of online CPUs;
+    workers are capped by the server's own max_parallel_workers.
+    """
+    return """
+SELECT
+    set_config('max_parallel_workers_per_gather', settings.workers::text, true) AS gather,
+    set_config('max_parallel_maintenance_workers', settings.workers::text, true) AS maintenance,
+    set_config('min_parallel_table_scan_size', '1MB', true) AS scan_size
+FROM (
+    SELECT LEAST(GREATEST(:'pgdm_cpus'::integer - 1, 1),
+                 current_setting('max_parallel_workers')::integer) AS workers
+) AS settings
+\\gset pgdm_parallel_
+CREATE FUNCTION pg_temp.pgdm_distinct_is_sorted(statement text) RETURNS boolean
+LANGUAGE plpgsql AS $pgdm_distinct$
+DECLARE
+    node jsonb;
+    sort_key jsonb;
+    previous_position bigint := 0;
+    matched_position bigint;
+BEGIN
+    EXECUTE 'EXPLAIN (VERBOSE, FORMAT JSON) ' || statement INTO node;
+    node := node -> 0 -> 'Plan';
+    WHILE node ->> 'Node Type' IN ('ModifyTable', 'Subquery Scan', 'Result')
+          AND jsonb_array_length(COALESCE(node -> 'Plans', '[]')) = 1 LOOP
+        node := node -> 'Plans' -> 0;
+    END LOOP;
+    IF node ->> 'Node Type' IS DISTINCT FROM 'Unique' THEN
+        RETURN false;
+    END IF;
+    node := node -> 'Plans' -> 0;
+    IF node ->> 'Node Type' IS DISTINCT FROM 'Sort' THEN
+        RETURN false;
+    END IF;
+    -- The sort key must follow the select list order. The planner leaves out
+    -- constant and duplicate columns, which do not change the order.
+    FOR sort_key IN SELECT value FROM jsonb_array_elements(node -> 'Sort Key') LOOP
+        SELECT min(item.position) INTO matched_position
+        FROM jsonb_array_elements(node -> 'Output') WITH ORDINALITY AS item(value, position)
+        WHERE item.position > previous_position AND item.value = sort_key;
+        IF matched_position IS NULL THEN
+            RETURN false;
+        END IF;
+        previous_position := matched_position;
+    END LOOP;
+    RETURN true;
+END
+$pgdm_distinct$;
+CREATE FUNCTION pg_temp.pgdm_is_sortable(type_oid oid) RETURNS boolean
+LANGUAGE sql STABLE AS $pgdm_sortable$
+    SELECT EXISTS (
+        SELECT 1
+        FROM pg_catalog.pg_type AS type_data
+        LEFT JOIN pg_catalog.pg_type AS element
+          ON element.oid = type_data.typelem AND type_data.typcategory = 'A'
+        CROSS JOIN LATERAL (
+            SELECT COALESCE(element.oid, type_data.oid) AS input_type,
+                   COALESCE(element.typtype, type_data.typtype) AS input_kind
+        ) AS checked
+        WHERE type_data.oid = type_oid
+          AND (
+              checked.input_kind = 'e'
+              OR EXISTS (
+                  SELECT 1
+                  FROM pg_catalog.pg_opclass AS class
+                  JOIN pg_catalog.pg_am AS method ON method.oid = class.opcmethod
+                  WHERE method.amname = 'btree'
+                    AND class.opcdefault
+                    AND (
+                        class.opcintype = checked.input_type
+                        OR class.opcintype IN (
+                            SELECT cast_data.casttarget
+                            FROM pg_catalog.pg_cast AS cast_data
+                            WHERE cast_data.castsource = checked.input_type
+                              AND cast_data.castmethod = 'b'
+                        )
+                    )
+              )
+          )
+    )
+$pgdm_sortable$;""".strip()
+
+
+def defer_indexes_sql(relation_literals):
+    """Drop the destinations' btree indexes; restore_indexes_sql() rebuilds them.
+
+    Run after defer_foreign_keys_sql(): an index still used by a foreign key
+    that was not deferred is kept, as are indexes the role does not own,
+    partition indexes, clustered or replica-identity indexes and indexes
+    outside the default tablespace. A duplicate makes the rebuild fail, which
+    aborts the transaction like a failing row insert.
+    """
+    return f"""
+CREATE TEMP TABLE pgdm_deferred_indexes ON COMMIT DROP AS
+SELECT
+    row_number() OVER (ORDER BY index_data.indrelid, index_class.relname) AS position,
+    index_data.indrelid::regclass::text AS relation_name,
+    index_data.indexrelid::regclass::text AS qualified_index_name,
+    constraint_data.conname::text AS constraint_name,
+    CASE
+        WHEN constraint_data.oid IS NULL THEN pg_get_indexdef(index_data.indexrelid)
+        ELSE pg_get_constraintdef(constraint_data.oid)
+    END AS definition,
+    obj_description(index_data.indexrelid, 'pg_class') AS index_comment,
+    CASE WHEN constraint_data.oid IS NOT NULL
+         THEN obj_description(constraint_data.oid, 'pg_constraint') END AS constraint_comment
+FROM pg_index AS index_data
+JOIN pg_class AS index_class ON index_class.oid = index_data.indexrelid
+JOIN pg_class AS relation ON relation.oid = index_data.indrelid
+JOIN pg_am AS method ON method.oid = index_class.relam
+LEFT JOIN pg_constraint AS constraint_data
+  ON constraint_data.conindid = index_data.indexrelid
+ AND constraint_data.conrelid = index_data.indrelid
+ AND constraint_data.contype IN ('p', 'u')
+WHERE index_data.indrelid IN ({", ".join(f"{name}::regclass" for name in relation_literals)})
+  AND relation.relkind = 'r'
+  AND method.amname = 'btree'
+  AND pg_has_role(relation.relowner, 'USAGE')
+  AND index_data.indisvalid AND index_data.indisready AND index_data.indislive
+  AND NOT index_data.indisclustered
+  AND NOT index_data.indisreplident
+  AND index_class.reltablespace = 0
+  AND (constraint_data.oid IS NULL OR constraint_data.conparentid = 0)
+  AND NOT EXISTS (SELECT 1 FROM pg_inherits WHERE pg_inherits.inhrelid = index_data.indexrelid)
+  AND NOT EXISTS (
+      SELECT 1 FROM pg_constraint AS other
+      WHERE other.conindid = index_data.indexrelid
+        AND (other.contype NOT IN ('p', 'u') OR other.conrelid <> index_data.indrelid)
+  );
+
+DO $pgdm_defer_index$
+DECLARE
+    item record;
+BEGIN
+    FOR item IN SELECT * FROM pg_temp.pgdm_deferred_indexes ORDER BY position LOOP
+        IF item.constraint_name IS NULL THEN
+            EXECUTE format('DROP INDEX %s', item.qualified_index_name);
+        ELSE
+            EXECUTE format('ALTER TABLE %s DROP CONSTRAINT %I',
+                           item.relation_name, item.constraint_name);
+        END IF;
+    END LOOP;
+END
+$pgdm_defer_index$;""".strip()
+
+
+def restore_indexes_sql():
+    """Rebuild every deferred index with its original definition and comments."""
+    return """
+DO $pgdm_restore_index$
+DECLARE
+    item record;
+BEGIN
+    FOR item IN SELECT * FROM pg_temp.pgdm_deferred_indexes ORDER BY position LOOP
+        IF item.constraint_name IS NULL THEN
+            EXECUTE item.definition;
+        ELSE
+            EXECUTE format('ALTER TABLE %s ADD CONSTRAINT %I %s',
+                           item.relation_name, item.constraint_name, item.definition);
+            IF item.constraint_comment IS NOT NULL THEN
+                EXECUTE format('COMMENT ON CONSTRAINT %I ON %s IS %L',
+                               item.constraint_name, item.relation_name,
+                               item.constraint_comment);
+            END IF;
+        END IF;
+        IF item.index_comment IS NOT NULL THEN
+            EXECUTE format('COMMENT ON INDEX %s IS %L',
+                           item.qualified_index_name, item.index_comment);
+        END IF;
+    END LOOP;
+END
+$pgdm_restore_index$;""".strip()

@@ -37,8 +37,8 @@ Baseline at 1M rows (MEASURED PROCESSING TOTAL 107.5 s; SQL stage 104.4 s):
 
 ## 2. Optimizations
 
-Everything still runs in the original single `REPEATABLE READ` transaction with the same locks,
-row counters, manifest and validations.
+Everything still runs in one `REPEATABLE READ` transaction with the original row counters,
+manifest and validations.
 
 **Parallel recipe evaluation and bulk load.** Each recipe's `SELECT` is run as an ordered query
 that PostgreSQL executes with parallel workers, and its rows are loaded into the destination with
@@ -91,11 +91,14 @@ process (plus one for missing counters). Timed remote commands: 32 → 7.
 **Tried and dropped:** larger `work_mem` / `maintenance_work_mem` (no gain), a larger identity
 sequence cache (−0.3 s on table2, not worth changing sequence options), skipping the sort
 (−0.6 s on table2 but identity values would no longer match), evaluating `raw -> 'values'` once per
-source row (−0.4 s on table2, but it changed the table5 plan and made it 8× slower).
+source row (−0.4 s on table2, but it changed the table5 plan and made it 8× slower), one committed
+transaction per destination with the recipes evaluated in ctid slices by separate sessions (no gain
+on 10 physical cores: compute already saturates them and concurrent loads contend on WAL), and
+loading into an `UNLOGGED` table followed by `SET LOGGED` (the rewrite costs more than it saves).
 
 ## 3. Results
 
-Same machine (16 cores), PostgreSQL 17.11 defaults, organizer generator, median of three runs on
+Same machine (16 logical cores), PostgreSQL 17.11 defaults, organizer generator, median of three runs on
 fresh clones, the report's own measurement model (SQL clocked in PostgreSQL, remote
 commands clocked on the server).
 
@@ -136,8 +139,8 @@ At 100k: WAL 300 → 48 MB, peak temporary disk 0 → 18 MB, peak memory 36 → 
 
 Temporary disk is the binary COPY file of one recipe at a time (the same file is overwritten for each
 recipe and deleted with the job directory; the largest is table2) plus the workers' sort spill
-files; it grows linearly with the source. Memory grows with the number of parallel workers (each bounded by the unchanged `work_mem`),
-not with the data size. No staging in permanent tables, no settings changed outside the transaction.
+files; it grows linearly with the source. Memory grows with the number of parallel workers (each
+bounded by the unchanged `work_mem`), not with the data size. No staging in permanent tables, no settings changed outside the transaction.
 Extra persistent storage is one journal row per expansion (a few KB).
 
 ## 5. Failure recovery
@@ -155,11 +158,19 @@ Extra persistent storage is one journal row per expansion (a few KB).
 - **Idempotent registration.** The job id is stored in each version's dependency payload and checked
   under the existing advisory locks, so registering a job twice returns the existing versions.
 - **Atomic data phase.** Any failure before `COMMIT` (backend killed, PostgreSQL crash, cancel) rolls
-  back everything, including the dropped indexes and FKs and the stage tables.
+  back everything, including the dropped indexes and FKs.
 
-Tested at 100k (each case followed by a normal Expand): client killed mid-job, crash between data
-commit and versioning, backend terminated mid-transaction, PostgreSQL immediate shutdown
-mid-transaction, cancel during the job, double registration.
+Tested on the final version at 1M rows, each case followed by a normal Expand:
+
+- client killed while the job runs (the job commits without versions; the next Expand registers
+  them from the journal without reloading, also when started while the job is still running);
+- backend terminated mid-transaction;
+- PostgreSQL immediate shutdown mid-transaction;
+- cancel during the job;
+- version registration repeated for one job.
+
+After each failure nothing is committed, all FKs and indexes are present and counters are
+unchanged; after each recovery the output fingerprint matches the original.
 
 ## 6. Limitations and trade-offs
 

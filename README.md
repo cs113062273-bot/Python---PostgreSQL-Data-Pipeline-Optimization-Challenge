@@ -9,7 +9,7 @@ the application is installed and used exactly as before (Windows GUI → SSH →
 
 ## What changed
 
-**Execution** — still one `REPEATABLE READ` transaction with the same locks, counters, manifest and
+**Execution** — still one `REPEATABLE READ` transaction with the original counters, manifest and
 validations. The six destination tables come out row-for-row identical to the original, identity
 values included.
 
@@ -53,7 +53,7 @@ values included.
 
 ## Results
 
-Local lab: Windows 11, 16 cores, PostgreSQL 17.11 with default settings, organizer generator,
+Local lab: Windows 11, 16 logical cores, PostgreSQL 17.11 with default settings, organizer generator,
 six official recipes. "Remote" commands run through a local bash, so the measurement model is the
 application's own: SQL clocked inside PostgreSQL, remote commands clocked on the server.
 Each row is the median of three runs on fresh clones of the same generated database.
@@ -84,12 +84,11 @@ Output check: [tools/output_fingerprint.sql](tools/output_fingerprint.sql) gives
 the original and this version at 100k and 1M rows (all six tables with identity values, row counters,
 constraint definitions and validation state, indexes, sequence positions).
 
-Failure tests (100k, each followed by a normal Expand):
+Failure tests (1M, final version, each followed by a normal Expand):
 
 | Interruption | Result |
 |---|---|
-| Client killed while the job runs | Job commits on the server; next Expand registers its 6 versions without reloading |
-| Crash after data commit, before version registration | Next Expand registers the 6 versions from the journal |
+| Client killed while the job runs | Job commits on the server without versions; next Expand registers the 6 versions from the journal without reloading (also when started while the job is still running) |
 | Expansion backend terminated mid-transaction | Nothing committed; all FKs and indexes present, counters unchanged |
 | PostgreSQL immediate shutdown mid-transaction | Same as above after restart |
 | User cancel during the job | Same as above |

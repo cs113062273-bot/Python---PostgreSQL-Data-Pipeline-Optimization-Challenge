@@ -40,11 +40,21 @@ Baseline at 1M rows (MEASURED PROCESSING TOTAL 107.5 s; SQL stage 104.4 s):
 Everything still runs in the original single `REPEATABLE READ` transaction with the same locks,
 row counters, manifest and validations.
 
-**Parallel recipe evaluation.** Each recipe's `SELECT` is evaluated by
-`CREATE TEMP TABLE … AS SELECT … ORDER BY …`, which PostgreSQL does run with parallel workers;
-the destination is then filled from that table with the original `INSERT` column list (counters
-are updated from its row count as before). The sort key reproduces the order in which the original
-statement produced its rows, so identity values go to the same rows:
+**Parallel recipe evaluation and bulk load.** Each recipe's `SELECT` is run as an ordered query
+that PostgreSQL executes with parallel workers, and its rows are loaded into the destination with
+the recipe's own column list:
+
+- normally `\copy (SELECT … ORDER BY …) TO` a binary file in the job directory, then
+  `\copy destination (columns) FROM` it — COPY writes pages in batches (one WAL record per batch
+  instead of per row). Used only when every output already has the destination column's type
+  (text may go to varchar/bpchar), so loading applies exactly the checks an INSERT would; row
+  counters are updated from the loaded row count;
+- otherwise a parallel `CREATE TEMP TABLE … AS SELECT … ORDER BY …` followed by
+  `INSERT … SELECT` from it, unless an output is an untyped literal that INSERT would have
+  coerced to a non-text column — then the original statement runs unchanged.
+
+The sort key reproduces the order in which the original statement produced its rows, so identity
+values go to the same rows:
 
 - row recipes: source row position (`ctid`, exposed through the existing scoped source subquery),
   then the output columns (orders the 14 table2 positions within a source row);
@@ -80,32 +90,33 @@ process (plus one for missing counters). Timed remote commands: 32 → 7.
 
 **Tried and dropped:** larger `work_mem` / `maintenance_work_mem` (no gain), a larger identity
 sequence cache (−0.3 s on table2, not worth changing sequence options), skipping the sort
-(−0.6 s on table2 but identity values would no longer match).
+(−0.6 s on table2 but identity values would no longer match), evaluating `raw -> 'values'` once per
+source row (−0.4 s on table2, but it changed the table5 plan and made it 8× slower).
 
 ## 3. Results
 
-Same machine (16 cores), PostgreSQL 17.11 defaults, organizer generator, median of three alternating
-runs on fresh clones, the report's own measurement model (SQL clocked in PostgreSQL, remote
+Same machine (16 cores), PostgreSQL 17.11 defaults, organizer generator, median of three runs on
+fresh clones, the report's own measurement model (SQL clocked in PostgreSQL, remote
 commands clocked on the server).
 
 | | Original | This version | Change |
 |---|---:|---:|---:|
-| **1M rows — MEASURED PROCESSING TOTAL** | **107.5 s** | **23.8 s** | **−77.8 %** |
-| 1M rows — SQL stage | 104.4 s | 23.0 s | |
-| **100k rows — MEASURED PROCESSING TOTAL** | **12.46 s** | **4.38 s** | **−64.9 %** |
-| 100k rows — SQL stage | 9.64 s | 3.48 s | |
+| **1M rows — MEASURED PROCESSING TOTAL** | **107.5 s** | **22.9 s** | **−78.7 %** |
+| 1M rows — SQL stage | 104.4 s | 22.1 s | |
+| **100k rows — MEASURED PROCESSING TOTAL** | **12.46 s** | **4.33 s** | **−65.2 %** |
+| 100k rows — SQL stage | 9.64 s | 3.34 s | |
 
-Per step at 1M (seconds, evaluate + insert):
+Per step at 1M (seconds; this version: evaluate + load):
 
 | Step | Original | This version |
 |---|---:|---:|
 | table3 / table4 | 2.8 / 2.3 | 0.7 / 0.8 |
-| table1 | 33.5 | 2.0 + 1.4 |
-| table5 | 9.8 | 0.9 + 1.0 |
-| table6 | 11.4 | 0.9 + 1.1 |
-| table2 | 43.0 | 4.9 + 3.1 |
-| Rebuild indexes | — | 3.3 |
-| Re-create and validate foreign keys | — | 1.7 |
+| table1 | 33.5 | 2.3 + 1.0 |
+| table5 | 9.8 | 1.0 + 0.6 |
+| table6 | 11.4 | 1.1 + 0.5 |
+| table2 | 43.0 | 5.7 + 2.2 |
+| Rebuild indexes | — | 3.4 |
+| Re-create and validate foreign keys | — | 1.8 |
 
 Correctness: an output fingerprint (all six tables ordered by identity, row counters, constraint
 definitions and validation state, index definitions, sequence positions) is identical for the original
@@ -116,17 +127,16 @@ fallbacks, the FK/index deferral SQL, the batch structure and the preflight batc
 
 | 1M rows | Original | This version |
 |---|---:|---:|
-| WAL written | 3086 MB | 730 MB |
-| Peak temporary disk (temp tables + spill files) | 43 MB | 425 MB |
-| Peak private memory, all PostgreSQL processes | 59 MB | 114 MB |
-| Database size after the run | 2618.5 MB | 2618.6 MB |
+| WAL written | 3086 MB | 473 MB |
+| Peak temporary disk (spill files, temp tables, job directory) | 43 MB | 205 MB |
+| Peak private memory, all PostgreSQL processes | 59 MB | 106 MB |
+| Database size after the run | 2618.5 MB | 2619.6 MB |
 
-At 100k: WAL 300 → 74 MB, peak temporary disk 0 → 39 MB, peak
-memory 36 → 62 MB.
+At 100k: WAL 300 → 48 MB, peak temporary disk 0 → 18 MB, peak memory 36 → 63 MB.
 
-Temporary disk is the evaluated rows of one recipe at a time (each stage table is dropped right after
-its insert; the largest is table2) plus the workers' sort spill files; it grows linearly with the
-source. Memory grows with the number of parallel workers (each bounded by the unchanged `work_mem`),
+Temporary disk is the binary COPY file of one recipe at a time (the same file is overwritten for each
+recipe and deleted with the job directory; the largest is table2) plus the workers' sort spill
+files; it grows linearly with the source. Memory grows with the number of parallel workers (each bounded by the unchanged `work_mem`),
 not with the data size. No staging in permanent tables, no settings changed outside the transaction.
 Extra persistent storage is one journal row per expansion (a few KB).
 

@@ -9,6 +9,8 @@ from services.expansion_engine import (
     restore_foreign_keys_sql,
     restore_indexes_sql,
     rewrite_json_paths,
+    stage_copy_sql,
+    stage_probe_sql,
     staged_insert_sql,
 )
 
@@ -120,11 +122,35 @@ class ParallelStageTests(unittest.TestCase):
         self.assertEqual(plan["stage_columns"], ["pgdm_source_ctid", "pgdm_c1", "pgdm_c2"])
         self.assertIn("s.pgdm_source_ctid, s.raw", plan["select_sql"])
         self.assertIn("SELECT *, ctid AS pgdm_source_ctid", plan["select_sql"])
+        self.assertEqual(plan["column_names"], ["a", "b"])
+        probe = stage_probe_sql(plan, "pgdm_stage_10", "'\"public\".\"t\"'")
+        self.assertIn("WITH NO DATA", probe)
+        self.assertIn("AS pgdm_stage_10_copy", probe)
+        self.assertIn("AS pgdm_stage_10_insert", probe)
+        self.assertIn("NOT relation.relrowsecurity", probe)
+        self.assertIn("NOT relation.relhasrules", probe)
+        self.assertIn("ARRAY['a', 'b']::text[]", probe)
         build, insert = staged_insert_sql(plan, "pgdm_stage_10")
-        self.assertIn("WITH NO DATA", build)
-        self.assertIn("\\gset", build)
         self.assertTrue(build.endswith(":pgdm_stage_10_order;"))
         self.assertTrue(insert.endswith("SELECT pgdm_c1, pgdm_c2 FROM pg_temp.pgdm_stage_10"))
+        copy_out, copy_in = stage_copy_sql(plan, "pgdm_stage.bin")
+        self.assertTrue(copy_out.startswith("\\copy (SELECT pgdm_c1 , pgdm_c2 FROM"))
+        self.assertTrue(copy_out.endswith(
+            "ORDER BY pgdm_source_ctid , pgdm_c1 , pgdm_c2) TO 'pgdm_stage.bin' WITH (FORMAT binary)"
+        ))
+        self.assertNotIn("\n", copy_out)
+        self.assertEqual(
+            copy_in, "\\copy public . t ( a , b ) FROM 'pgdm_stage.bin' WITH (FORMAT binary)"
+        )
+
+    def test_copy_needs_single_line_sql(self):
+        plan = staged(
+            "INSERT INTO public.t (a) -- comment\n"
+            "SELECT s.raw ->> 'x' /* note */ FROM {{source}} AS s"
+        )
+        self.assertNotIn("comment", stage_copy_sql(plan, "f.bin")[0])
+        plan = staged("INSERT INTO public.t (a) SELECT 'line\nbreak' || s.raw FROM {{source}} AS s")
+        self.assertIsNone(stage_copy_sql(plan, "f.bin"))
 
     def test_distinct_recipe_does_not_add_the_source_position(self):
         plan = staged("INSERT INTO public.t (a) SELECT DISTINCT s.raw ->> 'x' FROM {{source}} s")

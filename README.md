@@ -13,14 +13,18 @@ the application is installed and used exactly as before (Windows GUI → SSH →
 validations. The six destination tables come out row-for-row identical to the original, identity
 values included.
 
-1. **Parallel recipe evaluation.** PostgreSQL never parallelizes `INSERT … SELECT`, so the original
-   ran every recipe on one core. Each recipe's `SELECT` now runs as a parallel
-   `CREATE TEMP TABLE … AS SELECT … ORDER BY …`, and the destination is filled from it with the
-   original column list. The sort key is the order the original statement produced rows in (source
-   row position, then output columns; for `SELECT DISTINCT` the output columns, used only when
-   `EXPLAIN` of the original shows Sort + Unique), so every row gets the same identity value.
-   Recipes with aggregates, window functions, `GROUP BY`, `ORDER BY`/`LIMIT`, set operations or
-   whole-row source references run unchanged ([services/expansion_engine.py](services/expansion_engine.py)).
+1. **Parallel recipe evaluation and bulk load.** PostgreSQL never parallelizes `INSERT … SELECT`,
+   so the original ran every recipe on one core and inserted row by row. Each recipe's `SELECT` now
+   runs as a parallel ordered query whose rows are written with psql `\copy … TO` a binary file in
+   the job directory and loaded with `\copy destination (columns) FROM` it (COPY writes pages in
+   batches). The sort key is the order the original statement produced rows in (source row
+   position, then output columns; for `SELECT DISTINCT` the output columns, used only when `EXPLAIN`
+   of the original shows Sort + Unique), so every row gets the same identity value. COPY is used
+   only when each output already has the destination column's type; otherwise the rows go through a
+   parallel `CREATE TEMP TABLE … AS` and `INSERT … SELECT`, or, for untyped literals and for recipes
+   with aggregates, window functions, `GROUP BY`, `ORDER BY`/`LIMIT`, set operations or whole-row
+   source references, the original statement runs unchanged
+   ([services/expansion_engine.py](services/expansion_engine.py)).
 2. **Bulk index build.** The destinations' btree indexes are dropped inside the transaction and rebuilt
    from their catalog definitions before `COMMIT`, instead of being maintained row by row.
    A duplicate fails the rebuild and aborts the transaction, as a failing insert did.
@@ -52,29 +56,29 @@ values included.
 Local lab: Windows 11, 16 cores, PostgreSQL 17.11 with default settings, organizer generator,
 six official recipes. "Remote" commands run through a local bash, so the measurement model is the
 application's own: SQL clocked inside PostgreSQL, remote commands clocked on the server.
-Each row is the median of three alternating runs on fresh clones of the same generated database.
+Each row is the median of three runs on fresh clones of the same generated database.
 
 | | Original | This version | Change |
 |---|---:|---:|---:|
-| **1M rows — MEASURED PROCESSING TOTAL** | **107.5 s** | **23.8 s** | **−77.8 %** |
-| 1M rows — SQL stage | 104.4 s | 23.0 s | |
-| **100k rows — MEASURED PROCESSING TOTAL** | **12.46 s** | **4.38 s** | **−64.9 %** |
-| 100k rows — SQL stage | 9.64 s | 3.48 s | |
-| WAL written, 1M | 3086 MB | 730 MB | |
-| Peak temporary disk, 1M (temp tables + spill files) | 43 MB | 425 MB | |
-| Peak private memory of all PostgreSQL processes, 1M | 59 MB | 114 MB | |
+| **1M rows — MEASURED PROCESSING TOTAL** | **107.5 s** | **22.9 s** | **−78.7 %** |
+| 1M rows — SQL stage | 104.4 s | 22.1 s | |
+| **100k rows — MEASURED PROCESSING TOTAL** | **12.46 s** | **4.33 s** | **−65.2 %** |
+| 100k rows — SQL stage | 9.64 s | 3.34 s | |
+| WAL written, 1M | 3086 MB | 473 MB | |
+| Peak temporary disk, 1M (spill files, temp tables, job directory) | 43 MB | 205 MB | |
+| Peak private memory of all PostgreSQL processes, 1M | 59 MB | 106 MB | |
 
-Per step at 1M (seconds; this version: evaluate + insert):
+Per step at 1M (seconds; this version: evaluate + load):
 
 | Step | Original | This version |
 |---|---:|---:|
 | table3 / table4 | 2.8 / 2.3 | 0.7 / 0.8 |
-| table1 | 33.5 | 2.0 + 1.4 |
-| table5 | 9.8 | 0.9 + 1.0 |
-| table6 | 11.4 | 0.9 + 1.1 |
-| table2 | 43.0 | 4.9 + 3.1 |
-| Rebuild indexes | — | 3.3 |
-| Re-create and validate foreign keys | — | 1.7 |
+| table1 | 33.5 | 2.3 + 1.0 |
+| table5 | 9.8 | 1.0 + 0.6 |
+| table6 | 11.4 | 1.1 + 0.5 |
+| table2 | 43.0 | 5.7 + 2.2 |
+| Rebuild indexes | — | 3.4 |
+| Re-create and validate foreign keys | — | 1.8 |
 
 Output check: [tools/output_fingerprint.sql](tools/output_fingerprint.sql) gives identical results for
 the original and this version at 100k and 1M rows (all six tables with identity values, row counters,
@@ -122,8 +126,8 @@ Unit tests: `python -m pytest tests`.
 
 - Speed depends on CPU cores: parallel steps use online CPUs − 1 workers (capped by the server's
   `max_parallel_workers`). Inserts, index builds and FK validation remain single-threaded.
-- Temporary disk holds one recipe's evaluated rows at a time (table2 is the largest) plus sort spill
-  files, and grows linearly with the source.
+- Temporary disk holds one recipe's binary COPY file at a time in the job directory (table2 is the
+  largest) plus sort spill files, and grows linearly with the source.
 - Identity values match because the original plans emit rows in source order and the generated
   `raw_data` is stored in `raw_id` order. On a source stored in another order the rows and their
   relationships are the same, but identity numbers may be assigned in a different order.
@@ -138,7 +142,7 @@ Unit tests: `python -m pytest tests`.
 
 | File | Change |
 |---|---|
-| [services/expansion_engine.py](services/expansion_engine.py) | New: JSON path rewrite, parallel staging, FK and index defer/restore SQL |
+| [services/expansion_engine.py](services/expansion_engine.py) | New: JSON path rewrite, parallel evaluation and COPY load, FK and index defer/restore SQL |
 | [services/postgres_service.py](services/postgres_service.py) | Batch construction, batched preflight, server-side job, journal, recovery, idempotent registration |
 | [main.py](main.py) | Runs recovery before a new Expand |
 | [tests/test_expansion_engine.py](tests/test_expansion_engine.py) | Rewrite, staging, FK/index SQL and preflight batch tests |

@@ -15,6 +15,10 @@ INTEGER_LIKE = re.compile(r"^\s*[+-]?\d+\s*$")
 TIGHT_KEYWORDS = {"at", "collate", "operator"}
 
 
+def sql_string(value):
+    return "'" + str(value).replace("'", "''") + "'"
+
+
 def lex(sql):
     """Return (kind, text, start, end) tokens; comments are skipped."""
     tokens = []
@@ -339,6 +343,14 @@ def plan_staged_insert(statement, source_sql, blocked_functions=()):
     opening_index = max(index for index in range(select_index - 1)
                         if tokens[index][0][1] == "(" and tokens[index][1] == 0)
     column_count = _top_level_items(tokens, opening_index + 1, select_index - 1, level=1)
+    column_tokens = [token for token, _depth in tokens[opening_index + 1:select_index - 1]]
+    column_names = [_name(token) for token in column_tokens[::2]]
+    if (
+        len(column_tokens) != 2 * column_count - 1
+        or None in column_names
+        or any(token[1] != "," for token in column_tokens[1::2])
+    ):
+        return None
 
     list_start = select_index + 1
     distinct = False
@@ -407,8 +419,11 @@ def plan_staged_insert(statement, source_sql, blocked_functions=()):
             + statement[source_end:]
         )
         stage_columns = [SOURCE_CTID_COLUMN] + names
+    into_index = next(index for index, word in words if word == "into")
     return {
         "insert_prefix": statement[:select_start].rstrip(),
+        "target_sql": _one_line(statement[tokens[into_index][0][3]:closing[0][3]]),
+        "column_names": column_names,
         "select_sql": select_sql.rstrip().rstrip(";").rstrip(),
         "stage_columns": stage_columns,
         "output_columns": names,
@@ -416,26 +431,109 @@ def plan_staged_insert(statement, source_sql, blocked_functions=()):
     }
 
 
-def staged_insert_sql(plan, stage_name):
-    """Return (build_stage_sql, insert_from_stage_sql) for a plan_staged_insert() result.
+def _one_line(sql):
+    """Rebuild `sql` on one line from its tokens (comments dropped), or None."""
+    tokens = lex(sql)
+    if any("\n" in token[1] or "\r" in token[1] for token in tokens):
+        return None
+    return " ".join(token[1] for token in tokens)
 
-    The stage query is first created WITH NO DATA (planned, not run) so the sort
-    key can leave out column types that have no btree ordering.
+
+def _stage_query(plan):
+    columns = ", ".join(plan["stage_columns"])
+    return f"SELECT * FROM (\n{plan['select_sql']}\n) AS pgdm_stage_query ({columns})"
+
+
+def stage_probe_sql(plan, stage_name, destination_literal):
+    """Plan the recipe (CREATE ... WITH NO DATA) and set three psql variables.
+
+    `<stage>_order`  ORDER BY clause over the sortable stage columns.
+    `<stage>_copy`   the evaluated rows can be loaded with binary COPY: every
+                     output has the destination column's exact type (text may
+                     go to varchar/bpchar, whose binary format is the same and
+                     whose length rules are applied on input as on assignment),
+                     every stage column is sortable, and the destination is a
+                     plain table without row security or rules.
+    `<stage>_insert` INSERT from the stage behaves like the original statement:
+                     no output became text where the destination is not a
+                     character type (an untyped literal resolves to text in a
+                     subquery but to the column type in INSERT ... SELECT).
+    """
+    names = ", ".join(sql_string(name) for name in plan["column_names"])
+    pairs = f"""
+        FROM unnest(ARRAY[{names}]::text[]) WITH ORDINALITY AS target(name, position)
+        LEFT JOIN pg_attribute AS destination
+          ON destination.attrelid = {destination_literal}::regclass
+         AND destination.attname = target.name AND NOT destination.attisdropped
+        LEFT JOIN pg_attribute AS stage
+          ON stage.attrelid = 'pg_temp.{stage_name}'::regclass
+         AND stage.attname = 'pgdm_c' || target.position"""
+    return f"""
+CREATE TEMP TABLE {stage_name} ON COMMIT DROP AS {_stage_query(plan)} WITH NO DATA;
+SELECT
+    (SELECT COALESCE(' ORDER BY ' || string_agg(quote_ident(attribute.attname), ', '
+                     ORDER BY attribute.attnum)
+                     FILTER (WHERE pg_temp.pgdm_is_sortable(attribute.atttypid)), '')
+     FROM pg_attribute AS attribute
+     WHERE attribute.attrelid = 'pg_temp.{stage_name}'::regclass
+       AND attribute.attnum > 0 AND NOT attribute.attisdropped) AS {stage_name}_order,
+    (
+        NOT EXISTS (
+            SELECT 1 {pairs}
+            WHERE destination.atttypid IS NULL
+               OR destination.attidentity = 'a'
+               OR NOT (stage.atttypid = destination.atttypid
+                       OR (stage.atttypid = 'text'::regtype
+                           AND destination.atttypid IN ('varchar'::regtype, 'bpchar'::regtype)))
+        )
+        AND NOT EXISTS (
+            SELECT 1 FROM pg_attribute AS attribute
+            WHERE attribute.attrelid = 'pg_temp.{stage_name}'::regclass
+              AND attribute.attnum > 0 AND NOT attribute.attisdropped
+              AND NOT pg_temp.pgdm_is_sortable(attribute.atttypid)
+        )
+        AND EXISTS (
+            SELECT 1 FROM pg_class AS relation
+            WHERE relation.oid = {destination_literal}::regclass
+              AND relation.relkind = 'r'
+              AND NOT relation.relrowsecurity
+              AND NOT relation.relhasrules
+        )
+    ) AS {stage_name}_copy,
+    NOT EXISTS (
+        SELECT 1 {pairs}
+        WHERE stage.atttypid = 'text'::regtype
+          AND destination.atttypid NOT IN ('text'::regtype, 'varchar'::regtype, 'bpchar'::regtype)
+    ) AS {stage_name}_insert
+\\gset
+DROP TABLE pg_temp.{stage_name};""".strip()
+
+
+def stage_copy_sql(plan, file_name):
+    """Return (copy_out, copy_in) psql commands, or None when the SQL cannot be one line.
+
+    The ordered query runs with parallel workers inside COPY TO; psql writes the
+    rows to `file_name` next to the batch and COPY FROM loads them in that order,
+    so the identity default numbers them exactly as the INSERT would.
     """
     columns = ", ".join(plan["stage_columns"])
-    query = f"SELECT * FROM (\n{plan['select_sql']}\n) AS pgdm_stage_query ({columns})"
-    variable = f"{stage_name}_order"
+    query = _one_line(
+        f"SELECT {', '.join(plan['output_columns'])} FROM ({plan['select_sql']}) "
+        f"AS pgdm_stage_query ({columns}) ORDER BY {columns}"
+    )
+    if query is None or plan["target_sql"] is None or "'" in file_name:
+        return None
+    return (
+        f"\\copy ({query}) TO '{file_name}' WITH (FORMAT binary)",
+        f"\\copy {plan['target_sql']} FROM '{file_name}' WITH (FORMAT binary)",
+    )
+
+
+def staged_insert_sql(plan, stage_name):
+    """Return (build_stage_sql, insert_from_stage_sql); run after stage_probe_sql()."""
     build = (
-        f"CREATE TEMP TABLE {stage_name} ON COMMIT DROP AS {query} WITH NO DATA;\n"
-        "SELECT COALESCE(' ORDER BY ' || string_agg(quote_ident(attribute.attname), ', '"
-        " ORDER BY attribute.attnum) FILTER (WHERE pg_temp.pgdm_is_sortable(attribute.atttypid)),"
-        f" '') AS {variable}\n"
-        "FROM pg_attribute AS attribute\n"
-        f"WHERE attribute.attrelid = 'pg_temp.{stage_name}'::regclass\n"
-        "  AND attribute.attnum > 0 AND NOT attribute.attisdropped\n"
-        "\\gset\n"
-        f"DROP TABLE pg_temp.{stage_name};\n"
-        f"CREATE TEMP TABLE {stage_name} ON COMMIT DROP AS {query}\n:{variable};"
+        f"CREATE TEMP TABLE {stage_name} ON COMMIT DROP AS {_stage_query(plan)}\n"
+        f":{stage_name}_order;"
     )
     insert = (
         f"{plan['insert_prefix']}\n"

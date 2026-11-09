@@ -12461,7 +12461,11 @@ ROLLBACK;
         timing_name: str | None = None,
         timing_destination: str | None = None,
         timing_statement_index: int | None = None,
+        affected_rows_sql: str | None = None,
+        started_at_sql: str | None = None,
     ) -> str:
+        # affected_rows_sql / started_at_sql: the rows were already written by a
+        # preceding command (psql \copy); count them and time from its start.
         tag_base = "pgdm_managed_sql"
         tag = f"${tag_base}$"
         suffix = 0
@@ -12487,7 +12491,8 @@ ROLLBACK;
         timing_insert = ""
         if timing_sequence is not None and timing_stage and timing_name:
             timing_declaration = (
-                "\n    pgdm_timing_started_at timestamptz := clock_timestamp();"
+                "\n    pgdm_timing_started_at timestamptz := "
+                f"{started_at_sql or 'clock_timestamp()'};"
             )
             timing_insert = f"""
 
@@ -12510,14 +12515,19 @@ ROLLBACK;
         {sql_literal(timing_destination) if timing_destination else 'NULL'},
         {int(timing_statement_index) if timing_statement_index is not None else 'NULL'}
     );"""
+        if affected_rows_sql is None:
+            row_count_sql = (
+                f"{statement}\n    ;\n"
+                "    GET DIAGNOSTICS pgdm_affected_rows = ROW_COUNT;"
+            )
+        else:
+            row_count_sql = f"pgdm_affected_rows := {affected_rows_sql};"
         return f"""
 DO {tag}
 DECLARE
     pgdm_affected_rows bigint;{timing_declaration}
 BEGIN
-    {statement}
-    ;
-    GET DIAGNOSTICS pgdm_affected_rows = ROW_COUNT;
+    {row_count_sql}
 
     UPDATE {DATA_TABLE_ROW_COUNTS}
     SET row_count = row_count {operator} pgdm_affected_rows,
@@ -13877,6 +13887,7 @@ SELECT json_build_object(
 """.strip()
 
     EXPANSION_JOB_APPLICATION_PREFIX = "pgdm_expand:"
+    EXPANSION_STAGE_FILE = "pgdm_stage.bin"
     EXPANSION_ALREADY_REGISTERED = "PGDM_EXPANSION_ALREADY_REGISTERED"
 
     @staticmethod
@@ -14494,7 +14505,7 @@ WHERE finalized_at IS NULL;
                         source_relation_sql,
                         order_changing_functions,
                     )
-                    def managed_insert(sql_text, sequence):
+                    def managed_insert(sql_text, sequence, **counted):
                         return self._build_managed_dml_sql(
                             sql_text,
                             destination["schema_name"],
@@ -14508,6 +14519,7 @@ WHERE finalized_at IS NULL;
                             ),
                             timing_destination=destination["table_name"],
                             timing_statement_index=statement_index,
+                            **counted,
                         )
 
                     if stage_plan is None:
@@ -14517,21 +14529,66 @@ WHERE finalized_at IS NULL;
                         timing_sequence += 1
                         continue
                     stage_name = f"pgdm_stage_{timing_sequence}"
+                    destination_literal = sql_literal(
+                        f"{sql_ident(destination['schema_name'])}."
+                        f"{sql_ident(destination['pure_table_name'])}"
+                    )
                     build_stage_sql, staged_insert = expansion_engine.staged_insert_sql(
                         stage_plan,
                         stage_name,
                     )
+                    evaluate_name = (
+                        f"Evaluate recipe for {destination['table_name']} "
+                        f"(statement {statement_index}, parallel)"
+                    )
                     staged_steps = [
                         self._timed_expansion_sql(
                             timing_sequence + 1,
-                            (
-                                f"Evaluate recipe for {destination['table_name']} "
-                                f"(statement {statement_index}, parallel)"
+                            f"Plan recipe output for {destination['table_name']} "
+                            f"(statement {statement_index})",
+                            expansion_engine.stage_probe_sql(
+                                stage_plan, stage_name, destination_literal
                             ),
-                            build_stage_sql,
+                        )
+                    ]
+                    copy_commands = expansion_engine.stage_copy_sql(
+                        stage_plan, self.EXPANSION_STAGE_FILE
+                    )
+                    if copy_commands is not None:
+                        staged_steps += [
+                            f"\\if :{stage_name}_copy",
+                            self._timed_expansion_sql(
+                                timing_sequence + 2, evaluate_name, copy_commands[0]
+                            ),
+                            "SELECT set_config('pgdm.load_started', "
+                            "clock_timestamp()::text, true) AS started\n"
+                            "\\gset pgdm_scratch_",
+                            copy_commands[1],
+                            "SELECT set_config('pgdm.loaded_rows', :'ROW_COUNT', true) "
+                            "AS loaded\n\\gset pgdm_scratch_",
+                            managed_insert(
+                                "",
+                                timing_sequence + 3,
+                                affected_rows_sql=(
+                                    "current_setting('pgdm.loaded_rows')::bigint"
+                                ),
+                                started_at_sql=(
+                                    "current_setting('pgdm.load_started')::timestamptz"
+                                ),
+                            ),
+                            f"\\elif :{stage_name}_insert",
+                        ]
+                    else:
+                        staged_steps.append(f"\\if :{stage_name}_insert")
+                    staged_steps += [
+                        self._timed_expansion_sql(
+                            timing_sequence + 2, evaluate_name, build_stage_sql
                         ),
-                        managed_insert(staged_insert, timing_sequence + 2),
+                        managed_insert(staged_insert, timing_sequence + 3),
                         f"DROP TABLE pg_temp.{stage_name};",
+                        "\\else",
+                        managed_insert(optimized_statement, timing_sequence + 3),
+                        "\\endif",
                     ]
                     if stage_plan["distinct"]:
                         staged_variable = f"{stage_name}_staged"
@@ -14551,13 +14608,13 @@ WHERE finalized_at IS NULL;
                                 f"\\if :{staged_variable}",
                                 *staged_steps,
                                 "\\else",
-                                managed_insert(optimized_statement, timing_sequence + 2),
+                                managed_insert(optimized_statement, timing_sequence + 3),
                                 "\\endif",
                             ]
                         )
                     else:
                         execution_statements.extend(staged_steps)
-                    timing_sequence += 3
+                    timing_sequence += 4
                 # Fresh statistics let later recipes that read this table plan
                 # their joins on real row counts instead of an empty table.
                 destination_key = (

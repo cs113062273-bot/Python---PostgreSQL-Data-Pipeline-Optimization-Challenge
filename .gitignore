@@ -1,10 +1,36 @@
-.runtime/
-.venv/
-reports/
-dist/
+# Python
 __pycache__/
-.pytest_cache/
-*.pyc
-*.log
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# PyCharm
+.idea/
+*.iml
+
+# Environment variables / secrets
 .env
-/PORTABLE_MANIFEST.json
+.env.*
+*.key
+*.pem
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build / packaging
+build/
+dist/
+*.egg-info/

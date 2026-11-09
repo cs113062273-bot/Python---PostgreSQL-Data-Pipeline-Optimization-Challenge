@@ -1,6 +1,0 @@
-comment = 'Research normalizer, verified key-layout reuse and numeric proof'
-default_version = '0.1'
-module_pathname = '$libdir/challenge_probe_831a871ec46c82dc'
-relocatable = false
-superuser = true
-trusted = true

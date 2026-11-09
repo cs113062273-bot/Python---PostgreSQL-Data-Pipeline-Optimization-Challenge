@@ -1,6 +1,0 @@
-comment = 'Guarded native turbo details research, SECURITY INVOKER'
-default_version = '0.1'
-module_pathname = '$libdir/challenge_probe_ab9a6fd57346e092'
-relocatable = false
-superuser = true
-trusted = true

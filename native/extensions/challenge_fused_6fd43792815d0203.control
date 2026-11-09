@@ -1,6 +1,0 @@
-comment = 'Research fused native COPY, SECURITY INVOKER'
-default_version = '0.1'
-module_pathname = '$libdir/challenge_fused_6fd43792815d0203'
-relocatable = false
-superuser = true
-trusted = true

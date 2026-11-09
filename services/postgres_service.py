@@ -9,6 +9,7 @@ import sys
 import tempfile
 import threading
 import time
+import uuid
 import warnings
 from contextlib import contextmanager
 from datetime import datetime
@@ -16,6 +17,8 @@ from pathlib import Path
 
 import paramiko
 import pandas as pd
+
+from services import expansion_engine
 
 from config import (
     CONTROL_DB,
@@ -59,6 +62,9 @@ CONTROL_TABLE_VERSION_DEPENDENCIES = (
 )
 DATA_TABLE_ROW_COUNTS_NAME = "pgdm_table_row_counts"
 DATA_TABLE_ROW_COUNTS = f"{sql_ident('public')}.{sql_ident(DATA_TABLE_ROW_COUNTS_NAME)}"
+DATA_EXPANSION_JOURNAL_NAME = "pgdm_expansion_journal"
+DATA_EXPANSION_JOURNAL = f"{sql_ident('public')}.{sql_ident(DATA_EXPANSION_JOURNAL_NAME)}"
+DATA_INTERNAL_TABLE_NAMES = (DATA_TABLE_ROW_COUNTS_NAME, DATA_EXPANSION_JOURNAL_NAME)
 LEGACY_CONTROL_TABLE_VERSIONS = f"{sql_ident(LEGACY_CONTROL_SCHEMA)}.{sql_ident('table_versions')}"
 LEGACY_CONTROL_TABLE_DELETE_AUDIT = f"{sql_ident(LEGACY_CONTROL_SCHEMA)}.{sql_ident('delete_audit')}"
 
@@ -9528,6 +9534,17 @@ CREATE TABLE IF NOT EXISTS {DATA_TABLE_ROW_COUNTS} (
 
 COMMENT ON TABLE {DATA_TABLE_ROW_COUNTS} IS
     'Contagem exata de linhas das tabelas gerenciadas pelo PGDM DB Manager.';
+
+CREATE TABLE IF NOT EXISTS {DATA_EXPANSION_JOURNAL} (
+    job_id uuid PRIMARY KEY,
+    request_fingerprint text NOT NULL,
+    committed_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    finalized_at timestamptz,
+    expansion jsonb NOT NULL
+);
+
+COMMENT ON TABLE {DATA_EXPANSION_JOURNAL} IS
+    'Committed Expand operations; rows stay pending until their versions are registered.';
 """.strip()
 
     def ensure_data_database_metadata(self, database_name: str, cancel_event=None):
@@ -10576,7 +10593,7 @@ WHERE raw_dump_path = {sql_literal(dump_path)};
                 "SELECT schemaname || '.' || tablename "
                 "FROM pg_tables "
                 f"WHERE schemaname NOT IN ('pg_catalog', 'information_schema', {sql_literal(LEGACY_CONTROL_SCHEMA)}) "
-                f"AND NOT (schemaname = 'public' AND tablename = {sql_literal(DATA_TABLE_ROW_COUNTS_NAME)}) "
+                f"AND NOT (schemaname = 'public' AND tablename IN ({', '.join(sql_literal(name) for name in DATA_INTERNAL_TABLE_NAMES)})) "
                 "ORDER BY schemaname, tablename;"
             )
         else:
@@ -10584,7 +10601,7 @@ WHERE raw_dump_path = {sql_literal(dump_path)};
                 "SELECT schemaname || '.' || tablename "
                 "FROM pg_tables "
                 f"WHERE schemaname NOT IN ('pg_catalog', 'information_schema', {sql_literal(CONTROL_SCHEMA)}, {sql_literal(LEGACY_CONTROL_SCHEMA)}) "
-                f"AND NOT (schemaname = 'public' AND tablename = {sql_literal(DATA_TABLE_ROW_COUNTS_NAME)}) "
+                f"AND NOT (schemaname = 'public' AND tablename IN ({', '.join(sql_literal(name) for name in DATA_INTERNAL_TABLE_NAMES)})) "
                 "ORDER BY schemaname, tablename;"
             )
 
@@ -12147,11 +12164,11 @@ ROLLBACK;
         if any(kind == "symbol" and value == "\\" for kind, value, _depth in tokens):
             raise RuntimeError("Rodar SQL nao aceita comandos internos do psql iniciados por barra invertida.")
         if any(
-            kind in {"word", "identifier"} and value.lower() == DATA_TABLE_ROW_COUNTS_NAME
+            kind in {"word", "identifier"} and value.lower() in DATA_INTERNAL_TABLE_NAMES
             for kind, value, _depth in tokens
         ):
             raise RuntimeError(
-                f"A tabela interna {DATA_TABLE_ROW_COUNTS_NAME} e protegida e nao pode ser alterada pelo editor SQL."
+                "As tabelas internas " + ", ".join(DATA_INTERNAL_TABLE_NAMES) + " sao protegidas e nao podem ser alteradas pelo editor SQL."
             )
 
         first_kind, first_keyword, first_depth = tokens[0]
@@ -13785,6 +13802,278 @@ SELECT json_build_object(
 )::text;
 """.strip()
 
+    EXPANSION_JOB_APPLICATION_PREFIX = "pgdm_expand:"
+    EXPANSION_ALREADY_REGISTERED = "PGDM_EXPANSION_ALREADY_REGISTERED"
+
+    @staticmethod
+    def _timed_expansion_sql(
+        sequence: int,
+        name: str,
+        body: str,
+        stage: str = "execute",
+        destination: str | None = None,
+    ) -> str:
+        return (
+            "INSERT INTO pg_temp.pgdm_expansion_timings VALUES "
+            f"({int(sequence)}, {sql_literal(stage)}, {sql_literal(name)}, "
+            "clock_timestamp(), NULL, NULL, "
+            f"{sql_literal(destination) if destination else 'NULL'}, NULL);\n"
+            f"{body.strip()}\n"
+            "UPDATE pg_temp.pgdm_expansion_timings SET finished_at = "
+            f"clock_timestamp() WHERE sequence_number = {int(sequence)};"
+        )
+
+    @staticmethod
+    def cross_table_expansion_fingerprint(
+        database_name: str,
+        source_full_table_name: str,
+        raw_schemas,
+        destinations,
+    ) -> str:
+        payload = {
+            "database": str(database_name or "").strip(),
+            "source": str(source_full_table_name or "").strip(),
+            "raw_schemas": sorted(str(value) for value in (raw_schemas or [])),
+            "destinations": [
+                [
+                    str(item.get("table_name") or "").strip(),
+                    list(item.get("statements") or [str(item.get("sql") or "").strip()]),
+                ]
+                for item in (destinations or [])
+            ],
+        }
+        return hashlib.sha256(
+            json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
+
+    def _expansion_job_directory(self, job_id: str) -> str:
+        return f"{self.remote_storage_root}/expansion_jobs/{uuid.UUID(job_id)}"
+
+    def _run_expansion_job(
+        self,
+        database_name: str,
+        job_id: str,
+        sql_text: str,
+        cancel_event=None,
+        progress_callback=None,
+    ) -> str:
+        """Run the batch as a server-side job that outlives the SSH session.
+
+        psql is started with nohup and its own files, so a dropped connection
+        or a closed DB Manager does not abort the transaction. The job is
+        identified in pg_stat_activity by application_name.
+        """
+        job_directory = self._expansion_job_directory(job_id)
+        psql_command = (
+            f"psql -h localhost -U {shlex.quote(self.sql_username)} "
+            f"-d {shlex.quote(database_name)} "
+            "-X -qAt -v ON_ERROR_STOP=1 -f batch.sql > out.txt 2> err.txt; "
+            "echo $? > exit_code.tmp && mv exit_code.tmp exit_code"
+        )
+        # The job starts only if the upload arrived complete.
+        end_marker = f"-- pgdm batch end {job_id}"
+        sql_text = sql_text.rstrip("\n") + "\n" + end_marker + "\n"
+        launch_command = (
+            f"mkdir -p {shlex.quote(job_directory)} && "
+            f"cd {shlex.quote(job_directory)} && cat > batch.sql && "
+            f"[ \"$(tail -n 1 batch.sql)\" = {shlex.quote(end_marker)} ] "
+            "|| { echo 'Expansion batch upload was incomplete; nothing was started.' >&2; exit 1; }; "
+            "if command -v setsid >/dev/null 2>&1; then pgdm_setsid=setsid; else pgdm_setsid=; fi; "
+            f"PGAPPNAME={shlex.quote(self.EXPANSION_JOB_APPLICATION_PREFIX + job_id)} "
+            f"nohup $pgdm_setsid sh -c {shlex.quote(psql_command)} "
+            "> /dev/null 2>&1 < /dev/null & echo started"
+        )
+        self.run_remote_command(
+            launch_command,
+            stdin_text=sql_text,
+            cancel_event=cancel_event,
+            stdin_progress_callback=lambda progress, message: self._notify_progress(
+                progress_callback, "execute", 5 + progress * 0.05, message
+            ),
+        )
+        self._notify_progress(
+            progress_callback,
+            "execute",
+            15,
+            f"Expansion job {job_id} is running on the server...",
+        )
+        try:
+            return self._wait_for_expansion_job(job_id, cancel_event=cancel_event)
+        except (OSError, EOFError, paramiko.SSHException) as exc:
+            raise RuntimeError(
+                f"The connection was lost while expansion job {job_id} was running. "
+                "The job keeps running on the server. Reconnect and run Expand "
+                "again on this database: the job is awaited and its versions are "
+                f"registered without repeating the data load.\n\n{exc}"
+            ) from exc
+        except OperationCancelledError:
+            # Stop the server-side transaction, then report what really
+            # happened: a COMMIT that already completed cannot be undone.
+            self._cancel_expansion_job(database_name, job_id)
+            try:
+                output = self._wait_for_expansion_job(job_id)
+            except RuntimeError:
+                raise OperationCancelledError("Operacao cancelada pelo usuario.")
+            return output
+
+    def _wait_for_expansion_job(self, job_id: str, cancel_event=None) -> str:
+        job_directory = shlex.quote(self._expansion_job_directory(job_id))
+        output = self.run_remote_command(
+            f"cd {job_directory} && "
+            "while [ ! -f exit_code ]; do sleep 0.05; done; "
+            "pgdm_status=$(cat exit_code); "
+            "cat out.txt; "
+            "if [ \"$pgdm_status\" != 0 ]; then cat err.txt >&2; fi; "
+            f"cd / && rm -rf {job_directory}; "
+            "exit \"$pgdm_status\"",
+            cancel_event=cancel_event,
+        )
+        return output
+
+    def _cancel_expansion_job(self, database_name: str, job_id: str):
+        # Terminating the session rolls back an uncommitted transaction even
+        # when the signal lands between two statements.
+        sql = (
+            "SELECT pg_terminate_backend(pid) FROM pg_stat_activity "
+            f"WHERE datname = {sql_literal(database_name)} "
+            "AND application_name = "
+            f"{sql_literal(self.EXPANSION_JOB_APPLICATION_PREFIX + job_id)};"
+        )
+        try:
+            self.run_remote_command(
+                f"psql -h localhost -U {shlex.quote(self.sql_username)} "
+                f"-d {shlex.quote(database_name)} -X -qAt -c {shlex.quote(sql)}"
+            )
+        except RuntimeError:
+            pass
+
+    def recover_cross_table_expansions(
+        self,
+        database_name: str,
+        progress_callback=None,
+        timing_report: dict | None = None,
+    ) -> list[dict]:
+        """Finish expansions that were interrupted after reaching the server.
+
+        1. Jobs still running server-side are awaited.
+        2. Committed jobs whose versions were never registered are finalized
+           from their journal entry (registration is idempotent per job).
+        Returns one dict per finalized job.
+        """
+        prefix = self.EXPANSION_JOB_APPLICATION_PREFIX
+        # Same round trip as ensure_data_database_metadata: create the
+        # metadata tables if needed, then read the job state.
+        sql = (
+            "BEGIN;\n"
+            "SET LOCAL client_min_messages = warning;\n"
+            + self._data_table_row_counts_ddl_sql()
+            + "\nCOMMIT;\n"
+            + f"""
+SELECT json_build_object(
+    'running', COALESCE((
+        SELECT json_agg(substr(application_name, {len(prefix) + 1}))
+        FROM pg_stat_activity
+        WHERE datname = current_database()
+          AND application_name LIKE {sql_literal(prefix + '%')}
+    ), '[]'::json),
+    'pending', (
+        SELECT COALESCE(json_agg(job_id::text ORDER BY committed_at), '[]'::json)
+        FROM {DATA_EXPANSION_JOURNAL}
+        WHERE finalized_at IS NULL
+    )
+)::text;
+"""
+        )
+        command = (
+            f"psql -h localhost -U {shlex.quote(self.sql_username)} "
+            f"-d {shlex.quote(database_name)} -X -qAt -v ON_ERROR_STOP=1 -f -"
+        )
+        with self.expansion_timing_scope(
+            timing_report,
+            "preflight",
+            "Ensure data-database metadata and check for interrupted jobs",
+        ):
+            state = json.loads(
+                self.run_remote_command(command, stdin_text=sql).splitlines()[-1]
+            )
+        with self._data_metadata_lock:
+            self._data_metadata_ready_databases.add(database_name)
+        if not state["running"] and not state["pending"]:
+            return []
+
+        for job_id in state["running"]:
+            self._notify_progress(
+                progress_callback,
+                "preflight",
+                10,
+                f"Waiting for interrupted expansion job {job_id} to finish on the server...",
+            )
+            try:
+                self._wait_for_expansion_job(job_id)
+            except RuntimeError:
+                pass
+
+        pending_sql = f"""
+SELECT COALESCE(json_agg(json_build_object(
+    'job_id', job_id::text,
+    'request_fingerprint', request_fingerprint,
+    'expansion', expansion
+) ORDER BY committed_at), '[]'::json)::text
+FROM {DATA_EXPANSION_JOURNAL}
+WHERE finalized_at IS NULL;
+"""
+        entries = json.loads(
+            self.run_remote_command(
+                f"psql -h localhost -U {shlex.quote(self.sql_username)} "
+                f"-d {shlex.quote(database_name)} -X -qAt -v ON_ERROR_STOP=1 "
+                f"-c {shlex.quote(pending_sql)}"
+            ).splitlines()[-1]
+        )
+        recovered = []
+        for entry in entries:
+            request = entry["expansion"]["request"]
+            self._notify_progress(
+                progress_callback,
+                "preflight",
+                50,
+                f"Registering versions for interrupted expansion job {entry['job_id']}...",
+            )
+            expansion_result = {
+                "source_database_name": request["source_database_name"],
+                "source_schema_name": request["source_schema_name"],
+                "source_table_name": request["source_table_name"],
+                "raw_schemas": request["raw_schemas"],
+                "source_versions": request["source_versions"],
+                "dependency_manifest": entry["expansion"]["manifest"],
+                "destinations": request["destinations"],
+                "expansion_job_id": entry["job_id"],
+                "request_fingerprint": entry["request_fingerprint"],
+            }
+            versions = self.register_cross_table_expansion_versions(
+                expansion_result=expansion_result,
+                requested_by=request.get("requested_by") or "recovered",
+                workstation_name=request.get("workstation_name") or "recovered",
+            )
+            recovered.append(
+                {
+                    "job_id": entry["job_id"],
+                    "request_fingerprint": entry["request_fingerprint"],
+                    "versions": versions,
+                    "expansion_result": expansion_result,
+                }
+            )
+        if recovered:
+            # Job directories of runs whose client never came back.
+            job_directories = " ".join(
+                shlex.quote(self._expansion_job_directory(job["job_id"]))
+                for job in recovered
+            )
+            try:
+                self.run_remote_command(f"rm -rf {job_directories}")
+            except RuntimeError:
+                pass
+        return recovered
+
     def execute_cross_table_expansion(
         self,
         database_name: str,
@@ -13795,6 +14084,8 @@ SELECT json_build_object(
         progress_callback=None,
         post_commit_callback=None,
         timing_report: dict | None = None,
+        requested_by: str | None = None,
+        workstation_name: str | None = None,
     ) -> dict:
         if timing_report is None:
             timing_report = self.create_cross_table_expansion_timing_report(
@@ -13959,21 +14250,40 @@ SELECT json_build_object(
         )
         self._raise_if_cancelled(cancel_event)
 
+        job_id = str(uuid.uuid4())
+        request_fingerprint = self.cross_table_expansion_fingerprint(
+            database_name,
+            source_full_table_name,
+            prepared["raw_schemas"],
+            prepared["destinations"],
+        )
         with self.expansion_timing_scope(
             timing_report,
             "prepare",
             "Build protected transactional SQL batch",
         ):
+            json_columns = [
+                column_name
+                for column_name, column_type in source_columns.items()
+                if str(column_type).lower() in {"json", "jsonb"}
+            ]
             execution_statements = []
             timing_sequence = 10
+            destination_keys = {
+                (destination["schema_name"], destination["pure_table_name"])
+                for destination in prepared["destinations"]
+            }
             for destination in prepared["destinations"]:
                 for statement_index, statement in enumerate(
                     destination["statements"],
                     start=1,
                 ):
+                    optimized_statement, _rewrites = (
+                        expansion_engine.rewrite_json_paths(statement, json_columns)
+                    )
                     execution_statements.append(
                         self._build_managed_dml_sql(
-                            statement,
+                            optimized_statement,
                             destination["schema_name"],
                             destination["pure_table_name"],
                             "add",
@@ -13994,9 +14304,38 @@ SELECT json_build_object(
                 source_table_name,
                 prepared["raw_schemas"],
             )
+            manifest_select_index = manifest_sql.rindex("SELECT json_build_object(")
+            manifest_expression = (
+                manifest_sql[manifest_select_index + len("SELECT "):]
+                .strip()
+                .rstrip(";")
+            )
             destination_lock_sql = self._build_cross_table_expansion_lock_sql(
                 prepared["destinations"]
             )
+            destination_literals = [
+                sql_literal(f"{sql_ident(schema_name)}.{sql_ident(table_name)}")
+                for schema_name, table_name in sorted(destination_keys)
+            ]
+            journal_request = {
+                "source_database_name": database_name,
+                "source_schema_name": source_schema_name,
+                "source_table_name": source_table_name,
+                "raw_schemas": list(prepared["raw_schemas"]),
+                "source_versions": source_versions,
+                "destinations": prepared["destinations"],
+                "requested_by": requested_by,
+                "workstation_name": workstation_name,
+            }
+            journal_sql = f"""
+INSERT INTO {DATA_EXPANSION_JOURNAL} (job_id, request_fingerprint, expansion)
+SELECT
+    {sql_literal(job_id)}::uuid,
+    {sql_literal(request_fingerprint)},
+    jsonb_build_object(
+        'request', {sql_literal(json.dumps(journal_request, ensure_ascii=False))}::jsonb,
+        'manifest', ({manifest_expression})::jsonb
+    );""".strip()
             timing_table_sql = """
 CREATE TEMP TABLE pgdm_expansion_timings (
     sequence_number integer PRIMARY KEY,
@@ -14030,47 +14369,56 @@ SELECT json_build_object(
 )::text
 FROM pg_temp.pgdm_expansion_timings;
 """.strip()
-            wrapped_sql = (
-                timing_table_sql
-                + "\n\nBEGIN ISOLATION LEVEL REPEATABLE READ;\n"
-                + "INSERT INTO pg_temp.pgdm_expansion_timings VALUES "
-                + "(1, 'execute', 'Initialize database transaction', "
-                + "clock_timestamp(), NULL, NULL, NULL, NULL);\n"
-                + "SET LOCAL client_min_messages = warning;\n"
-                + "UPDATE pg_temp.pgdm_expansion_timings SET finished_at = "
-                + "clock_timestamp() WHERE sequence_number = 1;\n\n"
-                + "INSERT INTO pg_temp.pgdm_expansion_timings VALUES "
-                + "(2, 'execute', 'Acquire destination table locks', "
-                + "clock_timestamp(), NULL, NULL, NULL, NULL);\n"
-                + destination_lock_sql
-                + "\nUPDATE pg_temp.pgdm_expansion_timings SET finished_at = "
-                + "clock_timestamp() WHERE sequence_number = 2;\n\n"
-                + "INSERT INTO pg_temp.pgdm_expansion_timings VALUES "
-                + "(3, 'execute', 'Scan source and build dependency manifest', "
-                + "clock_timestamp(), NULL, NULL, NULL, NULL);\n"
-                + manifest_sql
-                + "\nUPDATE pg_temp.pgdm_expansion_timings SET finished_at = "
-                + "clock_timestamp() WHERE sequence_number = 3;\n\n"
-                + "\n\n".join(execution_statements)
-                + "\n\nINSERT INTO pg_temp.pgdm_expansion_timings VALUES "
-                + "(9000, 'execute', 'Commit expansion transaction', "
-                + "clock_timestamp(), NULL, NULL, NULL, NULL);\n"
-                + "COMMIT;\n"
-                + "UPDATE pg_temp.pgdm_expansion_timings SET finished_at = "
-                + "clock_timestamp() WHERE sequence_number = 9000;\n\n"
-                + timing_result_sql
-                + "\nDROP TABLE pg_temp.pgdm_expansion_timings;\n"
-            )
-        command = (
-            f"psql -h localhost -U {shlex.quote(self.sql_username)} "
-            f"-d {shlex.quote(database_name)} "
-            "-X -qAt -v ON_ERROR_STOP=1 -f -"
-        )
+            wrapped_sql = "\n\n".join(
+                [
+                    timing_table_sql,
+                    "BEGIN ISOLATION LEVEL REPEATABLE READ;",
+                    self._timed_expansion_sql(
+                        1,
+                        "Initialize database transaction",
+                        "SET LOCAL client_min_messages = warning;",
+                    ),
+                    self._timed_expansion_sql(
+                        2,
+                        "Acquire destination table locks",
+                        destination_lock_sql,
+                    ),
+                    self._timed_expansion_sql(
+                        3,
+                        "Scan source and build dependency manifest",
+                        manifest_sql,
+                    ),
+                    self._timed_expansion_sql(
+                        4,
+                        "Defer destination foreign keys to one bulk validation",
+                        expansion_engine.defer_foreign_keys_sql(destination_literals),
+                    ),
+                    *execution_statements,
+                    self._timed_expansion_sql(
+                        8000,
+                        "Re-create and validate deferred foreign keys",
+                        expansion_engine.restore_foreign_keys_sql(),
+                    ),
+                    self._timed_expansion_sql(
+                        8100,
+                        "Write expansion journal entry",
+                        journal_sql,
+                    ),
+                    "INSERT INTO pg_temp.pgdm_expansion_timings VALUES "
+                    "(9000, 'execute', 'Commit expansion transaction', "
+                    "clock_timestamp(), NULL, NULL, NULL, NULL);\n"
+                    "COMMIT;\n"
+                    "UPDATE pg_temp.pgdm_expansion_timings SET finished_at = "
+                    "clock_timestamp() WHERE sequence_number = 9000;",
+                    timing_result_sql,
+                    "DROP TABLE pg_temp.pgdm_expansion_timings;",
+                ]
+            ) + "\n"
         self._notify_progress(
             progress_callback,
             "execute",
             5,
-            "Running all expansions in a single transaction...",
+            "Running all expansions in a single transaction on the server...",
         )
         with self.expansion_timing_scope(
             timing_report,
@@ -14079,16 +14427,12 @@ FROM pg_temp.pgdm_expansion_timings;
             record_local_cpu=False,
             remote_include_in_total=False,
         ):
-            output = self.run_remote_command(
-                command,
-                stdin_text=wrapped_sql,
+            output = self._run_expansion_job(
+                database_name,
+                job_id,
+                wrapped_sql,
                 cancel_event=cancel_event,
-                stdin_progress_callback=lambda progress, message: self._notify_progress(
-                    progress_callback,
-                    "execute",
-                    10 + (progress * 0.8),
-                    message,
-                ),
+                progress_callback=progress_callback,
             )
         if post_commit_callback:
             post_commit_callback()
@@ -14174,6 +14518,8 @@ FROM pg_temp.pgdm_expansion_timings;
             "dependency_manifest": manifest,
             "destinations": prepared["destinations"],
             "timing_report": timing_report,
+            "expansion_job_id": job_id,
+            "request_fingerprint": request_fingerprint,
         }
 
     def execute_sql_script(
@@ -14949,6 +15295,44 @@ COMMIT;
             ]
         )
 
+    def _build_journal_finalize_sql(self, database_name: str, job_id: str) -> str:
+        """psql commands that mark the data-database journal entry finalized."""
+        quoted_database = "'" + database_name.replace("\\", "\\\\").replace("'", "''") + "'"
+        return f"""
+\\connect {quoted_database}
+SELECT clock_timestamp() AS pgdm_journal_started \\gset
+UPDATE {DATA_EXPANSION_JOURNAL}
+SET finalized_at = clock_timestamp()
+WHERE job_id = {sql_literal(job_id)}::uuid;
+SELECT json_build_object('pgdm_expansion_timings', json_build_array(json_build_object(
+    'stage', 'version',
+    'name', 'Mark expansion journal entry finalized',
+    'duration_seconds', EXTRACT(EPOCH FROM clock_timestamp() - :'pgdm_journal_started'::timestamptz),
+    'rows', 1
+)))::text;
+""".strip()
+
+    def _existing_expansion_versions(self, database_name: str, job_id: str) -> list[dict]:
+        """Versions already registered for a job; also closes its journal entry."""
+        sql = f"""
+SELECT COALESCE(json_agg(json_build_object(
+    'table_name', version.schema_name || '.' || version.table_name,
+    'version_code', version.version_code,
+    'dependency_count', 1
+) ORDER BY version.id), '[]'::json)::text
+FROM {CONTROL_TABLE_VERSIONS} AS version
+JOIN {CONTROL_TABLE_VERSION_DEPENDENCIES} AS dependency
+  ON dependency.table_version_id = version.id
+WHERE dependency.source_database_name = {sql_literal(database_name)}
+  AND dependency.dependency_payload ->> 'expansion_job_id' = {sql_literal(job_id)};
+"""
+        output = self.run_remote_command(
+            f"psql -h localhost -U {shlex.quote(self.sql_username)} "
+            f"-d {shlex.quote(CONTROL_DB)} -X -qAt -v ON_ERROR_STOP=1 -f -",
+            stdin_text=sql + "\n" + self._build_journal_finalize_sql(database_name, job_id) + "\n",
+        )
+        return json.loads(output.splitlines()[0])
+
     def register_cross_table_expansion_versions(
         self,
         expansion_result: dict,
@@ -15002,6 +15386,11 @@ COMMIT;
             )
         base_manifest["source_versions"] = source_versions
         base_manifest["raw_schemas"] = raw_schemas
+        expansion_job_id = str(
+            (expansion_result or {}).get("expansion_job_id") or ""
+        ).strip()
+        if expansion_job_id:
+            base_manifest["expansion_job_id"] = expansion_job_id
 
         self._notify_progress(
             progress_callback,
@@ -15060,6 +15449,24 @@ CREATE TEMP TABLE pgdm_expansion_timings (
                 f"clock_timestamp() WHERE sequence_number = {timing_sequence};"
             )
             timing_sequence += 1
+
+        if expansion_job_id:
+            # Checked under the advisory locks. psql \if keeps reading the
+            # whole script, so the client never writes into a closed pipe.
+            sql_parts.append(
+                f"""
+SELECT EXISTS (
+    SELECT 1
+    FROM {CONTROL_TABLE_VERSION_DEPENDENCIES}
+    WHERE dependency_kind = {sql_literal(self.CROSS_TABLE_EXPANSION_DEPENDENCY_KIND)}
+      AND source_database_name = {sql_literal(database_name)}
+      AND dependency_payload ->> 'expansion_job_id' = {sql_literal(expansion_job_id)}
+) AS pgdm_already_registered \\gset
+\\if :pgdm_already_registered
+\\echo {self.EXPANSION_ALREADY_REGISTERED}
+ROLLBACK;
+\\else""".strip()
+            )
 
         version_statement_sequence = 100
         for destination in destinations:
@@ -15255,6 +15662,9 @@ DROP TABLE pg_temp.pgdm_expansion_timings;
 """.strip(),
             ]
         )
+        if expansion_job_id:
+            sql_parts.append(self._build_journal_finalize_sql(database_name, expansion_job_id))
+            sql_parts.append("\\endif")
         self._append_expansion_timing(
             timing_report,
             "version",
@@ -15283,6 +15693,8 @@ DROP TABLE pg_temp.pgdm_expansion_timings;
                 stdin_text="\n\n".join(sql_parts) + "\n",
                 cancel_event=cancel_event,
             )
+        if expansion_job_id and self.EXPANSION_ALREADY_REGISTERED in output.splitlines():
+            return self._existing_expansion_versions(database_name, expansion_job_id)
         with self.expansion_timing_scope(
             timing_report,
             "version",
@@ -15303,7 +15715,7 @@ DROP TABLE pg_temp.pgdm_expansion_timings;
                 if item.get("table_name") and item.get("version_code"):
                     registered.append(item)
                 if "pgdm_expansion_timings" in item:
-                    server_timing_items = list(
+                    server_timing_items.extend(
                         item.get("pgdm_expansion_timings") or []
                     )
             for item in server_timing_items:

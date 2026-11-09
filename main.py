@@ -5436,6 +5436,58 @@ class App(ctk.CTk):
                 "Environment ready.",
             )
 
+            # An earlier run may have been cut off after reaching the server:
+            # wait for it / register its versions before anything else.
+            recovered_jobs = self.service.recover_cross_table_expansions(
+                database_name,
+                progress_callback=lambda stage_key, progress, message: self.ui(
+                    self.update_cross_table_expansion_progress,
+                    stage_key,
+                    progress,
+                    message,
+                ),
+                timing_report=timing_report,
+            )
+            if recovered_jobs:
+                request_fingerprint = self.service.cross_table_expansion_fingerprint(
+                    database_name,
+                    source_table_name,
+                    expansion_request["raw_schemas"],
+                    self.service._prepare_cross_table_expansion(
+                        source_table_name,
+                        expansion_request["raw_schemas"],
+                        expansion_request["destinations"],
+                    )["destinations"],
+                )
+                recovered_summary = "\n".join(
+                    f"- job {job['job_id']}: "
+                    + ", ".join(
+                        f"{item['table_name']}={item['version_code']}"
+                        for item in job["versions"]
+                    )
+                    for job in recovered_jobs
+                )
+                if any(
+                    job["request_fingerprint"] == request_fingerprint
+                    for job in recovered_jobs
+                ):
+                    self.ui(self.close_cross_table_expansion_progress)
+                    self.ui(
+                        self.show_info,
+                        "Expansion recovered",
+                        "This expansion had already been committed on the server by an "
+                        "interrupted run. Its versions are now registered, so it was "
+                        "not executed again.\n\n" + recovered_summary,
+                    )
+                    self.ui(self.set_status, "Interrupted expansion recovered", "success")
+                    return
+                self.ui(
+                    self.show_info,
+                    "Interrupted expansion recovered",
+                    "An interrupted expansion was finalized before this run:\n\n"
+                    + recovered_summary,
+                )
+
             result = self.service.execute_cross_table_expansion(
                 database_name=database_name,
                 source_full_table_name=source_table_name,
@@ -5450,6 +5502,8 @@ class App(ctk.CTk):
                 ),
                 post_commit_callback=self.begin_cross_table_expansion_finalization,
                 timing_report=timing_report,
+                requested_by=expansion_request["requested_by"],
+                workstation_name=socket.gethostname(),
             )
 
             # O COMMIT dos dados ja ocorreu. Daqui em diante a operacao precisa
@@ -5552,8 +5606,9 @@ class App(ctk.CTk):
             if was_finalizing:
                 error_message = (
                     "The data had already been committed to the destinations, but "
-                    "version finalization failed. Do not repeat the expansion "
-                    "before reconciling version history.\n\n"
+                    "version finalization failed. The committed run is kept in the "
+                    "expansion journal; running Expand again on this database "
+                    "registers its versions without repeating the data load.\n\n"
                     f"{exc}"
                 )
             else:

@@ -79,6 +79,7 @@ class ExpansionTimingTests(unittest.TestCase):
 
     def test_expansion_batch_contains_server_side_substep_instrumentation(self):
         service = PostgresAdminService()
+        service.ssh_username = "tester"
         captured = {}
         manifest = {
             "raw_schemas": ["group001"],
@@ -104,7 +105,11 @@ class ExpansionTimingTests(unittest.TestCase):
         }
 
         def fake_remote_command(_command, **kwargs):
-            captured["sql"] = kwargs.get("stdin_text") or ""
+            # First call uploads and starts the server-side job; the second
+            # waits for it and returns its output.
+            if kwargs.get("stdin_text"):
+                captured["sql"] = kwargs["stdin_text"]
+                return "started"
             return f"{__import__('json').dumps(manifest)}\n{__import__('json').dumps(telemetry)}"
 
         report = service.create_cross_table_expansion_timing_report(
@@ -158,6 +163,10 @@ class ExpansionTimingTests(unittest.TestCase):
         self.assertIn("Scan source and build dependency manifest", captured["sql"])
         self.assertIn("GET DIAGNOSTICS pgdm_affected_rows = ROW_COUNT", captured["sql"])
         self.assertIn("Commit expansion transaction", captured["sql"])
+        self.assertIn("Defer destination foreign keys", captured["sql"])
+        self.assertIn("Re-create and validate deferred foreign keys", captured["sql"])
+        self.assertIn("Write expansion journal entry", captured["sql"])
+        self.assertTrue(result["expansion_job_id"])
         self.assertEqual(result["timing_report"]["source_rows"], 2)
         self.assertEqual(result["timing_report"]["total_rows_inserted"], 2)
         self.assertEqual(

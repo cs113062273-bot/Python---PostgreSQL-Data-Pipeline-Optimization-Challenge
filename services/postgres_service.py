@@ -570,6 +570,12 @@ class PostgresAdminService:
         if self.sql_password is None:
             raise RuntimeError("Senha do PostgreSQL n?o dispon?vel.")
 
+        prefetched = getattr(self._expansion_timing_local, "prefetched", None)
+        if prefetched and (stdin_text is None or isinstance(stdin_text, str)):
+            cached_output = prefetched.pop((command, stdin_text), None)
+            if cached_output is not None:
+                return cached_output
+
         command_name = trace_label or "remote command"
         command_started_at = time.perf_counter()
         self._trace_table_open(trace_context, f"{command_name}: iniciou comando remoto")
@@ -2459,8 +2465,19 @@ SET raw = jsonb_build_object(
     ):
         started_at = time.perf_counter()
         self._trace_table_open(trace_context, f"get_table_column_definitions(): iniciando para {full_table_name}")
-        schema_name, table_name = split_table_name(full_table_name)
+        command = self._table_column_definitions_command(database_name, full_table_name)
+        output = self.run_remote_command(
+            command,
+            cancel_event=cancel_event,
+            trace_context=trace_context,
+            trace_label=f"get_table_column_definitions[{full_table_name}]",
+        )
+        return self._parse_table_column_definitions(
+            output, full_table_name, started_at, trace_context
+        )
 
+    def _table_column_definitions_command(self, database_name: str, full_table_name: str) -> str:
+        schema_name, table_name = split_table_name(full_table_name)
         sql = f"""
 SELECT
     a.attname,
@@ -2477,16 +2494,12 @@ WHERE n.nspname = {sql_literal(schema_name)}
   AND NOT a.attisdropped
 ORDER BY a.attnum;
 """
-        command = (
+        return (
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} -X --csv -c {shlex.quote(sql)}"
         )
-        output = self.run_remote_command(
-            command,
-            cancel_event=cancel_event,
-            trace_context=trace_context,
-            trace_label=f"get_table_column_definitions[{full_table_name}]",
-        )
+
+    def _parse_table_column_definitions(self, output, full_table_name, started_at, trace_context):
         parse_started_at = time.perf_counter()
         _headers, rows = self.parse_csv_output(output)
         self._trace_table_open(
@@ -9502,7 +9515,7 @@ LIMIT 1;
         output = self.run_remote_command(command, cancel_event=cancel_event).strip().lower()
         return output in {"t", "true", "1"}
 
-    def table_exists(self, database_name: str, full_table_name: str, cancel_event=None) -> bool:
+    def _table_exists_command(self, database_name: str, full_table_name: str) -> str:
         schema_name, table_name = split_table_name(full_table_name)
         sql = f"""
 SELECT EXISTS (
@@ -9512,10 +9525,13 @@ SELECT EXISTS (
       AND tablename = {sql_literal(table_name)}
 );
 """
-        command = (
+        return (
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} -X -At -c {shlex.quote(sql)}"
         )
+
+    def table_exists(self, database_name: str, full_table_name: str, cancel_event=None) -> bool:
+        command = self._table_exists_command(database_name, full_table_name)
         output = self.run_remote_command(command, cancel_event=cancel_event).strip().lower()
         return output in {"t", "true", "1"}
 
@@ -9686,6 +9702,12 @@ WHERE schema_name = {sql_literal(schema_name)}
 
     def reconcile_table_row_count(self, database_name: str, full_table_name: str, cancel_event=None) -> int:
         self.ensure_data_database_metadata(database_name, cancel_event=cancel_event)
+        command, sql = self._reconcile_table_row_count_command(database_name, full_table_name)
+        output = self.run_remote_command(command, stdin_text=sql, cancel_event=cancel_event).strip()
+        first_line = next((line.strip() for line in output.splitlines() if line.strip()), "")
+        return int(first_line or "0")
+
+    def _reconcile_table_row_count_command(self, database_name: str, full_table_name: str):
         schema_name, table_name = split_table_name(full_table_name)
         qualified_table = f"{sql_ident(schema_name)}.{sql_ident(table_name)}"
         sql = f"""
@@ -9719,12 +9741,9 @@ COMMIT;
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} -X -qAt -v ON_ERROR_STOP=1"
         )
-        output = self.run_remote_command(command, stdin_text=sql, cancel_event=cancel_event).strip()
-        first_line = next((line.strip() for line in output.splitlines() if line.strip()), "")
-        return int(first_line or "0")
+        return command, sql
 
-    def get_table_row_count(self, database_name: str, full_table_name: str, cancel_event=None) -> int:
-        self.ensure_data_database_metadata(database_name, cancel_event=cancel_event)
+    def _table_row_count_command(self, database_name: str, full_table_name: str) -> str:
         schema_name, table_name = split_table_name(full_table_name)
         sql = f"""
 SELECT row_count
@@ -9732,10 +9751,14 @@ FROM {DATA_TABLE_ROW_COUNTS}
 WHERE schema_name = {sql_literal(schema_name)}
   AND table_name = {sql_literal(table_name)};
 """
-        command = (
+        return (
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} -X -At -c {shlex.quote(sql)}"
         )
+
+    def get_table_row_count(self, database_name: str, full_table_name: str, cancel_event=None) -> int:
+        self.ensure_data_database_metadata(database_name, cancel_event=cancel_event)
+        command = self._table_row_count_command(database_name, full_table_name)
         output = self.run_remote_command(command, cancel_event=cancel_event).strip()
         if output:
             return int(output)
@@ -12605,6 +12628,18 @@ END
             return
 
         schema_name, table_name = split_table_name(full_table_name)
+        command = self._managed_sql_dependencies_command(database_name, full_table_name)
+        output = self.run_remote_command(command, cancel_event=cancel_event).strip()
+        self._check_managed_sql_dependencies(
+            output,
+            schema_name,
+            table_name,
+            dml_commands,
+            delete_relationship_acknowledged,
+        )
+
+    def _managed_sql_dependencies_command(self, database_name: str, full_table_name: str) -> str:
+        schema_name, table_name = split_table_name(full_table_name)
         sql = f"""
 SELECT json_build_object(
     'relation_kind', target.relkind,
@@ -12677,11 +12712,19 @@ JOIN pg_namespace AS target_namespace ON target_namespace.oid = target.relnamesp
 WHERE target_namespace.nspname = {sql_literal(schema_name)}
   AND target.relname = {sql_literal(table_name)};
 """
-        command = (
+        return (
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} -X -At -v ON_ERROR_STOP=1 -c {shlex.quote(sql)}"
         )
-        output = self.run_remote_command(command, cancel_event=cancel_event).strip()
+
+    @staticmethod
+    def _check_managed_sql_dependencies(
+        output: str,
+        schema_name: str,
+        table_name: str,
+        dml_commands: set[str],
+        delete_relationship_acknowledged: bool,
+    ):
         if not output:
             raise RuntimeError(f"A tabela selecionada {schema_name}.{table_name} nao existe.")
 
@@ -13596,6 +13639,16 @@ WHERE database_name = {sql_literal(database_name)}
         destinations,
         cancel_event=None,
     ):
+        command = self._cross_table_expansion_functions_command(database_name, destinations)
+        if command is None:
+            return
+        output = self.run_remote_command(
+            command,
+            cancel_event=cancel_event,
+        ).strip()
+        self._check_cross_table_expansion_functions(output)
+
+    def _cross_table_expansion_functions_command(self, database_name: str, destinations):
         function_references = []
         for destination in destinations or []:
             for reference in destination.get("function_references") or []:
@@ -13609,7 +13662,7 @@ WHERE database_name = {sql_literal(database_name)}
                 ):
                     function_references.append(normalized_reference)
         if not function_references:
-            return
+            return None
 
         values_sql = ",\n".join(
             (
@@ -13662,15 +13715,14 @@ SELECT COALESCE(
 )::text
 FROM requested;
 """
-        command = (
+        return (
             f"psql -h localhost -U {shlex.quote(self.sql_username)} "
             f"-d {shlex.quote(database_name)} -X -qAt -v ON_ERROR_STOP=1 "
             f"-c {shlex.quote(sql)}"
         )
-        output = self.run_remote_command(
-            command,
-            cancel_event=cancel_event,
-        ).strip()
+
+    @staticmethod
+    def _check_cross_table_expansion_functions(output: str):
         try:
             function_metadata = json.loads(output.splitlines()[-1] if output else "[]")
         except json.JSONDecodeError as exc:
@@ -13845,6 +13897,123 @@ SELECT json_build_object(
         return hashlib.sha256(
             json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
         ).hexdigest()
+
+    PREFETCH_SPLIT_MARKER = "__PGDM_PREFETCH_SPLIT__"
+
+    def _run_batched_psql(self, command: str, statements: list[str], cancel_event=None):
+        """Run several statements in one psql process; return one output per statement."""
+        script = "\n".join(
+            statement.rstrip() + f"\n\\echo {self.PREFETCH_SPLIT_MARKER}"
+            for statement in statements
+        ) + "\n"
+        output = self.run_remote_command(command, stdin_text=script, cancel_event=cancel_event)
+        parts = re.split(
+            rf"(?m)^{re.escape(self.PREFETCH_SPLIT_MARKER)}\r?$", output
+        )
+        if len(parts) != len(statements) + 1:
+            raise RuntimeError("Unexpected batched psql output.")
+        return [part.strip() for part in parts[:-1]]
+
+    def _prefetch_expansion_preflight(
+        self,
+        database_name: str,
+        source_full_table_name: str,
+        destinations,
+        timing_report: dict | None = None,
+        cancel_event=None,
+    ):
+        """Answer the preflight's catalog reads with one psql process.
+
+        The preflight still calls table_exists, get_table_row_count, etc. in
+        the original order and with the original checks; run_remote_command
+        serves their exact commands from this thread's cache. Missing row
+        counters are initialized together. On any error the cache stays
+        empty and every check runs on its own, as before.
+        """
+        self._expansion_timing_local.prefetched = {}
+        destination_names = [item["table_name"] for item in destinations]
+        read_commands = [
+            self._table_exists_command(database_name, source_full_table_name),
+            self._table_column_definitions_command(database_name, source_full_table_name),
+        ]
+        function_command = self._cross_table_expansion_functions_command(
+            database_name, destinations
+        )
+        if function_command:
+            read_commands.append(function_command)
+        for full_table_name in destination_names:
+            read_commands.extend(
+                [
+                    self._table_exists_command(database_name, full_table_name),
+                    self._table_row_count_command(database_name, full_table_name),
+                    self._managed_sql_dependencies_command(database_name, full_table_name),
+                ]
+            )
+        statements = []
+        for command in read_commands:
+            arguments = shlex.split(command)
+            output_format = (
+                "\\pset format csv\n\\pset tuples_only off"
+                if "--csv" in arguments
+                else "\\pset format unaligned\n\\pset tuples_only on"
+            )
+            statements.append(output_format + "\n" + arguments[arguments.index("-c") + 1].strip())
+        batch_command = (
+            f"psql -h localhost -U {shlex.quote(self.sql_username)} "
+            f"-d {shlex.quote(database_name)} -X -q -v ON_ERROR_STOP=1 -f -"
+        )
+        with self.expansion_timing_scope(
+            timing_report,
+            "preflight",
+            "Read source, function and destination metadata (one batch)",
+        ):
+            try:
+                outputs = self._run_batched_psql(
+                    batch_command, statements, cancel_event=cancel_event
+                )
+            except OperationCancelledError:
+                raise
+            except RuntimeError:
+                return
+        cache = {
+            (command, None): output for command, output in zip(read_commands, outputs)
+        }
+
+        missing_counters = [
+            full_table_name
+            for full_table_name in destination_names
+            if cache.get((self._table_exists_command(database_name, full_table_name), None))
+            in {"t", "true", "1"}
+            and not cache.get((self._table_row_count_command(database_name, full_table_name), None))
+        ]
+        if missing_counters:
+            reconciles = [
+                self._reconcile_table_row_count_command(database_name, full_table_name)
+                for full_table_name in missing_counters
+            ]
+            with self.expansion_timing_scope(
+                timing_report,
+                "preflight",
+                "Initialize missing row counters (one batch)",
+            ):
+                try:
+                    outputs = self._run_batched_psql(
+                        reconciles[0][0],
+                        [sql for _command, sql in reconciles],
+                        cancel_event=cancel_event,
+                    )
+                except OperationCancelledError:
+                    raise
+                except RuntimeError:
+                    outputs = None
+            if outputs is not None:
+                cache.update(
+                    {
+                        (command, sql): output
+                        for (command, sql), output in zip(reconciles, outputs)
+                    }
+                )
+        self._expansion_timing_local.prefetched = cache
 
     def _expansion_job_directory(self, job_id: str) -> str:
         return f"{self.remote_storage_root}/expansion_jobs/{uuid.UUID(job_id)}"
@@ -14114,6 +14283,14 @@ WHERE finalized_at IS NULL;
             5,
             "Validating source, destinations, and counters...",
         )
+        self.ensure_data_database_metadata(database_name, cancel_event=cancel_event)
+        self._prefetch_expansion_preflight(
+            database_name,
+            source_full_table_name,
+            prepared["destinations"],
+            timing_report=timing_report,
+            cancel_event=cancel_event,
+        )
         with self.expansion_timing_scope(
             timing_report,
             "preflight",
@@ -14238,6 +14415,7 @@ WHERE finalized_at IS NULL;
                     {"insert"},
                     cancel_event=cancel_event,
                 )
+        self._expansion_timing_local.prefetched = None
 
         self._notify_progress(
             progress_callback,

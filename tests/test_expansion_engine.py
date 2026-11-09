@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from services.expansion_engine import (
     defer_foreign_keys_sql,
@@ -92,6 +93,37 @@ class ForeignKeyDeferralTests(unittest.TestCase):
         sql = restore_foreign_keys_sql()
         self.assertIn("ADD CONSTRAINT %I %s", sql)
         self.assertIn("COMMENT ON CONSTRAINT", sql)
+
+
+class PreflightBatchTests(unittest.TestCase):
+    def setUp(self):
+        from services.postgres_service import PostgresAdminService
+
+        self.service = PostgresAdminService()
+        self.service.ssh_client = object()
+        self.service.sql_username = "challenge"
+        self.service.sql_password = "x"
+
+    def test_batched_output_is_split_per_statement(self):
+        marker = self.service.PREFETCH_SPLIT_MARKER
+        with patch.object(
+            self.service,
+            "run_remote_command",
+            return_value=f"t\r\n{marker}\r\n\r\n{marker}\r\na,b\r\n1,2\r\n{marker}",
+        ):
+            outputs = self.service._run_batched_psql("psql", ["SELECT 1;", "SELECT 2;", "SELECT 3;"])
+        self.assertEqual(outputs, ["t", "", "a,b\r\n1,2"])
+
+    def test_wrong_part_count_is_rejected(self):
+        with patch.object(self.service, "run_remote_command", return_value="t"):
+            with self.assertRaises(RuntimeError):
+                self.service._run_batched_psql("psql", ["SELECT 1;"])
+
+    def test_prefetched_output_is_served_once(self):
+        command = self.service._table_exists_command("db", "public.table1")
+        self.service._expansion_timing_local.prefetched = {(command, None): "t"}
+        self.assertEqual(self.service.run_remote_command(command), "t")
+        self.assertEqual(self.service._expansion_timing_local.prefetched, {})
 
 
 if __name__ == "__main__":
